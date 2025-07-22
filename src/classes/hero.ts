@@ -289,6 +289,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.boardPosition = tile.boardPosition;
     this.row = tile.row;
     this.col = tile.col;
+    this.specialTileCheck(this.getTile().tileType);
   }
 
   exportData(): IHero {
