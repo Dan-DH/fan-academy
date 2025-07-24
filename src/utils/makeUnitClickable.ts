@@ -78,7 +78,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   if (activeUnit && !isSameUnit) {
     // Unique case: Wraith can spawn on a KO'd unit
     if (isHero(unit) && unit.isKO && isHero(activeUnit) && activeUnit.unitType === EHeroes.WRAITH && activeUnit.boardPosition >= 45) {
-      activeUnit.spawn(unit.getTile());
+      activeUnit.spawn(unit.getTile()) && !isEnemySpawn(context, unit.getTile());
       return;
     }
 
