@@ -46,6 +46,7 @@ export interface IItem {
   belongsTo: number;
   canHeal: boolean;
   dealsDamage: boolean;
+  selectSound: string;
 }
 
 /**

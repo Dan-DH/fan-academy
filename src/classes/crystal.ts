@@ -1,7 +1,7 @@
-import { ETiles, EWinConditions } from "../enums/gameEnums";
+import { EGameSounds, ETiles, EWinConditions } from "../enums/gameEnums";
 import { ICrystal, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { roundToFive } from "../utils/gameUtils";
+import { roundToFive, effectSequence, timeDelay } from "../utils/gameUtils";
 import { makeCrystalClickable } from "../utils/makeUnitClickable";
 import { CrystalCard } from "./crystalCard";
 import { FloatingText } from "./floatingText";
@@ -158,20 +158,42 @@ export class Crystal extends Phaser.GameObjects.Container {
     };
   }
 
-  getsDamaged(damage: number): void {
+  //attackType and hitSound included to match hero.getsDamaged to simplify calls
+  getsDamaged(damage: number, _attackType: any, delay = 0, hitSound = true): [Promise<void>, number] {
     const totalDamage = roundToFive(damage + 300 * this.debuffLevel);
     const damageTaken = totalDamage > this.currentHealth ? this.currentHealth : totalDamage;
     this.currentHealth -= damageTaken;
 
-    if (this.currentHealth <= this.maxHealth / 2) {
-      this.crystalImage.setTexture('crystalDamaged'); // FIXME: below 50%, this changes the texture every time the crystal is damaged
+    if (this.currentHealth <= this.maxHealth / 2 && this.currentHealth + totalDamage >= this.maxHealth / 2) {
+      this.crystalImage.setTexture('crystalDamaged');
+    }
+
+    const replayDelay = this.showDamage(damageTaken, delay, hitSound);
+
+    return [replayDelay, 0]
+  }
+
+  async showDamage(damageTaken: number, delay: number, hitSound: boolean){
+    let replayWait = 0;
+    if (this.currentHealth <= 0) {
+      replayWait = 2000
+      this.removeFromGame(delay);
+      await timeDelay(this.context, delay);
+    } else {
+      await timeDelay(this.context, delay);
+      replayWait = 100
+      if (hitSound) {
+        const damageSounds = [EGameSounds.DAMAGE_CRYSTAL_1, EGameSounds.DAMAGE_CRYSTAL_2] 
+        effectSequence(this.scene, Phaser.Math.RND.pick(damageSounds));
+      }
     }
 
     // Update hp bar
     this.healthBar.setHealth(this.maxHealth, this.currentHealth);
 
     // Show damage numbers
-    if (damageTaken > 0) new FloatingText(this.context, this.x, this.y - 50, damageTaken.toString());
+    if (damageTaken > 0) new FloatingText(this.context, this.x, this.y - 50, damageTaken.toString());        
+
 
     this.unitCard.updateCardHealth(this.currentHealth, this.maxHealth);
     this.updateTileData();
@@ -180,15 +202,10 @@ export class Crystal extends Phaser.GameObjects.Container {
     if (this.belongsTo === 1) this.context.gameController?.gameUI.banner.playerOneHpBar.setHealth();
     if (this.belongsTo === 2) this.context.gameController?.gameUI.banner.playerTwoHpBar.setHealth();
 
-    if (this.currentHealth <= 0) this.removeFromGame();
+    await timeDelay(this.context, replayWait);
   }
 
-  removeFromGame(): void {
-    const tile = this.getTile();
-    tile.crystal = undefined;
-    tile.obstacle = false;
-    tile.tileType = ETiles.BASIC;
-
+  async removeFromGame(delay: number): Promise<void> {
     // Remove destoyed crystal from the board array
     const crystalArray = this.context.gameController!.board.crystals;
     const index = crystalArray.findIndex(crystal => crystal.boardPosition === this.boardPosition);
@@ -207,6 +224,17 @@ export class Crystal extends Phaser.GameObjects.Container {
       otherCrystal.isLastCrystal = true;
       otherCrystal.updateTileData();
     }
+
+    await timeDelay(this.context, delay);
+
+    effectSequence(this.scene, EGameSounds.DESTROY_CRYSTAL);
+
+    await timeDelay(this.context, 1000); // TODO: sync with animations when added
+
+    const tile = this.getTile();
+    tile.crystal = undefined;
+    tile.obstacle = false;
+    tile.tileType = ETiles.BASIC;
 
     // Remove animations
     this.scene.tweens.killTweensOf(this);

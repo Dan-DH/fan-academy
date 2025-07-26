@@ -1,13 +1,22 @@
 import { authCheck, loginQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";
+import { effectSequence } from "../utils/gameUtils";
 import createMainMenuButton from "./mainMenuUtils/buttons";
 import { CDN_PATH } from "./preloader.scene";
+import { EGameSounds } from "../enums/gameEnums";
+
+// Declare a global or static variable to hold the music instance
+// This ensures it persists across scene changes if the scene itself isn't destroyed
+let titleMusicInstance: Phaser.Sound.BaseSound | null = null;
 
 export default class MainMenuScene extends Phaser.Scene {
   userId: string | undefined;
   gameList: string | undefined;
 
   currentSubScene: string | undefined;
+
+  // No need for titleMusic as a class property if we're using a global instance
+  // titleMusic!: Phaser.Sound.BaseSound;
 
   constructor() {
     super({ key: 'MainMenuScene' });
@@ -33,6 +42,17 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   async create() {
+    // Only play the music if it's not already playing
+    if (!titleMusicInstance || !titleMusicInstance.isPlaying) {
+      if (titleMusicInstance) { 
+          titleMusicInstance.destroy();
+          titleMusicInstance = null;
+      }
+      titleMusicInstance = this.sound.add(EGameSounds.TITLE_MUSIC, { loop: true, volume: 0.5 });
+      titleMusicInstance.play();
+    }
+
+
     // Auth check
     this.userId = await authCheck();
 
@@ -78,6 +98,7 @@ export default class MainMenuScene extends Phaser.Scene {
       text: 'Profile',
       font: '70px proHeavy',
       callback: () => {
+        effectSequence(this, EGameSounds.BUTTON_PRESS_GENERIC);
         backgroundGameScreen.setVisible(true);
         menuImg.setVisible(false);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
@@ -95,6 +116,7 @@ export default class MainMenuScene extends Phaser.Scene {
       text: 'Leaderboard',
       font: '70px proHeavy',
       callback: () => {
+        effectSequence(this, EGameSounds.BUTTON_PRESS_GENERIC);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.launch('LeaderboardScene', { userId: this.userId });
         this.currentSubScene = 'LeaderboardScene';
@@ -110,6 +132,7 @@ export default class MainMenuScene extends Phaser.Scene {
       text: 'About',
       font: '70px proHeavy',
       callback: () => {
+        effectSequence(this, EGameSounds.BUTTON_PRESS_GENERIC);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.launch('AboutScene');
         this.currentSubScene = 'AboutScene';
@@ -125,6 +148,7 @@ export default class MainMenuScene extends Phaser.Scene {
       text: 'Discord',
       font: '70px proHeavy',
       callback: () => {
+        effectSequence(this, EGameSounds.BUTTON_PRESS_GENERIC);
         window.open('https://discord.gg/pkfwDvKyxX');
       }
     });
@@ -138,7 +162,11 @@ export default class MainMenuScene extends Phaser.Scene {
       text: 'Play!',
       font: '130px proHeavy',
       callback: () => {
+        effectSequence(this, EGameSounds.BATTLE_BUTTON);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
+        if (titleMusicInstance && titleMusicInstance.isPlaying) {
+          titleMusicInstance.stop();
+        }
         this.scene.start('UIScene', { userId: this.userId });
         this.currentSubScene = 'UIScene';
       }
@@ -154,10 +182,12 @@ export default class MainMenuScene extends Phaser.Scene {
       font: '70px proHeavy',
       tint: '0x990000',
       callback: async () => {
+        effectSequence(this, EGameSounds.BUTTON_PRESS_GENERIC);
         localStorage.removeItem('jwt');
         this.userId = undefined;
         document.title = 'Fan Academy';
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
+        // Do NOT stop the music here, as we want it to continue on restart
         this.scene.restart();
       }
     });
@@ -211,13 +241,18 @@ export default class MainMenuScene extends Phaser.Scene {
       if (loginUsernameInput.value && loginPasswordInput.value) {
         const result = await loginQuery(loginUsernameInput.value, loginPasswordInput.value);
         if (result.success) {
+          effectSequence(this, EGameSounds.BATTLE_BUTTON);
           loginForm.setVisible(false);
           blockingLayer.setVisible(false);
           this.userId = result.userId;
           console.log('UserId after login:', this.userId);
         }else {
+          effectSequence(this, EGameSounds.BUTTON_FAILED);
           showFormError(loginError, result.error); // Show server error to user
         }
+      } else {
+        effectSequence(this, EGameSounds.BUTTON_FAILED);
+        showFormError(loginError, 'Incorrect username or password.'); // Show server error to user
       }
     });
 
@@ -226,15 +261,18 @@ export default class MainMenuScene extends Phaser.Scene {
       hideFormError(signUpError);
 
       if (signUpPasswordInput.value !== signUpPasswordConfirm.value) {
+        effectSequence(this, EGameSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Passwords do not match');
         return;
       };
       if (!isValidPassword(signUpPasswordInput.value)) {
+        effectSequence(this, EGameSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Password must be at least 8 characters long and contain a letter and a number');
         return;
       };
 
       if(signUpUsernameInput.value.length > 20) {
+        effectSequence(this, EGameSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Username must be 20 characters or shorter');
         return;
       }
@@ -242,11 +280,13 @@ export default class MainMenuScene extends Phaser.Scene {
       if (signUpEmailInput.value && signUpUsernameInput.value && signUpPasswordInput.value) {
         const result = await signUpQuery(signUpEmailInput.value, signUpUsernameInput.value, signUpPasswordInput.value);
         if (result.success) {
+          effectSequence(this, EGameSounds.BATTLE_BUTTON);
           signUpForm.setVisible(false);
           blockingLayer.setVisible(false);
           this.userId = result.userId;
           console.log('UserId after sign up:', this.userId);
         } else {
+          effectSequence(this, EGameSounds.BUTTON_FAILED);
           showFormError(signUpError, result.error); // Show server error to user
         }
       }

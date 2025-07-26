@@ -1,6 +1,6 @@
 import { IHero, IItem } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { createNewHero, createNewItem, isHero, isItem } from "../utils/gameUtils";
+import { createNewHero, createNewItem, isHero, isItem, timeDelay } from "../utils/gameUtils";
 import { getCurrentPlayer } from "../utils/playerUtils";
 import { Hero } from "./hero";
 import { Item } from "./item";
@@ -30,10 +30,11 @@ export class Hand {
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 
-  addToHand(units: (IHero | IItem)[]): void {
+  async addToHand(units: (IHero | IItem)[]): Promise<void> {
     const defaultPositions = [45, 46, 47, 48, 49, 50];
 
     let previousIndex = -1;
+    let toRender: (Hero | Item)[] = [];
     defaultPositions.forEach(element => {
       const matchIndex = this.hand.findIndex((unit) => unit.boardPosition === element);
 
@@ -44,10 +45,17 @@ export class Hand {
         if (unitData) {
           unitData.boardPosition = element;
           const newUnit = this.renderUnit(unitData);
+          newUnit.setVisible(false);
+          toRender.push(newUnit)
           this.hand.splice(++previousIndex, 0, newUnit);
         }
       }
     });
+
+    await timeDelay(this.context, 1000);
+    for (const unit of toRender){
+      unit.setVisible(true);
+    }
   }
 
   removeFromHand(unitToRemove: IHero | IItem): void {

@@ -1,13 +1,15 @@
 import { Client, Room } from "colyseus.js";
 import { HomeButton } from "../classes/homeButton";
 import { connectToGameLobby } from "../colyseus/colyseusLobbyRoom";
-import { EFaction } from "../enums/gameEnums";
+import { EFaction, EGameSounds } from "../enums/gameEnums"; // Import EGameSounds
 import { IGame } from "../interfaces/gameInterface";
 import { getGameList } from "../queries/gameQueries";
 import { createGameList } from "./gameSceneUtils/gameList";
 import { CDN_PATH } from "./preloader.scene";
 import { profilePicNames } from "./profileSceneUtils/profilePicNames";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
+
+export let backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
 export default class UIScene extends Phaser.Scene {
   colyseusClient: Client;
@@ -51,9 +53,21 @@ export default class UIScene extends Phaser.Scene {
     this.load.image('concedeButton', `${CDN_PATH}/ui/concede_button.webp`);
 
     this.load.html('disconnectWarning', 'html/disconnectWarning.html');
+
+    this.load.audio('backgroundMusic', `${CDN_PATH}/audio/Background_Music.mp3`);
   }
 
   async create() {
+    // Play background music if not already playing
+    if (!backgroundMusicInstance || !backgroundMusicInstance.isPlaying) {
+      if (backgroundMusicInstance) {
+        backgroundMusicInstance.destroy();
+        backgroundMusicInstance = null;
+      }
+      backgroundMusicInstance = this.sound.add(EGameSounds.BACKGROUND_MUSIC, { loop: true });
+      backgroundMusicInstance.play();
+    }
+
     this.time.addEvent({
       delay: 300000, // 5 minutes
       callback: () => {
@@ -76,8 +90,8 @@ export default class UIScene extends Phaser.Scene {
     // Create the game list UI
     await createGameList(this);
 
-    // Add Home button
     new HomeButton(this);
+
 
     // Background game screen
     this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2);

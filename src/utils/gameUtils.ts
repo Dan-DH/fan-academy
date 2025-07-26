@@ -104,7 +104,7 @@ export async function moveAnimation(context: GameScene, hero: Hero, targetTile: 
         targets: hero,
         x: targetTile.x,
         y: targetTile.y,
-        duration: 300,
+        duration: 400,
         ease: 'Linear',
         onComplete: () => {
           context.input.enabled = true;
@@ -159,6 +159,19 @@ export function getNewPositionAfterForce(attackerRow: number, attackerCol: numbe
     row: targetRow + directionRow,
     col: targetCol + directionColumn
   };
+}
+
+// Add animation calls here when ready
+export function effectSequence(scene: Phaser.Scene, sound: string): void {
+  if (sound) {
+    scene.sound.play(sound);
+  }  
+}
+
+export function timeDelay(scene: Phaser.Scene, delay: number): Promise<void> {
+  return new Promise(resolve => {
+    scene.time.delayedCall(delay, resolve);
+  });
 }
 
 export function getActionClass(action: EActionType): EActionClass {

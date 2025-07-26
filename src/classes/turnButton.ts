@@ -30,6 +30,6 @@ export class TurnButton {
     // Remove KO'd units before end of turn actions to handle a possible game over
     await gameController.removeKOUnits();
 
-    gameController.endOfTurnActions();
+    await gameController.endOfTurnActions();
   }
 }

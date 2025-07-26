@@ -1,4 +1,8 @@
 import UIScene from "../scenes/ui.scene";
+import { EGameSounds } from "../enums/gameEnums";
+import { effectSequence } from "../utils/gameUtils";
+// Import the backgroundMusicInstance from ui.scene.ts
+import { backgroundMusicInstance } from "../scenes/ui.scene"; // <-- ADD THIS IMPORT
 
 export class HomeButton extends Phaser.GameObjects.Container {
   button: Phaser.GameObjects.Image;
@@ -19,9 +23,17 @@ export class HomeButton extends Phaser.GameObjects.Container {
     this.add([this.button, this.buttonText]).setScale(0.8);
 
     this.button.on('pointerdown', async() => {
+      effectSequence(this.scene, EGameSounds.BUTTON_PRESS_GENERIC);
+
       await context.lobbyRoom?.leave();
       await context.currentRoom?.leave();
       context.currentRoom = undefined;
+
+      // Stop and destroy the background music instance
+      if (backgroundMusicInstance && backgroundMusicInstance.isPlaying) {
+        backgroundMusicInstance.stop();
+      }
+
       context.scene.stop('GameScene');
       context.scene.start('MainMenuScene');
     });

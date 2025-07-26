@@ -1,9 +1,9 @@
 import { ChallengePopup } from "../../classes/challengePopup";
 import { createGame } from "../../colyseus/colyseusGameRoom";
 import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EFaction, EGameStatus } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction, EGameStatus, EGameSounds } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
-import { truncateText } from "../../utils/gameUtils";
+import { truncateText, effectSequence } from "../../utils/gameUtils";
 import { timeAgo } from "../../utils/timeAgo";
 import UIScene from "../ui.scene";
 import { accessGame } from "./gameMenuUI";
@@ -112,6 +112,7 @@ export async function createGameList(context: UIScene) {
           if (pointerMoved) return; // skip tap if user was swiping
 
           sendDeletedGameMessage(context.lobbyRoom!, game._id, context.userId);
+          effectSequence(context, EGameSounds.DELETE_GAME);
           createGameList(context);
         });
       }
@@ -132,6 +133,7 @@ export async function createGameList(context: UIScene) {
           if (pointerMoved) return; // skip tap if user was swiping
 
           highlightGameButton();
+          effectSequence(context, EGameSounds.BUTTON_PRESS_GENERIC);
           await accessGame(context, game);
         });
       }
@@ -142,6 +144,7 @@ export async function createGameList(context: UIScene) {
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
+          effectSequence(context, EGameSounds.DELETE_GAME);
           highlightGameButton();
 
           if (context.currentRoom) {
@@ -177,6 +180,7 @@ export async function createGameList(context: UIScene) {
   councilEmblem.on('pointerdown', async () => {
     // Create the faction's deck and starting hand
     if (context.userId) {
+      effectSequence(context, EGameSounds.BATTLE_BUTTON);
       await createGame(context, EFaction.COUNCIL);
       await context.currentRoom?.leave();
       context.currentRoom = undefined;
@@ -187,6 +191,7 @@ export async function createGameList(context: UIScene) {
   elvesEmblem.on('pointerdown', async () => {
     // Create the faction's deck and starting hand
     if (context.userId) {
+      effectSequence(context, EGameSounds.BATTLE_BUTTON);
       await createGame(context, EFaction.DARK_ELVES);
       await context.currentRoom?.leave();
       context.currentRoom = undefined;

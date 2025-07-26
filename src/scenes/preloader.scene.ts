@@ -1,5 +1,5 @@
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@d4ce54f';
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@0555fd4';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -27,6 +27,12 @@ export default class PreloaderScene extends Phaser.Scene {
 
     // background image
     this.load.image('gameBackground', `${CDN_PATH}/ui/create_game.webp`);
+
+    // sounds
+    this.load.audio('buttonFailed', `${CDN_PATH}/audio/Unit_Damage.mp3`);  this.load.audio('battleButton', `${CDN_PATH}/audio/UI_Front_End_Begin_Battle.mp3`);
+    this.load.audio('buttonPressGeneric', `${CDN_PATH}/audio/UI_Front_End_Select.mp3`);
+    this.load.audio('deleteGame', `${CDN_PATH}/audio/Game_Delete.mp3`);
+    this.load.audio('titleMusic', `${CDN_PATH}/audio/Mx_Title_Theme_v4.mp3`);
   }
 
   create(): void {

@@ -1,7 +1,7 @@
-import { EActionType, EAttackType, EClass, EFaction, EHeroes, EItems, ETiles } from "../enums/gameEnums";
+import { EActionType, EAttackType, EClass, EFaction, EHeroes, EItems, ETiles, EGameSounds } from "../enums/gameEnums";
 import { IHero } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { useAnimation, getGridDistance, isInHand, moveAnimation, roundToFive, updateUnitsLeft } from "../utils/gameUtils";
+import { effectSequence, timeDelay, getGridDistance, isInHand, useAnimation, moveAnimation, roundToFive, updateUnitsLeft } from "../utils/gameUtils";
 import { positionHeroImage } from "../utils/heroImagePosition";
 import { makeUnitClickable } from "../utils/makeUnitClickable";
 import { Crystal } from "./crystal";
@@ -382,7 +382,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.setScale(1);
   }
 
-  getsDamaged(damage: number, attackType: EAttackType): number {
+  getsDamaged(damage: number, attackType: EAttackType, delay = 0, hitSound = true): [Promise<void>, number] {
     // Flash the unit red
     this.characterImage.setTint(0xff0000);
     this.scene.time.delayedCall(500, () => this.characterImage.clearTint());
@@ -392,7 +392,25 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.currentHealth -= totalDamage;
 
-    if (this.currentHealth <= 0) this.getsKnockedDown();
+    // desyncs visuals to align with animations/sounds without forcing player to wait
+    const replayWait = this.showDamage(totalDamage, delay, hitSound)
+
+    return [replayWait, totalDamage]; // Lifesteal damage
+  }
+
+  async showDamage(totalDamage: number, delay: number, hitSound = true): Promise<void> {
+    let koWait = null;
+    if (this.currentHealth <= 0) {
+      // set ko state now, wait for attack delay, update visuals, slowmo later 
+      koWait = this.getsKnockedDown(delay); 
+      await timeDelay(this.context, delay);
+    } else {
+      await timeDelay(this.context, delay);
+      if (hitSound) {
+        const damageSounds = [EGameSounds.HIT_1, EGameSounds.HIT_2, EGameSounds.HIT_3, EGameSounds.HIT_4]
+        effectSequence(this.scene, Phaser.Math.RND.pick(damageSounds));
+      }
+    }
 
     // Update hp bar
     this.healthBar.setHealth(this.maxHealth, this.currentHealth);
@@ -400,10 +418,17 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Show damage numbers
     if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
 
-    this.unitCard.updateCardHealth(this);
-    this.updateTileData();
+    // phantom won't exist any more
+    if (this.unitType != EHeroes.PHANTOM) {
+      this?.unitCard.updateCardHealth(this);
+      this.updateTileData();
+    } else {
+      this.removeFromGame(true, false);
+    }
 
-    return totalDamage; // Return damage taken for lifesteal
+    if (koWait) {
+      await koWait;
+    }
   }
 
   getTotalPower(rangeModifier = 1): number {
@@ -478,6 +503,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const { charImageX, charImageY } = positionHeroImage(this.unitType, this.belongsTo === 1, false, false);
     this.specialTileCheck(this.getTile().tileType);
 
+    effectSequence(this.scene, EGameSounds.REVIVE_HERO);
+
     this.characterImage.x = charImageX;
     this.characterImage.y = charImageY;
   }
@@ -509,7 +536,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     new FloatingText(this.context, this.x, this.y - 50, textFigure.toString(), true);
   };
 
-  getsKnockedDown(): void {
+  async getsKnockedDown(delay: number): Promise<void> {
     this.removeSpecialTileOnKo();
 
     this.currentHealth = 0;
@@ -518,10 +545,22 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const tile = this.getTile();
     tile.hero = this.exportData();
 
-    this.characterImage.setTexture(this.updateCharacterImage());
-    const { charImageX, charImageY } = positionHeroImage(this.unitType, this.belongsTo === 1, false, true);
-    this.characterImage.x = charImageX;
-    this.characterImage.y = charImageY;
+    await timeDelay(this.context, delay);
+    effectSequence(this.context, EGameSounds.KO)
+    await timeDelay(this.context, 950);
+    const heroKoSound = `${this.unitType}Death`
+    effectSequence(this.context, heroKoSound)
+
+    // phantom won't exist anymore
+    if (this.unitType != EHeroes.PHANTOM) {
+      this.characterImage.setTexture(this.updateCharacterImage());
+      const { charImageX, charImageY } = positionHeroImage(this.unitType, this.belongsTo === 1, false, true);
+      this.characterImage.x = charImageX;
+      this.characterImage.y = charImageY;
+    }
+
+
+    await timeDelay(this.context, 250);
   }
 
   getTile(): Tile {
@@ -547,7 +586,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.removeFromGame(false);
   }
 
-  removeFromGame(board = true): void {
+  removeFromGame(board = true, sound = true): void {
     // Remove animations
     this.scene.tweens.killTweensOf(this);
 
@@ -563,13 +602,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.superChargeEvent.remove(false);
     if (this.spawnEvent) this.spawnEvent?.remove(false);
 
-    if (board) this.removeFromBoard();
+    if (board) this.removeFromBoard(sound);
 
     // Destroy container and children
     this.destroy(true);
   }
 
-  removeFromBoard(): void {
+  removeFromBoard(sound: boolean): void {
     // Remove hero data from tile
     const tile = this.getTile();
     if (tile.tileType === ETiles.CRYSTAL_DAMAGE) this.updateCrystals(false);
@@ -580,7 +619,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (index !== -1) { this.context.gameController!.board.units.splice(index, 1); }
 
     // Update hero counter
-    if (this.unitType !== EHeroes.PHANTOM) updateUnitsLeft(this.context, this);
+    if (this.unitType !== EHeroes.PHANTOM) {
+      updateUnitsLeft(this.context, this);
+
+      if (sound) effectSequence(this.context, EGameSounds.VANISH);
+    }
   }
 
   getDistanceToTarget(target: Hero | Crystal): number {
@@ -603,12 +646,17 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const startTile = gameController.board.getTileFromBoardPosition(this.boardPosition);
     if (!startTile) return;
 
+    gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
+    
+    // There is a second sound for moving that does not play in replay, see makeUnitClickable.ts
+    effectSequence(this.scene, EGameSounds.MOVE_WALK); // TODO: Define which units can fly and walk and apply proper sound
     await moveAnimation(this.context, this, targetTile);
 
     // Stomp KO'd units
     if (targetTile.hero && targetTile.hero.isKO) {
       const hero = gameController.board.units.find(unit => unit.unitId === targetTile.hero?.unitId);
       if (!hero) console.error('move() Found heroData on targetTile, but no Hero to remove', targetTile);
+      effectSequence(this.scene, EGameSounds.STOMP);
       hero?.removeFromGame(true);
     }
 
@@ -618,10 +666,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     targetTile.hero = this.exportData();
     startTile.removeHero();
 
-    gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
+    await timeDelay(this.context, 500);
   }
 
-  spawn(tile: Tile): void {
+  async spawn(tile: Tile): Promise<void> {
     const startingPosition = this.boardPosition;
     const gameController = this.context.gameController!;
 
@@ -629,6 +677,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (tile.hero && (tile.hero.isKO || tile.isEnemy(this.context.userId) && tile.hero.unitType === EHeroes.PHANTOM)) {
       const hero = gameController.board.units.find(unit => unit.unitId === tile.hero?.unitId);
       if (!hero) console.error('spawn() Found heroData on tile, but no Hero to remove', tile);
+      effectSequence(this.scene, EGameSounds.STOMP);
       hero?.removeFromGame(true);
     }
 
@@ -654,7 +703,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.healthBar.setVisible(true);
 
+    effectSequence(this.scene, EGameSounds.SPAWN_HERO);
+
     gameController.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
+
+    await timeDelay(this.scene, 500)
   }
 
   abstract attack(target: Hero | Crystal): void;
@@ -693,7 +746,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.updateCardMagicalResistance(this);
     this.updateTileData();
 
-    this.context.gameController?.afterAction(EActionType.USE, handPosition, this.boardPosition);
+    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.boardPosition);
   }
 
   equipRunemetal(handPosition: number): void {
@@ -759,18 +812,22 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (targetTile === ETiles.CRYSTAL_DAMAGE) {
       this.updateCrystals(true);
       this.crystalDebuffTileAnim.setVisible(true);
+      effectSequence(this.scene, EGameSounds.LAND_CRYSTAL);
     }
     if (targetTile === ETiles.POWER) {
       this.attackTile = true;
       this.powerTileAnim.setVisible(true);
+      effectSequence(this.scene, EGameSounds.LAND_SWORD);
     }
     if (targetTile === ETiles.MAGICAL_RESISTANCE) {
       this.magicalDamageResistance += 20;
       this.magicalResistanceTileAnim.setVisible(true);
+      effectSequence(this.scene, EGameSounds.LAND_HELM);
     }
     if (targetTile === ETiles.PHYSICAL_RESISTANCE) {
       this.physicalDamageResistance += 20;
       this.physicalResistanceTileAnim.setVisible(true);
+      effectSequence(this.scene, EGameSounds.LAND_SHIELD);
     }
 
     this.unitCard.updateCardData(this);
