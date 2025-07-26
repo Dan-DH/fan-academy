@@ -351,7 +351,7 @@ export function getCardText(unit: EHeroes | EItems): {
     [EItems.SOUL_STONE]: {
       cardName: 'Soulstone',
       cardType: ECardType.EQUIPMENT,
-      cardText: "Doubles the effect of a unit's life leech and increases max health by 50 HP"
+      cardText: "Doubles the effect of a unit's life leech and increases max health by 10%"
     }
   };
 
