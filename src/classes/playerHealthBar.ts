@@ -8,7 +8,7 @@ export class PlayerHealthBar extends Phaser.GameObjects.Container {
   background: Phaser.GameObjects.Image;
   healthBar: Phaser.GameObjects.Image;
 
-  maxHealth = 9000;
+  maxHealth = 0;
   currentHealth = 0;
   player: number;
 
@@ -31,6 +31,10 @@ export class PlayerHealthBar extends Phaser.GameObjects.Container {
         y: 65
       }
     };
+
+    board.crystals.forEach(crystals => {
+      this.maxHealth += crystals.maxHealth / 2;
+    });
 
     this.background = context.add.image(coordMap[player].x, coordMap[player].y, 'HpBackground').setScale(3).setOrigin(0);
     this.healthBar = context.add.image(coordMap[player].x, coordMap[player].y, 'HpAlly').setScale(3).setOrigin(0);
