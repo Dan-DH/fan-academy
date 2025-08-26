@@ -194,8 +194,8 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       }
 
       if (isItem(activeUnit)) {
-        if (unit.isAlreadyEquipped(activeUnit) || (unit.unitType === EHeroes.PHANTOM && !activeUnit.dealsDamage)) return;
-        
+        if (unit.isAlreadyEquipped(activeUnit) || unit.unitType === EHeroes.PHANTOM && !activeUnit.dealsDamage) return;
+
         if (activeUnit.dealsDamage) activeUnit.use(unit.getTile());
 
         if (!activeUnit.dealsDamage && (!unit.isKO || activeUnit.itemType === EItems.HEALING_POTION)) activeUnit.use(unit);
