@@ -47,6 +47,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
 
   const activeUnit = context.activeUnit;
+  const activeUnitTile = activeUnit && isHero(activeUnit) ? (activeUnit as Hero).getTile() : undefined;
   const isFriendly = belongsToPlayer(context, unit);
   const isEnemy = isHero(unit) && !isFriendly;
   const isSameUnit = activeUnit?.unitId === unit.unitId;
@@ -110,16 +111,15 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
         if (
           unit.isKO &&
-          activeUnit.unitType !== EHeroes.NECROMANCER &&
+          (activeUnit.unitType !== EHeroes.NECROMANCER ||
+          activeUnit.unitType === EHeroes.NECROMANCER && unit.blockedLOS.visible) &&
           (withinStompingRange || unitTile.isHighlighted)
         ) {
           activeUnit.move(unitTile);
           return;
         }
         if (
-          unit.isKO &&
-          (activeUnit.unitType === EHeroes.NECROMANCER && unit.blockedLOS.visible) &&
-          (withinStompingRange || unitTile.isHighlighted)
+          unit.isKO && unitTile.tileType === ETiles.TELEPORTER && activeUnitTile?.tileType === ETiles.TELEPORTER
         ) {
           activeUnit.move(unitTile);
           return;
