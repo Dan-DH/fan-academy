@@ -47,7 +47,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
 
   const activeUnit = context.activeUnit;
-  const activeUnitTile = activeUnit && isHero(activeUnit) ? (activeUnit as Hero).getTile() : undefined;
+  const activeUnitTile = activeUnit && isHero(activeUnit) && activeUnit.boardPosition < 45 ? (activeUnit as Hero).getTile() : undefined;
   const isFriendly = belongsToPlayer(context, unit);
   const isEnemy = isHero(unit) && !isFriendly;
   const isSameUnit = activeUnit?.unitId === unit.unitId;
