@@ -89,7 +89,8 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       isHero(activeUnit) &&
       activeUnit.unitType === EHeroes.WRAITH &&
       activeUnit.boardPosition >= 45 &&
-      !isEnemySpawn(context, unit.getTile())
+      !isEnemySpawn(context, unit.getTile()) &&
+      unit.getTile().isHighlighted
     ) {
       activeUnit.spawn(unit.getTile());
       return;
