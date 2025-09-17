@@ -140,7 +140,14 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       }
 
       // Stomp enemy phantoms on friendly spawn tiles with a unit from hand
-      if (isHero(activeUnit) && activeUnit.boardPosition >= 45 && unit.unitType === EHeroes.PHANTOM && !isEnemySpawn(context, unitTile)) {
+      if (
+        isHero(activeUnit) &&
+        activeUnit.boardPosition >= 45 &&
+        unit.unitType === EHeroes.PHANTOM &&
+        unitTile.tileType === ETiles.SPAWN &&
+        !isEnemySpawn(context, unitTile) &&
+        unitTile.isHighlighted
+      ) {
         activeUnit.spawn(unit.getTile());
         return;
       }
