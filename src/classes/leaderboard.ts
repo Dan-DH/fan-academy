@@ -104,6 +104,8 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     const forwardButton = context.add.image(120, 0, 'curvedArrowButton').setFlipX(true).setScale(0.7).setVisible(page !== data.totalPages);
     const lastPageButton = context.add.image(180, 0, 'arrowButton').setScale(0.7).setVisible(page !== data.totalPages);
 
+    let isQuerying = false;
+
     firstPageButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page > 1) {
@@ -116,6 +118,9 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     });
 
     backButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
+      if (isQuerying) return;
+      isQuerying = true;
+
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page > 1) {
         const leaderboardData = await getLeaderBoard(--page);
@@ -123,16 +128,21 @@ export class Leaderboard extends Phaser.GameObjects.Container {
           new Leaderboard(this.context, leaderboardData);
           this.destroy();
         }
+        isQuerying = false;
       }
     });
 
     forwardButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
+      if (isQuerying) return;
+      isQuerying = true;
+
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       const leaderboardData = await getLeaderBoard(++page);
       if (leaderboardData) {
         new Leaderboard(this.context, leaderboardData);
         this.destroy();
       }
+      isQuerying = false;
     });
 
     lastPageButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
