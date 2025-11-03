@@ -389,6 +389,7 @@ export class Phantom extends Hero {
       this.removeAttackModifiers();
     }
 
+    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
     this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
   }
 
