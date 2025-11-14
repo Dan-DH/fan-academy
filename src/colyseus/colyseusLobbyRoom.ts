@@ -22,8 +22,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
     });
 
     lobby.onMessage('newGameListUpdate', async (message) => {
-      console.log('A game has been added');
-
       if (!context.gameList) console.error('newGameListUpdate - No context.gameList found');
 
       // Update game and re-render game list. Remove the 'Searching...' game first if needed
@@ -44,8 +42,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
       turnNumber: number,
       lastPlayedAt: Date
     }) => {
-      console.log('A game has been updated');
-
       let game = undefined;
       const isInArrayIndex = context.gameList!.findIndex(game => game._id === message.gameId);
       if (isInArrayIndex !== -1) game = context.gameList?.splice(isInArrayIndex, 1)[0];
@@ -80,7 +76,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
       lastPlayedAt: Date,
       gameOver: IGameOver
     }) => {
-      console.log('A game has ended, updating game list');
       const gameList = context.gameList;
       if (!gameList) console.error('gameOverUpdate - No context.gameList found');
 
@@ -88,7 +83,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
       const unfinishedGames = gameList?.filter(game => game.status !== EGameStatus.FINISHED);
       const finishedGames = gameList?.filter(game => game.status === EGameStatus.FINISHED);
       finishedGames?.sort((a, b) => new Date(b.finishedAt).getTime() - new Date(a.finishedAt).getTime());
-      console.log('finished games', finishedGames);
 
       if (finishedGames && finishedGames.length > 4) finishedGames.pop();
 
@@ -121,7 +115,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
       gameId: string,
       userIds: string[]
     }) => {
-      console.log('A game has been deleted, removing it from the game list');
       if (!context.gameList) console.error('gameDeletedUpdate - No context.gameList found');
 
       // Remove game from the list and re-render it
@@ -136,7 +129,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
       gameIds: string[],
       userIds: string[]
     }) => {
-      console.log('A user has been deleted, removing affected games from the game list');
       if (!context.gameList) console.error('userDeletedUpdate - No context.gameList found');
 
       // Remove game from the list and re-render it

@@ -20,7 +20,6 @@ export async function getGameList(userId: string): Promise<IGame[] | []> {
     return [];
   }
 
-  console.log('Game list fetched...');
   return games;
 }
 
@@ -28,7 +27,6 @@ export async function getGameList(userId: string): Promise<IGame[] | []> {
 export async function newGameChallenge(userId: string, faction: EFaction, opponentId: string): Promise<any> {
   const jwt = localStorage.getItem('jwt');
 
-  console.log('Sending challenge to player... ');
   const url = `${import.meta.env.VITE_BE_URL}games/newGame?userId=${encodeURIComponent(userId)}&faction=${encodeURIComponent(faction)}&opponentId=${encodeURIComponent(opponentId)}`;
   const result = await fetch(url, {
     method: 'POST',
@@ -45,6 +43,5 @@ export async function newGameChallenge(userId: string, faction: EFaction, oppone
     return null;
   }
 
-  console.log('Challenge sent', data);
   return data;
 }

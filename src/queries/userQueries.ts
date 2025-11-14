@@ -130,7 +130,6 @@ export async function getLeaderBoard(page = 1): Promise<{
   totalPages: number,
   currentPage: number
 } | null> {
-  console.log('Fetching leaderboard data...');
   const jwt = localStorage.getItem('jwt');
 
   const result = await fetch(`${import.meta.env.VITE_BE_URL}users/leaderboard?page=${encodeURIComponent(page)}`, {
@@ -148,8 +147,6 @@ export async function getLeaderBoard(page = 1): Promise<{
     return null;
   }
 
-  console.log('Leaderboard data fetched');
-
   return data;
 }
 
@@ -164,7 +161,6 @@ export async function getProfile(): Promise<{
   preferences: IUserPreferences;
   stats: IUserStats
 } | null> {
-  console.log('Fetching profile data...');
   const jwt = localStorage.getItem('jwt');
 
   const result = await fetch(`${import.meta.env.VITE_BE_URL}users/profile`, {
@@ -181,8 +177,6 @@ export async function getProfile(): Promise<{
     console.error('Error getting profile data...');
     return null;
   }
-
-  console.log('Profile data fetched');
 
   return data;
 }

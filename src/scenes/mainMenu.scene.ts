@@ -224,7 +224,6 @@ export default class MainMenuScene extends Phaser.Scene {
           loginForm.setVisible(false);
           blockingLayer.setVisible(false);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
-          console.log('UserId after login:', this.userId);
         }else {
           this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(loginError, result.error); // Show server error to user

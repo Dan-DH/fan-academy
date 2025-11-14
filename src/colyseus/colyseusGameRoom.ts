@@ -63,8 +63,6 @@ export async function joinGame(client: Client, userId: string, roomId: string, c
 
 function subscribeToListeners(room: Room): void {
   room.onMessage('chatMessageReceived', (message) => {
-    console.log('Received chat message:', message);
-
     renderChatMessage(message);
   });
 
@@ -90,8 +88,6 @@ export function sendTurnMessage(currentRoom: Room, currentTurn: IGameState[], ne
     turnNumber,
     token
   });
-
-  console.log("Turn message sent");
 }
 
 export function sendChatMessage(currentRoom: Room, message: string): void {
@@ -102,6 +98,4 @@ export function sendChatMessage(currentRoom: Room, message: string): void {
     message,
     token
   });
-
-  console.log("Chat message sent");
 }

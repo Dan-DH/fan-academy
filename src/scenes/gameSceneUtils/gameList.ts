@@ -182,7 +182,6 @@ export async function createGameList(context: UIScene) {
   // Creating a new game when clicking on the desired faction
   const createNewGame = async (faction: EFaction) => {
     if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
-      console.log('Reached game cap');
       if (context.currentRoom) {
         context.game.events.emit('messageToGameScene', {
           x: 300,

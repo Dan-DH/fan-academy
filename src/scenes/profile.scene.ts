@@ -40,7 +40,6 @@ export default class ProfileScene extends Phaser.Scene {
   }
 
   onShutdown() {
-    console.log('Profile scene shutdown logs, remove');
     this.sound.stopAll();
   }
 }

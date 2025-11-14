@@ -86,8 +86,6 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
       context.turnNumber!++;
 
       sendTurnMessage(context.currentRoom, gameController.currentTurn, context.opponentId, context.turnNumber!, gameOver);
-
-      if (gameController.gameOver) console.log('GAME ENDS! THE WINNER IS', gameController.gameOver?.winner);
     });
 
     this.cancelButtonImage.on('pointerdown', () => {

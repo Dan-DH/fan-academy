@@ -81,7 +81,6 @@ export function createChatComponent(context: GameScene): GameObjects.DOMElement 
 
   chatInput.addEventListener('keydown', (keyPressed) => {
     if (keyPressed.key === 'Enter' && chatInput.value.trim()) {
-      console.log("Message: ", chatInput.value);
       sendChatMessage(context.currentRoom, chatInput.value.trim());
       chatInput.value = '';
     }
