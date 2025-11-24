@@ -274,7 +274,10 @@ export function isLastUnit(context: GameScene, hero: Hero): boolean {
   if (!unitsArray) throw new Error('updateUnitsLeft() no units array found');
 
   // Get remaining units of defending player. Populate gameOver flag if there are none left and the player has no revives in hand
-  const remainingBoardUnits = unitsArray.filter(unit => unit.belongsTo === hero.belongsTo).find(unit => !unit.isKO);
+  const remainingAwakeBoardUnits: Hero[] = [];
+  const remainingKoBoardUnits: Hero[] = [];
+
+  unitsArray.filter(unit => unit.belongsTo === hero.belongsTo).map(unit => unit.isKO ? remainingKoBoardUnits.push(unit) : remainingAwakeBoardUnits.push(unit));
 
   let hand;
   let remainingHandUnits;
@@ -292,7 +295,7 @@ export function isLastUnit(context: GameScene, hero: Hero): boolean {
   const reviveItems = [EItems.HEALING_POTION, EItems.SOUL_HARVEST];
   const hasReviveInHand = hand ? hand.find(unit => reviveItems.includes((unit as Item)?.itemType)) : undefined;
 
-  if (remainingBoardUnits || remainingHandUnits || remainingDeckUnits || hasReviveInHand) return false;
+  if (remainingAwakeBoardUnits || remainingHandUnits || remainingDeckUnits || remainingKoBoardUnits && hasReviveInHand) return false;
 
   return true;
 }
