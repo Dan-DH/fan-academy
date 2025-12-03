@@ -273,30 +273,41 @@ export function isLastUnit(context: GameScene, hero: Hero): boolean {
   const unitsArray = context.gameController?.board.units;
   if (!unitsArray) throw new Error('updateUnitsLeft() no units array found');
 
-  // Get remaining units of defending player. Populate gameOver flag if there are none left and the player has no revives in hand
-  const remainingAwakeBoardUnits: Hero[] = [];
-  const remainingKoBoardUnits: Hero[] = [];
-
-  unitsArray.filter(unit => unit.belongsTo === hero.belongsTo).map(unit => unit.isKO ? remainingKoBoardUnits.push(unit) : remainingAwakeBoardUnits.push(unit));
-
+  // Get remaining units of defending player. Populate gameOver flag if there are none left OR (all units are ok AND the player has no revives in hand)
+  const hasAwakeBoardUnits = unitsArray
+      .filter(unit => unit.belongsTo === hero.belongsTo)
+      .some(unit => !unit.isKO);
+  
   let hand;
-  let remainingHandUnits;
-  const defendingPlayerIsActivePlayer = defendingPlayer.playerId === context.activePlayer;
-  if (defendingPlayerIsActivePlayer) {
-    hand = context.gameController?.hand.getHand();
-    remainingHandUnits = hand!.find(unit => unit.belongsTo === hero.belongsTo && unit.class === EClass.HERO);
+  if (defendingPlayer.playerId === context.activePlayer) {
+      hand = context.gameController?.hand.getHand() || [];
   } else {
-    hand = defendingPlayer.factionData.unitsInHand;
-    remainingHandUnits = hand.find(unit => unit.belongsTo === hero.belongsTo && unit.class === EClass.HERO);
+      hand = defendingPlayer.factionData.unitsInHand || [];
   }
+  const deck = defendingPlayer.factionData.unitsInDeck || [];
+  
 
-  const remainingDeckUnits = defendingPlayer.factionData.unitsInDeck.find(unit => unit.belongsTo === hero.belongsTo && unit.class === EClass.HERO);
-
+  const hasHandUnits = hand.some(unit => unit.belongsTo === hero.belongsTo);
+  const hasDeckUnits = deck.some(unit => unit.belongsTo === hero.belongsTo);
+  
+  const hasKoBoardUnits = unitsArray
+      .filter(unit => unit.belongsTo === hero.belongsTo)
+      .some(unit => unit.isKO);
+  
   const reviveItems = [EItems.HEALING_POTION, EItems.SOUL_HARVEST];
-  const hasReviveInHand = hand ? hand.find(unit => reviveItems.includes((unit as Item)?.itemType)) : undefined;
-
-  if (remainingAwakeBoardUnits || remainingHandUnits || remainingDeckUnits || remainingKoBoardUnits && hasReviveInHand) return false;
-
+  
+  const hasReviveItem = hand.some(unit => reviveItems.includes((unit as Item)?.itemType)) ||
+                        deck.some(unit => reviveItems.includes((unit as Item)?.itemType));
+  
+  
+  if (hasAwakeBoardUnits || hasHandUnits || hasDeckUnits) {
+      return false;
+  }
+  
+  if (hasKoBoardUnits && hasReviveItem) {
+      return false;
+  }
+  
   return true;
 }
 
