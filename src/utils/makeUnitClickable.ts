@@ -107,13 +107,17 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
       // Stomp enemy KO'd units
       if (isHero(activeUnit) && activeUnit.boardPosition < 45) {
-        const tilesInRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
-        const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.boardPosition);
+        const tilesInMovingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
+        const tilesInAttackingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.ATTACK);
+        tilesInMovingRange.map(tile => console.log('TILE POSITION', tile.boardPosition));
+        console.log('Unit board position ->', unit.boardPosition);
+        const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.boardPosition);
+        const withinAttackingRange = tilesInAttackingRange.find(tile => tile.boardPosition === unit.boardPosition);
+        const necromancerStompCheck = context.gameController!.board.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
 
         if (
           unit.isKO &&
-          (activeUnit.unitType !== EHeroes.NECROMANCER ||
-          activeUnit.unitType === EHeroes.NECROMANCER && unit.blockedLOS.visible) &&
+          necromancerStompCheck &&
           (withinStompingRange || unitTile.isHighlighted)
         ) {
           activeUnit.move(unitTile);

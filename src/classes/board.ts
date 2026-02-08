@@ -441,4 +441,15 @@ export class Board {
 
     return row === 1 && col === 0 || row === 0 && col === 1;
   }
+
+  // Check if a Necromancer should stomp an enemit unit or create a phantom
+  necromancerStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
+    if (activeUnit.unitType !== EHeroes.NECROMANCER) return true; // not a necro, so no phantom
+
+    if (koUnit.blockedLOS.visible) return true; // should be able to stomp if LOS is blocked for phantom creation
+
+    if (!withinAttackingRange && withinStompingRange) return true; // if standing on a speed tile
+
+    return false;
+  }
 }
