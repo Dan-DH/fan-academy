@@ -57,7 +57,7 @@ export async function createGameList(context: UIScene) {
   // Creating a container for the game list and adding it to the context (scene)
   const initialContainerX = 19;
   const initialContainerY = 65;
-  const gameListContainer = context.add.container(initialContainerX, initialContainerY); // Setting a variable to save not having to write 'context' every time
+  const gameListContainer = context.add.container(initialContainerX, initialContainerY); // Setting a variable to save me having to write 'context' every time
   context.gameListContainer = gameListContainer;
 
   // Function for adding elements to the container
