@@ -3,7 +3,8 @@ import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { belongsToPlayer, createNewHero, getGridDistance, isEnemySpawn } from "../utils/gameUtils";
 import { Crystal } from "./crystal";
-import { ManaVial, Phantom } from "./elves";
+import { ManaVial } from "./factions/elves/items";
+import { Phantom } from "./factions/elves/phantom";
 import { Hero } from "./hero";
 import { Item } from "./item";
 import { Tile } from "./tile";
@@ -187,8 +188,11 @@ export class Board {
       if (hero instanceof Phantom) return;
       if (hero.isAlreadyEquipped(item)) return;
       if (item.canHeal && hero.isFullHP()) return;
-      if (item.canHeal && item instanceof ManaVial && hero.isKO) return;
       if (!item.canHeal && hero.isKO) return;
+      if (item.canHeal &&  hero.isKO) {
+        if (item instanceof ManaVial) return;
+        // DWARVES: add brew check
+      }
 
       tilesToHighlight.push(hero.getTile());
     });
@@ -269,6 +273,7 @@ export class Board {
     return [...inRangeTiles];
   }
 
+  // DWARVES can use this for the grenadier and the drill effects
   getAreaOfEffectTiles(tile: Tile): Tile[] {
     const totalRows = 4;
     const totalCols = 8;
@@ -444,11 +449,11 @@ export class Board {
 
   // Check if a Necromancer should stomp an enemit unit or create a phantom
   necromancerStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
-    if (activeUnit.unitType !== EHeroes.NECROMANCER) return true; // not a necro, so no phantom
+    if (activeUnit.unitType !== EHeroes.NECROMANCER) return true; // not a necro, so stomp
 
-    if (koUnit.blockedLOS.visible) return true; // should be able to stomp if LOS is blocked for phantom creation
+    if (koUnit.blockedLOS.visible) return true; // stomp if LOS is blocked for phantom creation
 
-    if (!withinAttackingRange && withinStompingRange) return true; // if standing on a speed tile
+    if (!withinAttackingRange && withinStompingRange) return true; // if standing on a speed tile he can stomp further than he can attack
 
     return false;
   }

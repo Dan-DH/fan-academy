@@ -1,7 +1,5 @@
 import { GameObjects } from "phaser";
-import { Archer, Cleric, DragonScale, HealingPotion, Inferno, Knight, Ninja, Wizard } from "../classes/council";
 import { Crystal } from "../classes/crystal";
-import { Impaler, ManaVial, Necromancer, Phantom, Priestess, SoulHarvest, SoulStone, VoidMonk, Wraith } from "../classes/elves";
 import { Hero } from "../classes/hero";
 import { Item, RuneMetal, ShiningHelm, SuperCharge } from "../classes/item";
 import { Tile } from "../classes/tile";
@@ -9,6 +7,19 @@ import { EActionClass, EActionType, ECardType, EClass, EGameSounds, EHeroes, EIt
 import { ICrystal, IHero, IItem, IPlayerState, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import UIScene from "../scenes/ui.scene";
+import { Archer } from "../classes/factions/council/archer";
+import { Cleric } from "../classes/factions/council/cleric";
+import { DragonScale, HealingPotion, Inferno } from "../classes/factions/council/items";
+import { Knight } from "../classes/factions/council/knight";
+import { Ninja } from "../classes/factions/council/ninja";
+import { Wizard } from "../classes/factions/council/wizard";
+import { ManaVial, SoulHarvest, SoulStone } from "../classes/factions/elves/items";
+import { Necromancer } from "../classes/factions/elves/necromancer";
+import { Phantom } from "../classes/factions/elves/phantom";
+import { Priestess } from "../classes/factions/elves/priestess";
+import { VoidMonk } from "../classes/factions/elves/voidMonk";
+import { Wraith } from "../classes/factions/elves/wraith";
+import { Impaler } from "../classes/factions/elves/impaler";
 
 export function isHero(hero: IHero | IItem): hero is Hero {
   return hero.class === "hero";
