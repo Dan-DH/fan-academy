@@ -1,4 +1,4 @@
-import { EChallengePopup, EUiSounds } from "../enums/gameEnums";
+import { EChallengePopup, EFaction, EUiSounds } from "../enums/gameEnums";
 import { IUserStats } from "../interfaces/userInterface";
 import { getLeaderBoard } from "../queries/userQueries";
 import LeaderboardScene from "../scenes/leaderboard.scene";
@@ -53,8 +53,8 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     const usernameText = context.add.text(100, 0, 'Username', bigStyle);
     const totalGames = context.add.text(320, 0, `Games`, bigStyle);
     const totalWins = context.add.text(520, 0, `Wins`, bigStyle);
-    const councilWins = context.add.text(720, 0, `Council`, bigStyle);
-    const elvesWins = context.add.text(920, 0, `Elves`, bigStyle);
+    const councilWins = context.add.image(760, 25, EFaction.COUNCIL).setScale(0.2);
+    const elvesWins = context.add.image(950, 25, EFaction.DARK_ELVES).setScale(0.2);
 
     this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins]);
 
