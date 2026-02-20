@@ -63,7 +63,11 @@ export function createNewItem(context: GameScene, itemData: IItem): Item {
 
     [EItems.MANA_VIAL]: () => new ManaVial(context, itemData),
     [EItems.SOUL_HARVEST]: () => new SoulHarvest(context, itemData),
-    [EItems.SOUL_STONE]: () => new SoulStone(context, itemData)
+    [EItems.SOUL_STONE]: () => new SoulStone(context, itemData),
+
+    // TODO: dwarven items
+    [EItems.BREW]: () => new SoulHarvest(context, itemData),
+    [EItems.PULVERIZER]: () => new SoulStone(context, itemData)
   };
 
   const createItem = itemTypes[itemData.itemType];
@@ -84,7 +88,14 @@ export function createNewHero(context: GameScene, heroData: IHero, tile?: Tile):
     [EHeroes.NECROMANCER]: () => new Necromancer(context, heroData, tile),
     [EHeroes.PHANTOM]: () => new Phantom(context, heroData, tile),
     [EHeroes.VOIDMONK]: () => new VoidMonk(context, heroData, tile),
-    [EHeroes.WRAITH]: () => new Wraith(context, heroData, tile)
+    [EHeroes.WRAITH]: () => new Wraith(context, heroData, tile),
+
+    // TODO: dwarven heroes
+    [EHeroes.PALADIN]: () => new Archer(context, heroData, tile),
+    [EHeroes.ENGINEER]: () => new Cleric(context, heroData, tile),
+    [EHeroes.GUNNER]: () => new Knight(context, heroData, tile),
+    [EHeroes.GRENADIER]: () => new Ninja(context, heroData, tile),
+    [EHeroes.ANNIHILATOR]: () => new Wizard(context, heroData, tile)
   };
 
   const createHero = heroTypes[heroData.unitType];
@@ -203,7 +214,10 @@ export function selectItemSound(scene: Phaser.Scene, item: EItems): void {
 
     [EItems.SOUL_STONE]: EGameSounds.ITEM_SELECT,
     [EItems.MANA_VIAL]: EGameSounds.POTION_SELECT,
-    [EItems.SOUL_HARVEST]: EGameSounds.AOE_SPELL_SELECT
+    [EItems.SOUL_HARVEST]: EGameSounds.AOE_SPELL_SELECT,
+
+    [EItems.BREW]: EGameSounds.ITEM_SELECT,
+    [EItems.PULVERIZER]: EGameSounds.POTION_SELECT
   };
 
   const soundToPlay = itemMap[item];
@@ -225,7 +239,13 @@ export function selectDeathSound(scene: Phaser.Scene, hero: EHeroes): void {
     [EHeroes.PRIESTESS]: EGameSounds.PRIESTESS_DEATH,
     [EHeroes.NECROMANCER]: EGameSounds.NECROMANCER_DEATH,
     [EHeroes.WRAITH]: EGameSounds.WRAITH_DEATH,
-    [EHeroes.PHANTOM]: EGameSounds.PHANTOM_DEATH
+    [EHeroes.PHANTOM]: EGameSounds.PHANTOM_DEATH,
+
+    [EHeroes.PALADIN]: EGameSounds.IMPALER_DEATH,
+    [EHeroes.GUNNER]: EGameSounds.VOIDMONK_DEATH,
+    [EHeroes.ENGINEER]: EGameSounds.PRIESTESS_DEATH,
+    [EHeroes.GRENADIER]: EGameSounds.NECROMANCER_DEATH,
+    [EHeroes.ANNIHILATOR]: EGameSounds.WRAITH_DEATH
   };
 
   const soundToPlay = heroMap[hero];
@@ -398,6 +418,27 @@ export function getCardText(unit: EHeroes | EItems): {
       cardText: "A terror who gains max health and power by draining K.O.'d units."
     },
 
+    [EHeroes.GUNNER]: {
+      cardType: ECardType.SHOOTER,
+      cardText: "Shooter who deals high damage to a nearby enemy. AoE damage at range."
+    },
+    [EHeroes.PALADIN]: {
+      cardType: ECardType.FIGHTER,
+      cardText: "Holy warrior; heals and revives allies, healing herself in the process. Nearby allies gain defenses and power."
+    },
+    [EHeroes.ENGINEER]: {
+      cardType: ECardType.SUPPORT,
+      cardText: "Shield a single ally/crystal. Higher bonus from premium squares."
+    },
+    [EHeroes.ANNIHILATOR]: {
+      cardType: ECardType.SUPER,
+      cardText: "Deals heavy damage with AoE knockback. Direct hits weaken physical defenses."
+    },
+    [EHeroes.GRENADIER]: {
+      cardType: ECardType.CASTER,
+      cardText: "Lobs molotovs over enemies for AoE damage. Weak melee attack."
+    },
+
     [EItems.SHINING_HELM]: {
       cardName: 'Shining Helm',
       cardType: ECardType.EQUIPMENT,
@@ -444,6 +485,17 @@ export function getCardText(unit: EHeroes | EItems): {
       cardName: 'Soulstone',
       cardType: ECardType.EQUIPMENT,
       cardText: "Doubles the effect of a unit's life leech and increases max health by 10%."
+    },
+
+    [EItems.BREW]: {
+      cardName: 'Healing Potion',
+      cardType: ECardType.CONSUMABLE,
+      cardText: "Heals an ally for 1000 HP and increases damage resistance by 50% until the next hit."
+    },
+    [EItems.PULVERIZER]: {
+      cardName: 'Inferno',
+      cardType: ECardType.SPELL,
+      cardText: "Deals 600 physical damage to a target. Crystal hits damage all nearby units, while unit direct hits destroy equipped Armor."
     }
   };
 

@@ -11,4 +11,5 @@ export function loadLeaderboardUI(context: LeaderboardScene): void {
   // faction emblems
   context.load.image(EFaction.COUNCIL, `${CDN_PATH}/ui/council_emblem.webp`);
   context.load.image(EFaction.DARK_ELVES, `${CDN_PATH}/ui/elves_emblem.webp`);
+  context.load.image(EFaction.DWARVES, `./assetsd/ui/dwarves_emblem.webp`);
 }

@@ -55,6 +55,7 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     const totalWins = context.add.text(520, 0, `Wins`, bigStyle);
     const councilWins = context.add.image(760, 25, EFaction.COUNCIL).setScale(0.2);
     const elvesWins = context.add.image(950, 25, EFaction.DARK_ELVES).setScale(0.2);
+    // TODO: dwarven leaderboard
 
     this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins]);
 

@@ -24,7 +24,8 @@ export enum EWinConditions {
 
 export enum EFaction {
   COUNCIL = 'Council',
-  DARK_ELVES = 'Dark Elves'
+  DARK_ELVES = 'Dark Elves',
+  DWARVES = 'Dwarves'
 }
 
 export enum EActionType {
@@ -63,7 +64,11 @@ export enum EItems {
   // Dark elves
   SOUL_STONE = 'soulStone',
   SOUL_HARVEST = 'soulHarvest',
-  MANA_VIAL = 'manaVial'
+  MANA_VIAL = 'manaVial',
+
+  // Dwarves
+  BREW = 'brew',
+  PULVERIZER = 'pulverizer'
 }
 
 export enum EClass {
@@ -85,7 +90,15 @@ export enum EHeroes {
   NECROMANCER = 'necromancer',
   PHANTOM = 'phantom',
   VOIDMONK = 'voidmonk',
-  WRAITH = 'wraith'
+  WRAITH = 'wraith',
+
+  // Dwarves
+  PALADIN = 'paladin',
+  GUNNER = 'gunner',
+  ENGINEER = 'engineer',
+  GRENADIER = 'grenadier',
+  ANNIHILATOR = 'annihilator'
+
 }
 
 export enum ETiles {
@@ -125,7 +138,8 @@ export enum ECardType {
 
 export enum EChallengePopup {
   SEND = 'send',
-  ACCEPT = 'accept'
+  ACCEPT = 'accept',
+  OPEN = 'open'
 }
 
 export enum EPopups {
@@ -222,4 +236,6 @@ export enum EGameSounds {
   WRAITH_DEATH = 'wraithDeathSound', // used also for Necromancer's death
   WRAITH_CONSUME = 'wraithConsumeSound',
   USE_HARVEST = 'useHarvestSound'
+
+  // TODO: dwarven noises
 }
