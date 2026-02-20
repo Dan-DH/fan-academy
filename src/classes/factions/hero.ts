@@ -1,15 +1,16 @@
-import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes, EItems, ETiles } from "../enums/gameEnums";
-import { IHero } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { checkUnitGameOver, getGridDistance, isInHand, moveAnimation, playSound, roundToFive, selectDeathSound, useAnimation } from "../utils/gameUtils";
-import { positionHeroImage } from "../utils/heroImagePosition";
-import { makeUnitClickable } from "../utils/makeUnitClickable";
-import { Crystal } from "./crystal";
-import { FloatingText } from "./floatingText";
-import { HealthBar } from "./healthBar";
-import { HeroCard } from "./heroCard";
+import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes, EItems, ETiles } from "../../enums/gameEnums";
+import { IHero } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { checkUnitGameOver, getGridDistance, isInHand, moveAnimation, playSound, roundToFive, selectDeathSound, useAnimation } from "../../utils/gameUtils";
+import { positionHeroImage } from "../../utils/heroImagePosition";
+import { makeUnitClickable } from "../../utils/makeUnitClickable";
+
 import { Item } from "./item";
-import { Tile } from "./tile";
+import { Tile } from "../board/tile";
+import { Crystal } from "../board/crystal";
+import { HeroCard } from "../cards/heroCard";
+import { FloatingText } from "../effects/floatingText";
+import { HealthBar } from "./healthBar";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   class: EClass = EClass.HERO;

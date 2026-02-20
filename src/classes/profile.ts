@@ -3,8 +3,8 @@ import { deleteAccount, updateProfile } from "../queries/userQueries";
 import ProfileScene from "../scenes/profile.scene";
 import { playSound } from "../utils/gameUtils";
 import { isValidPassword } from "../utils/playerUtils";
-import { DeleteWarningPopup } from "./deletePopup";
-import { ProfilePicPopup } from "./profilePicPopup";
+import { DeleteWarningPopup } from "./popups/deletePopup";
+import { ProfilePicPopup } from "./popups/profilePicPopup";
 
 export class Profile extends Phaser.GameObjects.Container {
   context: ProfileScene;

@@ -1,4 +1,4 @@
-import GameScene from "../scenes/game.scene";
+import GameScene from "../../scenes/game.scene";
 
 const actionPieCoordinates = {
   x: 550,

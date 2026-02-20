@@ -1,5 +1,5 @@
-import { Hero } from "../classes/hero";
-import { Item } from "../classes/item";
+import { Hero } from "../classes/factions/hero";
+import { Item } from "../classes/factions/item";
 import { EClass } from "../enums/gameEnums";
 import { IPlayerState } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";

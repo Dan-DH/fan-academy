@@ -1,6 +1,6 @@
-import { EChallengePopup } from "../enums/gameEnums";
-import GameScene from "../scenes/game.scene";
-import { ChallengePopup } from "./challengePopup";
+import { EChallengePopup } from "../../enums/gameEnums";
+import GameScene from "../../scenes/game.scene";
+import { ChallengePopup } from "../popups/challengePopup";
 
 export class RematchButton extends Phaser.GameObjects.Container {
   buttonImage: Phaser.GameObjects.Image;

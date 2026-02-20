@@ -1,8 +1,8 @@
-import { EAttackType, EHeroes } from "../enums/gameEnums";
-import { IHero } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { capitalize, getCardText } from "../utils/gameUtils";
-import { Hero } from "./hero";
+import { EAttackType, EHeroes } from "../../enums/gameEnums";
+import { IHero } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { getCardText, capitalize } from "../../utils/gameUtils";
+import { Hero } from "../factions/hero";
 
 export class HeroCard extends Phaser.GameObjects.Container {
   cardBackgroundImage: Phaser.GameObjects.Image;

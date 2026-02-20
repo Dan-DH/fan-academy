@@ -1,6 +1,6 @@
 import { GameObjects } from "phaser";
-import GameScene from "../scenes/game.scene";
-import { CDN_PATH } from "../scenes/preloader.scene";
+import GameScene from "../../scenes/game.scene";
+import { CDN_PATH } from "../../scenes/preloader.scene";
 
 export class GameOverScreen extends GameObjects.Container {
   gameOverImage: GameObjects.Image | undefined;

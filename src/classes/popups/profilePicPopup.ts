@@ -1,5 +1,5 @@
-import ProfileScene from "../scenes/profile.scene";
-import { profilePicNames } from "../scenes/profileSceneUtils/profilePicNames";
+import ProfileScene from "../../scenes/profile.scene";
+import { profilePicNames } from "../../scenes/profileSceneUtils/profilePicNames";
 
 export class ProfilePicPopup extends Phaser.GameObjects.Container {
   visibleFlag: boolean;

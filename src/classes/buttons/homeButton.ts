@@ -1,6 +1,5 @@
-import { EUiSounds } from "../enums/gameEnums";
-import UIScene from "../scenes/ui.scene";
-// Import the backgroundMusicInstance from ui.scene.ts
+import { EUiSounds } from "../../enums/gameEnums";
+import UIScene from "../../scenes/ui.scene";
 
 export class HomeButton extends Phaser.GameObjects.Container {
   button: Phaser.GameObjects.Image;

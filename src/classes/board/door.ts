@@ -1,7 +1,7 @@
-import { EActionType, EGameSounds } from "../enums/gameEnums";
-import GameScene from "../scenes/game.scene";
-import { isInHand, playSound } from "../utils/gameUtils";
-import { getCurrentPlayer } from "../utils/playerUtils";
+import { EGameSounds, EActionType } from "../../enums/gameEnums";
+import GameScene from "../../scenes/game.scene";
+import { isInHand, playSound } from "../../utils/gameUtils";
+import { getCurrentPlayer } from "../../utils/playerUtils";
 
 export class Door extends Phaser.GameObjects.Container {
   doorClosed: Phaser.GameObjects.Image;

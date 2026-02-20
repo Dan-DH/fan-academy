@@ -1,12 +1,12 @@
-import { EHeroes, ERange, ETiles } from "../enums/gameEnums";
-import { Coordinates, ITile } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { belongsToPlayer, createNewHero, getGridDistance, isEnemySpawn } from "../utils/gameUtils";
+import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
+import { Coordinates, ITile } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { createNewHero, isEnemySpawn, getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
+import { ManaVial } from "../factions/elves/items";
+import { Phantom } from "../factions/elves/phantom";
+import { Hero } from "../factions/hero";
+import { Item } from "../factions/item";
 import { Crystal } from "./crystal";
-import { ManaVial } from "./factions/elves/items";
-import { Phantom } from "./factions/elves/phantom";
-import { Hero } from "./hero";
-import { Item } from "./item";
 import { Tile } from "./tile";
 
 export class Board {

@@ -2,10 +2,10 @@ import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { turnIfBehind, playSound, isEnemySpawn, isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
-import { Crystal } from "../../crystal";
-import { Hero } from "../../hero";
-import { Tile } from "../../tile";
+import { Hero } from "../hero";
+import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
+import { Crystal } from "../../board/crystal";
 
 export class VoidMonk extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -65,7 +65,7 @@ export class VoidMonk extends DarkElf {
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
         splashedEnemies.forEach(enemy => {
-          const unitDamage = enemy.getsDamaged(splashDamage, this.attackType, 0.666);
+          const unitDamage = enemy.getsDamaged(splashDamage, this.attackType);
           if (unitDamage) damageDone += unitDamage;
         });
       }

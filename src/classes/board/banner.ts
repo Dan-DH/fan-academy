@@ -1,10 +1,10 @@
-import { IUserData } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { truncateText } from "../utils/gameUtils";
-import { getPlayersKey } from "../utils/playerUtils";
+import { IUserData } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { truncateText } from "../../utils/gameUtils";
+import { getPlayersKey } from "../../utils/playerUtils";
+import { PlayerHealthBar } from "../playerHealthBar";
+import { DeckPopup } from "../popups/deckPopup";
 import { Board } from "./board";
-import { DeckPopup } from "./deckPopup";
-import { PlayerHealthBar } from "./playerHealthBar";
 
 export class Banner extends Phaser.GameObjects.Container {
   playerOneHpBar: PlayerHealthBar;

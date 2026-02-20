@@ -1,8 +1,7 @@
 import { GameObjects } from "phaser";
-import { Crystal } from "../classes/crystal";
-import { Hero } from "../classes/hero";
-import { Item, RuneMetal, ShiningHelm, SuperCharge } from "../classes/item";
-import { Tile } from "../classes/tile";
+import { Hero } from "../classes/factions/hero";
+import { Item, RuneMetal, ShiningHelm, SuperCharge } from "../classes/factions/item";
+import { Tile } from "../classes/board/tile";
 import { EActionClass, EActionType, ECardType, EClass, EGameSounds, EHeroes, EItems, ETiles, EUiSounds, EWinConditions } from "../enums/gameEnums";
 import { ICrystal, IHero, IItem, IPlayerState, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
@@ -20,6 +19,7 @@ import { Priestess } from "../classes/factions/elves/priestess";
 import { VoidMonk } from "../classes/factions/elves/voidMonk";
 import { Wraith } from "../classes/factions/elves/wraith";
 import { Impaler } from "../classes/factions/elves/impaler";
+import { Crystal } from "../classes/board/crystal";
 
 export function isHero(hero: IHero | IItem): hero is Hero {
   return hero.class === "hero";

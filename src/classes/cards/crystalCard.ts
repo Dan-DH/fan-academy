@@ -1,5 +1,5 @@
-import { ICrystal } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
+import { ICrystal } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
 
 export class CrystalCard extends Phaser.GameObjects.Container {
   cardBackgroundImage: Phaser.GameObjects.Image;

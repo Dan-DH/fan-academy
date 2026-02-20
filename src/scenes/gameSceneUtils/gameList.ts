@@ -1,4 +1,4 @@
-import { ChallengePopup } from "../../classes/challengePopup";
+import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { createGame } from "../../colyseus/colyseusGameRoom";
 import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
 import { EChallengePopup, EFaction, EGameStatus, EUiSounds } from "../../enums/gameEnums";

@@ -2,9 +2,9 @@ import { EGameSounds, EActionType, EAttackType, EHeroes } from "../../../enums/g
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { playSound, useAnimation, getAOETiles } from "../../../utils/gameUtils";
-import { Hero } from "../../hero";
-import { Item } from "../../item";
-import { Tile } from "../../tile";
+import { Hero } from "../hero";
+import { Item } from "../item";
+import { Tile } from "../../board/tile";
 
 export class DragonScale extends Item {
   constructor(context: GameScene, data: IItem) {

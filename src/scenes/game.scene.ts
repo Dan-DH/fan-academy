@@ -1,14 +1,14 @@
 import { Client, Room } from "colyseus.js";
 import { Crystal } from "../classes/crystal";
 import { GameController } from "../classes/gameController";
-import { Hero } from "../classes/hero";
-import { Item } from "../classes/item";
+import { Hero } from "../classes/factions/hero";
+import { Item } from "../classes/factions/item";
 import { Coordinates, IGame, IPlayerData, IPlayerState } from "../interfaces/gameInterface";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 import { createChatComponent } from "./gameSceneUtils/chatComponent";
 import { loadGameBoardUI } from "./gameSceneUtils/gameBoardUI";
 import { loadGameAssets } from "./mainMenuUtils/gameAssets";
-import { Tile } from "../classes/tile";
+import { Tile } from "../classes/board/tile";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/gameUtils";
 
 export default class GameScene extends Phaser.Scene {

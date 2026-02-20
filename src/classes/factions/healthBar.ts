@@ -1,6 +1,6 @@
-import { ICrystal, IHero } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { belongsToPlayer } from "../utils/gameUtils";
+import { ICrystal, IHero } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { belongsToPlayer } from "../../utils/gameUtils";
 
 export class HealthBar extends Phaser.GameObjects.Container {
   context: GameScene;

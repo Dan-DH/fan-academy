@@ -3,7 +3,7 @@ import { IUserStats } from "../interfaces/userInterface";
 import { getLeaderBoard } from "../queries/userQueries";
 import LeaderboardScene from "../scenes/leaderboard.scene";
 import { playSound, truncateText } from "../utils/gameUtils";
-import { ChallengePopup } from "./challengePopup";
+import { ChallengePopup } from "./popups/challengePopup";
 
 export class Leaderboard extends Phaser.GameObjects.Container {
   header: Phaser.GameObjects.Container;

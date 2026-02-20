@@ -2,8 +2,8 @@ import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes } from
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { playSound, roundToFive, useAnimation } from "../../../utils/gameUtils";
-import { Hero } from "../../hero";
-import { Tile } from "../../tile";
+import { Hero } from "../hero";
+import { Tile } from "../../board/tile";
 
 export abstract class DarkElf extends Hero {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

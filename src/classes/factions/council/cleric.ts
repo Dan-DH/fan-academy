@@ -2,10 +2,10 @@ import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { turnIfBehind, isEnemySpawn, playSound } from "../../../utils/gameUtils";
-import { Crystal } from "../../crystal";
-import { Hero } from "../../hero";
-import { Tile } from "../../tile";
+import { Hero } from "../hero";
+import { Tile } from "../../board/tile";
 import { Council } from "./council";
+import { Crystal } from "../../board/crystal";
 
 export class Cleric extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

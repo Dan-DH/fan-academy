@@ -1,7 +1,7 @@
-import { EClass, EUiSounds } from "../enums/gameEnums";
-import { IHero, IItem } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { playSound } from "../utils/gameUtils";
+import { EClass, EUiSounds } from "../../enums/gameEnums";
+import { IHero, IItem } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { playSound } from "../../utils/gameUtils";
 
 const turnPopupCoordinates = {
   x: 800,

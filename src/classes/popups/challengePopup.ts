@@ -1,10 +1,10 @@
-import { sendChallengeAcceptedMessage } from "../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EFaction, EUiSounds } from "../enums/gameEnums";
-import { newGameChallenge } from "../queries/gameQueries";
-import GameScene from "../scenes/game.scene";
-import LeaderboardScene from "../scenes/leaderboard.scene";
-import UIScene from "../scenes/ui.scene";
-import { playSound, textAnimationFadeOut, truncateText } from "../utils/gameUtils";
+import { sendChallengeAcceptedMessage } from "../../colyseus/colyseusLobbyRoom";
+import { EChallengePopup, EFaction, EUiSounds } from "../../enums/gameEnums";
+import { newGameChallenge } from "../../queries/gameQueries";
+import GameScene from "../../scenes/game.scene";
+import LeaderboardScene from "../../scenes/leaderboard.scene";
+import UIScene from "../../scenes/ui.scene";
+import { truncateText, textAnimationFadeOut, playSound } from "../../utils/gameUtils";
 
 const challengePopupCoordinates = {
   x: 800,

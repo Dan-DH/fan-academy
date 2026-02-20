@@ -2,11 +2,11 @@ import { EGameSounds, EActionType, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { turnIfBehind, playSound, generateFourDigitId } from "../../../utils/gameUtils";
-import { Crystal } from "../../crystal";
-import { Hero } from "../../hero";
-import { Tile } from "../../tile";
+import { Hero } from "../hero";
+import { Tile } from "../../board/tile";
 import { createElvesPhantomData, DarkElf } from "./elves";
 import { Phantom } from "./phantom";
+import { Crystal } from "../../board/crystal";
 
 export class Necromancer extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

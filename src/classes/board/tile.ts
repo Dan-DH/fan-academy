@@ -1,8 +1,8 @@
-import { ETiles } from "../enums/gameEnums";
-import { ICrystal, IHero, ITile } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { makeTileClickable } from "../utils/makeUnitClickable";
-import { SpecialTileCard } from "./specialTileCard";
+import { ETiles } from "../../enums/gameEnums";
+import { ICrystal, IHero, ITile } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { makeTileClickable } from "../../utils/makeUnitClickable";
+import { SpecialTileCard } from "../cards/specialTileCard";
 
 export class Tile extends Phaser.GameObjects.Container {
   baseRectangle: Phaser.GameObjects.Rectangle;

@@ -2,11 +2,12 @@ import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { turnIfBehind, isEnemySpawn, playSound, isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
-import { Board } from "../../board";
-import { Crystal } from "../../crystal";
-import { Hero } from "../../hero";
-import { Tile } from "../../tile";
+
+import { Hero } from "../hero";
+import { Tile } from "../../board/tile";
 import { Council } from "./council";
+import { Board } from "../../board/board";
+import { Crystal } from "../../board/crystal";
 
 export class Wizard extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -45,8 +46,8 @@ export class Wizard extends Council {
 
       // Apply damage to targets
       target.getsDamaged(this.getTotalPower(), this.attackType);
-      if (secondTarget) secondTarget.getsDamaged(this.getTotalPower() * 0.75, this.attackType, 0.75);
-      if (thirdTarget) thirdTarget.getsDamaged(this.getTotalPower() * 0.56, this.attackType, 0.56);
+      if (secondTarget) secondTarget.getsDamaged(this.getTotalPower() * 0.75, this.attackType);
+      if (thirdTarget) thirdTarget.getsDamaged(this.getTotalPower() * 0.56, this.attackType);
 
       if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
       if (secondTarget && secondTarget instanceof Hero && secondTarget.isKO && secondTarget.unitType === EHeroes.PHANTOM) secondTarget.removeFromGame();

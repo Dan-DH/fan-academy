@@ -1,11 +1,11 @@
-import { EAttackType, EGameSounds, ETiles, EWinConditions } from "../enums/gameEnums";
-import { ICrystal, ITile } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
-import { playSound, roundToFive } from "../utils/gameUtils";
-import { makeCrystalClickable } from "../utils/makeUnitClickable";
-import { CrystalCard } from "./crystalCard";
-import { FloatingText } from "./floatingText";
-import { HealthBar } from "./healthBar";
+import { ETiles, EAttackType, EGameSounds, EWinConditions } from "../../enums/gameEnums";
+import { ICrystal, ITile } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { playSound, roundToFive } from "../../utils/gameUtils";
+import { makeCrystalClickable } from "../../utils/makeUnitClickable";
+import { CrystalCard } from "../cards/crystalCard";
+import { FloatingText } from "../effects/floatingText";
+import { HealthBar } from "../factions/healthBar";
 import { Tile } from "./tile";
 
 export class Crystal extends Phaser.GameObjects.Container {

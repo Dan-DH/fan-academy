@@ -1,5 +1,5 @@
-import { IUserData } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
+import { IUserData } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
 import { Banner } from "./banner";
 import { Board } from "./board";
 

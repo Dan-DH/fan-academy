@@ -2,8 +2,8 @@ import { EActionType, EGameSounds } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { playSound, useAnimation } from "../../../utils/gameUtils";
-import { Hero } from "../../hero";
-import { Tile } from "../../tile";
+import { Hero } from "../hero";
+import { Tile } from "../../board/tile";
 
 export abstract class Council extends Hero {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

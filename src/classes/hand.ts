@@ -2,8 +2,8 @@ import { IHero, IItem } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem, isHero, isItem } from "../utils/gameUtils";
 import { getCurrentPlayer } from "../utils/playerUtils";
-import { Hero } from "./hero";
-import { Item } from "./item";
+import { Hero } from "./factions/hero";
+import { Item } from "./factions/item";
 
 export class Hand {
   context: GameScene;

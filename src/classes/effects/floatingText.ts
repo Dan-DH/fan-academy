@@ -1,4 +1,4 @@
-import GameScene from "../scenes/game.scene";
+import GameScene from "../../scenes/game.scene";
 
 export class FloatingText extends Phaser.GameObjects.Container {
   constructor(context: GameScene, x: number, y: number, text: string, isHealing = false) {
