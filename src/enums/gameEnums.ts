@@ -67,7 +67,7 @@ export enum EItems {
   MANA_VIAL = 'manaVial',
 
   // Dwarves
-  BREW = 'brew',
+  DWARVEN_BREW = 'dwarvenBrew',
   PULVERIZER = 'pulverizer'
 }
 

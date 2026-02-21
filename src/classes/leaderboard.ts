@@ -53,11 +53,11 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     const usernameText = context.add.text(100, 0, 'Username', bigStyle);
     const totalGames = context.add.text(320, 0, `Games`, bigStyle);
     const totalWins = context.add.text(520, 0, `Wins`, bigStyle);
-    const councilWins = context.add.image(760, 25, EFaction.COUNCIL).setScale(0.2);
-    const elvesWins = context.add.image(950, 25, EFaction.DARK_ELVES).setScale(0.2);
-    // TODO: dwarven leaderboard
+    const councilWins = context.add.image(700, 25, EFaction.COUNCIL).setScale(0.2);
+    const elvesWins = context.add.image(800, 25, EFaction.DARK_ELVES).setScale(0.2);
+    const dwarvesWins = context.add.image(900, 25, EFaction.DWARVES).setScale(0.2);
 
-    this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins]);
+    this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins]);
 
     startingCoords.y += 20;
 
@@ -67,9 +67,10 @@ export class Leaderboard extends Phaser.GameObjects.Container {
 
       const usernameText = context.add.text(100, 0, truncateText(player.username, 13), smallStyle);
       const totalGames = context.add.text(350, 0, `${player.stats.totalGames}`, smallStyle);
-      const totalWins = context.add.text(550, 0, `${player.stats.totalWins}`, smallStyle);
-      const councilWins = context.add.text(750, 0, `${player.stats.councilWins}`, smallStyle);
-      const elvesWins = context.add.text(950, 0, `${player.stats.elvesWins}`, smallStyle);
+      const totalWins = context.add.text(530, 0, `${player.stats.totalWins}`, smallStyle);
+      const councilWins = context.add.text(690, 0, `${player.stats.councilWins}`, smallStyle);
+      const elvesWins = context.add.text(790, 0, `${player.stats.elvesWins}`, smallStyle);
+      const dwarvesWins = context.add.text(890, 0, `${player.stats.dwarvesWins}`, smallStyle);
 
       const challengeIcon = context.add.image(1030, 15, 'challengeIcon').setInteractive({ useHandCursor: true });
 
@@ -86,7 +87,7 @@ export class Leaderboard extends Phaser.GameObjects.Container {
 
       if (player._id === context.userId) challengeIcon.setVisible(false).disableInteractive();
 
-      row.add([usernameText, totalGames, totalWins, councilWins, elvesWins, challengeIcon]);
+      row.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins, challengeIcon]);
 
       return row;
     });

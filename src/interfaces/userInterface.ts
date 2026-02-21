@@ -9,7 +9,8 @@ export interface IUserStats {
   totalGames: number,
   totalWins: number,
   councilWins: number,
-  elvesWins: number
+  elvesWins: number,
+  dwarvesWins: number
 }
 
 export interface IUser  {

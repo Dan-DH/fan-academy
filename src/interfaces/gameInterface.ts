@@ -84,6 +84,7 @@ export interface IHero {
   attackTile: boolean;
   manaVial?: boolean;
   speedTile?: boolean;
+  dwarvenBrew?: boolean;
 }
 
 /**

@@ -273,7 +273,7 @@ export class Board {
     return [...inRangeTiles];
   }
 
-  // DWARVES can use this for the grenadier and the drill effects
+  // TODO: DWARVES can use this for the grenadier and the drill effects
   getAreaOfEffectTiles(tile: Tile): Tile[] {
     const totalRows = 4;
     const totalCols = 8;

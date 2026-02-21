@@ -66,7 +66,7 @@ export function createNewItem(context: GameScene, itemData: IItem): Item {
     [EItems.SOUL_STONE]: () => new SoulStone(context, itemData),
 
     // TODO: dwarven items
-    [EItems.BREW]: () => new SoulHarvest(context, itemData),
+    [EItems.DWARVEN_BREW]: () => new SoulHarvest(context, itemData),
     [EItems.PULVERIZER]: () => new SoulStone(context, itemData)
   };
 
@@ -216,7 +216,7 @@ export function selectItemSound(scene: Phaser.Scene, item: EItems): void {
     [EItems.MANA_VIAL]: EGameSounds.POTION_SELECT,
     [EItems.SOUL_HARVEST]: EGameSounds.AOE_SPELL_SELECT,
 
-    [EItems.BREW]: EGameSounds.ITEM_SELECT,
+    [EItems.DWARVEN_BREW]: EGameSounds.ITEM_SELECT,
     [EItems.PULVERIZER]: EGameSounds.POTION_SELECT
   };
 
@@ -487,7 +487,7 @@ export function getCardText(unit: EHeroes | EItems): {
       cardText: "Doubles the effect of a unit's life leech and increases max health by 10%."
     },
 
-    [EItems.BREW]: {
+    [EItems.DWARVEN_BREW]: {
       cardName: 'Healing Potion',
       cardType: ECardType.CONSUMABLE,
       cardText: "Heals an ally for 1000 HP and increases damage resistance by 50% until the next hit."

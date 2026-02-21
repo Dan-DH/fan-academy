@@ -49,11 +49,11 @@ export default class MainMenuScene extends Phaser.Scene {
 
     // Background image
     const bg = this.add.image(0, 0, 'uiBackground').setOrigin(0);
-    const menuImg = this.add.image(0, 5, 'mainMenuImage').setOrigin(0).setScale(1.057);
+    const menuImg = this.add.image(396, 15, 'mainMenuImage').setOrigin(0).setScale(1.065);
     // Background game screen (to be used when a sub scene is running to avoid flickering) // FIXME:
     const backgroundGameScreen = this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2).setVisible(false);
-    menuImg.x = bg.width - menuImg.width - 14;
-    menuImg.y += 14;
+    // menuImg.x = bg.width - menuImg.width - 14;
+    // menuImg.y += 14;
 
     // main menu bottom strip
     const menuBottomImage = this.add.image(0, 0, 'mainMenuBottom').setOrigin(0);
