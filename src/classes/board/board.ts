@@ -11,6 +11,7 @@ import { Hero } from "../factions/hero";
 import { Item } from "../factions/item";
 import { Crystal } from "./crystal";
 import { Tile } from "./tile";
+import { Engineer } from "../factions/dwarves/enginner";
 
 export class Board {
   topLeft: Coordinates =  {
@@ -234,7 +235,11 @@ export class Board {
     let range: number;
 
     if (hero.speedTile) {
-      speedTileBonus = hero instanceof Dwarf ? 3 : 2;
+      if (hero instanceof Dwarf) {
+        speedTileBonus = hero instanceof Engineer ? 4 : 3;
+      } else {
+        speedTileBonus = 2;
+      }
     }
 
     switch (rangeType) {
