@@ -1,5 +1,5 @@
 import GameScene from "../scenes/game.scene";
-import { Board } from "./board";
+import { Board } from "./board/board";
 
 export class PlayerHealthBar extends Phaser.GameObjects.Container {
   context: GameScene;

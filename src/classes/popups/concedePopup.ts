@@ -1,7 +1,7 @@
 import { sendTurnMessage } from "../../colyseus/colyseusGameRoom";
 import { EUiSounds, EWinConditions, EActionType, EActionClass } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
-import { playSound } from "../../utils/gameUtils";
+import { playSound } from "../../utils/gameSounds";
 
 const turnPopupCoordinates = {
   x: 800,

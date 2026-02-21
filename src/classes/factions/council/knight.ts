@@ -1,11 +1,13 @@
 import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { turnIfBehind, isEnemySpawn, playSound } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
+import { isEnemySpawn } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Knight extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

@@ -1,10 +1,10 @@
 import { EClass, EFaction, EGameSounds, EItems } from "../../enums/gameEnums";
 import { IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { playSound } from "../../utils/gameUtils";
 import { makeUnitClickable } from "../../utils/makeUnitClickable";
 import { Hero } from "./hero";
 import { ItemCard } from "../cards/itemCard";
+import { playSound } from "../../utils/gameSounds";
 
 export abstract class Item extends Phaser.GameObjects.Container {
   class: EClass = EClass.ITEM;

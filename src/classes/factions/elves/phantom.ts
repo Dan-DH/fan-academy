@@ -1,10 +1,12 @@
 import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { turnIfBehind, playSound, isEnemySpawn } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
+import { isEnemySpawn } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;

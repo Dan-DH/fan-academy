@@ -1,11 +1,12 @@
 import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { turnIfBehind, playSound } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
+import { playSound } from "../../../utils/gameSounds";
+import { turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Wraith extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

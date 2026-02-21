@@ -1,6 +1,7 @@
 import { IHero, IItem } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { createNewHero, createNewItem, isHero, isItem } from "../utils/gameUtils";
+import { createNewHero, createNewItem } from "../utils/createUnit";
+import { isHero, isItem } from "../utils/gameUtils";
 import { getCurrentPlayer } from "../utils/playerUtils";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";

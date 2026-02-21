@@ -3,7 +3,12 @@ import { EActionClass, EActionType, EGameSounds, EGameStatus, EHeroes, ETiles, E
 import { IGame, IGameOver, IGameState, IPlayerState, ITurnAction, IUserData } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { replayButton } from "../scenes/gameSceneUtils/replayButton";
-import { createNewHero, createNewItem, forcedMoveAnimation, forcedMoveSpawnCheck, getActionClass, getNewPositionAfterForce, isHero, isItem, playSound, textAnimationSizeIncrease, visibleUnitCardCheck } from "../utils/gameUtils";
+import { createNewHero, createNewItem } from "../utils/createUnit";
+import { playSound } from "../utils/gameSounds";
+import { isHero, isItem, getActionClass } from "../utils/gameUtils";
+import { textAnimationSizeIncrease } from "../utils/textAnimations";
+import { getNewPositionAfterForce, forcedMoveSpawnCheck, forcedMoveAnimation } from "../utils/unitAnimations";
+import { visibleUnitCardCheck } from "../utils/unitCards";
 import { deselectUnit, getPlayersKey } from "../utils/playerUtils";
 import { ActionPie } from "./board/actionPie";
 import { Board } from "./board/board";

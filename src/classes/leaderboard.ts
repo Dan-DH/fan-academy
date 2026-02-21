@@ -2,7 +2,8 @@ import { EChallengePopup, EFaction, EUiSounds } from "../enums/gameEnums";
 import { IUserStats } from "../interfaces/userInterface";
 import { getLeaderBoard } from "../queries/userQueries";
 import LeaderboardScene from "../scenes/leaderboard.scene";
-import { playSound, truncateText } from "../utils/gameUtils";
+import { playSound } from "../utils/gameSounds";
+import { truncateText } from "../utils/textAnimations";
 import { ChallengePopup } from "./popups/challengePopup";
 
 export class Leaderboard extends Phaser.GameObjects.Container {

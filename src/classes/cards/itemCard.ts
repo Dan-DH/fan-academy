@@ -1,6 +1,7 @@
 import { IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { capitalize, getCardText } from "../../utils/gameUtils";
+import { capitalize } from "../../utils/textAnimations";
+import { getCardText } from "../../utils/unitCards";
 
 export class ItemCard extends Phaser.GameObjects.Container {
   cardBackgroundImage: Phaser.GameObjects.Image;

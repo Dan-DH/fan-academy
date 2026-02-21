@@ -5,7 +5,8 @@ import GameScene from "../../scenes/game.scene";
 import { createNewGame } from "../../scenes/gameSceneUtils/createGame";
 import LeaderboardScene from "../../scenes/leaderboard.scene";
 import UIScene from "../../scenes/ui.scene";
-import { truncateText, textAnimationFadeOut, playSound } from "../../utils/gameUtils";
+import { playSound } from "../../utils/gameSounds";
+import { truncateText, textAnimationFadeOut } from "../../utils/textAnimations";
 
 const challengePopupCoordinates = {
   x: 800,

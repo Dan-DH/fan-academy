@@ -4,9 +4,12 @@ import { Item } from "../classes/factions/item";
 import { Tile } from "../classes/board/tile";
 import { EGameSounds, EGameStatus, EHeroes, EItems, ERange, ETiles } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
-import { belongsToPlayer, isEnemySpawn, isHero, isItem, playSound, selectItemSound, visibleUnitCardCheck } from "./gameUtils";
 import { deselectUnit, selectUnit } from "./playerUtils";
 import { Crystal } from "../classes/board/crystal";
+import { isHero, belongsToPlayer, isItem } from "./gameUtils";
+import { isEnemySpawn } from "./boardUtils";
+import { playSound, selectItemSound } from "./gameSounds";
+import { visibleUnitCardCheck } from "./unitCards";
 
 export function makeUnitClickable(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {

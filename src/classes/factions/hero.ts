@@ -1,7 +1,6 @@
 import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes, EItems, ETiles } from "../../enums/gameEnums";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { checkUnitGameOver, getGridDistance, isInHand, moveAnimation, playSound, roundToFive, selectDeathSound, useAnimation } from "../../utils/gameUtils";
 import { positionHeroImage } from "../../utils/heroImagePosition";
 import { makeUnitClickable } from "../../utils/makeUnitClickable";
 
@@ -11,6 +10,9 @@ import { Crystal } from "../board/crystal";
 import { HeroCard } from "../cards/heroCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
+import { selectDeathSound, playSound } from "../../utils/gameSounds";
+import { isInHand, roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
+import { moveAnimation, useAnimation } from "../../utils/unitAnimations";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   class: EClass = EClass.HERO;

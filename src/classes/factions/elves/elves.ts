@@ -1,9 +1,11 @@
 import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { playSound, roundToFive, useAnimation } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
+import { useAnimation } from "../../../utils/unitAnimations";
+import { playSound } from "../../../utils/gameSounds";
+import { roundToFive } from "../../../utils/gameUtils";
 
 export abstract class DarkElf extends Hero {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

@@ -1,10 +1,13 @@
 import { EGameSounds, EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { playSound, useAnimation, getAOETiles, roundToFive } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
+import { getAOETiles } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { roundToFive } from "../../../utils/gameUtils";
+import { useAnimation } from "../../../utils/unitAnimations";
 
 export class SoulStone extends Item {
   constructor(context: GameScene, data: IItem) {

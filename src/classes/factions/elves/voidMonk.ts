@@ -1,11 +1,14 @@
 import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { turnIfBehind, playSound, isEnemySpawn, isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
+import { isEnemySpawn } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
+import { turnIfBehind } from "../../../utils/unitAnimations";
 
 export class VoidMonk extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

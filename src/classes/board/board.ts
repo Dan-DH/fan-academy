@@ -1,7 +1,9 @@
 import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
 import { Coordinates, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { createNewHero, isEnemySpawn, getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
+import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
+import { isEnemySpawn } from "../../utils/boardUtils";
+import { createNewHero } from "../../utils/createUnit";
 import { Dwarf } from "../factions/dwarves/dwarves";
 import { ManaVial } from "../factions/elves/items";
 import { Phantom } from "../factions/elves/phantom";
@@ -280,7 +282,7 @@ export class Board {
   }
 
   // TODO: DWARVES can use this for the grenadier and the drill effects
-  getAreaOfEffectTiles(tile: Tile): Tile[] {
+  get3x3AreaOfEffectTiles(tile: Tile): Tile[] {
     const totalRows = 4;
     const totalCols = 8;
     const areaTiles: Tile[] = [];

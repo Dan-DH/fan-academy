@@ -1,7 +1,8 @@
 import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
 import { ICrystal, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { playSound, roundToFive } from "../../utils/gameUtils";
+import { roundToFive } from "../../utils/gameUtils";
+import { playSound } from "../../utils/gameSounds";
 import { makeCrystalClickable } from "../../utils/makeUnitClickable";
 import { CrystalCard } from "../cards/crystalCard";
 import { FloatingText } from "../effects/floatingText";
