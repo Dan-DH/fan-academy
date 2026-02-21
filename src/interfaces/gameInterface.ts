@@ -85,6 +85,8 @@ export interface IHero {
   manaVial?: boolean;
   speedTile?: boolean;
   dwarvenBrew?: boolean;
+  engineerShield?: string;
+  annihilatorDebuff?: boolean;
 }
 
 /**

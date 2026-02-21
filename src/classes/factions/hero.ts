@@ -45,10 +45,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   belongsTo: number;
   canHeal: boolean;
   unitsConsumed: number;
-  isDebuffed: boolean;
+  isDebuffed: boolean; // priestessDebuff. Renaming it would break ongoing games
   manaVial?: boolean;
   speedTile?: boolean;
+
   dwarvenBrew?: boolean;
+  engineerShield?: string; // unitId of the engineer shielding the unit. Will need on the Engineer class for the unit/crystal being shielded
+  annihilatorDebuff?: boolean;
 
   context: GameScene;
   unitCard: HeroCard;
@@ -69,6 +72,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   superChargeAnim: Phaser.GameObjects.Image;
   reviveAnim: Phaser.GameObjects.Image;
   smokeAnim?: Phaser.GameObjects.Image;
+
+  // TODO: assign these
+  dwarvenBrewImage?: Phaser.GameObjects.Image;
+  engineerShieldImage?: Phaser.GameObjects.Image;
+  annihilatorDebuffImage?: Phaser.GameObjects.Image;
 
   crystalDebuffEvent: Phaser.Time.TimerEvent;
   powerTileEvent: Phaser.Time.TimerEvent;
@@ -119,7 +127,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.isDebuffed = data.isDebuffed;
     this.manaVial = data?.manaVial ?? undefined;
     this.speedTile = data.speedTile;
-    this.dwarvenBrew = data?.dwarvenBrew ?? undefined;
+    this.dwarvenBrew = data?.dwarvenBrew ?? false;
+    this.engineerShield = data?.engineerShield ?? undefined;
+    this.annihilatorDebuff = data?.annihilatorDebuff ?? false;
 
     this.unitCard = new HeroCard(context, {
       ...data,
