@@ -1,7 +1,8 @@
 import { EAttackType, EHeroes } from "../../enums/gameEnums";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { getCardText, capitalize } from "../../utils/gameUtils";
+import { capitalize } from "../../utils/textAnimations";
+import { getCardText } from "../../utils/unitCards";
 import { Hero } from "../factions/hero";
 
 export class HeroCard extends Phaser.GameObjects.Container {

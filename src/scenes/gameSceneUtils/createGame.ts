@@ -1,7 +1,7 @@
 import { EFaction, EUiSounds } from "../../enums/gameEnums";
-import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/gameUtils";
 import UIScene from "../ui.scene";
 import { createGame } from "../../colyseus/colyseusGameRoom";
+import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
 
 export const createNewGame = async (context: UIScene, faction: EFaction) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {

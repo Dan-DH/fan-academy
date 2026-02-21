@@ -1,9 +1,10 @@
 import { EActionType, EGameSounds } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { playSound, useAnimation } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
+import { playSound } from "../../../utils/gameSounds";
+import { useAnimation } from "../../../utils/unitAnimations";
 
 export abstract class Dwarf extends Hero {
   constructor(context: GameScene, data: IHero, tile?: Tile) {

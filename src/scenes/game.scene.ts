@@ -8,8 +8,8 @@ import { createChatComponent } from "./gameSceneUtils/chatComponent";
 import { loadGameBoardUI } from "./gameSceneUtils/gameBoardUI";
 import { loadGameAssets } from "./mainMenuUtils/gameAssets";
 import { Tile } from "../classes/board/tile";
-import { gameListFadeOutText, textAnimationFadeOut } from "../utils/gameUtils";
 import { Crystal } from "../classes/board/crystal";
+import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
 
 export default class GameScene extends Phaser.Scene {
   userId!: string;

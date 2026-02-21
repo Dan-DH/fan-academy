@@ -1,8 +1,8 @@
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EFaction, EGameStatus, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EGameStatus, EUiSounds } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
-import { truncateText } from "../../utils/gameUtils";
+import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
 import UIScene from "../ui.scene";
 import { accessGame } from "./gameMenuUI";

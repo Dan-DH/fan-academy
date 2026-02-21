@@ -1,7 +1,7 @@
 import { IUserData } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { truncateText } from "../../utils/gameUtils";
 import { getPlayersKey } from "../../utils/playerUtils";
+import { truncateText } from "../../utils/textAnimations";
 import { PlayerHealthBar } from "../playerHealthBar";
 import { DeckPopup } from "../popups/deckPopup";
 import { Board } from "./board";
