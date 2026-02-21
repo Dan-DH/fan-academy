@@ -30,7 +30,7 @@ export class Cleric extends Council {
     } else {
       if (this.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK_BIG);
       if (!this.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
-      target.getsDamaged(this.getTotalPower(), this.attackType);
+      target.getsDamaged(this.getTotalPower(), this.attackType, this);
       this.removeAttackModifiers();
     }
 

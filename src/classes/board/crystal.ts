@@ -1,4 +1,4 @@
-import { ETiles, EAttackType, EGameSounds, EWinConditions } from "../../enums/gameEnums";
+import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
 import { ICrystal, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { playSound, roundToFive } from "../../utils/gameUtils";
@@ -6,6 +6,8 @@ import { makeCrystalClickable } from "../../utils/makeUnitClickable";
 import { CrystalCard } from "../cards/crystalCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "../factions/healthBar";
+import { Hero } from "../factions/hero";
+import { Item } from "../factions/item";
 import { Tile } from "./tile";
 
 export class Crystal extends Phaser.GameObjects.Container {
@@ -159,14 +161,21 @@ export class Crystal extends Phaser.GameObjects.Container {
     };
   }
 
-  getsDamaged(damage: number, _attackType: EAttackType, multiplier = 1): void {
+  getsDamaged(damage: number, _attackType: EAttackType, unit: Hero | Item): void {
+    /*
+    TODO: I removed 'multiplier = 1' as the last param in this fuction
+    It was used when calculating the damageMultiplier, between assaultBoostDamage and debuffLevel
+    I don't think it was used by anything, but we'll see
+    */
+
     if (this.debuffLevel > 0) {
       playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
     } else {
       playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE);
     }
 
-    const damageMultiplier = 300 * multiplier * this.debuffLevel;
+    const assaultBoostDamage = unit.faction === EFaction.DWARVES ? 360 : 300;
+    const damageMultiplier = assaultBoostDamage * this.debuffLevel;
     const totalDamage = roundToFive(damage + damageMultiplier);
     const damageTaken = totalDamage > this.currentHealth ? this.currentHealth : totalDamage;
     this.currentHealth -= damageTaken;

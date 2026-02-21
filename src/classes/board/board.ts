@@ -2,6 +2,7 @@ import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
 import { Coordinates, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { createNewHero, isEnemySpawn, getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
+import { Dwarf } from "../factions/dwarves/dwarves";
 import { ManaVial } from "../factions/elves/items";
 import { Phantom } from "../factions/elves/phantom";
 import { Hero } from "../factions/hero";
@@ -227,11 +228,16 @@ export class Board {
 
   getHeroTilesInRange(hero: Hero, rangeType: ERange): Tile[] {
     const heroTile = this.getTileFromBoardPosition(hero.boardPosition);
+    let speedTileBonus = 0;
     let range: number;
+
+    if (hero.speedTile) {
+      speedTileBonus = hero instanceof Dwarf ? 3 : 2;
+    }
 
     switch (rangeType) {
       case ERange.MOVE:
-        range = hero.speedTile ? hero.movement + 2 : hero.movement;
+        range = hero.movement + speedTileBonus;
         break;
 
       case ERange.ATTACK:

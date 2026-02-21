@@ -31,7 +31,7 @@ export class Priestess extends DarkElf {
     } else {
       playSound(this.scene, EGameSounds.PRIESTESS_ATTACK);
 
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.attackType);
+      const damageDone = target.getsDamaged(this.getTotalPower(), this.attackType, this);
 
       if (damageDone) this.lifeSteal(damageDone);
 

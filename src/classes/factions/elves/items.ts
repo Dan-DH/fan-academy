@@ -23,11 +23,12 @@ export class ManaVial extends Item {
   }
 
   use(target: Hero): void {
+    if (target.isKO) return;
+
     playSound(this.scene, EGameSounds.POTION_USE);
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'manaVial').setDepth(100);
     useAnimation(potionImage);
 
-    if (target.isKO) return;
     if (target.manaVial) {
       target.getsHealed(1000);
     } else {
@@ -82,7 +83,7 @@ export class SoulHarvest extends Item {
       const crystal = gameController.board.crystals.find(crystal => crystal.boardPosition === tile.boardPosition);
       if (!crystal) throw new Error('SoulHarvest use() crystal not found');
 
-      if (crystal.belongsTo !== this.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL);
+      if (crystal.belongsTo !== this.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
     });
 
     // Get total amount of friendly units in the map, including KO'd ones

@@ -35,12 +35,12 @@ export class Ninja extends Council {
         target.removeFromGame();
       } else {
         ninjaAttackSound();
-        target.getsDamaged(this.getTotalPower(2), this.attackType);
+        target.getsDamaged(this.getTotalPower(2), this.attackType, this);
         this.removeAttackModifiers();
       }
     } else {
       ninjaAttackSound();
-      target.getsDamaged(this.getTotalPower(), this.attackType);
+      target.getsDamaged(this.getTotalPower(), this.attackType, this);
       this.removeAttackModifiers();
     }
 

@@ -32,14 +32,14 @@ export class Archer extends Council {
       } else {
         playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
 
-        target.getsDamaged(this.getTotalPower(0.5), this.attackType);
+        target.getsDamaged(this.getTotalPower(0.5), this.attackType, this);
         this.removeAttackModifiers();
       }
     } else {
       if (this.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK_BIG);
       if (!this.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK);
 
-      target.getsDamaged(this.getTotalPower(), this.attackType);
+      target.getsDamaged(this.getTotalPower(), this.attackType, this);
       this.removeAttackModifiers();
     }
 

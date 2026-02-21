@@ -36,7 +36,7 @@ export class Phantom extends Hero {
     ) {
       target.removeFromGame();
     } else {
-      target.getsDamaged(this.getTotalPower(), this.attackType);
+      target.getsDamaged(this.getTotalPower(), this.attackType, this);
 
       this.removeAttackModifiers();
     }
