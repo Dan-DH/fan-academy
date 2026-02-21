@@ -177,6 +177,13 @@ export async function createGameList(context: UIScene) {
   const newGameButton = context.add.image(0, lastListItemY, 'newGameButton').setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
+    if (context.currentRoom) {
+      console.log('Leaving game: ', context.currentRoom.roomId);
+      await context.currentRoom.leave();
+      context.currentRoom = undefined;
+      context.scene.stop('GameScene');
+    }
+
     new ChallengePopup({
       context,
       challengeType: EChallengePopup.OPEN
