@@ -62,4 +62,5 @@ export class Cleric extends Council {
   };
 
   teleport(_target: Hero): void {};
+  shieldAlly(_target: Hero | Crystal): void {}
 }

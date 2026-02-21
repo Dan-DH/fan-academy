@@ -123,4 +123,5 @@ export class VoidMonk extends DarkElf {
 
   heal(_target: Hero): void {};
   teleport(_target: Hero): void {};
+  shieldAlly(_target: Hero | Crystal): void {}
 }

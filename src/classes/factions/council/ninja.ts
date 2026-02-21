@@ -71,4 +71,5 @@ export class Ninja extends Council {
   };
 
   heal(_target: Hero): void {};
+  shieldAlly(_target: Hero | Crystal): void {}
 }

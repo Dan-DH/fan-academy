@@ -1,4 +1,4 @@
-import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
+import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction } from "../../enums/gameEnums";
 import { ICrystal, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
@@ -10,6 +10,7 @@ import { HealthBar } from "../factions/healthBar";
 import { Hero } from "../factions/hero";
 import { Item } from "../factions/item";
 import { Tile } from "./tile";
+import { Engineer } from "../factions/dwarves/enginner";
 
 export class Crystal extends Phaser.GameObjects.Container {
   belongsTo: number;
@@ -21,6 +22,8 @@ export class Crystal extends Phaser.GameObjects.Container {
   row: number;
   col: number;
   debuffLevel: number;
+  shieldedByEngineer?: string;
+  unitId: string;
 
   context: GameScene;
 
@@ -30,6 +33,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   doubleCrystalDebuff: Phaser.GameObjects.Image;
   attackReticle: Phaser.GameObjects.Image;
   blockedLOS: Phaser.GameObjects.Image;
+  engineerShieldImage: Phaser.GameObjects.Image;
 
   debuffEventSingle: Phaser.Time.TimerEvent;
   debuffEventDouble: Phaser.Time.TimerEvent;
@@ -51,6 +55,9 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.col = tile.col;
     this.belongsTo = data.belongsTo;
     this.debuffLevel = data.debuffLevel < 0 ? 0 : data.debuffLevel; // safeguard for bug that keeps making debuff level negative. Remove when fixed
+    this.shieldedByEngineer = data?.shieldedByEngineer ?? undefined;
+
+    this.unitId = `crystal_${this.boardPosition}`;
 
     this.healthBar = new HealthBar(context, data, -38, -70);
     this.unitCard = new CrystalCard(context, data).setVisible(false);
@@ -68,6 +75,9 @@ export class Crystal extends Phaser.GameObjects.Container {
     // Debuff images and animation
     this.singleCrystalDebuff = context.add.image(0, -30, 'crystalDebuff_1').setVisible(false);
     this.doubleCrystalDebuff = context.add.image(0, -30, 'crystalDebuff_3').setVisible(false);
+
+    const isShielded = this.shieldedByEngineer ? true : false;
+    this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
 
     const crystalDebuffEvent = (debuffImage: Phaser.GameObjects.Image, texture1: string, texture2: string) => {
       let frame = 0;
@@ -158,8 +168,21 @@ export class Crystal extends Phaser.GameObjects.Container {
       boardPosition: this.boardPosition,
       row: this.row,
       col: this.col,
-      debuffLevel: this.debuffLevel
+      debuffLevel: this.debuffLevel,
+      shieldedByEngineer: this.shieldedByEngineer
     };
+  }
+
+  getEngineerShield(engineerId: string): void {
+    this.shieldedByEngineer = engineerId;
+    this.engineerShieldImage.setVisible(true);
+    this.updateTileData();
+  }
+
+  removeEngineerShield(): void {
+    this.shieldedByEngineer = undefined;
+    this.engineerShieldImage.setVisible(false);
+    this.updateTileData();
   }
 
   getsDamaged(damage: number, _attackType: EAttackType, unit: Hero | Item): void {
@@ -175,7 +198,12 @@ export class Crystal extends Phaser.GameObjects.Container {
       playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE);
     }
 
-    const assaultBoostDamage = unit.faction === EFaction.DWARVES ? 360 : 300;
+    let assaultBoostDamage;
+    if (unit.faction === EFaction.DWARVES) {
+      assaultBoostDamage = unit instanceof Engineer ? 420 : 360;
+    } else {
+      assaultBoostDamage = 300;
+    }
     const damageMultiplier = assaultBoostDamage * this.debuffLevel;
     const totalDamage = roundToFive(damage + damageMultiplier);
     const damageTaken = totalDamage > this.currentHealth ? this.currentHealth : totalDamage;

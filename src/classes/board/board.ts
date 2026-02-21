@@ -465,4 +465,18 @@ export class Board {
 
     return false;
   }
+
+  removeEngineerShield(unitId: string): void {
+    let target;
+
+    if (unitId.includes('crystal')) {
+      target = this.crystals.find(crystal => crystal.unitId === unitId);
+    } else {
+      target = this.units.find(unit => unit.unitId === unitId);
+    }
+
+    if (!target) throw new Error(`removeEngineerShield: no target found with id ${unitId}`);
+
+    target.removeEngineerShield();
+  }
 }

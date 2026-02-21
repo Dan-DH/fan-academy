@@ -50,8 +50,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   speedTile?: boolean;
 
   dwarvenBrew?: boolean;
-  engineerShield?: string; // unitId of the engineer shielding the unit. Will need on the Engineer class for the unit/crystal being shielded
+  shieldedByEngineer?: string; // unitId of the engineer shielding the unit. Will need on the Engineer class for the unit/crystal being shielded
   annihilatorDebuff?: boolean;
+  shieldingAlly?: string;
 
   context: GameScene;
   unitCard: HeroCard;
@@ -74,9 +75,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   smokeAnim?: Phaser.GameObjects.Image;
 
   // TODO: assign these
-  dwarvenBrewImage?: Phaser.GameObjects.Image;
-  engineerShieldImage?: Phaser.GameObjects.Image;
-  annihilatorDebuffImage?: Phaser.GameObjects.Image;
+  dwarvenBrewImage: Phaser.GameObjects.Image;
+  engineerShieldImage: Phaser.GameObjects.Image;
+  annihilatorDebuffImage: Phaser.GameObjects.Image;
 
   crystalDebuffEvent: Phaser.Time.TimerEvent;
   powerTileEvent: Phaser.Time.TimerEvent;
@@ -128,8 +129,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.manaVial = data?.manaVial ?? undefined;
     this.speedTile = data.speedTile;
     this.dwarvenBrew = data?.dwarvenBrew ?? false;
-    this.engineerShield = data?.engineerShield ?? undefined;
+    this.shieldedByEngineer = data?.engineerShield ?? undefined;
     this.annihilatorDebuff = data?.annihilatorDebuff ?? false;
+    this.shieldingAlly = data?.shieldingAlly ?? undefined;
 
     this.unitCard = new HeroCard(context, {
       ...data,
@@ -152,16 +154,21 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.shiningHelmImage = context.add.image(-28, 25, 'shiningHelm').setOrigin(0.5).setScale(0.4).setName('shiningHelm');
     if (!this.shiningHelm) this.shiningHelmImage.setVisible(false);
 
-    if (this.faction === EFaction.COUNCIL) {
+    if (this.faction === EFaction.COUNCIL || this.faction === EFaction.DWARVES) {
       this.factionBuffImage = context.add.image(5, 25, 'dragonScale').setOrigin(0.5).setScale(0.4).setName('dragonScale');
     } else {
       this.factionBuffImage = context.add.image(5, 25, 'soulStone').setOrigin(0.5).setScale(0.4).setName('soulStone');
     } // Using else here removes a bunch of checks on factionBuff being possibly undefined
     if (!this.factionBuff) this.factionBuffImage.setVisible(false);
 
-    if (this.faction === EFaction.COUNCIL) {
-      this.smokeAnim = context.add.image(0, 0, 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
-    }
+    // TODO: place correctly
+    this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
+    this.annihilatorDebuffImage = context.add.image(5, 25, 'annihilatorDebuff').setOrigin(0.5).setScale(0.4).setName('annihilatorDebuff');
+
+    this.smokeAnim = context.add.image(0, 0, 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
+
+    const isShielded = this.shieldedByEngineer ? true : false;
+    this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
 
     this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
     this.healReticle = context.add.image(0, -10, 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
@@ -436,7 +443,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
      * - assault tile bonus
      * - any other multiplicative modifier (scroll, debuff, runemetal)
      */
-    const attackTileDamage = this.faction === EFaction.DWARVES ? 120 : 100;
+    let attackTileDamage;
+    if (this.faction === EFaction.DWARVES) {
+      attackTileDamage = this.unitType === EHeroes.ENGINEER ? 140 : 120;
+    } else {
+      attackTileDamage = 100;
+    }
 
     if (rangeModifier === 0) rangeModifier = 1;
     const runeMetalBuff = this.runeMetal ? 1.5 : 1;
@@ -460,7 +472,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   getTotalHealing(unitHealingMult: number): number {
-    const attackTileDamage = this.faction === EFaction.DWARVES ? 120 : 100;
+    let attackTileDamage;
+    if (this.faction === EFaction.DWARVES) {
+      attackTileDamage = this.unitType === EHeroes.ENGINEER ? 140 : 120;
+    } else {
+      attackTileDamage = 100;
+    }
 
     const runeMetalBuff = this.runeMetal ? 1.5 : 1;
     const attackTileBuff = this.attackTile ? attackTileDamage : 0;
@@ -612,6 +629,18 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     checkUnitGameOver(this.context, this);
   }
 
+  getEngineerShield(engineerId: string): void {
+    this.shieldedByEngineer = engineerId;
+    this.engineerShieldImage.setVisible(true);
+    this.updateTileData();
+  }
+
+  removeEngineerShield(): void {
+    this.shieldedByEngineer = undefined;
+    this.engineerShieldImage.setVisible(false);
+    this.updateTileData();
+  }
+
   getDistanceToTarget(target: Hero | Crystal): number {
     const gameController = this.context.gameController!;
 
@@ -695,6 +724,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   abstract heal(target: Hero): void;
   abstract teleport(target: Hero): void;
   abstract equipFactionBuff(handPosition: number): void;
+  abstract shieldAlly(target: Hero | Crystal): void;
 
   isFullHP(): boolean {
     return this.maxHealth === this.currentHealth;
@@ -771,7 +801,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   };
 
   specialTileCheck(targetTile: ETiles, currentTile?: ETiles): void {
-    const damageResistance = this.faction === EFaction.DWARVES ? 24 : 20;
+    let damageResistance;
+    if (this.faction === EFaction.DWARVES) {
+      damageResistance = this.unitType === EHeroes.ENGINEER ? 28 : 24;
+    } else {
+      damageResistance = 20;
+    }
 
     // If hero is leaving a special tile
     if (currentTile === ETiles.CRYSTAL_DAMAGE) {
@@ -826,7 +861,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   removeSpecialTileOnKo(): void {
     const currentTile = this.getTile();
-    const damageResistance = this.faction === EFaction.DWARVES ? 24 : 20;
+
+    let damageResistance;
+    if (this.faction === EFaction.DWARVES) {
+      damageResistance = this.unitType === EHeroes.ENGINEER ? 28 : 24;
+    } else {
+      damageResistance = 20;
+    }
 
     if (currentTile.tileType === ETiles.CRYSTAL_DAMAGE) {
       this.updateCrystals(false);

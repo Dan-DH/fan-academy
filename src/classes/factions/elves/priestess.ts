@@ -72,4 +72,5 @@ export class Priestess extends DarkElf {
   };
 
   teleport(_target: Hero): void {};
+  shieldAlly(_target: Hero | Crystal): void {}
 }

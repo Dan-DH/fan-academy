@@ -49,5 +49,6 @@ export class Phantom extends Hero {
 
   heal(_target: Hero): void {};
   teleport(_target: Hero): void {};
-  equipFactionBuff(): void {}
+  equipFactionBuff(): void {};
+  shieldAlly(_target: Hero | Crystal): void {}
 }

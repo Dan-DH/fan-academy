@@ -32,6 +32,7 @@ export interface ICrystal {
   debuffLevel: number;
   row: number;
   col: number;
+  shieldedByEngineer?: string;
 }
 
 /**
@@ -56,28 +57,34 @@ export interface IHero {
   faction: EFaction;
   unitType: EHeroes;
   unitId: string; // userId_unitName_unitNumber
+  belongsTo: number;
+
   boardPosition: number;
   row: number;
   col: number;
+
   baseHealth: number;
   maxHealth: number;
   currentHealth: number;
+
   isKO: boolean;
   lastBreath: boolean;
+
   movement: number;
   attackRange: number;
   healingRange: number;
   attackType: EAttackType;
   basePower: number;
+
   physicalDamageResistance: number;
   magicalDamageResistance: number;
   basePhysicalDamageResistance: number;
   baseMagicalDamageResistance: number;
+
   factionBuff: boolean;
   runeMetal: boolean;
   shiningHelm: boolean;
   superCharge: boolean;
-  belongsTo: number;
   canHeal: boolean;
   unitsConsumed?: number;
   isDebuffed: boolean;
@@ -87,6 +94,7 @@ export interface IHero {
   dwarvenBrew?: boolean;
   engineerShield?: string;
   annihilatorDebuff?: boolean;
+  shieldingAlly?: string;
 }
 
 /**
