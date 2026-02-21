@@ -309,7 +309,7 @@ export class Board {
     return areaTiles;
   }
 
-  // Used for Wizard and VoidMonk's attacks
+  // Used for Wizard, Gunner and VoidMonk's attacks
   getAttackDirection(attackerBP: number, targetBP: number): number {
     const distance =  targetBP - attackerBP;
 

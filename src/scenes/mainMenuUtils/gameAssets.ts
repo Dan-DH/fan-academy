@@ -79,6 +79,7 @@ export function loadGameAssets(context: GameScene) {
   // Loading units
   const councilArray = ['archer', 'cleric', 'knight', 'ninja', 'wizard'];
   const darkElvesArray = ['priestess', 'impaler', 'necromancer', 'phantom', 'voidmonk', 'wraith'];
+  const dwarvesArray = ['paladin', 'engineer', 'gunner', 'grenadier', 'annihilator'];
 
   councilArray.forEach(asset => {
     for (let i = 1; i <= 9; i++) {
@@ -96,6 +97,13 @@ export function loadGameAssets(context: GameScene) {
     }
     context.load.image(`${asset}CardPic`, `${CDN_PATH}/images/profilePics/${asset}_v1-hd.webp`); // Unit picture for its unit card
   });
+  // TODO: change to webp
+  dwarvesArray.forEach(asset => {
+    for (let i = 1; i <= 9; i++) {
+      context.load.image(`${asset}_${i}`, `./assetsd/images/factions/dwarves/${asset}/${asset}_${i}.png`);
+    }
+    context.load.image(`${asset}CardPic`, `./assetsd/images/profilePics/${asset}_v1-hd.jpg`); // Unit picture for its unit card
+  });
 
   // Loading item card icons
   Object.entries(EItems).forEach(([_key, value]) => {
@@ -111,6 +119,10 @@ export function loadGameAssets(context: GameScene) {
   context.load.image('soulStone', `${CDN_PATH}/images/factions/darkElves/soul_stone.webp`);
   context.load.image('soulHarvest', `${CDN_PATH}/images/factions/darkElves/soul_harvest.webp`);
   context.load.image('manaVial', `${CDN_PATH}/images/factions/darkElves/mana_vial.webp`);
+
+  // Dwarves // TODO:
+  context.load.image('dwarvenBrew', `./assetsd/images/factions/dwarves/dwarven_brew.webp`);
+  context.load.image('pulverizer', `./assetsd/images/factions/dwarves/pulverizer.webp`);
 
   // Shared items
   context.load.image('superCharge', `${CDN_PATH}/images/factions/common/super_charge.webp`);
