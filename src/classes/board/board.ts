@@ -136,23 +136,34 @@ export class Board {
   }
 
   highlightFriendlyTargets(hero: Hero) {
-    if (!hero.canHeal) return;
+    if (!hero.canHeal && !hero.canBuff) return;
 
-    const tilesInRange: Tile[] = this.getHeroTilesInRange(hero, ERange.HEAL);
+    const tilesInHealingRange: Tile[] = hero.canHeal ? this.getHeroTilesInRange(hero, ERange.HEAL) : [];
+    const tilesInBuffRange: Tile[] = hero.canBuff ? this.getHeroTilesInRange(hero, ERange.BUFF) : [];
+    const tilesInRange: Tile[] = tilesInHealingRange.concat(tilesInBuffRange);
+
+    console.log('TILEHEALINGRANGE', tilesInHealingRange);
+    console.log('tilebuffrange', tilesInBuffRange);
+    console.log('result', tilesInRange);
+
     if (!tilesInRange.length) return;
 
     tilesInRange.forEach(tile => {
-      if (tile.crystal) return;
-      const target = this.units.find(unit => unit.unitId === tile.hero?.unitId);
+      const target = tile.hero ? this.units.find(unit => unit.unitId === tile.hero?.unitId) : this.crystals.find(crystal => crystal.boardPosition === tile.crystal?.boardPosition);
       if (!target) {
         console.error('No healing target found', tile);
         return;
       }
-      const userId = this.context.userId;
+
       const maxHealth = target.maxHealth;
       const currentHealth = target.currentHealth;
 
-      if (tile.isFriendly(userId) && currentHealth! < maxHealth!) target.healReticle.setVisible(true);
+      if (target instanceof Hero && hero.canHeal && target.belongsTo === hero.belongsTo && currentHealth! < maxHealth!) {
+        target.healReticle.setVisible(true);
+      }
+      if (hero.canBuff && target.belongsTo === hero.belongsTo && !target.engineerShield) {
+        target.healReticle.setVisible(true); // will need to update this logic for any future buffs by other units
+      }
     });
   }
 
@@ -225,6 +236,7 @@ export class Board {
 
     this.crystals.forEach(crystal => {
       crystal.attackReticle.setVisible(false);
+      crystal.healReticle.setVisible(false);
       crystal.blockedLOS.setVisible(false);
     });
   }
@@ -255,6 +267,10 @@ export class Board {
         range = hero.healingRange;
         break;
 
+      case ERange.BUFF:
+        range = hero.buffRange;
+        break;
+
       default:
         break;
     }
@@ -277,8 +293,8 @@ export class Board {
           !tile.crystal
         ) inRangeTiles.add(tile);
 
-        if (rangeType === ERange.ATTACK || rangeType === ERange.HEAL) {
-          if (tile.crystal || tile.hero && tile.hero.unitId !== hero.unitId) inRangeTiles.add(tile);
+        if ([ERange.ATTACK, ERange.HEAL, ERange.BUFF].includes(rangeType)) {
+          if (tile.crystal || tile.hero && tile.hero.unitId !== hero.unitId) inRangeTiles.add(tile); // TODO: refactor this for legibility
         }
       }
     });
@@ -480,8 +496,14 @@ export class Board {
       target = this.units.find(unit => unit.unitId === unitId);
     }
 
-    if (!target) throw new Error(`removeEngineerShield: no target found with id ${unitId}`);
-
+    if (!target || !target.engineerShield) throw new Error(`removeEngineerShield: no target or engineerId found with id ${unitId}`);
+    this.updateEngineerOnShieldLost(target.engineerShield);
     target.removeEngineerShield();
+  }
+
+  updateEngineerOnShieldLost(engineerId: string): void {
+    const engineer = this.units.find(unit => unit.unitId === engineerId);
+    if (!engineer) return; // TODO: check that this doesn't throw when the Engie gets KO'd
+    engineer.shieldingAlly = undefined;
   }
 }

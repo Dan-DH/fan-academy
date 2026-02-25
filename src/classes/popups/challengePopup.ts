@@ -108,6 +108,11 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       await buttonCallback(EFaction.DARK_ELVES);
     });
 
+    this.dwarvesButtonImage.on('pointerdown', async () => {
+      playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      await buttonCallback(EFaction.DWARVES);
+    });
+
     this.cancelButtonImage.on('pointerdown', () => {
       this.scene.sound.play(EUiSounds.BUTTON_FAILED);
       this.setVisible(false);

@@ -22,7 +22,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   row: number;
   col: number;
   debuffLevel: number;
-  shieldedByEngineer?: string;
+  engineerShield?: string;
   unitId: string;
 
   context: GameScene;
@@ -32,6 +32,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   singleCrystalDebuff: Phaser.GameObjects.Image;
   doubleCrystalDebuff: Phaser.GameObjects.Image;
   attackReticle: Phaser.GameObjects.Image;
+  healReticle: Phaser.GameObjects.Image;
   blockedLOS: Phaser.GameObjects.Image;
   engineerShieldImage: Phaser.GameObjects.Image;
 
@@ -55,7 +56,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.col = tile.col;
     this.belongsTo = data.belongsTo;
     this.debuffLevel = data.debuffLevel < 0 ? 0 : data.debuffLevel; // safeguard for bug that keeps making debuff level negative. Remove when fixed
-    this.shieldedByEngineer = data?.shieldedByEngineer ?? undefined;
+    this.engineerShield = data?.engineerShield ?? undefined;
 
     this.unitId = `crystal_${this.boardPosition}`;
 
@@ -76,8 +77,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.singleCrystalDebuff = context.add.image(0, -30, 'crystalDebuff_1').setVisible(false);
     this.doubleCrystalDebuff = context.add.image(0, -30, 'crystalDebuff_3').setVisible(false);
 
-    const isShielded = this.shieldedByEngineer ? true : false;
-    this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
+    const isShielded = this.engineerShield ? true : false;
+    this.engineerShieldImage = context.add.image(0, -20, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
 
     const crystalDebuffEvent = (debuffImage: Phaser.GameObjects.Image, texture1: string, texture2: string) => {
       let frame = 0;
@@ -93,8 +94,9 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.debuffEventSingle = crystalDebuffEvent(this.singleCrystalDebuff, 'crystalDebuff_1', 'crystalDebuff_2');
     this.debuffEventDouble = crystalDebuffEvent(this.doubleCrystalDebuff, 'crystalDebuff_3', 'crystalDebuff_4');
 
-    // Attack reticle and animation
+    // Attack  and healing reticle animations
     this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
+    this.healReticle = context.add.image(0, -10, 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
     const addTween = (reticle: Phaser.GameObjects.Image) => {
       context.tweens.add({
         targets: reticle,
@@ -109,8 +111,9 @@ export class Crystal extends Phaser.GameObjects.Container {
       });
     };
     addTween(this.attackReticle);
+    addTween(this.healReticle);
 
-    this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.doubleCrystalDebuff, this.healthBar, this.attackReticle, this.blockedLOS, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.row + 10);
+    this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.doubleCrystalDebuff, this.healthBar, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.row + 10);
     makeCrystalClickable(this, this.context);
 
     context.add.existing(this);
@@ -169,18 +172,18 @@ export class Crystal extends Phaser.GameObjects.Container {
       row: this.row,
       col: this.col,
       debuffLevel: this.debuffLevel,
-      shieldedByEngineer: this.shieldedByEngineer
+      engineerShield: this.engineerShield
     };
   }
 
-  getEngineerShield(engineerId: string): void {
-    this.shieldedByEngineer = engineerId;
+  receiveEngineerShield(engineerId: string): void {
+    this.engineerShield = engineerId;
     this.engineerShieldImage.setVisible(true);
     this.updateTileData();
   }
 
   removeEngineerShield(): void {
-    this.shieldedByEngineer = undefined;
+    this.engineerShield = undefined;
     this.engineerShieldImage.setVisible(false);
     this.updateTileData();
   }

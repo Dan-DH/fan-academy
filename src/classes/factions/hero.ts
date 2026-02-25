@@ -30,6 +30,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   movement: number;
   attackRange: number;
   healingRange: number;
+  buffRange: number;
   attackType: EAttackType;
   basePower: number;
   physicalDamageResistance: number;
@@ -44,13 +45,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   isActiveValue: boolean;
   belongsTo: number;
   canHeal: boolean;
+  canBuff: boolean;
   unitsConsumed: number;
   isDebuffed: boolean; // priestessDebuff. Renaming it would break ongoing games
   manaVial?: boolean;
   speedTile?: boolean;
 
   dwarvenBrew?: boolean;
-  shieldedByEngineer?: string; // unitId of the engineer shielding the unit. Will need on the Engineer class for the unit/crystal being shielded
+  engineerShield?: string; // unitId of the engineer shielding the unit. Will need on the Engineer class for the unit/crystal being shielded
   annihilatorDebuff?: boolean;
   shieldingAlly?: string;
 
@@ -110,6 +112,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.movement = data.movement;
     this.attackRange = data.attackRange;
     this.healingRange = data.healingRange;
+    this.buffRange = data.buffRange;
     this.attackType = data.attackType;
     this.basePower = data.basePower;
     this.physicalDamageResistance = data.physicalDamageResistance;
@@ -124,12 +127,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.isActiveValue = false;
     this.belongsTo = data.belongsTo ?? 1;
     this.canHeal = data.canHeal ?? false;
+    this.canBuff = data.canBuff ?? false;
     this.unitsConsumed = data.unitsConsumed ?? 0;
     this.isDebuffed = data.isDebuffed;
     this.manaVial = data?.manaVial ?? undefined;
     this.speedTile = data.speedTile;
     this.dwarvenBrew = data?.dwarvenBrew ?? false;
-    this.shieldedByEngineer = data?.engineerShield ?? undefined;
+    this.engineerShield = data?.engineerShield ?? undefined;
     this.annihilatorDebuff = data?.annihilatorDebuff ?? false;
     this.shieldingAlly = data?.shieldingAlly ?? undefined;
 
@@ -162,12 +166,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (!this.factionBuff) this.factionBuffImage.setVisible(false);
 
     // TODO: place correctly
-    this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
-    this.annihilatorDebuffImage = context.add.image(5, 25, 'annihilatorDebuff').setOrigin(0.5).setScale(0.4).setName('annihilatorDebuff');
+    this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew').setVisible(false);
+    this.annihilatorDebuffImage = context.add.image(5, 25, 'annihilatorDebuff').setOrigin(0.5).setScale(0.4).setName('annihilatorDebuff').setVisible(false);
 
     this.smokeAnim = context.add.image(0, 0, 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
 
-    const isShielded = this.shieldedByEngineer ? true : false;
+    const isShielded = this.engineerShield ? true : false;
     this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
 
     this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
@@ -278,7 +282,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       this.allyReticle,
       ...this.smokeAnim ? [this.smokeAnim] : [],
       this.blockedLOS,
-      this.unitCard
+      this.unitCard,
+      this.dwarvenBrewImage,
+      this.annihilatorDebuffImage,
+      this.engineerShieldImage
     ]).setInteractive({
       hitArea,
       hitAreaCallback: Phaser.Geom.Rectangle.Contains,
@@ -333,6 +340,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       movement: this.movement,
       attackRange: this.attackRange,
       healingRange: this.healingRange,
+      buffRange: this.buffRange,
       attackType: this.attackType,
       basePower: this.basePower,
       physicalDamageResistance: this.physicalDamageResistance,
@@ -346,10 +354,15 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       attackTile: this.attackTile,
       belongsTo: this.belongsTo,
       canHeal: this.canHeal,
+      canBuff: this.canBuff,
       unitsConsumed: this.unitsConsumed,
       isDebuffed: this.isDebuffed,
       manaVial: this.manaVial,
-      speedTile: this.speedTile
+      speedTile: this.speedTile,
+      annihilatorDebuff: this.annihilatorDebuff,
+      dwarvenBrew: this.dwarvenBrew,
+      engineerShield: this.engineerShield,
+      shieldingAlly: this.shieldingAlly
     };
   }
 
@@ -412,6 +425,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   getsDamaged(damage: number, attackType: EAttackType): number {
+    if (this.engineerShield) {
+      this.context.gameController?.board.updateEngineerOnShieldLost(this.engineerShield);
+      this.removeEngineerShield();
+      return 0;
+    }
+
     // Flash the unit red
     this.characterImage.setTint(0xff0000);
     this.scene.time.delayedCall(500, () => this.characterImage.clearTint());
@@ -558,6 +577,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (this.unitType !== EHeroes.PHANTOM) selectDeathSound(this.scene, this.unitType);
     this.removeSpecialTileOnKo();
 
+    if (this.shieldingAlly) {
+      this.context.gameController?.board.removeEngineerShield(this.shieldingAlly);
+      this.shieldingAlly = undefined;
+    }
+
     this.currentHealth = 0;
     this.isKO = true;
 
@@ -629,14 +653,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     checkUnitGameOver(this.context, this);
   }
 
-  getEngineerShield(engineerId: string): void {
-    this.shieldedByEngineer = engineerId;
+  receiveEngineerShield(engineerId: string): void {
+    this.engineerShield = engineerId;
     this.engineerShieldImage.setVisible(true);
     this.updateTileData();
   }
 
   removeEngineerShield(): void {
-    this.shieldedByEngineer = undefined;
+    this.engineerShield = undefined;
     this.engineerShieldImage.setVisible(false);
     this.updateTileData();
   }

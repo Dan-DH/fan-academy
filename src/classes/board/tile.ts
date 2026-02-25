@@ -76,10 +76,6 @@ export class Tile extends Phaser.GameObjects.Container {
     this.hero = undefined;
   }
 
-  isFriendly(userId: string) {
-    return this.hero && this.hero.unitId.includes(userId);
-  }
-
   isEnemy(userId: string) {
     return this.hero && !this.hero.unitId.includes(userId);
   }

@@ -5,6 +5,12 @@ import { DragonScale, HealingPotion, Inferno } from "../classes/factions/council
 import { Knight } from "../classes/factions/council/knight";
 import { Ninja } from "../classes/factions/council/ninja";
 import { Wizard } from "../classes/factions/council/wizard";
+import { Annihilator } from "../classes/factions/dwarves/annihilator";
+import { Engineer } from "../classes/factions/dwarves/enginner";
+import { Grenadier } from "../classes/factions/dwarves/grenadier";
+import { Gunner } from "../classes/factions/dwarves/gunner";
+import { DwarvenBrew, Pulverizer } from "../classes/factions/dwarves/items";
+import { Paladin } from "../classes/factions/dwarves/paladin";
 import { Impaler } from "../classes/factions/elves/impaler";
 import { ManaVial, SoulHarvest, SoulStone } from "../classes/factions/elves/items";
 import { Necromancer } from "../classes/factions/elves/necromancer";
@@ -32,9 +38,8 @@ export function createNewItem(context: GameScene, itemData: IItem): Item {
     [EItems.SOUL_HARVEST]: () => new SoulHarvest(context, itemData),
     [EItems.SOUL_STONE]: () => new SoulStone(context, itemData),
 
-    // TODO: dwarven items
-    [EItems.DWARVEN_BREW]: () => new SoulHarvest(context, itemData),
-    [EItems.PULVERIZER]: () => new SoulStone(context, itemData)
+    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(context, itemData),
+    [EItems.PULVERIZER]: () => new Pulverizer(context, itemData)
   };
 
   const createItem = itemTypes[itemData.itemType];
@@ -57,12 +62,11 @@ export function createNewHero(context: GameScene, heroData: IHero, tile?: Tile):
     [EHeroes.VOIDMONK]: () => new VoidMonk(context, heroData, tile),
     [EHeroes.WRAITH]: () => new Wraith(context, heroData, tile),
 
-    // TODO: dwarven heroes
-    [EHeroes.PALADIN]: () => new Archer(context, heroData, tile),
-    [EHeroes.ENGINEER]: () => new Cleric(context, heroData, tile),
-    [EHeroes.GUNNER]: () => new Knight(context, heroData, tile),
-    [EHeroes.GRENADIER]: () => new Ninja(context, heroData, tile),
-    [EHeroes.ANNIHILATOR]: () => new Wizard(context, heroData, tile)
+    [EHeroes.PALADIN]: () => new Paladin(context, heroData, tile),
+    [EHeroes.ENGINEER]: () => new Engineer(context, heroData, tile),
+    [EHeroes.GUNNER]: () => new Gunner(context, heroData, tile),
+    [EHeroes.GRENADIER]: () => new Grenadier(context, heroData, tile),
+    [EHeroes.ANNIHILATOR]: () => new Annihilator(context, heroData, tile)
   };
 
   const createHero = heroTypes[heroData.unitType];

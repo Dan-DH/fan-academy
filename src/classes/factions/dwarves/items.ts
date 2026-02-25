@@ -1,10 +1,12 @@
 import { EGameSounds, EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { playSound, useAnimation, getAOETiles } from "../../../utils/gameUtils";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
+import { getAOETiles } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { useAnimation } from "../../../utils/unitAnimations";
 
 export class DragonScale extends Item {
   constructor(context: GameScene, data: IItem) {
@@ -31,7 +33,7 @@ export class DwarvenBrew extends Item {
     useAnimation(potionImage);
 
     if (!target.dwarvenBrew) {
-      // TODO: increate damage reduction;
+      // TODO: increase damage reduction;
     }
 
     target.getsHealed(1000);
@@ -42,7 +44,7 @@ export class DwarvenBrew extends Item {
   }
 }
 
-export class Inferno extends Item {
+export class Pulverizer extends Item {
   constructor(context: GameScene, data: IItem) {
     super(context, data);
   };
@@ -76,7 +78,7 @@ export class Inferno extends Item {
       const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.boardPosition === tile.boardPosition);
       if (!crystal) throw new Error('Inferno use() crystal not found');
 
-      if (crystal.belongsTo !== this.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL);
+      if (crystal.belongsTo !== this.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
     });
 
     this.removeFromGame();

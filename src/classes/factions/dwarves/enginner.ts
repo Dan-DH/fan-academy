@@ -1,15 +1,3 @@
-/**
- * engineer will have a nullable activeShield field with the id of the ally.
- * the ally will have a nullbale engineerShield field with the id of the engie
- *
- * a change in status of either triggers a util function that will update the value on the other
- * status changes:
- *  ally is damages
- *  engie creates a new bubnle
- *  engie dies
- *
- */
-
 import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
@@ -53,10 +41,13 @@ export class Engineer extends Dwarf {
 
   shieldAlly(target: Hero | Crystal): void {
     if (this.shieldingAlly) {
+      if (this.shieldingAlly === target.unitId) return;
       this.context.gameController?.board.removeEngineerShield(this.shieldingAlly);
     }
-    target.getEngineerShield(this.unitId);
+
+    target.receiveEngineerShield(this.unitId);
     this.shieldingAlly = target.unitId;
+    this.context.gameController!.afterAction(EActionType.BUFF, this.boardPosition, target.boardPosition);
   }
 
   heal(_target: Hero): void {};

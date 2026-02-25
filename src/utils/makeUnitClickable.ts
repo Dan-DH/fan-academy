@@ -88,7 +88,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   // CASE 3: There is already an active unit
   if (activeUnit && !isSameUnit) {
     // Unique case: Wraith can spawn on a KO'd unit
-    if (isHero(unit) && unit.isKO &&
+    if (
+      isHero(unit) &&
+      unit.isKO &&
       isHero(activeUnit) &&
       activeUnit.unitType === EHeroes.WRAITH &&
       activeUnit.boardPosition >= 45 &&
@@ -183,6 +185,11 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
         if (activeUnit.canHeal && healReticle?.visible) {
           activeUnit.heal(unit);
+          return;
+        }
+
+        if (activeUnit.canBuff && healReticle?.visible) {
+          activeUnit.shieldAlly(unit); // Engineers only
           return;
         }
 
@@ -328,11 +335,16 @@ export function makeCrystalClickable(crystal: Crystal, context: GameScene): void
     // Handling left click
     if (pointer.button === 0) {
       const attackReticle = crystal.attackReticle;
+      const healReticle = crystal.healReticle;
       const activeUnit = context.activeUnit;
 
       if (activeUnit) {
         if (isHero(activeUnit) && attackReticle.visible) {
           activeUnit.attack(crystal);
+          return;
+        }
+        if (isHero(activeUnit) && healReticle.visible) {
+          activeUnit.shieldAlly(crystal);
           return;
         }
         if (isItem(activeUnit) && activeUnit?.dealsDamage) {

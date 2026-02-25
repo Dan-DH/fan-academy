@@ -32,7 +32,7 @@ export interface ICrystal {
   debuffLevel: number;
   row: number;
   col: number;
-  shieldedByEngineer?: string;
+  engineerShield?: string;
 }
 
 /**
@@ -73,6 +73,7 @@ export interface IHero {
   movement: number;
   attackRange: number;
   healingRange: number;
+  buffRange: number;
   attackType: EAttackType;
   basePower: number;
 
@@ -86,6 +87,7 @@ export interface IHero {
   shiningHelm: boolean;
   superCharge: boolean;
   canHeal: boolean;
+  canBuff: boolean;
   unitsConsumed?: number;
   isDebuffed: boolean;
   attackTile: boolean;

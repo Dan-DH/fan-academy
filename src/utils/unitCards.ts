@@ -137,12 +137,12 @@ export function getCardText(unit: EHeroes | EItems): {
     },
 
     [EItems.DWARVEN_BREW]: {
-      cardName: 'Healing Potion',
+      cardName: 'Dwarven Brew',
       cardType: ECardType.CONSUMABLE,
       cardText: "Heals an ally for 1000 HP and increases damage resistance by 50% until the next hit."
     },
     [EItems.PULVERIZER]: {
-      cardName: 'Inferno',
+      cardName: 'Pulverizer',
       cardType: ECardType.SPELL,
       cardText: "Deals 600 physical damage to a target. Crystal hits damage all nearby units, while unit direct hits destroy equipped Armor."
     }
