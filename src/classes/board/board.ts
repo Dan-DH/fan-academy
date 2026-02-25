@@ -503,7 +503,8 @@ export class Board {
 
   updateEngineerOnShieldLost(engineerId: string): void {
     const engineer = this.units.find(unit => unit.unitId === engineerId);
-    if (!engineer) return; // TODO: check that this doesn't throw when the Engie gets KO'd
+    if (!engineer) return;
     engineer.shieldingAlly = undefined;
+    engineer.updateTileData();
   }
 }

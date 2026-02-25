@@ -195,6 +195,12 @@ export class Crystal extends Phaser.GameObjects.Container {
     I don't think it was used by anything, but we'll see
     */
 
+    if (this.engineerShield) {
+      this.context.gameController?.board.updateEngineerOnShieldLost(this.engineerShield);
+      this.removeEngineerShield();
+      return;
+    }
+
     if (this.debuffLevel > 0) {
       playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
     } else {

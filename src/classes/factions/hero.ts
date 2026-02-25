@@ -52,7 +52,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   speedTile?: boolean;
 
   dwarvenBrew?: boolean;
-  engineerShield?: string; // unitId of the engineer shielding the unit. Will need on the Engineer class for the unit/crystal being shielded
+  engineerShield?: string; // unitId of the engineer shielding the unit
   annihilatorDebuff?: boolean;
   shieldingAlly?: string;
 
@@ -166,8 +166,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (!this.factionBuff) this.factionBuffImage.setVisible(false);
 
     // TODO: place correctly
-    this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew').setVisible(false);
-    this.annihilatorDebuffImage = context.add.image(5, 25, 'annihilatorDebuff').setOrigin(0.5).setScale(0.4).setName('annihilatorDebuff').setVisible(false);
+    this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
+    if (!this.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
+    this.annihilatorDebuffImage = context.add.image(5, 25, 'annihilatorDebuff').setOrigin(0.5).setScale(0.4).setName('annihilatorDebuff');
+    if (!this.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
     this.smokeAnim = context.add.image(0, 0, 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
 
