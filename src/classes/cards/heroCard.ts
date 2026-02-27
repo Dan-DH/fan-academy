@@ -173,9 +173,9 @@ export class HeroCard extends Phaser.GameObjects.Container {
     const totalPow = hero.getTotalPower();
     this.powerText.setText(`${totalPow} ${this.attackType}`);
 
-    const basePower = hero.unitType === EHeroes.WRAITH ? 250 : hero.basePower;
+    const basePower = hero.stats.unitType === EHeroes.WRAITH ? 250 : hero.stats.basePower;
 
-    if (hero.isDebuffed) {
+    if (hero.stats.isDebuffed) {
       this.powerText.setColor('#ff0000');
     } else {
       this.powerText.setColor(this.getTextColor(totalPow, basePower));
@@ -183,19 +183,19 @@ export class HeroCard extends Phaser.GameObjects.Container {
   }
 
   updateCardPhysicalResistance(hero: Hero): void {
-    this.physicalResistanceText.setText(`${hero.physicalDamageResistance} %`);
-    this.physicalResistanceText.setColor(this.getTextColor(hero.physicalDamageResistance, hero.basePhysicalDamageResistance));
+    this.physicalResistanceText.setText(`${hero.stats.physicalDamageResistance} %`);
+    this.physicalResistanceText.setColor(this.getTextColor(hero.stats.physicalDamageResistance, hero.stats.basePhysicalDamageResistance));
   }
 
   updateCardMagicalResistance(hero: Hero): void {
-    this.magicalResistanceText.setText(`${hero.magicalDamageResistance} %`);
-    this.magicalResistanceText.setColor(this.getTextColor(hero.magicalDamageResistance, hero.baseMagicalDamageResistance));
+    this.magicalResistanceText.setText(`${hero.stats.magicalDamageResistance} %`);
+    this.magicalResistanceText.setColor(this.getTextColor(hero.stats.magicalDamageResistance, hero.stats.baseMagicalDamageResistance));
   }
 
   updateCardHealth(hero: Hero ): void {
-    this.currentHpText.setText(`${hero.currentHealth}/${hero.maxHealth}`);
-    this.currentHpText.setColor(this.getTextColor(hero.maxHealth, hero.baseHealth));
-    this.setHealthBar(hero.currentHealth, hero.maxHealth);
+    this.currentHpText.setText(`${hero.stats.currentHealth}/${hero.stats.maxHealth}`);
+    this.currentHpText.setColor(this.getTextColor(hero.stats.maxHealth, hero.stats.baseHealth));
+    this.setHealthBar(hero.stats.currentHealth, hero.stats.maxHealth);
   }
 
   setHealthBar(currentHealth: number, maxHealth: number) {

@@ -18,7 +18,10 @@ export class Paladin extends Dwarf {
 
   }
 
-  heal(_target: Hero): void {};
+  heal(_target: Hero): void {
+    // TODO:
+  };
+
   teleport(_target: Hero): void {};
   shieldAlly(_arget: Hero | Crystal): void {}
 }

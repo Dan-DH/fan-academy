@@ -1,6 +1,7 @@
 import { EClass, EUiSounds } from "../../enums/gameEnums";
 import { IHero, IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
+import { playSound } from "../../utils/gameSounds";
 
 const turnPopupCoordinates = {
   x: 800,
@@ -104,7 +105,4 @@ export class DeckPopup extends Phaser.GameObjects.Container {
 
     this.setVisible(true);
   }
-}
-function playSound(scene: Phaser.Scene, BUTTON_GENERIC: EUiSounds) {
-  throw new Error("Function not implemented.");
 }

@@ -23,6 +23,7 @@ export type Coordinates = {
  * Crystal Interface
  */
 export interface ICrystal {
+  unitId?: string;
   belongsTo: number;
   maxHealth: number;
   currentHealth: number;
@@ -45,6 +46,7 @@ export interface IItem {
   itemType: EItems;
   boardPosition: number // 45-51
   belongsTo: number;
+  row: number;
   canHeal: boolean;
   dealsDamage: boolean;
 }
@@ -54,34 +56,28 @@ export interface IItem {
  */
 export interface IHero {
   class: EClass;
-  faction: EFaction;
-  unitType: EHeroes;
   unitId: string; // userId_unitName_unitNumber
   belongsTo: number;
-
   boardPosition: number;
+  faction: EFaction;
+  unitType: EHeroes;
   row: number;
   col: number;
-
   baseHealth: number;
   maxHealth: number;
   currentHealth: number;
-
   isKO: boolean;
   lastBreath: boolean;
-
   movement: number;
   attackRange: number;
   healingRange: number;
   buffRange: number;
   attackType: EAttackType;
   basePower: number;
-
   physicalDamageResistance: number;
   magicalDamageResistance: number;
   basePhysicalDamageResistance: number;
   baseMagicalDamageResistance: number;
-
   factionBuff: boolean;
   runeMetal: boolean;
   shiningHelm: boolean;

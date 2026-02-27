@@ -7,7 +7,7 @@ import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Board } from "../../board/board";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
 import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
 import { turnIfBehind } from "../../../utils/unitAnimations";
@@ -23,54 +23,54 @@ export class Wizard extends Council {
     const gameController = this.context.gameController!;
     turnIfBehind(this.context, this, target);
 
-    const distance = this.getDistanceToTarget(target);
+    const distance = getDistanceToTarget(this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
       distance === 1 &&
       target instanceof Hero &&
-      target.isKO &&
+      target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
       playSound(this.scene, EGameSounds.WIZARD_ATTACK);
       target.removeFromGame();
     } else {
-      if (this.superCharge) playSound(this.scene, EGameSounds.WIZARD_ATTACK_BIG);
-      if (!this.superCharge) playSound(this.scene, EGameSounds.WIZARD_ATTACK);
+      if (this.stats.superCharge) playSound(this.scene, EGameSounds.WIZARD_ATTACK_BIG);
+      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.WIZARD_ATTACK);
 
       // Get directions for finding out the next targets
-      const attackDirection = gameController.board.getAttackDirection(this.boardPosition, target.boardPosition);
-      const opponentDirection = this.belongsTo === 1 ? [2, 3, 4] : [6, 7, 8];
+      const attackDirection = gameController.board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
+      const opponentDirection = this.stats.belongsTo === 1 ? [2, 3, 4] : [6, 7, 8];
 
       // Collect all targets
       const secondTarget = this.getNextTarget(target, attackDirection, opponentDirection, gameController.board, false);
       let thirdTarget: Hero | Crystal | undefined;
-      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, opponentDirection, gameController.board, false, [target.boardPosition, secondTarget.boardPosition]);
+      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, opponentDirection, gameController.board, false, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
 
       // Apply damage to targets
-      target.getsDamaged(this.getTotalPower(), this.attackType, this);
-      if (secondTarget) secondTarget.getsDamaged(this.getTotalPower() * 0.75, this.attackType, this);
-      if (thirdTarget) thirdTarget.getsDamaged(this.getTotalPower() * 0.56, this.attackType, this);
+      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      if (secondTarget) secondTarget.getsDamaged(this.getTotalPower() * 0.75, this.stats.attackType, this);
+      if (thirdTarget) thirdTarget.getsDamaged(this.getTotalPower() * 0.56, this.stats.attackType, this);
 
-      if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-      if (secondTarget && secondTarget instanceof Hero && secondTarget.isKO && secondTarget.unitType === EHeroes.PHANTOM) secondTarget.removeFromGame();
-      if (thirdTarget && thirdTarget instanceof Hero && thirdTarget.isKO && thirdTarget.unitType === EHeroes.PHANTOM) thirdTarget.removeFromGame();
+      if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+      if (secondTarget && secondTarget instanceof Hero && secondTarget.stats.isKO && secondTarget.stats.unitType === EHeroes.PHANTOM) secondTarget.removeFromGame();
+      if (thirdTarget && thirdTarget instanceof Hero && thirdTarget.stats.isKO && thirdTarget.stats.unitType === EHeroes.PHANTOM) thirdTarget.removeFromGame();
 
       this.removeAttackModifiers();
     }
 
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   getNextTarget(target: Hero | Crystal, attackDirection: number, opponentDirection: number[], board: Board, isLastTarget: boolean, toIgnore?: number[]): Hero | Crystal | undefined {
-    const positionsToIgnore = toIgnore ? toIgnore : [target.boardPosition];
-    const adjacentEnemies = this.getAdjacentEnemyTiles(target.boardPosition, positionsToIgnore);
+    const positionsToIgnore = toIgnore ? toIgnore : [target.stats.boardPosition];
+    const adjacentEnemies = this.getAdjacentEnemyTiles(target.stats.boardPosition, positionsToIgnore);
 
     let maxScore = -1;
     let bestTarget: Tile | undefined;
 
     for (const enemyTile of adjacentEnemies) {
-      const enemyTileDirection = board.getAttackDirection(target.boardPosition, enemyTile.boardPosition);
+      const enemyTileDirection = board.getAttackDirection(target.stats.boardPosition, enemyTile.boardPosition);
 
       let score = 0;
 
@@ -108,12 +108,12 @@ export class Wizard extends Council {
     }
 
     if (bestTarget.hero) {
-      const hero = board.units.find(unit => unit.unitId === bestTarget.hero!.unitId);
+      const hero = board.units.find(unit => unit.stats.unitId === bestTarget.hero!.unitId);
       if (hero) return hero;
     }
 
     if (bestTarget.crystal) {
-      const crystal = board.crystals.find(c => c.boardPosition === bestTarget.crystal!.boardPosition);
+      const crystal = board.crystals.find(c => c.stats.boardPosition === bestTarget.crystal!.boardPosition);
       if (crystal) return crystal;
     }
 

@@ -46,7 +46,7 @@ export class PlayerHealthBar extends Phaser.GameObjects.Container {
   // Updates health visually
   setHealth() {
     this.currentHealth = 0;
-    this.board.crystals.forEach(crystal => {if (crystal.belongsTo === this.player) this.currentHealth += crystal.currentHealth;});
+    this.board.crystals.forEach(crystal => {if (crystal.stats.belongsTo === this.player) this.currentHealth += crystal.stats.currentHealth;});
 
     const ratio = this.currentHealth / this.maxHealth;
     this.healthBar.displayWidth = this.fullWidth * ratio;

@@ -12,24 +12,24 @@ export abstract class Dwarf extends Hero {
   }
 
   equipFactionBuff(handPosition: number): void {
-    playSound(this.scene, EGameSounds.DRAGON_SCALE_USE); // I think Dwarves also use DragonScale
+    playSound(this.scene, EGameSounds.DRAGON_SCALE_USE);
 
     const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
 
-    this.factionBuff = true;
-    this.factionBuffImage.setVisible(true);
-    this.characterImage.setTexture(this.updateCharacterImage());
+    this.stats.factionBuff = true;
+    this.visuals.factionBuffImage.setVisible(true);
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
 
-    this.physicalDamageResistance += 20;
+    this.stats.physicalDamageResistance += 20;
 
-    this.increaseMaxHealth(this.baseHealth * 0.1);
+    this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
     this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.boardPosition);
+    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 }

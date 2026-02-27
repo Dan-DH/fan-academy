@@ -1,11 +1,10 @@
 import { sendTurnMessage } from "../colyseus/colyseusGameRoom";
-import { EActionClass, EActionType, EGameSounds, EGameStatus, EHeroes, ETiles, EUiSounds } from "../enums/gameEnums";
-import { IGame, IGameOver, IGameState, IPlayerState, ITurnAction, IUserData } from "../interfaces/gameInterface";
+import { EActionClass, EActionType, EClass, EGameSounds, EGameStatus, EHeroes, ETiles, EUiSounds } from "../enums/gameEnums";
+import { IGame, IGameOver, IGameState, IHero, IItem, IPlayerState, ITurnAction, IUserData } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { replayButton } from "../scenes/gameSceneUtils/replayButton";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { playSound } from "../utils/gameSounds";
-import { isHero, isItem, getActionClass } from "../utils/gameUtils";
 import { textAnimationSizeIncrease } from "../utils/textAnimations";
 import { getNewPositionAfterForce, forcedMoveSpawnCheck, forcedMoveAnimation } from "../utils/unitAnimations";
 import { visibleUnitCardCheck } from "../utils/unitCards";
@@ -24,6 +23,8 @@ import { Item } from "./factions/item";
 import { Hand } from "./hand";
 import { ConcedeWarningPopup } from "./popups/concedePopup";
 import { TurnWarningPopup } from "./popups/turnPopup";
+import { getActionClass } from "../utils/gameUtils";
+import { specialTileCheck } from "../utils/boardUtils";
 
 export class GameController {
   context: GameScene;
@@ -129,8 +130,8 @@ export class GameController {
       const opponentData = this.context.isPlayerOne ? this.lastTurnState.player2 : this.lastTurnState.player1;
 
       opponentData?.factionData.unitsInHand.forEach(unit => {
-        if (isHero(unit)) opponentHand.push(createNewHero(this.context, unit).setVisible(false).setInteractive(false));
-        if (isItem(unit)) opponentHand.push(createNewItem(this.context, unit).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(this.context, unit as IHero).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(this.context, unit as IItem).setVisible(false).setInteractive(false));
       });
     }
 
@@ -182,7 +183,7 @@ export class GameController {
     const actionTaken = action.action;
     const hand = opponentHand.length ? opponentHand : this.hand.hand;
 
-    const hero = actionTaken === EActionType.SPAWN ? hand.find(unit => unit.boardPosition === action.actorPosition) as Hero : this.board.units.find(unit => unit.boardPosition === action.actorPosition);
+    const hero = actionTaken === EActionType.SPAWN ? hand.find(unit => unit.stats.boardPosition === action.actorPosition) as Hero : this.board.units.find(unit => unit.stats.boardPosition === action.actorPosition);
 
     const tile = this.board.getTileFromBoardPosition(action.targetPosition!);
 
@@ -193,8 +194,8 @@ export class GameController {
   };
 
   async replayUnitAction(action: ITurnAction): Promise<void> {
-    const hero = this.board.units.find(unit => unit.boardPosition === action.actorPosition);
-    const target = this.board.crystals.find(crystal => crystal.boardPosition === action.targetPosition) ?? this.board.units.find(unit => unit.boardPosition === action.targetPosition);
+    const hero = this.board.units.find(unit => unit.stats.boardPosition === action.actorPosition);
+    const target = this.board.crystals.find(crystal => crystal.stats.boardPosition === action.targetPosition) ?? this.board.units.find(unit => unit.stats.boardPosition === action.targetPosition);
     if (!hero || !target) throw new Error('Missing hero or target in attack or heal action');
 
     // VSCode says await has no effect on them, but it does work
@@ -207,17 +208,17 @@ export class GameController {
   async replayUse(action: ITurnAction, opponentHand: (Hero | Item)[]): Promise<void> {
     const hand = opponentHand.length ? opponentHand : this.hand.hand;
 
-    const item = hand.find(item => item.boardPosition === action.actorPosition) as Item;
+    const item = hand.find(item => item.stats.boardPosition === action.actorPosition) as Item;
     if (!item) throw new Error('Missing item in use action');
 
-    if (item.dealsDamage) {
+    if (item.stats.dealsDamage) {
       const tile = this.board.getTileFromBoardPosition(action.targetPosition!);
       if (!item) throw new Error('Missing tile in use action');
       await item.use(tile);
     }
 
-    if (!item.dealsDamage) {
-      const hero = this.board.units.find(unit => unit.boardPosition === action.targetPosition);
+    if (!item.stats.dealsDamage) {
+      const hero = this.board.units.find(unit => unit.stats.boardPosition === action.targetPosition);
       if (!hero) throw new Error('Missing target in use action');
       await item.use(hero);
     }
@@ -288,10 +289,10 @@ export class GameController {
     const unitsToRemove: Hero[] = [];
 
     this.board.units.forEach(unit => {
-      if (unit.isKO) {
-        if (unit.lastBreath) unitsToRemove.push(unit);
-        if (!unit.lastBreath) {
-          unit.lastBreath = true;
+      if (unit.stats.isKO) {
+        if (unit.stats.lastBreath) unitsToRemove.push(unit);
+        if (!unit.stats.lastBreath) {
+          unit.stats.lastBreath = true;
           unit.updateTileData();
         }
       }
@@ -357,21 +358,21 @@ export class GameController {
   }
 
   onHeroClicked(hero: Hero) {
-    console.log(`A hero in position ${hero.boardPosition} has been clicked`);
-    if (hero.boardPosition > 44) this.board.highlightSpawns(hero.unitType);
+    console.log(`A hero in position ${hero.stats.boardPosition} has been clicked`);
+    if (hero.stats.boardPosition > 44) this.board.highlightSpawns(hero.stats.unitType);
 
-    if (hero.boardPosition < 45) {
+    if (hero.stats.boardPosition < 45) {
       this.board.highlightEnemyTargets(hero);
       this.board.highlightFriendlyTargets(hero);
       this.board.highlightMovementArea(hero);
 
-      if (hero.unitType === EHeroes.NINJA || hero.getTile().tileType === ETiles.TELEPORTER) this.board.highlightTeleportOptions(hero);
+      if (hero.stats.unitType === EHeroes.NINJA || hero.getTile().tileType === ETiles.TELEPORTER) this.board.highlightTeleportOptions(hero);
     }
   }
 
   onItemClicked(item: Item) {
-    console.log(`An item ${item.unitId} has been clicked`);
-    if (item.dealsDamage) {
+    console.log(`An item ${item.stats.unitId} has been clicked`);
+    if (item.stats.dealsDamage) {
       this.board.highlightAllBoard();
     } else {
       this.board.highlightEquipmentTargets(item);
@@ -426,8 +427,8 @@ export class GameController {
   }
 
   async pushEnemy(attacker: Hero, target: Hero): Promise<void> {
-    const attackerTile = this.board.getTileFromBoardPosition(attacker.boardPosition);
-    const targetTile = this.board.getTileFromBoardPosition(target.boardPosition);
+    const attackerTile = this.board.getTileFromBoardPosition(attacker.stats.boardPosition);
+    const targetTile = this.board.getTileFromBoardPosition(target.stats.boardPosition);
     if (!attackerTile || !targetTile) {
       console.error('pushEnemy() no attacker or target board position');
       return;
@@ -452,12 +453,12 @@ export class GameController {
       console.error('pushEnemy() Destination tile is occupied');
       return;
     }
-    if (targetNewTile.tileType == ETiles.SPAWN && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.isKO) {
+    if (targetNewTile.tileType == ETiles.SPAWN && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) {
       console.error(`pushEnemy() Can't push a non-KO'd enemy onto a friendly spawn`);
       return;
     }
 
-    if (!target.isKO) target.specialTileCheck(targetNewTile.tileType, targetTile.tileType);
+    if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
     await forcedMoveAnimation(this.context, target, targetNewTile);
 
@@ -467,8 +468,8 @@ export class GameController {
   }
 
   async pullEnemy(attacker: Hero, target: Hero): Promise<void> {
-    const attackerTile = this.board.getTileFromBoardPosition(attacker.boardPosition);
-    const targetTile = this.board.getTileFromBoardPosition(target.boardPosition);
+    const attackerTile = this.board.getTileFromBoardPosition(attacker.stats.boardPosition);
+    const targetTile = this.board.getTileFromBoardPosition(target.stats.boardPosition);
     if (!attackerTile || !targetTile) {
       console.error('pullEnemy() no attacker or target board position');
       return;
@@ -485,12 +486,12 @@ export class GameController {
       console.error('pullEnemy() Destination tile is occupied');
       return;
     }
-    if (targetNewTile.tileType == ETiles.SPAWN && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.isKO) {
+    if (targetNewTile.tileType == ETiles.SPAWN && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) {
       console.error(`pushEnemy() Can't pull a non-KO'd enemy onto a friendly spawn`);
       return;
     }
 
-    if (!target.isKO) target.specialTileCheck(targetNewTile.tileType, targetTile.tileType);
+    if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
     await forcedMoveAnimation(this.context, target, targetNewTile);
 
@@ -498,4 +499,17 @@ export class GameController {
     targetNewTile.hero = target.exportData();
     targetTile.removeHero();
   }
+
+  updateCrystals(belongsTo: number, increase: boolean): void {
+    this.board.crystals.forEach(crystal => {
+      if (crystal.stats.belongsTo !== belongsTo) {
+        let newLevel: number = 0;
+
+        if (increase) newLevel = crystal.stats.debuffLevel + 1;
+        if (!increase && crystal.stats.debuffLevel > 0) newLevel = crystal.stats.debuffLevel - 1; // Safeguard to avoid it going negative until I figure out the bug
+
+        crystal.updateCrystalDebuffAnimation(newLevel);
+      }
+    });
+  };
 }

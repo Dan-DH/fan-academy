@@ -5,7 +5,7 @@ import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
 import { turnIfBehind } from "../../../utils/unitAnimations";
 
@@ -17,7 +17,7 @@ export class Archer extends Council {
   attack(target: Hero | Crystal): void {
     this.flashActingUnit();
 
-    const distance = this.getDistanceToTarget(target);
+    const distance = getDistanceToTarget(this, target);
 
     turnIfBehind(this.context, this, target);
 
@@ -25,7 +25,7 @@ export class Archer extends Council {
       // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
       if (
         target instanceof Hero &&
-        target.isKO &&
+        target.stats.isKO &&
         isEnemySpawn(this.context, target.getTile())
       ) {
         playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
@@ -34,19 +34,19 @@ export class Archer extends Council {
       } else {
         playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
 
-        target.getsDamaged(this.getTotalPower(0.5), this.attackType, this);
+        target.getsDamaged(this.getTotalPower(0.5), this.stats.attackType, this);
         this.removeAttackModifiers();
       }
     } else {
-      if (this.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK_BIG);
-      if (!this.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK);
+      if (this.stats.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK_BIG);
+      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK);
 
-      target.getsDamaged(this.getTotalPower(), this.attackType, this);
+      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

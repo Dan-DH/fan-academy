@@ -2,15 +2,15 @@ import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EActionType, EActionClass, EClass, EItems, EWinConditions } from "../enums/gameEnums";
-import { IHero, IItem, ICrystal, IPlayerState } from "../interfaces/gameInterface";
+import { EActionType, EActionClass, EClass, EWinConditions } from "../enums/gameEnums";
+import { IHero, IItem, ICrystal } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 
-export function isHero(hero: IHero | IItem): hero is Hero {
-  return hero.class === "hero";
+export function isHero(unit: IHero | IItem): boolean {
+  return unit.class === "hero";
 }
 
-export function isItem(item: IHero | IItem): item is Item {
+export function isItem(item: IHero | IItem): boolean {
   return item.class === "item";
 }
 
@@ -22,8 +22,9 @@ export function isOnBoard(position: number): boolean {
   return position >= 0 && position <= 44;
 }
 
-export function belongsToPlayer(context: GameScene, unit: Hero | IHero | Item | IItem | Crystal | ICrystal): boolean {
+export function belongsToPlayer(context: GameScene, unit: Hero | Item | IItem | Crystal | ICrystal | IHero): boolean {
   const playerNumber = context.isPlayerOne ? 1 : 2;
+  if (unit instanceof Hero || unit instanceof Item || unit instanceof Crystal) return unit.stats.belongsTo === playerNumber;
   return unit.belongsTo === playerNumber;
 }
 
@@ -50,62 +51,30 @@ export function getActionClass(action: EActionType): EActionClass {
 export function canBeAttacked(attacker: Hero, tile: Tile): boolean {
   let result = false;
 
-  if (tile.hero && tile.hero.belongsTo !== attacker.belongsTo && !tile.hero.isKO) result = true;
-  if (tile.crystal && tile.crystal.belongsTo !== attacker.belongsTo) result = true;
+  if (tile.hero && tile.hero.belongsTo !== attacker.stats.belongsTo && !tile.hero.isKO) result = true;
+  if (tile.crystal && tile.crystal.belongsTo !== attacker.stats.belongsTo) result = true;
 
   return result;
 }
 
-export function isLastUnit(context: GameScene, hero: Hero): boolean {
-  let attackingPlayer: IPlayerState | undefined;
-  let defendingPlayer: IPlayerState | undefined;
+export function isLastUnit(hero: Hero): boolean {
+  const hand = hero.context.gameController?.hand.getHand();
+  const handUnits = hand?.filter(unit => unit.stats.class === EClass.HERO);
+  if (handUnits?.length) return false;
 
-  if (hero.unitId.includes(context.player1!.playerId)) {
-    attackingPlayer = context.player2;
-    defendingPlayer = context.player1;
-  } else {
-    attackingPlayer = context.player1;
-    defendingPlayer = context.player2;
-  }
-
-  if (!attackingPlayer || !defendingPlayer) throw new Error('updateUnitsLeft() No player found');
-
-  const unitsArray = context.gameController?.board.units;
-  if (!unitsArray) throw new Error('updateUnitsLeft() no units array found');
-
-  // Get remaining units of defending player. Populate gameOver flag if there are none left and the player has no revives in hand
-  const remainingAwakeBoardUnits: Hero[] = [];
-  const remainingKoBoardUnits: Hero[] = [];
-
-  unitsArray.filter(unit => unit.belongsTo === hero.belongsTo).map(unit => unit.isKO ? remainingKoBoardUnits.push(unit) : remainingAwakeBoardUnits.push(unit));
-
-  let hand;
-  let remainingHandUnits;
-  const defendingPlayerIsActivePlayer = defendingPlayer.playerId === context.activePlayer;
-  if (defendingPlayerIsActivePlayer) {
-    hand = context.gameController?.hand.getHand();
-    remainingHandUnits = hand!.find(unit => unit.belongsTo === hero.belongsTo && unit.class === EClass.HERO);
-  } else {
-    hand = defendingPlayer.factionData.unitsInHand;
-    remainingHandUnits = hand.find(unit => unit.belongsTo === hero.belongsTo && unit.class === EClass.HERO);
-  }
-
-  const remainingDeckUnits = defendingPlayer.factionData.unitsInDeck.find(unit => unit.belongsTo === hero.belongsTo && unit.class === EClass.HERO);
-
-  const reviveItems = [EItems.HEALING_POTION, EItems.SOUL_HARVEST];
-  const hasReviveInHand = hand ? hand.find(unit => reviveItems.includes((unit as Item)?.itemType)) : undefined;
-
-  if (remainingAwakeBoardUnits || remainingHandUnits || remainingDeckUnits || remainingKoBoardUnits && hasReviveInHand) return false;
+  const boardUnits = hero.context.gameController?.board.units;
+  const aliveBoardUnits = boardUnits!.filter(unit => unit.stats.belongsTo === hero.stats.belongsTo).filter(unit => !unit.stats.isKO);
+  if (aliveBoardUnits.length) return false;
 
   return true;
 }
 
-export function checkUnitGameOver(context: GameScene, hero: Hero): void {
-  if (!isLastUnit(context, hero)) return;
+export function checkUnitGameOver(hero: Hero): void {
+  if (!isLastUnit(hero)) return;
 
-  const attackingPlayer = hero.unitId.includes(context.player1!.playerId) ? context.player2 : context.player1;
+  const attackingPlayer = hero.stats.unitId.includes(hero.context.player1!.playerId) ? hero.context.player2 : hero.context.player1;
 
-  context.gameController!.gameOver = {
+  hero.context.gameController!.gameOver = {
     winCondition: EWinConditions.UNITS,
     winner: attackingPlayer!.playerId
   };

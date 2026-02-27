@@ -23,24 +23,24 @@ export class Knight extends Council {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
       target instanceof Hero &&
-      target.isKO &&
+      target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
       playSound(this.scene, EGameSounds.KNIGHT_ATTACK);
       target.removeFromGame();
     } else {
-      if (this.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
-      if (!this.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+      if (this.stats.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
+      if (!this.stats.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
 
-      target.getsDamaged(this.getTotalPower(), this.attackType, this);
+      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
-      if (target instanceof Hero && target.unitType !== EHeroes.PHANTOM) gameController.pushEnemy(this, target);
+      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) gameController.pushEnemy(this, target);
 
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

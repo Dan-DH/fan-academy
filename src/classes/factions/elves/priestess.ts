@@ -5,7 +5,7 @@ import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
 import { turnIfBehind } from "../../../utils/unitAnimations";
 
@@ -19,13 +19,13 @@ export class Priestess extends DarkElf {
 
     turnIfBehind(this.context, this, target);
 
-    const distance = this.getDistanceToTarget(target);
+    const distance = getDistanceToTarget(this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
       distance === 1 &&
       target instanceof Hero &&
-      target.isKO &&
+      target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
       playSound(this.scene, EGameSounds.PRIESTESS_ATTACK);
@@ -33,14 +33,14 @@ export class Priestess extends DarkElf {
     } else {
       playSound(this.scene, EGameSounds.PRIESTESS_ATTACK);
 
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.attackType, this);
+      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
       if (damageDone) this.lifeSteal(damageDone);
 
       // Apply a 50% debuff to the target's next attack or heal
       if (target instanceof Hero) {
-        target.isDebuffed = true;
-        target.debuffImage.setVisible(true);
+        target.stats.isDebuffed = true;
+        target.visuals.debuffImage.setVisible(true);
         target.updateTileData();
         target.unitCard.updateCardData(target);
       }
@@ -48,17 +48,17 @@ export class Priestess extends DarkElf {
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   async heal(target: Hero): Promise<void> {
     this.flashActingUnit();
     turnIfBehind(this.context, this, target);
-    if (!this.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    if (this.superCharge)  playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
+    if (this.stats.superCharge)  playSound(this.scene, EGameSounds.HEAL_EXTRA);
 
-    if (target.isKO) {
+    if (target.stats.isKO) {
       const healingAmount = this.getTotalHealing(0.5);
       target.getsHealed(healingAmount);
     } else {
@@ -68,7 +68,7 @@ export class Priestess extends DarkElf {
 
     this.removeAttackModifiers();
 
-    this.context.gameController?.afterAction(EActionType.HEAL, this.boardPosition, target.boardPosition);
+    this.context.gameController?.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
   };
 
   teleport(_target: Hero): void {};

@@ -18,30 +18,30 @@ export class Wraith extends DarkElf {
 
     turnIfBehind(this.context, this, target);
 
-    if (target instanceof Hero && target.isKO) {
+    if (target instanceof Hero && target.stats.isKO) {
       playSound(this.scene, EGameSounds.WRAITH_CONSUME);
       target.removeFromGame(true);
 
-      if (this.unitsConsumed < 3) {
-        this.basePower += 50;
-        this.unitsConsumed++;
+      if (this.stats.unitsConsumed! < 3) {
+        this.stats.basePower += 50;
+        this.stats.unitsConsumed!++;
         this.increaseMaxHealth(100);
         this.updateTileData();
         this.unitCard.updateCardData(this);
       }
     } else {
-      if (this.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK_BIG);
-      if (!this.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK);
+      if (this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK_BIG);
+      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK);
 
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.attackType, this);
+      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
       if (damageDone) this.lifeSteal(damageDone);
 
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

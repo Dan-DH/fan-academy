@@ -14,7 +14,7 @@ export class DragonScale extends Item {
   }
 
   use(target: Hero): void {
-    target.equipFactionBuff(this.boardPosition);
+    target.equipFactionBuff(this.stats.boardPosition);
     this.removeFromGame();
   }
 }
@@ -30,12 +30,12 @@ export class HealingPotion extends Item {
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'healingPotion').setDepth(100);
     useAnimation(potionImage);
 
-    const healingAmount = target.isKO ? 100 : 1000;
+    const healingAmount = target.stats.isKO ? 100 : 1000;
     target.getsHealed(healingAmount);
 
     this.removeFromGame();
 
-    this.context.gameController!.afterAction(EActionType.USE, this.boardPosition, target.boardPosition);
+    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 }
 
@@ -52,31 +52,31 @@ export class Inferno extends Item {
     // Damages enemy units and crystals, and removes enemy KO'd units
     const damage = 350;
 
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this.context, this, targetTile);
+    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
 
     enemyHeroTiles?.forEach(tile => {
-      const hero = this.context.gameController!.board.units.find(unit => unit.boardPosition === tile.boardPosition);
+      const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
       if (!hero) throw new Error('Inferno use() hero not found');
 
       // Inferno removes KO'd enemy units
-      if (hero.isKO){
+      if (hero.stats.isKO){
         hero.removeFromGame(true);
         return;
       }
 
       hero.getsDamaged(damage, EAttackType.MAGICAL);
 
-      if (hero && hero instanceof Hero && hero.unitType === EHeroes.PHANTOM) hero.removeFromGame();
+      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM) hero.removeFromGame();
     });
 
     enemyCrystalTiles.forEach(tile => {
-      const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.boardPosition === tile.boardPosition);
+      const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
       if (!crystal) throw new Error('Inferno use() crystal not found');
 
-      if (crystal.belongsTo !== this.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
+      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
     });
 
     this.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.USE, this.boardPosition, targetTile.boardPosition);
+    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
   }
 }

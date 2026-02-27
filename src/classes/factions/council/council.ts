@@ -4,6 +4,7 @@ import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { useAnimation } from "../../../utils/unitAnimations";
+import { playSound } from "../../../utils/gameSounds";
 
 export abstract class Council extends Hero {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -16,22 +17,19 @@ export abstract class Council extends Hero {
     const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
 
-    this.factionBuff = true;
-    this.factionBuffImage.setVisible(true);
-    this.characterImage.setTexture(this.updateCharacterImage());
+    this.stats.factionBuff = true;
+    this.visuals.factionBuffImage.setVisible(true);
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
 
-    this.physicalDamageResistance += 20;
+    this.stats.physicalDamageResistance += 20;
 
-    this.increaseMaxHealth(this.baseHealth * 0.1);
+    this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
     this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.boardPosition);
+    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
-}
-function playSound(scene: Phaser.Scene, DRAGON_SCALE_USE: EGameSounds) {
-  throw new Error("Function not implemented.");
 }

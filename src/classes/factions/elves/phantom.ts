@@ -4,9 +4,9 @@ import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
+import { isEnemySpawn, specialTileCheck } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { singleTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
@@ -17,9 +17,9 @@ export class Phantom extends Hero {
     if (spawned && tile) {
       this.spawnAnim = context.add.image(0, -15, 'phantomSpawnAnim_1').setOrigin(0.5).setScale(0.9);
 
-      this.specialTileCheck(tile.tileType);
+      specialTileCheck(this, tile.tileType);
       this.add([this.spawnAnim]);
-      this.singleTween(this.spawnAnim, 200);
+      singleTween(this.spawnAnim, 200);
     }
   }
 
@@ -33,18 +33,18 @@ export class Phantom extends Hero {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
       target instanceof Hero &&
-      target.isKO &&
+      target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
       target.removeFromGame();
     } else {
-      target.getsDamaged(this.getTotalPower(), this.attackType, this);
+      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

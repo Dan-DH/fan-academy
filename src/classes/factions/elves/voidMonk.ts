@@ -21,13 +21,13 @@ export class VoidMonk extends DarkElf {
 
     const splashedEnemies: (Hero | Crystal)[] = [];
 
-    if (this.superCharge) playSound(this.scene, EGameSounds.VOIDMONK_ATTACK_BIG);
-    if (!this.superCharge) playSound(this.scene, EGameSounds.VOIDMONK_ATTACK);
+    if (this.stats.superCharge) playSound(this.scene, EGameSounds.VOIDMONK_ATTACK_BIG);
+    if (!this.stats.superCharge) playSound(this.scene, EGameSounds.VOIDMONK_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
       target instanceof Hero &&
-      target.isKO &&
+      target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
       target.removeFromGame();
@@ -35,14 +35,14 @@ export class VoidMonk extends DarkElf {
       const board = this.context.gameController!.board;
 
       // Get the direction of the attack and offset tiles
-      const attackDirection = board.getAttackDirection(this.boardPosition, target.boardPosition);
+      const attackDirection = board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
 
-      const offsetTiles = this.getOffsetTiles(target.boardPosition, attackDirection);
+      const offsetTiles = this.getOffsetTiles(target.stats.boardPosition, attackDirection);
 
-      if (!offsetTiles.length) throw new Error(`voidMonk attack() No offsetTiles: ${this.boardPosition}, ${target.boardPosition}`);
+      if (!offsetTiles.length) throw new Error(`voidMonk attack() No offsetTiles: ${this.stats.boardPosition}, ${target.stats.boardPosition}`);
 
       for (const offset of offsetTiles) {
-        const tileBP = target.boardPosition + offset;
+        const tileBP = target.stats.boardPosition + offset;
         if (!isOnBoard(tileBP)) continue;
 
         const tile = board.getTileFromBoardPosition(tileBP);
@@ -51,24 +51,24 @@ export class VoidMonk extends DarkElf {
         if (!canBeAttacked(this, tile)) continue;
 
         if (tile.hero) {
-          const hero = board.units.find(unit => unit.unitId === tile.hero!.unitId);
+          const hero = board.units.find(unit => unit.stats.unitId === tile.hero!.unitId);
           if (hero) splashedEnemies.push(hero);
         }
 
         if (tile.crystal) {
-          const crystal = board.crystals.find(c => c.boardPosition === tile.crystal!.boardPosition);
+          const crystal = board.crystals.find(c => c.stats.boardPosition === tile.crystal!.boardPosition);
           if (crystal) splashedEnemies.push(crystal);
         }
       };
 
       // Apply damage to targets
       let damageDone = 0;
-      const unitDamage = target.getsDamaged(this.getTotalPower(), this.attackType, this);
+      const unitDamage = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       if (unitDamage) damageDone += unitDamage;
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
         splashedEnemies.forEach(enemy => {
-          const unitDamage = enemy.getsDamaged(splashDamage, this.attackType, this);
+          const unitDamage = enemy.getsDamaged(splashDamage, this.stats.attackType, this);
           if (unitDamage) damageDone += unitDamage;
         });
       }
@@ -79,11 +79,11 @@ export class VoidMonk extends DarkElf {
     }
 
     splashedEnemies.forEach(enemy => {
-      if (enemy instanceof Hero && enemy.unitType === EHeroes.PHANTOM && enemy.isKO) enemy.removeFromGame(true);
+      if (enemy instanceof Hero && enemy.stats.unitType === EHeroes.PHANTOM && enemy.stats.isKO) enemy.removeFromGame(true);
     });
 
-    if (target && target instanceof Hero && target.isKO && target.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.boardPosition, target.boardPosition);
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   getOffsetTiles(targetBoardPosition: number, attackDirection: number): number[] {

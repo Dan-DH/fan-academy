@@ -6,10 +6,10 @@ import { EGameSounds, EGameStatus, EHeroes, EItems, ERange, ETiles } from "../en
 import GameScene from "../scenes/game.scene";
 import { deselectUnit, selectUnit } from "./playerUtils";
 import { Crystal } from "../classes/board/crystal";
-import { isHero, belongsToPlayer, isItem } from "./gameUtils";
 import { isEnemySpawn } from "./boardUtils";
 import { playSound, selectItemSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";
+import { belongsToPlayer } from "./gameUtils";
 
 export function makeUnitClickable(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
@@ -42,7 +42,7 @@ export function makeUnitClickable(unit: Hero | Item, context: GameScene): void {
 }
 
 function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
-  console.log(`Unit in ${unit.boardPosition}`, unit);
+  console.log(`Unit in ${unit.stats.boardPosition}`, unit);
   // Set a timer for the a hold press on mobile
   context.longPressStart = context.time.now;
 
@@ -50,22 +50,22 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
 
   const activeUnit = context.activeUnit;
-  const activeUnitTile = activeUnit && isHero(activeUnit) && activeUnit.boardPosition < 45 ? (activeUnit as Hero).getTile() : undefined;
+  const activeUnitTile = activeUnit && activeUnit instanceof Hero && activeUnit.stats.boardPosition < 45 ? activeUnit.getTile() : undefined;
   const isFriendly = belongsToPlayer(context, unit);
-  const isEnemy = isHero(unit) && !isFriendly;
-  const isSameUnit = activeUnit?.unitId === unit.unitId;
+  const isEnemy = unit instanceof Hero && !isFriendly;
+  const isSameUnit = activeUnit?.stats.unitId === unit.stats.unitId;
 
-  const healReticle = isHero(unit) ? unit.getByName('healReticle') as Phaser.GameObjects.Image : undefined;
-  const attackReticle = isHero(unit) ? unit.getByName('attackReticle') as Phaser.GameObjects.Image : undefined;
-  const allyReticle = isHero(unit) ? unit.getByName('allyReticle') as Phaser.GameObjects.Image : undefined;
+  const healReticle = unit instanceof Hero ? unit.getByName('healReticle') as Phaser.GameObjects.Image : undefined;
+  const attackReticle = unit instanceof Hero ? unit.getByName('attackReticle') as Phaser.GameObjects.Image : undefined;
+  const allyReticle = unit instanceof Hero ? unit.getByName('allyReticle') as Phaser.GameObjects.Image : undefined;
 
   // CASE 1: No active unit
   if (!activeUnit && isFriendly) {
-    if (isHero(unit) && unit.isKO) return;
+    if (unit instanceof Hero && unit.stats.isKO) return;
 
-    if (unit.boardPosition >= 45) {
-      if (isHero(unit)) playSound(context, EGameSounds.HERO_HAND_SELECT);
-      if (isItem(unit)) selectItemSound(context, unit.itemType);
+    if (unit.stats.boardPosition >= 45) {
+      if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
+      if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
     } else {
       playSound(context, EGameSounds.HERO_BOARD_SELECT);
     }
@@ -76,7 +76,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
   // CASE 2: Clicking the active unit deselects it, unless it's a healer
   if (isSameUnit) {
-    if (isHero(activeUnit) && activeUnit.canHeal && healReticle?.visible && isHero(unit)) {
+    if (activeUnit instanceof Hero && activeUnit.stats.canHeal && healReticle?.visible && unit instanceof Hero) {
       activeUnit.heal(unit);
       return;
     } else {
@@ -89,11 +89,11 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   if (activeUnit && !isSameUnit) {
     // Unique case: Wraith can spawn on a KO'd unit
     if (
-      isHero(unit) &&
-      unit.isKO &&
-      isHero(activeUnit) &&
-      activeUnit.unitType === EHeroes.WRAITH &&
-      activeUnit.boardPosition >= 45 &&
+      unit instanceof Hero &&
+      unit.stats.isKO &&
+      activeUnit instanceof Hero &&
+      activeUnit.stats.unitType === EHeroes.WRAITH &&
+      activeUnit.stats.boardPosition >= 45 &&
       !isEnemySpawn(context, unit.getTile()) &&
       unit.getTile().isHighlighted
     ) {
@@ -103,25 +103,25 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
     // CASE 3.1: Clicking an enemy unit
     if (isEnemy) {
-      const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.boardPosition);
+      const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.stats.boardPosition);
 
-      if (isHero(activeUnit) && attackReticle?.visible) {
+      if (activeUnit instanceof Hero && attackReticle?.visible) {
         activeUnit.attack(unit);
         return;
       }
 
       // Stomp enemy KO'd units
-      if (isHero(activeUnit) && activeUnit.boardPosition < 45) {
+      if (activeUnit instanceof Hero && activeUnit.stats.boardPosition < 45) {
         const tilesInMovingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
         const tilesInAttackingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.ATTACK);
         tilesInMovingRange.map(tile => console.log('TILE POSITION', tile.boardPosition));
-        console.log('Unit board position ->', unit.boardPosition);
-        const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.boardPosition);
-        const withinAttackingRange = tilesInAttackingRange.find(tile => tile.boardPosition === unit.boardPosition);
+        console.log('Unit board position ->', unit.stats.boardPosition);
+        const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
+        const withinAttackingRange = tilesInAttackingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const necromancerStompCheck = context.gameController!.board.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
 
         if (
-          unit.isKO &&
+          unit.stats.isKO &&
           necromancerStompCheck &&
           (withinStompingRange || unitTile.isHighlighted)
         ) {
@@ -129,7 +129,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
           return;
         }
         if (
-          unit.isKO && unitTile.tileType === ETiles.TELEPORTER && activeUnitTile?.tileType === ETiles.TELEPORTER
+          unit.stats.isKO && unitTile.tileType === ETiles.TELEPORTER && activeUnitTile?.tileType === ETiles.TELEPORTER
         ) {
           activeUnit.move(unitTile);
           return;
@@ -138,9 +138,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
       // Stomp a KO unit or Phantom on a friendly spawn tile with a unit from hand
       if (
-        isHero(activeUnit) &&
-        activeUnit.boardPosition >= 45 &&
-        (unit.isKO || unit.unitType === EHeroes.PHANTOM) &&
+        activeUnit instanceof Hero &&
+        activeUnit.stats.boardPosition >= 45 &&
+        (unit.stats.isKO || unit.stats.unitType === EHeroes.PHANTOM) &&
         !isEnemySpawn(context, unitTile) &&
         unitTile.isHighlighted
       ) {
@@ -150,9 +150,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
       // Stomp enemy phantoms on friendly spawn tiles with a unit from hand
       if (
-        isHero(activeUnit) &&
-        activeUnit.boardPosition >= 45 &&
-        unit.unitType === EHeroes.PHANTOM &&
+        activeUnit instanceof Hero &&
+        activeUnit.stats.boardPosition >= 45 &&
+        unit.stats.unitType === EHeroes.PHANTOM &&
         unitTile.tileType === ETiles.SPAWN &&
         !isEnemySpawn(context, unitTile) &&
         unitTile.isHighlighted
@@ -161,66 +161,66 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
         return;
       }
 
-      if (isItem(activeUnit) && activeUnit.dealsDamage) {
+      if (activeUnit instanceof Item && activeUnit.stats.dealsDamage) {
         activeUnit.use(unit.getTile());
         return;
       }
     }
 
     // CASE 3.2: Clicking a friendly unit on the board
-    if (isHero(unit) && isFriendly && unit.boardPosition < 45) {
+    if (unit instanceof Hero && isFriendly && unit.stats.boardPosition < 45) {
       // Necromancer and Wraith can target friendly units if they are knocked down. NOTE: this check should always go before the stomping check
-      if (isHero(activeUnit) && [EHeroes.NECROMANCER, EHeroes.WRAITH].includes(activeUnit.unitType) && unit.isKO && attackReticle?.visible) {
+      if (activeUnit instanceof Hero && [EHeroes.NECROMANCER, EHeroes.WRAITH].includes(activeUnit.stats.unitType) && unit.stats.isKO && attackReticle?.visible) {
         activeUnit.attack(unit);
         return;
       }
 
-      if (isHero(activeUnit)) {
+      if (activeUnit instanceof Hero) {
         // Spawn stomp friendly units with a unit from hand
         const unitTile = unit.getTile();
-        if (unit.isKO && unitTile.tileType === ETiles.SPAWN && unitTile.isHighlighted && activeUnit.boardPosition >= 45) {
+        if (unit.stats.isKO && unitTile.tileType === ETiles.SPAWN && unitTile.isHighlighted && activeUnit.stats.boardPosition >= 45) {
           activeUnit.spawn(unitTile);
           return;
         }
 
-        if (activeUnit.canHeal && healReticle?.visible) {
+        if (activeUnit.stats.canHeal && healReticle?.visible) {
           activeUnit.heal(unit);
           return;
         }
 
-        if (activeUnit.canBuff && healReticle?.visible) {
+        if (activeUnit.stats.canBuff && healReticle?.visible) {
           activeUnit.shieldAlly(unit); // Engineers only
           return;
         }
 
         // Ninja can swap places with any friendly unit on the board
-        if (activeUnit.unitType === EHeroes.NINJA && allyReticle?.visible && !unit.isKO) {
+        if (activeUnit.stats.unitType === EHeroes.NINJA && allyReticle?.visible && !unit.stats.isKO) {
           activeUnit.teleport(unit);
           return;
         }
 
         // Stomp friendly KO'd units, unless you are a Necromancer
-        if (activeUnit.boardPosition < 45) {
+        if (activeUnit.stats.boardPosition < 45) {
           const tilesInRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
-          const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.boardPosition);
+          const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
           if (
-            unit.isKO &&
-            activeUnit.unitType !== EHeroes.NECROMANCER &&
+            unit.stats.isKO &&
+            activeUnit.stats.unitType !== EHeroes.NECROMANCER &&
             (withinStompingRange || unitTile.isHighlighted)
           ) {
-            const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.boardPosition);
+            const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.stats.boardPosition);
             activeUnit.move(unitTile);
             return;
           }
         }
       }
 
-      if (isItem(activeUnit)) {
-        if (unit.isAlreadyEquipped(activeUnit) || unit.unitType === EHeroes.PHANTOM && !activeUnit.dealsDamage) return;
+      if (activeUnit instanceof Item) {
+        if (unit.isAlreadyEquipped(activeUnit) || unit.stats.unitType === EHeroes.PHANTOM && !activeUnit.stats.dealsDamage) return;
 
-        if (activeUnit.dealsDamage) activeUnit.use(unit.getTile());
+        if (activeUnit.stats.dealsDamage) activeUnit.use(unit.getTile());
 
-        if (!activeUnit.dealsDamage && (!unit.isKO || activeUnit.itemType === EItems.HEALING_POTION)) activeUnit.use(unit);
+        if (!activeUnit.stats.dealsDamage && (!unit.stats.isKO || activeUnit.stats.itemType === EItems.HEALING_POTION)) activeUnit.use(unit);
 
         return;
       }
@@ -228,12 +228,12 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
     // If the new unit can't be attacked, healed or teleported, and it's a friendly unit, switch focus to new unit
     if (isFriendly) {
-      if (isHero(unit) && unit.isKO) return;
+      if (unit instanceof Hero && unit.stats.isKO) return;
       deselectUnit(context);
 
-      if (unit.boardPosition >= 45) {
-        if (isHero(unit)) playSound(context, EGameSounds.HERO_HAND_SELECT);
-        if (isItem(unit)) selectItemSound(context, unit.itemType);
+      if (unit.stats.boardPosition >= 45) {
+        if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
+        if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
       } else {
         playSound(context, EGameSounds.HERO_BOARD_SELECT);
       }
@@ -272,15 +272,15 @@ export function makeTileClickable(tile: Tile, context: GameScene): void {
     if (!activeUnit || !gameController) return;
 
     // If unit is on the board and the tile clicked on is in range, move the unit
-    if (activeUnit.boardPosition < 45 && tile.isHighlighted && isHero(activeUnit)) {
+    if (activeUnit.stats.boardPosition < 45 && tile.isHighlighted && activeUnit instanceof Hero) {
       activeUnit.move(tile);
       playSound(context, EGameSounds.HERO_MOVE);
     }
 
     // If unit is in hand and clicked tile is highlighted, spawn. Otherwise, use item
-    if (activeUnit.boardPosition > 44 && tile.isHighlighted) {
-      if (isHero(activeUnit)) activeUnit.spawn(tile);
-      if (isItem(activeUnit) && activeUnit.dealsDamage) activeUnit.use(tile);
+    if (activeUnit.stats.boardPosition > 44 && tile.isHighlighted) {
+      if (activeUnit instanceof Hero) activeUnit.spawn(tile);
+      if (activeUnit instanceof Item && activeUnit.stats.dealsDamage) activeUnit.use(tile);
     }
   });
 
@@ -316,7 +316,7 @@ export function makeCrystalClickable(crystal: Crystal, context: GameScene): void
   crystal.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _Y: number, event: Types.Input.EventData) => {
     if (context.currentGame.status === EGameStatus.FINISHED) return;
 
-    console.log(`Crystal on ${crystal.boardPosition}`, crystal);
+    console.log(`Crystal on ${crystal.stats.boardPosition}`, crystal);
 
     visibleUnitCardCheck(context);
 
@@ -334,20 +334,20 @@ export function makeCrystalClickable(crystal: Crystal, context: GameScene): void
 
     // Handling left click
     if (pointer.button === 0) {
-      const attackReticle = crystal.attackReticle;
-      const healReticle = crystal.healReticle;
+      const attackReticle = crystal.visuals.attackReticle;
+      const healReticle = crystal.visuals.healReticle;
       const activeUnit = context.activeUnit;
 
       if (activeUnit) {
-        if (isHero(activeUnit) && attackReticle.visible) {
+        if (activeUnit instanceof Hero && attackReticle.visible) {
           activeUnit.attack(crystal);
           return;
         }
-        if (isHero(activeUnit) && healReticle.visible) {
+        if (activeUnit instanceof Hero && healReticle.visible) {
           activeUnit.shieldAlly(crystal);
           return;
         }
-        if (isItem(activeUnit) && activeUnit?.dealsDamage) {
+        if (activeUnit instanceof Item && activeUnit?.stats.dealsDamage) {
           activeUnit.use(crystal.getTile());
           return;
         }
@@ -369,7 +369,7 @@ export function makeCrystalClickable(crystal: Crystal, context: GameScene): void
     // Ignore if there was a long press. Used on mobile
     if (context.visibleUnitCard) return;
 
-    crystal.setDepth(crystal.row + 10);
+    crystal.setDepth(crystal.stats.row + 10);
     crystal.unitCard.setVisible(false);
   });
 }

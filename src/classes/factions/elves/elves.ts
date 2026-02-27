@@ -16,21 +16,21 @@ export abstract class DarkElf extends Hero {
     const soulStone = this.scene.add.image(this.x, this.y - 10, 'soulStone').setOrigin(0.5).setDepth(100);
     useAnimation(soulStone);
 
-    this.factionBuff = true;
-    this.factionBuffImage.setVisible(true);
-    this.characterImage.setTexture(this.updateCharacterImage());
-    this.increaseMaxHealth(this.baseHealth * 0.1);
+    this.stats.factionBuff = true;
+    this.visuals.factionBuffImage.setVisible(true);
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
     playSound(this.scene, EGameSounds.ITEM_USE);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.boardPosition);
+    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   lifeSteal(damage: number): void {
-    if (this.factionBuff) {
+    if (this.stats.factionBuff) {
       const roundedHealing = roundToFive(damage * 0.666);
       this.getsHealed(roundedHealing);
     } else {
@@ -76,7 +76,9 @@ export function createGenericElvesData(data: Partial<IHero>): {
   row: number,
   col: number,
   isDebuffed: boolean,
-  attackTile: boolean
+  attackTile: boolean,
+  buffRange: number,
+  canBuff: boolean
 } {
   return {
     class: EClass.HERO,
@@ -93,6 +95,8 @@ export function createGenericElvesData(data: Partial<IHero>): {
     row: data.row ?? 0,
     col: data.col ?? 0,
     isDebuffed: data.isDebuffed ?? false,
-    attackTile: data.attackTile ?? false
+    attackTile: data.attackTile ?? false,
+    buffRange: 0,
+    canBuff: false
   };
 }

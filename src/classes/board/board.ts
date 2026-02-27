@@ -4,14 +4,14 @@ import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
 import { isEnemySpawn } from "../../utils/boardUtils";
 import { createNewHero } from "../../utils/createUnit";
-import { Dwarf } from "../factions/dwarves/dwarves";
 import { ManaVial } from "../factions/elves/items";
 import { Phantom } from "../factions/elves/phantom";
-import { Hero } from "../factions/hero";
 import { Item } from "../factions/item";
 import { Crystal } from "./crystal";
 import { Tile } from "./tile";
 import { Engineer } from "../factions/dwarves/enginner";
+import { Dwarf } from "../factions/dwarves/dwarves";
+import { Hero } from "../factions/hero";
 
 export class Board {
   topLeft: Coordinates =  {
@@ -28,7 +28,7 @@ export class Board {
   constructor(context: GameScene, data: ITile[]) {
     this.context = context;
     this.tiles = this.createTileGrid(data);
-    this.crystals.forEach(crystal => crystal.updateDebuffAnimation(crystal.debuffLevel));
+    this.crystals.forEach(crystal => crystal.updateCrystalDebuffAnimation(crystal.stats.debuffLevel));
   }
 
   createTileGrid(tiles: ITile[]) {
@@ -37,7 +37,7 @@ export class Board {
     tiles.forEach(tile => {
       const newTile = new Tile(this.context, tile);
       if (newTile.hero) this.units.push(createNewHero(this.context, newTile.hero, newTile));
-      if (newTile.crystal) this.crystals.push(new Crystal(this.context, newTile.crystal, tile));
+      if (newTile.crystal) this.crystals.push(new Crystal(this.context, newTile.crystal)); // TODO: I used to pass a tile here as a last param. Unused (I think) in the constructor
       grid.push(newTile);
     });
 
@@ -96,7 +96,7 @@ export class Board {
     const enemyLOSCheck: (Hero | Crystal)[] = [];
 
     tilesInRange.forEach(tile => {
-      const target = tile.hero ? this.units.find(unit => unit.unitId === tile.hero!.unitId) : tile.crystal ? this.crystals.find(crystal => crystal.boardPosition === tile.crystal?.boardPosition) : undefined;
+      const target = tile.hero ? this.units.find(unit => unit.stats.unitId === tile.hero!.unitId) : tile.crystal ? this.crystals.find(crystal => crystal.stats.boardPosition === tile.crystal?.boardPosition) : undefined;
       if (!target) {
         console.error('No target found', tile.hero);
         return;
@@ -111,10 +111,10 @@ export class Board {
        */
 
       if (
-        target instanceof Crystal && target.belongsTo !== hero.belongsTo ||
-        target instanceof Hero && target.belongsTo !== hero.belongsTo && !target.isKO ||
-        (hero.unitType === EHeroes.NECROMANCER || hero.unitType === EHeroes.WRAITH) && target instanceof Hero && target.isKO ||
-        target instanceof Hero && target.isKO && this.isOrthogonalAdjacent(hero, target) && isEnemySpawn(this.context, target.getTile())
+        target instanceof Crystal && target.stats.belongsTo !== hero.stats.belongsTo ||
+        target instanceof Hero && target.stats.belongsTo !== hero.stats.belongsTo && !target.stats.isKO ||
+        (hero.stats.unitType === EHeroes.NECROMANCER || hero.stats.unitType === EHeroes.WRAITH) && target instanceof Hero && target.stats.isKO ||
+        target instanceof Hero && target.stats.isKO && this.isOrthogonalAdjacent(hero, target) && isEnemySpawn(this.context, target.getTile())
       ) {
         enemyLOSCheck.push(target);
       }
@@ -131,15 +131,15 @@ export class Board {
       }
     });
 
-    enemiesToHighlight.forEach(enemy => enemy.attackReticle.setVisible(true));
-    enemiesBlocked.forEach(enemy => enemy.blockedLOS.setVisible(true));
+    enemiesToHighlight.forEach(enemy => enemy.visuals.attackReticle.setVisible(true));
+    enemiesBlocked.forEach(enemy => enemy.visuals.blockedLOS.setVisible(true));
   }
 
   highlightFriendlyTargets(hero: Hero) {
-    if (!hero.canHeal && !hero.canBuff) return;
+    if (!hero.stats.canHeal && !hero.stats.canBuff) return;
 
-    const tilesInHealingRange: Tile[] = hero.canHeal ? this.getHeroTilesInRange(hero, ERange.HEAL) : [];
-    const tilesInBuffRange: Tile[] = hero.canBuff ? this.getHeroTilesInRange(hero, ERange.BUFF) : [];
+    const tilesInHealingRange: Tile[] = hero.stats.canHeal ? this.getHeroTilesInRange(hero, ERange.HEAL) : [];
+    const tilesInBuffRange: Tile[] = hero.stats.canBuff ? this.getHeroTilesInRange(hero, ERange.BUFF) : [];
     const tilesInRange: Tile[] = tilesInHealingRange.concat(tilesInBuffRange);
 
     console.log('TILEHEALINGRANGE', tilesInHealingRange);
@@ -149,20 +149,20 @@ export class Board {
     if (!tilesInRange.length) return;
 
     tilesInRange.forEach(tile => {
-      const target = tile.hero ? this.units.find(unit => unit.unitId === tile.hero?.unitId) : this.crystals.find(crystal => crystal.boardPosition === tile.crystal?.boardPosition);
+      const target = tile.hero ? this.units.find(unit => unit.stats.unitId === tile.hero?.unitId) : this.crystals.find(crystal => crystal.stats.boardPosition === tile.crystal?.boardPosition);
       if (!target) {
         console.error('No healing target found', tile);
         return;
       }
 
-      const maxHealth = target.maxHealth;
-      const currentHealth = target.currentHealth;
+      const maxHealth = target.stats.maxHealth;
+      const currentHealth = target.stats.currentHealth;
 
-      if (target instanceof Hero && hero.canHeal && target.belongsTo === hero.belongsTo && currentHealth! < maxHealth!) {
-        target.healReticle.setVisible(true);
+      if (target instanceof Hero && hero.stats.canHeal && target.stats.belongsTo === hero.stats.belongsTo && currentHealth! < maxHealth!) {
+        target.visuals.healReticle.setVisible(true);
       }
-      if (hero.canBuff && target.belongsTo === hero.belongsTo && !target.engineerShield) {
-        target.healReticle.setVisible(true); // will need to update this logic for any future buffs by other units
+      if (hero.stats.canBuff && target.stats.belongsTo === hero.stats.belongsTo && !target.stats.engineerShield) {
+        target.visuals.healReticle.setVisible(true); // will need to update this logic for any future buffs by other units
       }
     });
   }
@@ -181,17 +181,17 @@ export class Board {
     }
 
     // Ninja teleporting
-    if (hero.unitType !== EHeroes.NINJA) return;
+    if (hero.stats.unitType !== EHeroes.NINJA) return;
 
     const friendlyUnitsOnBoard: Hero[] = [];
     this.units.forEach(unit => {
-      if (hero.belongsTo === unit.belongsTo && !unit.isKO) friendlyUnitsOnBoard.push(unit);
+      if (hero.stats.belongsTo === unit.stats.belongsTo && !unit.stats.isKO) friendlyUnitsOnBoard.push(unit);
     });
 
     if (friendlyUnitsOnBoard.length <= 1) return;
 
     friendlyUnitsOnBoard.forEach(unit => {
-      unit.allyReticle.setVisible(true);
+      unit.visuals.allyReticle.setVisible(true);
     });
   }
 
@@ -199,12 +199,12 @@ export class Board {
     const tilesToHighlight: Tile[] = [];
 
     this.units.forEach(hero => {
-      if (hero.belongsTo !== item.belongsTo) return;
+      if (hero.stats.belongsTo !== item.stats.belongsTo) return;
       if (hero instanceof Phantom) return;
       if (hero.isAlreadyEquipped(item)) return;
-      if (item.canHeal && hero.isFullHP()) return;
-      if (!item.canHeal && hero.isKO) return;
-      if (item.canHeal &&  hero.isKO) {
+      if (item.stats.canHeal && hero.isFullHP()) return;
+      if (!item.stats.canHeal && hero.stats.isKO) return;
+      if (item.stats.canHeal &&  hero.stats.isKO) {
         if (item instanceof ManaVial) return;
         // DWARVES: add brew check
       }
@@ -227,26 +227,26 @@ export class Board {
 
   removeReticles(): void {
     this.units.forEach(unit => {
-      unit.attackReticle.setVisible(false);
-      unit.blockedLOS.setVisible(false);
+      unit.visuals.attackReticle.setVisible(false);
+      unit.visuals.blockedLOS.setVisible(false);
 
-      unit.healReticle.setVisible(false);
-      unit.allyReticle.setVisible(false);
+      unit.visuals.healReticle.setVisible(false);
+      unit.visuals.allyReticle.setVisible(false);
     });
 
     this.crystals.forEach(crystal => {
-      crystal.attackReticle.setVisible(false);
-      crystal.healReticle.setVisible(false);
-      crystal.blockedLOS.setVisible(false);
+      crystal.visuals.attackReticle.setVisible(false);
+      crystal.visuals.healReticle.setVisible(false);
+      crystal.visuals.blockedLOS.setVisible(false);
     });
   }
 
   getHeroTilesInRange(hero: Hero, rangeType: ERange): Tile[] {
-    const heroTile = this.getTileFromBoardPosition(hero.boardPosition);
+    const heroTile = this.getTileFromBoardPosition(hero.stats.boardPosition);
     let speedTileBonus = 0;
     let range: number;
 
-    if (hero.speedTile) {
+    if (hero.stats.speedTile) {
       if (hero instanceof Dwarf) {
         speedTileBonus = hero instanceof Engineer ? 4 : 3;
       } else {
@@ -256,19 +256,19 @@ export class Board {
 
     switch (rangeType) {
       case ERange.MOVE:
-        range = hero.movement + speedTileBonus;
+        range = hero.stats.movement + speedTileBonus;
         break;
 
       case ERange.ATTACK:
-        range = hero.attackRange;
+        range = hero.stats.attackRange;
         break;
 
       case ERange.HEAL:
-        range = hero.healingRange;
+        range = hero.stats.healingRange;
         break;
 
       case ERange.BUFF:
-        range = hero.buffRange;
+        range = hero.stats.buffRange;
         break;
 
       default:
@@ -294,7 +294,7 @@ export class Board {
         ) inRangeTiles.add(tile);
 
         if ([ERange.ATTACK, ERange.HEAL, ERange.BUFF].includes(rangeType)) {
-          if (tile.crystal || tile.hero && tile.hero.unitId !== hero.unitId) inRangeTiles.add(tile); // TODO: refactor this for legibility
+          if (tile.crystal || tile.hero && tile.hero.unitId !== hero.stats.unitId) inRangeTiles.add(tile); // TODO: refactor this for legibility
         }
       }
     });
@@ -382,8 +382,8 @@ export class Board {
   hasLineOfSight(attacker: Hero, target: (Hero | Crystal)): boolean {
     if (this.isAdjacent(attacker, target)) return true;
 
-    if (attacker.row === target.row || attacker.col === target.col) {
-      const attackDirection = this.getAttackDirection(attacker.boardPosition, target.boardPosition);
+    if (attacker.stats.row === target.stats.row || attacker.stats.col === target.stats.col) {
+      const attackDirection = this.getAttackDirection(attacker.stats.boardPosition, target.stats.boardPosition);
 
       const attackDirectionOffsetMap: Record<string, number[]> = {
         1: [-9, -18],
@@ -397,9 +397,9 @@ export class Board {
       if (!offsets) return true;
 
       for (const offset of offsets) {
-        const positionToCheck = attacker.boardPosition + offset; // should never be out of bounds
+        const positionToCheck = attacker.stats.boardPosition + offset; // should never be out of bounds
 
-        if (positionToCheck === target.boardPosition) return true; // don't block self
+        if (positionToCheck === target.stats.boardPosition) return true; // don't block self
 
         const tile = this.getTileFromBoardPosition(positionToCheck);
 
@@ -426,8 +426,8 @@ export class Board {
     };
 
     const getOffset = {
-      row: target.row - attacker.row,
-      col: target.col - attacker.col
+      row: target.stats.row - attacker.stats.row,
+      col: target.stats.col - attacker.stats.col
     };
 
     const tileCoordKey = `${getOffset.row}, ${getOffset.col}`;
@@ -437,8 +437,8 @@ export class Board {
 
     if (offsetsToCheck && offsetsToCheck.length) {
       for (const offset of offsetsToCheck) {
-        const tileRow = attacker.row + offset[0];
-        const tileCol = attacker.col + offset[1];
+        const tileRow = attacker.stats.row + offset[0];
+        const tileCol = attacker.stats.col + offset[1];
 
         const isWrongRow = tileRow < 0 || tileRow > 4;
         const isWrongCol = tileCol < 0 || tileCol > 8;
@@ -446,7 +446,7 @@ export class Board {
 
         const tile = this.getTileFromCoordinates(tileRow, tileCol);
 
-        if (tile.boardPosition === target.boardPosition) return true; // don't block self
+        if (tile.boardPosition === target.stats.boardPosition) return true; // don't block self
 
         if (
           tile.crystal && !belongsToPlayer(this.context, tile.crystal) ||
@@ -463,24 +463,24 @@ export class Board {
 
   // Includes diagonally adjacent
   isAdjacent(hero: Hero, unitToCompare: Hero | Crystal): boolean {
-    const row = Math.abs(hero.row - unitToCompare.row);
-    const col = Math.abs(hero.col - unitToCompare.col);
+    const row = Math.abs(hero.stats.row - unitToCompare.stats.row);
+    const col = Math.abs(hero.stats.col - unitToCompare.stats.col);
 
     return col <= 1 && row <= 1 && !(row === 0 && col === 0);
   }
 
   isOrthogonalAdjacent(hero: Hero, unitToCompare: Hero | Crystal): boolean {
-    const row = Math.abs(hero.row - unitToCompare.row);
-    const col = Math.abs(hero.col - unitToCompare.col);
+    const row = Math.abs(hero.stats.row - unitToCompare.stats.row);
+    const col = Math.abs(hero.stats.col - unitToCompare.stats.col);
 
     return row === 1 && col === 0 || row === 0 && col === 1;
   }
 
   // Check if a Necromancer should stomp an enemit unit or create a phantom
   necromancerStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
-    if (activeUnit.unitType !== EHeroes.NECROMANCER) return true; // not a necro, so stomp
+    if (activeUnit.stats.unitType !== EHeroes.NECROMANCER) return true; // not a necro, so stomp
 
-    if (koUnit.blockedLOS.visible) return true; // stomp if LOS is blocked for phantom creation
+    if (koUnit.visuals.blockedLOS.visible) return true; // stomp if LOS is blocked for phantom creation
 
     if (!withinAttackingRange && withinStompingRange) return true; // if standing on a speed tile he can stomp further than he can attack
 
@@ -491,20 +491,20 @@ export class Board {
     let target;
 
     if (unitId.includes('crystal')) {
-      target = this.crystals.find(crystal => crystal.unitId === unitId);
+      target = this.crystals.find(crystal => crystal.stats.unitId === unitId);
     } else {
-      target = this.units.find(unit => unit.unitId === unitId);
+      target = this.units.find(unit => unit.stats.unitId === unitId);
     }
 
-    if (!target || !target.engineerShield) throw new Error(`removeEngineerShield: no target or engineerId found with id ${unitId}`);
-    this.updateEngineerOnShieldLost(target.engineerShield);
+    if (!target || !target.stats.engineerShield) throw new Error(`removeEngineerShield: no target or engineerId found with id ${unitId}`);
+    this.updateEngineerOnShieldLost(target.stats.engineerShield);
     target.removeEngineerShield();
   }
 
   updateEngineerOnShieldLost(engineerId: string): void {
-    const engineer = this.units.find(unit => unit.unitId === engineerId);
+    const engineer = this.units.find(unit => unit.stats.unitId === engineerId);
     if (!engineer) return;
-    engineer.shieldingAlly = undefined;
+    engineer.stats.shieldingAlly = undefined;
     engineer.updateTileData();
   }
 }

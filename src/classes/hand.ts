@@ -1,7 +1,7 @@
+import { EClass } from "../enums/gameEnums";
 import { IHero, IItem } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
-import { isHero, isItem } from "../utils/gameUtils";
 import { getCurrentPlayer } from "../utils/playerUtils";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
@@ -26,8 +26,8 @@ export class Hand {
   }
 
   renderUnit(unit: IHero | IItem): Hero | Item {
-    if (isHero(unit)) return createNewHero(this.context, unit);
-    if (isItem(unit)) return createNewItem(this.context, unit);
+    if (unit.class === EClass.HERO) return createNewHero(this.context, unit as IHero);
+    if (unit.class === EClass.ITEM) return createNewItem(this.context, unit as IItem);
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 
@@ -36,7 +36,7 @@ export class Hand {
 
     let previousIndex = -1;
     defaultPositions.forEach(element => {
-      const matchIndex = this.hand.findIndex((unit) => unit.boardPosition === element);
+      const matchIndex = this.hand.findIndex((unit) => unit.stats.boardPosition === element);
 
       if (matchIndex !== -1) {
         previousIndex = matchIndex;
@@ -51,8 +51,8 @@ export class Hand {
     });
   }
 
-  removeFromHand(unitToRemove: IHero | IItem): void {
-    const index = this.hand.findIndex(unit => unit.unitId === unitToRemove.unitId);
+  removeFromHand(unitId: string): void {
+    const index = this.hand.findIndex(unit => unit.stats.unitId === unitId);
     if (index !== -1) this.hand.splice(index, 1);// can't use filter because creating a new array breaks the reference with factionData
   }
 
