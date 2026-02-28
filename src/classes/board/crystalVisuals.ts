@@ -15,8 +15,8 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
   debuffEventSingle: Phaser.Time.TimerEvent;
   debuffEventDouble: Phaser.Time.TimerEvent;
 
-  constructor(context: GameScene, data: ICrystal, x: number, y: number) {
-    super(context, x, y);
+  constructor(context: GameScene, data: ICrystal) {
+    super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
 
     this.pedestalImage = context.add.image(0, 10, 'pedestal').setScale(0.8);

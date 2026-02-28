@@ -58,11 +58,11 @@ export class GameController {
     }
 
     this.context = context;
-    this.game = context.currentGame!;
-    this.lastTurnState =  context.currentGame.previousTurn[context.triggerReplay ? 0 : context.currentGame.previousTurn.length - 1];
+    this.game = structuredClone(context.currentGame!);
+    this.lastTurnState =  this.game.previousTurn[context.triggerReplay ? 0 : this.game.previousTurn.length - 1];
     this.board = new Board(context, this.lastTurnState.boardState);
 
-    this.playerData = context.currentGame.players.map(player => { return player.userData;});
+    this.playerData = this.game.players.map(player => { return player.userData;});
     this.gameUI = new GameUI(context, this.board, this.playerData);
     context.player1 = this.lastTurnState.player1;
     context.player2 = this.lastTurnState.player2;
@@ -135,8 +135,8 @@ export class GameController {
       });
     }
 
-    for (let i = 1; i < this.context.currentGame.previousTurn.length; i++) {
-      const turn = this.context.currentGame.previousTurn[i];
+    for (let i = 1; i < this.game.previousTurn.length; i++) {
+      const turn = this.game.previousTurn[i];
 
       const actionsToIgnore = [EActionType.DRAW, EActionType.PASS];
       const actionTaken = turn.action?.action;
@@ -172,7 +172,7 @@ export class GameController {
     this.context.scene.restart({
       userId: this.context.userId,
       colyseusClient: this.context.colyseusClient,
-      currentGame: this.context.currentGame,
+      currentGame: this.game,
       currentRoom: this.context.currentRoom,
       triggerReplay: false,
       gameOver: undefined
@@ -335,7 +335,7 @@ export class GameController {
 
     // Refresh actionPie, draw units and update door banner
     this.actionPie.resetActionPie();
-    this.drawUnits();
+    this.drawUnits(); // FIXME: move this until after the sedTurnMessage succeeds (or show an error)
     this.door.updateBannerText();
 
     // Add the last action of the previous turn at index 0 of the actions array to serve as the base for the replay

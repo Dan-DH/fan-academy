@@ -5,8 +5,7 @@ import GameScene from "../scenes/game.scene";
 
 export function getPlayersKey(context: GameScene): {
   player: 'player1' | 'player2',
-  opponent: 'player1' | 'player2',
-
+  opponent: 'player1' | 'player2'
 } {
   return context.player1?.playerId === context.userId ? {
     player: 'player1',

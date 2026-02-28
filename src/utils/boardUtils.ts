@@ -135,7 +135,7 @@ export function getDistanceToTarget(hero: Hero, target: Hero | Crystal): number 
   return getGridDistance(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col );
 }
 
-export function  removeFromBoard(hero: Hero): void {
+export function removeFromBoard(hero: Hero): void {
   // Remove hero data from tile
   const tile = hero.getTile();
   tile.removeHero();

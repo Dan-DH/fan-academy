@@ -1,7 +1,7 @@
 import { ETiles } from "../../enums/gameEnums";
 import { ICrystal, IHero, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { makeTileClickable } from "../../utils/makeUnitClickable";
+import { handleTileClick } from "../../utils/handleTileClick";
 import { SpecialTileCard } from "../cards/specialTileCard";
 
 export class Tile extends Phaser.GameObjects.Container {
@@ -50,11 +50,10 @@ export class Tile extends Phaser.GameObjects.Container {
       if (this.col > 4) this.icon.setFlipX(true);
       this.add(this.icon);
     }
-    this.setSize(90, 90).setInteractive({ useHandCursor: true }).setDepth(2);
-    makeTileClickable(this, context);
 
     if (this.unitCard) this.add(this.unitCard);
-
+    this.setSize(90, 90).setInteractive({ useHandCursor: true }).setDepth(2);
+    handleTileClick(this, context);
     context.add.existing(this);
   }
 

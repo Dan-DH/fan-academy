@@ -1,4 +1,4 @@
-import { Leaderboard } from "../classes/leaderboard";
+import { Leaderboard } from "./leaderboardSceneUtils/leaderboard";
 import { getLeaderBoard } from "../queries/userQueries";
 import { loadLeaderboardUI } from "./leaderboardSceneUtils/leaderboardUI";
 

@@ -12,12 +12,12 @@ export abstract class DarkElf extends Hero {
     super(context, data, tile);
   }
 
-  equipFactionBuff(handPosition: number): void {
+  equipFactionEquipment(handPosition: number): void {
     const soulStone = this.scene.add.image(this.x, this.y - 10, 'soulStone').setOrigin(0.5).setDepth(100);
     useAnimation(soulStone);
 
-    this.stats.factionBuff = true;
-    this.visuals.factionBuffImage.setVisible(true);
+    this.stats.factionEquipment = true;
+    this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
@@ -30,7 +30,7 @@ export abstract class DarkElf extends Hero {
   }
 
   lifeSteal(damage: number): void {
-    if (this.stats.factionBuff) {
+    if (this.stats.factionEquipment) {
       const roundedHealing = roundToFive(damage * 0.666);
       this.getsHealed(roundedHealing);
     } else {
@@ -67,7 +67,7 @@ export function createGenericElvesData(data: Partial<IHero>): {
   unitId: string,
   boardPosition: number,
   isKO: boolean,
-  factionBuff: boolean,
+  factionEquipment: boolean,
   runeMetal: boolean,
   shiningHelm: boolean,
   superCharge: boolean,
@@ -75,8 +75,10 @@ export function createGenericElvesData(data: Partial<IHero>): {
   lastBreath: boolean,
   row: number,
   col: number,
-  isDebuffed: boolean,
+  priestessDebuff: boolean,
+  annihilatorDebuff: boolean,
   attackTile: boolean,
+  speedTile: boolean,
   buffRange: number,
   canBuff: boolean
 } {
@@ -87,15 +89,17 @@ export function createGenericElvesData(data: Partial<IHero>): {
     boardPosition: data.boardPosition ?? 51,
     isKO: data.isKO ?? false,
     lastBreath: data.lastBreath ?? false,
-    factionBuff: data.factionBuff ?? false,
+    factionEquipment: data.factionEquipment ?? false,
     runeMetal: data.runeMetal ?? false,
     shiningHelm: data.shiningHelm ?? false,
     superCharge: data.superCharge ?? false,
     belongsTo: data.belongsTo ?? 1,
     row: data.row ?? 0,
     col: data.col ?? 0,
-    isDebuffed: data.isDebuffed ?? false,
+    priestessDebuff: data.priestessDebuff ?? false,
+    annihilatorDebuff: data.annihilatorDebuff ?? false,
     attackTile: data.attackTile ?? false,
+    speedTile: data.speedTile ?? false,
     buffRange: 0,
     canBuff: false
   };

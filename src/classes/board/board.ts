@@ -29,6 +29,9 @@ export class Board {
     this.context = context;
     this.tiles = this.createTileGrid(data);
     this.crystals.forEach(crystal => crystal.updateCrystalDebuffAnimation(crystal.stats.debuffLevel));
+
+    console.log('tiles on start', this.tiles);
+    console.log('board on start ', this.units);
   }
 
   createTileGrid(tiles: ITile[]) {
@@ -37,6 +40,7 @@ export class Board {
     tiles.forEach(tile => {
       const newTile = new Tile(this.context, tile);
       if (newTile.hero) this.units.push(createNewHero(this.context, newTile.hero, newTile));
+
       if (newTile.crystal) this.crystals.push(new Crystal(this.context, newTile.crystal)); // TODO: I used to pass a tile here as a last param. Unused (I think) in the constructor
       grid.push(newTile);
     });

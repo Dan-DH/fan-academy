@@ -1,7 +1,7 @@
-import { EItems } from "../../enums/gameEnums";
+import { EClass, EItems } from "../../enums/gameEnums";
 import { IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { makeUnitClickable } from "../../utils/makeUnitClickable";
+import { handleUnitClick } from "../../utils/handleUnitClick";
 import { ItemCard } from "../cards/itemCard";
 
 export abstract class Item extends Phaser.GameObjects.Container {
@@ -16,11 +16,12 @@ export abstract class Item extends Phaser.GameObjects.Container {
     super(context, x, y - 20);
     this.context = context;
     this.stats = data;
-    this.unitCard = new ItemCard(context, data).setVisible(false);
+    this.stats.class = EClass.ITEM;
 
+    this.unitCard = new ItemCard(context, data).setVisible(false);
     this.itemImage = context.add.image(0, 0, this.stats.itemType).setOrigin(0.5).setName('itemImage');
 
-    if (this.stats.itemType ===  EItems.DRAGON_SCALE) {
+    if (this.stats.itemType ===  EItems.SUPERCHARGE) {
       this.itemImage.displayWidth = 55;
       this.itemImage.displayHeight = 55;
     } else if (this.stats.itemType ===  EItems.SHINING_HELM) {
@@ -35,7 +36,7 @@ export abstract class Item extends Phaser.GameObjects.Container {
 
     if (this.stats.boardPosition === 51) this.setVisible(false).disableInteractive();
 
-    makeUnitClickable(this, context);
+    handleUnitClick(this, context);
 
     this.add([this.itemImage, this.unitCard]).setDepth(this.stats.boardPosition).setInteractive({
       hitArea,

@@ -13,8 +13,9 @@ export class Hand {
 
   constructor(context: GameScene) {
     this.context = context;
-    this.handData = getCurrentPlayer(context).factionData.unitsInHand ?? [];
+    this.handData = structuredClone(getCurrentPlayer(context).factionData.unitsInHand) ?? []; // TODO: structureClone for all data coming from the game context?
     this.hand = this.handData?.map(unit => this.renderUnit(unit)) ?? [];
+    console.log('HAND SIZE', this.hand);
   }
 
   getHandSize(): number {
@@ -53,7 +54,7 @@ export class Hand {
 
   removeFromHand(unitId: string): void {
     const index = this.hand.findIndex(unit => unit.stats.unitId === unitId);
-    if (index !== -1) this.hand.splice(index, 1);// can't use filter because creating a new array breaks the reference with factionData
+    if (index !== -1) this.hand.splice(index, 1);
   }
 
   exportHandData(): (IHero | IItem)[] {

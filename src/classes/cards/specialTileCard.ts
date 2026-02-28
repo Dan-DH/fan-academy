@@ -56,7 +56,6 @@ export class SpecialTileCard extends Phaser.GameObjects.Container {
         typeLabel = 'Speed Boost';
         description = 'Grants 2 extra movement to the unit on this tile.';
         break;
-        // skip CRYSTAL
       default:
         unitImageKey = 'specialTile';
         typeLabel = 'Special Tile';

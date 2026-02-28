@@ -1,7 +1,7 @@
 import { EUiSounds } from "../../enums/gameEnums";
 import ProfileScene from "../../scenes/profile.scene";
 import { playSound } from "../../utils/gameSounds";
-import { Profile } from "../profile";
+import { Profile } from "../../scenes/profileSceneUtils/profile";
 
 const turnPopupCoordinates = {
   x: 800,

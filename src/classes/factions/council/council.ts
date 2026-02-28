@@ -11,14 +11,14 @@ export abstract class Council extends Hero {
     super(context, data, tile);
   }
 
-  equipFactionBuff(handPosition: number): void {
+  equipFactionEquipment(handPosition: number): void {
     playSound(this.scene, EGameSounds.DRAGON_SCALE_USE);
 
     const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
 
-    this.stats.factionBuff = true;
-    this.visuals.factionBuffImage.setVisible(true);
+    this.stats.factionEquipment = true;
+    this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
 
     this.stats.physicalDamageResistance += 20;

@@ -7,7 +7,7 @@ export class Deck {
   deck: (IHero | IItem)[];
   constructor(context: GameScene) {
     this.context = context;
-    this.deck = [...getCurrentPlayer(context).factionData.unitsInDeck]; // need to decouple from factionData to avoid issues when resetting the turn
+    this.deck = structuredClone(getCurrentPlayer(context).factionData.unitsInDeck);
   }
 
   getDeckSize(): number {

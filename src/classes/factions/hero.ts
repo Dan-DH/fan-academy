@@ -1,8 +1,8 @@
-import { EActionType, EAttackType, EFaction, EGameSounds, EHeroes, EItems } from "../../enums/gameEnums";
+import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes, EItems } from "../../enums/gameEnums";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
-import { makeUnitClickable } from "../../utils/makeUnitClickable";
+import { handleUnitClick } from "../../utils/handleUnitClick";
 import { Item } from "./item";
 import { Tile } from "../board/tile";
 import { Crystal } from "../board/crystal";
@@ -12,7 +12,7 @@ import { HealthBar } from "./healthBar";
 import { selectDeathSound, playSound } from "../../utils/gameSounds";
 import { roundToFive, checkUnitGameOver } from "../../utils/gameUtils";
 import { moveAnimation, singleAnimation, useAnimation } from "../../utils/unitAnimations";
-import { HeroVisuals } from "./hero/heroVisuals";
+import { HeroVisuals } from "./heroVisuals";
 import { removeFromBoard, removeSpecialTileOnKo, specialTileCheck } from "../../utils/boardUtils";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
@@ -28,6 +28,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     super(context, x, y);
     this.context = context;
     this.stats = data;
+    this.stats.class = EClass.HERO;
+
+    console.log('Created hero ' + this.stats.unitId + 'on position' + this.stats.boardPosition);
 
     this.unitCard = new HeroCard(context, {
       ...data,
@@ -37,7 +40,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.healthBar = new HealthBar(context, data, -38, -75);
     if (this.stats.boardPosition >= 45) this.healthBar.setVisible(false);
 
-    this.visuals = new HeroVisuals(context, data, x, y, tile);
+    this.visuals = new HeroVisuals(context, data, tile);
 
     const hitArea = new Phaser.Geom.Rectangle(-35, -50, 75, 85); // centered on (0,0)
 
@@ -48,7 +51,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }).setName(this.stats.unitId).setDepth(this.stats.row + 10);
 
     if (this.stats.boardPosition === 51) this.setVisible(false); // Hide if in deck
-    makeUnitClickable(this, context);
+    handleUnitClick(this, context);
     context.add.existing(this);
   }
 
@@ -60,7 +63,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   abstract attack(target: Hero | Crystal): void;
   abstract heal(target: Hero): void;
   abstract teleport(target: Hero): void;
-  abstract equipFactionBuff(handPosition: number): void;
+  abstract equipFactionEquipment(handPosition: number): void;
   abstract shieldAlly(target: Hero | Crystal): void;
 
   get isActive() {
@@ -149,7 +152,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const runeMetalBuff = this.stats.runeMetal ? 1.5 : 1;
     const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
     const superCharge = this.stats.superCharge ? 3 : 1;
-    const priestessDebuff = this.stats.isDebuffed ? 0.5 : 1;
+    const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
 
     return (this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff;
   }
@@ -177,7 +180,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const runeMetalBuff = this.stats.runeMetal ? 1.5 : 1;
     const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
     const superCharge = this.stats.superCharge ? 3 : 1;
-    const priestessDebuff = this.stats.isDebuffed ? 0.5 : 1;
+    const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
 
     return (this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff;
   }
@@ -298,6 +301,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   removeFromGame(board = true): void {
     // Remove animations
     this.scene.tweens.killTweensOf(this);
+    this.scene.tweens.killTweensOf(this.visuals);
 
     this.list.forEach(child => {
       this.scene.tweens.killTweensOf(child);
@@ -400,8 +404,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   isAlreadyEquipped(item: Item): boolean {
     const map: Partial<Record<EItems, boolean>> = {
-      [EItems.DRAGON_SCALE]: this.stats.factionBuff,
-      [EItems.SOUL_STONE]: this.stats.factionBuff,
+      [EItems.DRAGON_SCALE]: this.stats.factionEquipment,
+      [EItems.SOUL_STONE]: this.stats.factionEquipment,
       [EItems.RUNE_METAL]: this.stats.runeMetal,
       [EItems.SHINING_HELM]: this.stats.shiningHelm,
       [EItems.SUPERCHARGE]: this.stats.superCharge,
@@ -457,7 +461,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   removeAttackModifiers() {
-    this.stats.isDebuffed = false;
+    this.stats.priestessDebuff = false;
     this.visuals.debuffImage.setVisible(false);
     this.stats.superCharge = false;
     this.visuals.superChargeAnim.setVisible(false);

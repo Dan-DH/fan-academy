@@ -14,7 +14,7 @@ export class DragonScale extends Item {
   }
 
   use(target: Hero): void {
-    target.equipFactionBuff(this.stats.boardPosition);
+    target.equipFactionEquipment(this.stats.boardPosition);
     this.removeFromGame();
   }
 }

@@ -1,16 +1,16 @@
-import { EFaction, EHeroes, ETiles } from "../../../enums/gameEnums";
-import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
-import { isInHand } from "../../../utils/gameUtils";
-import { positionHeroImage } from "../../../utils/heroImagePosition";
-import { addCirclingTween, continuousAnimation } from "../../../utils/unitAnimations";
-import { Tile } from "../../board/tile";
+import { EFaction, EHeroes, ETiles } from "../../enums/gameEnums";
+import { IHero } from "../../interfaces/gameInterface";
+import GameScene from "../../scenes/game.scene";
+import { isInHand } from "../../utils/gameUtils";
+import { positionHeroImage } from "../../utils/heroImagePosition";
+import { addCirclingTween, continuousAnimation } from "../../utils/unitAnimations";
+import { Tile } from "../board/tile";
 
 export class HeroVisuals extends Phaser.GameObjects.Container {
   characterImage: Phaser.GameObjects.Image;
   runeMetalImage: Phaser.GameObjects.Image;
   shiningHelmImage: Phaser.GameObjects.Image;
-  factionBuffImage: Phaser.GameObjects.Image;
+  factionEquipmentImage: Phaser.GameObjects.Image;
   attackReticle: Phaser.GameObjects.Image;
   healReticle: Phaser.GameObjects.Image;
   allyReticle: Phaser.GameObjects.Image;
@@ -39,15 +39,15 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   unitType: EHeroes;
   isKO: boolean;
   runeMetal: boolean;
-  factionBuff: boolean;
+  factionEquipment: boolean;
   shiningHelm: boolean;
 
-  constructor(context: GameScene, data: IHero, x: number, y: number, tile?: Tile) {
-    super(context, x, y);
+  constructor(context: GameScene, data: IHero, tile?: Tile) {
+    super(context, 0, 0);
     this.unitType = data.unitType;
     this.isKO = data.isKO;
     this.runeMetal = data.runeMetal;
-    this.factionBuff = data.factionBuff;
+    this.factionEquipment = data.factionEquipment;
     this.shiningHelm = data.shiningHelm;
 
     const inHand = isInHand(data.boardPosition);
@@ -66,11 +66,11 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (!data.shiningHelm) this.shiningHelmImage.setVisible(false);
 
     if (data.faction === EFaction.COUNCIL || data.faction === EFaction.DWARVES) {
-      this.factionBuffImage = context.add.image(5, 25, 'dragonScale').setOrigin(0.5).setScale(0.4).setName('dragonScale');
+      this.factionEquipmentImage = context.add.image(5, 25, 'dragonScale').setOrigin(0.5).setScale(0.4).setName('dragonScale');
     } else {
-      this.factionBuffImage = context.add.image(5, 25, 'soulStone').setOrigin(0.5).setScale(0.4).setName('soulStone');
+      this.factionEquipmentImage = context.add.image(5, 25, 'soulStone').setOrigin(0.5).setScale(0.4).setName('soulStone');
     }
-    if (!data.factionBuff) this.factionBuffImage.setVisible(false);
+    if (!data.factionEquipment) this.factionEquipmentImage.setVisible(false);
 
     // TODO: place correctly
     this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
@@ -95,7 +95,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     addCirclingTween(this.allyReticle);
     this.debuffImage = context.add.image(0, -10, 'debuff').setOrigin(0.5).setScale(2.5).setName('debuff');
     addCirclingTween(this.debuffImage);
-    if (!data.isDebuffed) this.debuffImage.setVisible(false);
+    if (!data.priestessDebuff) this.debuffImage.setVisible(false);
     this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
     this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
 
@@ -147,6 +147,25 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.superChargeEvent = continuousAnimation(this.superChargeAnim, ['superChargeAnim_1', 'superChargeAnim_2', 'superChargeAnim_3']);
 
     this.reviveAnim = context.add.image(0, -10, 'reviveAnim_1').setOrigin(0.5).setScale(0.7).setVisible(false);
+
+    this.add([
+      this.debuffImage,
+      this.superChargeAnim,
+      this.reviveAnim,
+      this.characterImage,
+      this.runeMetalImage,
+      this.factionEquipmentImage,
+      this.shiningHelmImage,
+      this.crystalDebuffTileAnim,
+      this.powerTileAnim,
+      this.magicalResistanceTileAnim,
+      this.physicalResistanceTileAnim,
+      this.attackReticle,
+      this.healReticle,
+      this.allyReticle,
+      ...this.smokeAnim ? [this.smokeAnim] : [],
+      this.blockedLOS
+    ]);
   }
 
   updateCharacterImage(): string {
@@ -154,11 +173,11 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     if (this.isKO) return `${this.unitType}_9`;
 
-    if (this.runeMetal && this.factionBuff && this.shiningHelm) return `${this.unitType}_8`;
+    if (this.runeMetal && this.factionEquipment && this.shiningHelm) return `${this.unitType}_8`;
     if (this.runeMetal && this.shiningHelm) return `${this.unitType}_7`;
-    if (this.factionBuff && this.shiningHelm) return `${this.unitType}_6`;
-    if (this.factionBuff && this.runeMetal) return `${this.unitType}_5`;
-    if (this.factionBuff) return `${this.unitType}_4`;
+    if (this.factionEquipment && this.shiningHelm) return `${this.unitType}_6`;
+    if (this.factionEquipment && this.runeMetal) return `${this.unitType}_5`;
+    if (this.factionEquipment) return `${this.unitType}_4`;
     if (this.shiningHelm) return `${this.unitType}_3`;
     if (this.runeMetal) return `${this.unitType}_2`;
 

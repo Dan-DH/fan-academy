@@ -20,23 +20,6 @@ export type Coordinates = {
 };
 
 /**
- * Crystal Interface
- */
-export interface ICrystal {
-  unitId?: string;
-  belongsTo: number;
-  maxHealth: number;
-  currentHealth: number;
-  isDestroyed: boolean;
-  isLastCrystal: boolean;
-  boardPosition: number;
-  debuffLevel: number;
-  row: number;
-  col: number;
-  engineerShield?: string;
-}
-
-/**
  * Item Interface
  */
 export interface IItem {
@@ -56,11 +39,10 @@ export interface IItem {
  */
 export interface IHero {
   class: EClass;
-  unitId: string; // userId_unitName_unitNumber
-  belongsTo: number;
-  boardPosition: number;
   faction: EFaction;
   unitType: EHeroes;
+  unitId: string; // userId_unitName_unitNumber
+  boardPosition: number;
   row: number;
   col: number;
   baseHealth: number;
@@ -75,23 +57,24 @@ export interface IHero {
   attackType: EAttackType;
   basePower: number;
   physicalDamageResistance: number;
-  magicalDamageResistance: number;
   basePhysicalDamageResistance: number;
+  magicalDamageResistance: number;
   baseMagicalDamageResistance: number;
-  factionBuff: boolean;
+  factionEquipment: boolean;
   runeMetal: boolean;
   shiningHelm: boolean;
   superCharge: boolean;
+  belongsTo: number;
   canHeal: boolean;
   canBuff: boolean;
   unitsConsumed?: number;
-  isDebuffed: boolean;
+  priestessDebuff: boolean;
   attackTile: boolean;
   manaVial?: boolean;
-  speedTile?: boolean;
+  speedTile: boolean;
   dwarvenBrew?: boolean;
   engineerShield?: string;
-  annihilatorDebuff?: boolean;
+  annihilatorDebuff: boolean;
   shieldingAlly?: string;
 }
 
@@ -139,15 +122,32 @@ export interface IPlayerState {
 }
 
 /**
+ * Crystal Interface
+ */
+export interface ICrystal {
+  unitId?: string;
+  belongsTo: number;
+  maxHealth: number;
+  currentHealth: number;
+  row: number;
+  col: number;
+  isDestroyed: boolean;
+  isLastCrystal: boolean;
+  boardPosition: number;
+  debuffLevel: number;
+  engineerShield?: string;
+}
+
+/**
  * Tile Interface
  */
 export interface ITile {
   row: number;
   col: number;
+  boardPosition: number;
   tileType: ETiles;
   x: number;
   y: number;
-  boardPosition: number;
   obstacle: boolean;
   hero?: IHero | undefined;
   crystal?: ICrystal | undefined;
@@ -182,9 +182,9 @@ export interface IChat {
 export interface IGame {
   _id: string;
   players: IPlayerData[];
+  turnNumber: number;
   currentState: IGameState[];
   previousTurn: IGameState[];
-  turnNumber: number;
   gameOver?: IGameOver,
   status: EGameStatus;
   createdAt: Date;

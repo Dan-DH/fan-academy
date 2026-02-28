@@ -1,10 +1,10 @@
-import { EUiSounds } from "../enums/gameEnums";
-import { deleteAccount, updateProfile } from "../queries/userQueries";
-import ProfileScene from "../scenes/profile.scene";
-import { playSound } from "../utils/gameSounds";
-import { isValidPassword } from "../utils/playerUtils";
-import { DeleteWarningPopup } from "./popups/deletePopup";
-import { ProfilePicPopup } from "./popups/profilePicPopup";
+import { EUiSounds } from "../../enums/gameEnums";
+import { deleteAccount, updateProfile } from "../../queries/userQueries";
+import ProfileScene from "../profile.scene";
+import { playSound } from "../../utils/gameSounds";
+import { isValidPassword } from "../../utils/playerUtils";
+import { DeleteWarningPopup } from "../../classes/popups/deletePopup";
+import { ProfilePicPopup } from "../../classes/popups/profilePicPopup";
 
 export class Profile extends Phaser.GameObjects.Container {
   context: ProfileScene;

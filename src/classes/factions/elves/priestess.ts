@@ -39,7 +39,7 @@ export class Priestess extends DarkElf {
 
       // Apply a 50% debuff to the target's next attack or heal
       if (target instanceof Hero) {
-        target.stats.isDebuffed = true;
+        target.stats.priestessDebuff = true;
         target.visuals.debuffImage.setVisible(true);
         target.updateTileData();
         target.unitCard.updateCardData(target);

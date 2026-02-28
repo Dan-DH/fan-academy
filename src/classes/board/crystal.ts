@@ -3,7 +3,6 @@ import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
 import { playSound } from "../../utils/gameSounds";
-import { makeCrystalClickable } from "../../utils/makeUnitClickable";
 import { CrystalCard } from "../cards/crystalCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "../factions/healthBar";
@@ -11,6 +10,7 @@ import { Hero } from "../factions/hero";
 import { Item } from "../factions/item";
 import { Tile } from "./tile";
 import { CrystalVisuals } from "./crystalVisuals";
+import { handleCrystalClick } from "../../utils/handleCrystalClick";
 
 export class Crystal extends Phaser.GameObjects.Container {
   context: GameScene;
@@ -25,14 +25,12 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.context = context;
 
     this.stats = data;
-    if (!this.stats.unitId) this.stats.unitId = `crystal_${this.stats.boardPosition}`; // FIXME:
-
-    this.visuals = new CrystalVisuals(context, data, x, y);
+    this.visuals = new CrystalVisuals(context, data);
     this.healthBar = new HealthBar(context, data, -38, -70);
     this.unitCard = new CrystalCard(context, data).setVisible(false);
 
     this.add([this.visuals,  this.healthBar, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.stats.row + 10);
-    makeCrystalClickable(this, this.context);
+    handleCrystalClick(this, this.context);
 
     context.add.existing(this);
   }
@@ -183,6 +181,7 @@ export class Crystal extends Phaser.GameObjects.Container {
         break;
     }
 
+    if (newLevel === this.stats.debuffLevel) return;
     this.updateTileData();
   }
 }
