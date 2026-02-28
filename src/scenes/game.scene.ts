@@ -67,8 +67,6 @@ export default class GameScene extends Phaser.Scene {
     this.currentTurnAction = this.turnNumber === 0 ? 3 : 1;
 
     this.activeUnit = undefined;
-
-    console.log('GAME DATA', this.currentGame);
   }
 
   preload() {

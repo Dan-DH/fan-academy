@@ -500,9 +500,9 @@ export class GameController {
     targetTile.removeHero();
   }
 
-  updateCrystals(belongsTo: number, increase: boolean): void {
+  updateCrystals(attackerBelongsTo: number, increase: boolean): void {
     this.board.crystals.forEach(crystal => {
-      if (crystal.stats.belongsTo !== belongsTo) {
+      if (crystal.stats.belongsTo !== attackerBelongsTo) {
         let newLevel: number = 0;
 
         if (increase) newLevel = crystal.stats.debuffLevel + 1;

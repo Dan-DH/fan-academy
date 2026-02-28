@@ -12,6 +12,7 @@ import { Tile } from "./tile";
 import { Engineer } from "../factions/dwarves/enginner";
 import { Dwarf } from "../factions/dwarves/dwarves";
 import { Hero } from "../factions/hero";
+import { Grenadier } from "../factions/dwarves/grenadier";
 
 export class Board {
   topLeft: Coordinates =  {
@@ -29,9 +30,6 @@ export class Board {
     this.context = context;
     this.tiles = this.createTileGrid(data);
     this.crystals.forEach(crystal => crystal.updateCrystalDebuffAnimation(crystal.stats.debuffLevel));
-
-    console.log('tiles on start', this.tiles);
-    console.log('board on start ', this.units);
   }
 
   createTileGrid(tiles: ITile[]) {
@@ -128,7 +126,7 @@ export class Board {
     const enemiesBlocked: (Hero | Crystal)[] = [];
 
     enemyLOSCheck.forEach((enemy: Hero | Crystal) => {
-      if (this.hasLineOfSight(hero, enemy)) {
+      if (this.hasLineOfSight(hero, enemy) || hero instanceof Grenadier) {
         enemiesToHighlight.push(enemy);
       } else {
         enemiesBlocked.push(enemy);
@@ -145,10 +143,6 @@ export class Board {
     const tilesInHealingRange: Tile[] = hero.stats.canHeal ? this.getHeroTilesInRange(hero, ERange.HEAL) : [];
     const tilesInBuffRange: Tile[] = hero.stats.canBuff ? this.getHeroTilesInRange(hero, ERange.BUFF) : [];
     const tilesInRange: Tile[] = tilesInHealingRange.concat(tilesInBuffRange);
-
-    console.log('TILEHEALINGRANGE', tilesInHealingRange);
-    console.log('tilebuffrange', tilesInBuffRange);
-    console.log('result', tilesInRange);
 
     if (!tilesInRange.length) return;
 

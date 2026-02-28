@@ -30,8 +30,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats = data;
     this.stats.class = EClass.HERO;
 
-    console.log('Created hero ' + this.stats.unitId + 'on position' + this.stats.boardPosition);
-
     this.unitCard = new HeroCard(context, {
       ...data,
       currentPower: this.getTotalPower()
@@ -217,7 +215,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.stats.isKO = false;
     this.stats.lastBreath = false;
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
     specialTileCheck(this, this.getTile().tileType);
 
@@ -267,7 +265,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const tile = this.getTile();
     tile.hero = this.exportData();
 
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -425,7 +423,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.visuals.shiningHelmImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
     this.updateTileData();
@@ -441,7 +439,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.runeMetalImage.setVisible(true);
 
     this.visuals.runeMetalImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
     this.updateTileData();

@@ -40,6 +40,9 @@ export class Engineer extends Dwarf {
   }
 
   shieldAlly(target: Hero | Crystal): void {
+    this.flashActingUnit();
+    turnIfBehind(this.context, this, target);
+
     if (this.stats.shieldingAlly) {
       if (this.stats.shieldingAlly === target.stats.unitId) return;
       this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);

@@ -65,11 +65,10 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.updateTileData();
   }
 
-  getsDamaged(damage: number, _attackType: EAttackType, unit: Hero | Item): void {
+  getsDamaged(damage: number, _attackType: EAttackType, unit: Hero | Item, splashDamage = false): void {
     /*
-    TODO: I removed 'multiplier = 1' as the last param in this fuction
-    It was used when calculating the damageMultiplier, between assaultBoostDamage and debuffLevel
-    I don't think it was used by anything, but we'll see
+    *
+    *
     */
 
     if (this.stats.engineerShield) {
@@ -86,11 +85,15 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     let assaultBoostDamage;
     if (unit.stats.faction === EFaction.DWARVES) {
-      assaultBoostDamage = unit instanceof Hero && unit.stats.unitType === EHeroes.ENGINEER ? 420 : 360;
+      assaultBoostDamage = 360;
+      if (unit instanceof Hero && unit.stats.unitType === EHeroes.ENGINEER) assaultBoostDamage = 420;
+      if (unit instanceof Hero && unit.stats.unitType === EHeroes.ANNIHILATOR && splashDamage) assaultBoostDamage = 72; // TODO: make sure to implement
+      if (unit instanceof Hero && unit.stats.unitType === EHeroes.GRENADIER && splashDamage) assaultBoostDamage = 180;
     } else {
+      console.log('this logs');
       assaultBoostDamage = 300;
     }
-    const damageMultiplier = assaultBoostDamage * this.stats.debuffLevel;
+    const damageMultiplier = assaultBoostDamage  *  this.stats.debuffLevel;
     const totalDamage = roundToFive(damage + damageMultiplier);
     const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
     this.stats.currentHealth -= damageTaken;
@@ -160,6 +163,10 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   updateCrystalDebuffAnimation(newLevel: number): void {
+    if (newLevel === this.stats.debuffLevel) return;
+
+    console.log('newLevel', newLevel);
+    console.log('Crystal data', this);
     switch (newLevel) {
       case 0:
         this.visuals.singleCrystalDebuff.setVisible(false);
@@ -181,7 +188,7 @@ export class Crystal extends Phaser.GameObjects.Container {
         break;
     }
 
-    if (newLevel === this.stats.debuffLevel) return;
+    this.stats.debuffLevel = newLevel;
     this.updateTileData();
   }
 }

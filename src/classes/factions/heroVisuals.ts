@@ -36,23 +36,12 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   smokeEvent?: Phaser.Time.TimerEvent;
   spawnEvent?: Phaser.Time.TimerEvent;
 
-  unitType: EHeroes;
-  isKO: boolean;
-  runeMetal: boolean;
-  factionEquipment: boolean;
-  shiningHelm: boolean;
-
   constructor(context: GameScene, data: IHero, tile?: Tile) {
     super(context, 0, 0);
-    this.unitType = data.unitType;
-    this.isKO = data.isKO;
-    this.runeMetal = data.runeMetal;
-    this.factionEquipment = data.factionEquipment;
-    this.shiningHelm = data.shiningHelm;
 
     const inHand = isInHand(data.boardPosition);
     const { charImageX, charImageY } = positionHeroImage(data.unitType, data.belongsTo === 1, inHand, data.isKO);
-    this.characterImage = context.add.image(charImageX, charImageY, this.updateCharacterImage()).setOrigin(0.5).setName('body').setDepth(data.row + 10);
+    this.characterImage = context.add.image(charImageX, charImageY, this.updateCharacterImage(data)).setOrigin(0.5).setName('body').setDepth(data.row + 10);
     if (inHand) this.characterImage.setScale(0.8);
     if (data.belongsTo === 2 && data.boardPosition < 45) this.characterImage.setFlipX(true);
 
@@ -103,7 +92,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
      * TILE EFFECT ANIMATIONS
      */
     this.crystalDebuffTileAnim = context.add.image(0, 30, 'crystalDamageAnim_1').setOrigin(0.5).setScale(0.6);
-    if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !this.isKO) {
+    if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) {
       this.crystalDebuffTileAnim.setVisible(true);
     } else {
       this.crystalDebuffTileAnim.setVisible(false);
@@ -111,7 +100,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.crystalDebuffEvent = continuousAnimation(this.crystalDebuffTileAnim, ['crystalDamageAnim_1', 'crystalDamageAnim_2', 'crystalDamageAnim_3']);
 
     this.powerTileAnim = context.add.image(0, 27, 'powerTileAnim_1').setOrigin(0.5).setScale(0.6);
-    if (tile?.tileType === ETiles.POWER && !this.isKO) {
+    if (tile?.tileType === ETiles.POWER && !data.isKO) {
       this.powerTileAnim.setVisible(true);
     } else {
       this.powerTileAnim.setVisible(false);
@@ -120,7 +109,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.powerTileEvent = continuousAnimation(this.powerTileAnim, ['powerTileAnim_1', 'powerTileAnim_2', 'powerTileAnim_3']);
 
     this.magicalResistanceTileAnim = context.add.image(0, 30, 'magicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
-    if ((tile?.tileType === ETiles.MAGICAL_RESISTANCE || tile?.tileType === ETiles.SPEED) && !this.isKO) {
+    if ((tile?.tileType === ETiles.MAGICAL_RESISTANCE || tile?.tileType === ETiles.SPEED) && !data.isKO) {
       this.magicalResistanceTileAnim.setVisible(true);
     } else {
       this.magicalResistanceTileAnim.setVisible(false);
@@ -129,7 +118,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.magicalResistanceTileEvent = continuousAnimation(this.magicalResistanceTileAnim, ['magicalResistanceAnim_1', 'magicalResistanceAnim_2', 'magicalResistanceAnim_3']);
 
     this.physicalResistanceTileAnim = context.add.image(0, 30, 'physicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
-    if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !this.isKO) {
+    if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) {
       this.physicalResistanceTileAnim.setVisible(true);
     } else {
       this.physicalResistanceTileAnim.setVisible(false);
@@ -168,19 +157,19 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     ]);
   }
 
-  updateCharacterImage(): string {
-    if (this.unitType === EHeroes.PHANTOM) return 'phantom_1';
+  updateCharacterImage(data: IHero): string {
+    if (data.unitType === EHeroes.PHANTOM) return 'phantom_1';
 
-    if (this.isKO) return `${this.unitType}_9`;
+    if (data.isKO) return `${data.unitType}_9`;
 
-    if (this.runeMetal && this.factionEquipment && this.shiningHelm) return `${this.unitType}_8`;
-    if (this.runeMetal && this.shiningHelm) return `${this.unitType}_7`;
-    if (this.factionEquipment && this.shiningHelm) return `${this.unitType}_6`;
-    if (this.factionEquipment && this.runeMetal) return `${this.unitType}_5`;
-    if (this.factionEquipment) return `${this.unitType}_4`;
-    if (this.shiningHelm) return `${this.unitType}_3`;
-    if (this.runeMetal) return `${this.unitType}_2`;
+    if (data.runeMetal && data.factionEquipment && data.shiningHelm) return `${data.unitType}_8`;
+    if (data.runeMetal && data.shiningHelm) return `${data.unitType}_7`;
+    if (data.factionEquipment && data.shiningHelm) return `${data.unitType}_6`;
+    if (data.factionEquipment && data.runeMetal) return `${data.unitType}_5`;
+    if (data.factionEquipment) return `${data.unitType}_4`;
+    if (data.shiningHelm) return `${data.unitType}_3`;
+    if (data.runeMetal) return `${data.unitType}_2`;
 
-    return `${this.unitType}_1`;
+    return `${data.unitType}_1`;
   }
 }

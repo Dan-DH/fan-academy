@@ -27,7 +27,7 @@ export class DwarvenBrew extends Item {
   use(target: Hero): void {
     if (target.stats.isKO) return;
 
-    playSound(this.scene, EGameSounds.POTION_USE); // TODO:
+    playSound(this.scene, EGameSounds.POTION_USE); // TODO: correct sound and animation icon
 
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'healingPotion').setDepth(100);
     useAnimation(potionImage);
@@ -48,6 +48,8 @@ export class Pulverizer extends Item {
   constructor(context: GameScene, data: IItem) {
     super(context, data);
   };
+
+  // TODO: implement
 
   use(targetTile: Tile): void {
     const infernoImage = this.scene.add.image(targetTile.x, targetTile.y, 'infernoShockWave').setDepth(100);
@@ -78,7 +80,7 @@ export class Pulverizer extends Item {
       const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
       if (!crystal) throw new Error('Inferno use() crystal not found');
 
-      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
+      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this); // FIXME: we check for this already on getAOETiles. Remove from all AOE item attacks
     });
 
     this.removeFromGame();

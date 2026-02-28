@@ -18,7 +18,7 @@ export abstract class DarkElf extends Hero {
 
     this.stats.factionEquipment = true;
     this.visuals.factionEquipmentImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);

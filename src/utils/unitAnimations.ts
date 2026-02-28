@@ -18,11 +18,11 @@ export async function moveAnimation(context: GameScene, hero: Hero, targetTile: 
   // Stop user input until the animation finishes playing
   context.input.enabled = false;
 
-  const unitImage: Phaser.GameObjects.Image = hero.getByName('body');
+  const unitImage: Phaser.GameObjects.Image = hero.visuals.getByName('body');
 
   // If the unit is moving backwards, flip the unit's image for the duration of the animation
   let temporaryFlip: boolean;
-  if (hero.stats.belongsTo === 1 &&  targetTile.x < hero.x) {
+  if (hero.stats.belongsTo === 1 && targetTile.x < hero.x) {
     unitImage.setFlipX(true);
     temporaryFlip = true;
   }

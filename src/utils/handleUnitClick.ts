@@ -12,7 +12,6 @@ import { belongsToPlayer } from "./gameUtils";
 export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
     if (context.currentGame.status === EGameStatus.FINISHED) return;
-    console.log('UNIT DEPTH', unit.depth);
     visibleUnitCardCheck(context);
 
     if (pointer.button === 2) {
@@ -40,7 +39,7 @@ export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
 }
 
 function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
-  console.log(`Unit in ${unit.stats.boardPosition}`, unit);
+  console.log(`Unit in ${unit.stats.boardPosition}`, unit); // TODO: remove before release
   // Set a timer for the a hold press on mobile
   context.longPressStart = context.time.now;
 
@@ -53,9 +52,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   const isEnemy = unit instanceof Hero && !isFriendly;
   const isSameUnit = activeUnit?.stats.unitId === unit.stats.unitId;
 
-  const healReticle = unit instanceof Hero ? unit.getByName('healReticle') as Phaser.GameObjects.Image : undefined;
-  const attackReticle = unit instanceof Hero ? unit.getByName('attackReticle') as Phaser.GameObjects.Image : undefined;
-  const allyReticle = unit instanceof Hero ? unit.getByName('allyReticle') as Phaser.GameObjects.Image : undefined;
+  const healReticle = unit instanceof Hero ? unit.visuals.getByName('healReticle') as Phaser.GameObjects.Image : undefined;
+  const attackReticle = unit instanceof Hero ? unit.visuals.getByName('attackReticle') as Phaser.GameObjects.Image : undefined;
+  const allyReticle = unit instanceof Hero ? unit.visuals.getByName('allyReticle') as Phaser.GameObjects.Image : undefined;
 
   // CASE 1: No active unit
   if (!activeUnit && isFriendly) {
@@ -112,8 +111,6 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       if (activeUnit instanceof Hero && activeUnit.stats.boardPosition < 45) {
         const tilesInMovingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
         const tilesInAttackingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.ATTACK);
-        tilesInMovingRange.map(tile => console.log('TILE POSITION', tile.boardPosition));
-        console.log('Unit board position ->', unit.stats.boardPosition);
         const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const withinAttackingRange = tilesInAttackingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const necromancerStompCheck = context.gameController!.board.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);

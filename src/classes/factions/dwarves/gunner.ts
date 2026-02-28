@@ -11,7 +11,7 @@ export class Gunner extends Dwarf {
   }
 
   attack(_target: Hero | Crystal): void {
-
+    // add check for splash attack damage on crystals
   }
 
   heal(_target: Hero): void {};

@@ -19,7 +19,7 @@ export abstract class Council extends Hero {
 
     this.stats.factionEquipment = true;
     this.visuals.factionEquipmentImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage());
+    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
 
     this.stats.physicalDamageResistance += 20;
 

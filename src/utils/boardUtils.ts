@@ -8,19 +8,18 @@ import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
 
-// Used only by the voidmonk and wizard's splash attacks
-export function getAOETiles(spell: Item,  targetTile: Tile): {
+export function getAOETiles(aoeAttack: Hero | Item,  targetTile: Tile): {
   enemyHeroTiles: Tile[],
   enemyCrystalTiles: Tile[]
 } {
-  const board = spell.context.gameController?.board;
+  const board = aoeAttack.context.gameController?.board;
   if (!board) throw new Error('Inferno use() board not found');
 
   const areaOfEffect = board.get3x3AreaOfEffectTiles(targetTile);
 
-  const enemyHeroTiles = areaOfEffect?.filter(tile => tile.hero && tile.hero?.belongsTo !== spell.stats.belongsTo);
+  const enemyHeroTiles = areaOfEffect?.filter(tile => tile.hero && tile.hero?.belongsTo !== aoeAttack.stats.belongsTo);
 
-  const enemyCrystalTiles = areaOfEffect?.filter(tile => tile.crystal && tile.crystal?.belongsTo !== spell.stats.belongsTo);
+  const enemyCrystalTiles = areaOfEffect?.filter(tile => tile.crystal && tile.crystal?.belongsTo !== aoeAttack.stats.belongsTo);
 
   return {
     enemyHeroTiles,

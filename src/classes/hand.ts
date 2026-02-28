@@ -15,7 +15,6 @@ export class Hand {
     this.context = context;
     this.handData = structuredClone(getCurrentPlayer(context).factionData.unitsInHand) ?? []; // TODO: structureClone for all data coming from the game context?
     this.hand = this.handData?.map(unit => this.renderUnit(unit)) ?? [];
-    console.log('HAND SIZE', this.hand);
   }
 
   getHandSize(): number {

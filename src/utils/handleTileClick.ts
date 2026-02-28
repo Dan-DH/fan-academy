@@ -10,7 +10,6 @@ import { visibleUnitCardCheck } from "./unitCards";
 export function handleTileClick(tile: Tile, context: GameScene): void {
   tile.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
     if (context.currentGame.status === EGameStatus.FINISHED || tile.hero || tile.crystal) return;
-    console.log('TILE DEPTH', tile.depth);
 
     visibleUnitCardCheck(context);
     context.longPressStart = context.time.now;
