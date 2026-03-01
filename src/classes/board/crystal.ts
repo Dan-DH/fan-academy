@@ -26,10 +26,10 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     this.stats = data;
     this.visuals = new CrystalVisuals(context, data);
-    this.healthBar = new HealthBar(context, data, -38, -70);
+    this.healthBar = new HealthBar(context, data, -38, -75);
     this.unitCard = new CrystalCard(context, data).setVisible(false);
 
-    this.add([this.visuals,  this.healthBar, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.stats.row + 10);
+    this.add([this.visuals,  this.healthBar, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.stats.row + 9.5);
     handleCrystalClick(this, this.context);
 
     context.add.existing(this);

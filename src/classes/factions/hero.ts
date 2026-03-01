@@ -337,6 +337,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const startTile = gameController.board.getTileFromBoardPosition(this.stats.boardPosition);
     if (!startTile) return;
 
+    this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
     await moveAnimation(this.context, this, targetTile);
 
     // Stomp KO'd units

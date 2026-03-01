@@ -135,7 +135,8 @@ export class GameController {
       });
     }
 
-    for (let i = 1; i < this.game.previousTurn.length; i++) {
+    for (let i = 0; i < this.game.previousTurn.length; i++) {
+      // TODO: check this change: starting at index 0 instead of 1
       const turn = this.game.previousTurn[i];
 
       const actionsToIgnore = [EActionType.DRAW, EActionType.PASS];

@@ -152,6 +152,9 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       this.attackReticle,
       this.healReticle,
       this.allyReticle,
+      this.engineerShieldImage,
+      this.annihilatorDebuffImage,
+      this.dwarvenBrewImage,
       ...this.smokeAnim ? [this.smokeAnim] : [],
       this.blockedLOS
     ]);
