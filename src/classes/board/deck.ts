@@ -1,12 +1,15 @@
-import { IHero, IItem } from "../../interfaces/gameInterface";
+import { IGameState, IHero, IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getCurrentPlayer } from "../../utils/playerUtils";
 
 export class Deck {
-  context: GameScene;
   deck: (IHero | IItem)[];
-  constructor(context: GameScene) {
-    this.context = context;
+  constructor(context: GameScene, lasTurnState: IGameState) {
+    if (context.isPlayerOne){
+      this.deck = structuredClone(lasTurnState.player1.factionData.unitsInDeck) ?? [];
+    } else {
+      this.deck = structuredClone(lasTurnState.player2!.factionData.unitsInDeck) ?? [];
+    }
     this.deck = structuredClone(getCurrentPlayer(context).factionData.unitsInDeck);
   }
 

@@ -10,6 +10,7 @@ import { loadGameAssets } from "./mainMenuUtils/gameAssets";
 import { Tile } from "../classes/board/tile";
 import { Crystal } from "../classes/board/crystal";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
+import { TurnReplay } from "../classes/turnReplay";
 
 export default class GameScene extends Phaser.Scene {
   userId!: string;
@@ -89,8 +90,9 @@ export default class GameScene extends Phaser.Scene {
 
     this.input.mouse!.disableContextMenu();
     this.gameController = new GameController(this);
-    if (this.triggerReplay) this.gameController.replayTurn();
-
+    if (this.triggerReplay) {
+      new TurnReplay(this.gameController).replayTurn();
+    }
     this.game.events.on('messageToGameScene', (data: {
       x: number,
       y: number,

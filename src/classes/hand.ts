@@ -1,8 +1,7 @@
 import { EClass } from "../enums/gameEnums";
-import { IHero, IItem } from "../interfaces/gameInterface";
+import { IGameState, IHero, IItem } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
-import { getCurrentPlayer } from "../utils/playerUtils";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
 
@@ -11,9 +10,15 @@ export class Hand {
   handData: (IHero | IItem)[];
   hand: (Hero | Item)[];
 
-  constructor(context: GameScene) {
+  constructor(context: GameScene, lastTurnState: IGameState) {
     this.context = context;
-    this.handData = structuredClone(getCurrentPlayer(context).factionData.unitsInHand) ?? []; // TODO: structureClone for all data coming from the game context?
+
+    if (context.isPlayerOne){
+      this.handData = structuredClone(lastTurnState.player1.factionData.unitsInHand) ?? [];
+    } else {
+      this.handData = structuredClone(lastTurnState.player2!.factionData.unitsInHand) ?? [];
+    }
+
     this.hand = this.handData?.map(unit => this.renderUnit(unit)) ?? [];
   }
 

@@ -90,7 +90,6 @@ export class Crystal extends Phaser.GameObjects.Container {
       if (unit instanceof Hero && unit.stats.unitType === EHeroes.ANNIHILATOR && splashDamage) assaultBoostDamage = 72; // TODO: make sure to implement
       if (unit instanceof Hero && unit.stats.unitType === EHeroes.GRENADIER && splashDamage) assaultBoostDamage = 180;
     } else {
-      console.log('this logs');
       assaultBoostDamage = 300;
     }
     const damageMultiplier = assaultBoostDamage  *  this.stats.debuffLevel;
@@ -165,8 +164,6 @@ export class Crystal extends Phaser.GameObjects.Container {
   updateCrystalDebuffAnimation(newLevel: number): void {
     if (newLevel === this.stats.debuffLevel) return;
 
-    console.log('newLevel', newLevel);
-    console.log('Crystal data', this);
     switch (newLevel) {
       case 0:
         this.visuals.singleCrystalDebuff.setVisible(false);

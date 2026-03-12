@@ -183,8 +183,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return (this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff;
   }
 
-  getsHealed(healing: number, addText = true): number | undefined {
-    if (healing <= 0) return;
+  getsHealed(healing: number, addText = true): number {
+    if (healing <= 0) return 0;
 
     let actualHealing: number;
 
