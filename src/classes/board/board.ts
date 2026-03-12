@@ -1,8 +1,8 @@
 import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
-import { Coordinates, ITile } from "../../interfaces/gameInterface";
+import { ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
-import { isEnemySpawn } from "../../utils/boardUtils";
+import { createBasicTileData, isEnemySpawn } from "../../utils/boardUtils";
 import { createNewHero } from "../../utils/createUnit";
 import { ManaVial } from "../factions/elves/items";
 import { Phantom } from "../factions/elves/phantom";
@@ -15,11 +15,6 @@ import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
 
 export class Board {
-  topLeft: Coordinates =  {
-    x: 545,
-    y: 225
-  };
-
   tileSize: number = 90;
   context: GameScene;
   tiles: Tile[];
@@ -35,13 +30,25 @@ export class Board {
   createTileGrid(tiles: ITile[]) {
     const grid: Tile[] = [];
 
-    tiles.forEach(tile => {
-      const newTile = new Tile(this.context, tile);
-      if (newTile.hero) this.units.push(createNewHero(this.context, newTile.hero, newTile));
+    for (let boardPosition = 0; boardPosition < 45; boardPosition++) {
+      const coordinates = this.context.centerPoints[boardPosition];
+      const matchingTileData = tiles.find(tile => tile.boardPosition === boardPosition);
 
-      if (newTile.crystal) this.crystals.push(new Crystal(this.context, newTile.crystal)); // TODO: I used to pass a tile here as a last param. Unused (I think) in the constructor
+      let newTile;
+
+      if (!matchingTileData) {
+        grid.push(new Tile(this.context, createBasicTileData(coordinates)));
+        continue;
+      } else {
+        newTile = new Tile(this.context, matchingTileData);
+      }
+
+      if (matchingTileData.hero) this.units.push(createNewHero(this.context, matchingTileData.hero, newTile));
+
+      if (matchingTileData.crystal) this.crystals.push(new Crystal(this.context, matchingTileData.crystal));
+
       grid.push(newTile);
-    });
+    }
 
     return grid;
   }
@@ -59,7 +66,7 @@ export class Board {
   }
 
   getBoardState(): ITile[] {
-    return this.tiles.map(tile =>  tile.getTileData());
+    return this.tiles.filter(tile => tile.hero || tile.tileType !== ETiles.BASIC).map(tile => tile.getTileData());
   }
 
   clearHighlights() {

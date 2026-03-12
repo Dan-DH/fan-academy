@@ -3,7 +3,7 @@ import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
 import { EFaction, EGameSounds, EHeroes, ETiles } from "../enums/gameEnums";
-import { ITile } from "../interfaces/gameInterface";
+import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
@@ -144,4 +144,33 @@ export function removeFromBoard(hero: Hero): void {
   if (index !== -1) { hero.context.gameController!.board.units.splice(index, 1); }
 
   checkUnitGameOver(hero);
+}
+
+export function getKeyMapTiles(tiles: Tile[]): Tile[] {
+  const result: Tile[] = [];
+
+  for (const tile of tiles) {
+    if (tile.tileType !== ETiles.BASIC) {
+      result.push(tile);
+      continue;
+    }
+
+    if (tile.hero) result.push(tile);
+  }
+
+  return result;
+}
+
+export function createBasicTileData(coordinates: Coordinates): ITile {
+  return {
+    x: coordinates.x!,
+    y: coordinates.y!,
+    row: coordinates.row!,
+    col: coordinates.col!,
+    boardPosition: coordinates.boardPosition!,
+    tileType: ETiles.BASIC,
+    obstacle: false,
+    hero: undefined,
+    crystal: undefined
+  };
 }
