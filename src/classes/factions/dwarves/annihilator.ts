@@ -46,10 +46,13 @@ export class Annihilator extends Dwarf {
         target.unitCard.updateCardData(target);
       }
 
-      const adjacentFriendlyUnits = gameController.board.getAdjacentFriendlyUnitsOnBoard(target);
+      const adjacentFriendlyUnits = gameController.board.getAliveAdjacentFriendlyUnitsOnBoard(target);
 
       if (adjacentFriendlyUnits.length) {
-        adjacentFriendlyUnits.forEach(unit => gameController.pushEnemy(target, unit));
+        adjacentFriendlyUnits.forEach(unit =>{
+          unit.getsDamaged(this.getTotalPower(0.2), this.stats.attackType, this, true);
+          if (unit instanceof Hero && !unit.stats.isKO) gameController.pushEnemy(target, unit);
+        });
       }
 
       this.removeAttackModifiers();

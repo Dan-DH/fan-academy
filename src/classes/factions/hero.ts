@@ -128,8 +128,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
 
     // Remove 1-hit buffs and debuffs
-    this.stats.annihilatorDebuff = false;
-    this.visuals.annihilatorDebuffImage.setVisible(false);
+    if (attackType === EAttackType.PHYSICAL) {
+      this.stats.annihilatorDebuff = false;
+      this.visuals.annihilatorDebuffImage.setVisible(false);
+    }
     this.stats.dwarvenBrew = false;
     this.visuals.dwarvenBrewImage.setVisible(false);
 

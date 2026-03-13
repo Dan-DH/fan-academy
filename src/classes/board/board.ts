@@ -481,8 +481,17 @@ export class Board {
     return row === 1 && col === 0 || row === 0 && col === 1;
   }
 
-  getAdjacentFriendlyUnitsOnBoard(hero: Hero | Crystal): Hero[] {
-    return this.units.filter(unit => hero.stats.belongsTo === unit.stats.belongsTo && this.isAdjacent(hero, unit));
+  getAliveAdjacentFriendlyUnitsOnBoard(target: Hero | Crystal): (Hero | Crystal)[] {
+    const result: (Hero | Crystal)[] = [];
+
+    this.units.forEach(unit => {
+      if (!unit.stats.isKO && target.stats.belongsTo === unit.stats.belongsTo && this.isAdjacent(target, unit)) result.push(unit);
+    });
+    this.crystals.forEach(crystal => {
+      if (target.stats.belongsTo === crystal.stats.belongsTo && this.isAdjacent(target, crystal)) result.push(crystal);
+    });
+
+    return result;
   }
 
   searchForAliveAdjacentFriendlyUnit(target: Hero | Crystal, unitToSearch: EHeroes): number {

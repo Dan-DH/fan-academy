@@ -35,7 +35,7 @@ export class FloatingText extends Phaser.GameObjects.Container {
     context.tweens.add({
       targets: this,
       y: y - 30,
-      duration: 1500,
+      duration: 1800,
       ease: 'easeOut',
       alpha: 0,
       onComplete: () => this.destroy()
