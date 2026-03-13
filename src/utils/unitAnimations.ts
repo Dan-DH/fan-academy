@@ -199,3 +199,28 @@ export function singleAnimation(image: Phaser.GameObjects.Image, textures: strin
 
   return event;
 };
+
+export function paladinAuraAnimation(image: Phaser.GameObjects.Image): void {
+  image.scene.tweens.add({
+    targets: image,
+    scaleX: 4,
+    scaleY: 0.5,
+    alpha: 0,
+    duration: 3000,
+    ease: 'Cubic.Out',
+    repeat: -1
+  });
+}
+
+export function engineerShieldAnimation(image: Phaser.GameObjects.Image): void {
+  image.scene.tweens.add({
+    targets: image,
+    scaleX: 0.9,
+    scaleY: 1.1,
+    duration: 1000,
+    yoyo: true,
+    ease: 'Cubic.easeOut',
+    repeat: -1,
+    repeatDelay: 2000
+  });
+}

@@ -163,6 +163,8 @@ export class HeroCard extends Phaser.GameObjects.Container {
   }
 
   updateCardData(hero: Hero): void {
+    hero.getMagicalDamageResistance();
+    hero.getPhysicalDamageResistance();
     this.updateCardPower(hero);
     this.updateCardPhysicalResistance(hero);
     this.updateCardMagicalResistance(hero);

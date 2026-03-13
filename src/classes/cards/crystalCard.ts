@@ -1,5 +1,6 @@
 import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
+import { Crystal } from "../board/crystal";
 
 export class CrystalCard extends Phaser.GameObjects.Container {
   cardBackgroundImage: Phaser.GameObjects.Image;
@@ -54,17 +55,17 @@ export class CrystalCard extends Phaser.GameObjects.Container {
 
     // Resistances
     this.magicalResistanceImage = context.add.image(40, -10, 'magicalResistance').setOrigin(0.5);
-    this.magicalResistanceText = this.context.add.text(100, -10, '0%', {
+    this.magicalResistanceText = this.context.add.text(100, -10, `${data.magicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: '#ffffff'
+      color: this.getTextColor(data.magicalDamageResistance, data.baseMagicalDamageResistance)
     }).setOrigin(0.5);
 
     this.physicalResistanceImage = context.add.image(-150, -10, 'physicalResistance').setOrigin(0.5);
-    this.physicalResistanceText = this.context.add.text(-85, -10, '0%', {
+    this.physicalResistanceText = this.context.add.text(-85, -10, `${data.physicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: '#ffffff'
+      color: this.getTextColor(data.physicalDamageResistance, data.basePhysicalDamageResistance)
     }).setOrigin(0.5);
 
     // Flavour text
@@ -96,9 +97,31 @@ export class CrystalCard extends Phaser.GameObjects.Container {
     ]);
   }
 
-  updateCardHealth(newHealth: number, maxHealth: number): void {
-    this.currentHpText.setText(`${newHealth}/${maxHealth}`);
-    this.setHealthBar(newHealth, maxHealth);
+  getTextColor(currentNumber: number, baseNumber: number): string {
+    return currentNumber > baseNumber ? '#00FF00' : currentNumber < baseNumber ? '#ff0000' : '#ffffff';
+  }
+
+  updateCardData(crystal: Crystal): void {
+    crystal.getMagicalDamageResistance();
+    crystal.getPhysicalDamageResistance();
+    this.updateCardPhysicalResistance(crystal);
+    this.updateCardMagicalResistance(crystal);
+    this.updateCardHealth(crystal);
+  }
+
+  updateCardPhysicalResistance(crystal: Crystal): void {
+    this.physicalResistanceText.setText(`${crystal.stats.physicalDamageResistance} %`);
+    this.physicalResistanceText.setColor(this.getTextColor(crystal.stats.physicalDamageResistance, crystal.stats.basePhysicalDamageResistance));
+  }
+
+  updateCardMagicalResistance(crystal: Crystal): void {
+    this.magicalResistanceText.setText(`${crystal.stats.magicalDamageResistance} %`);
+    this.magicalResistanceText.setColor(this.getTextColor(crystal.stats.magicalDamageResistance, crystal.stats.baseMagicalDamageResistance));
+  }
+
+  updateCardHealth(crystal: Crystal): void {
+    this.currentHpText.setText(`${crystal.stats.currentHealth}/${crystal.stats.maxHealth}`);
+    this.setHealthBar(crystal.stats.currentHealth, crystal.stats.maxHealth);
   }
 
   setHealthBar(currentHealth: number, maxHealth: number) {

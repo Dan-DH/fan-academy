@@ -1,5 +1,9 @@
+import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
+import { isEnemySpawn } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
@@ -10,16 +14,50 @@ export class Paladin extends Dwarf {
     super(context, data, tile);
   }
 
-  /**
- * everyone has a paladinAura field. on hero move, check if there is one of more adjacent paladins, then stack the multiplier
- * paladinAura is an int, with the number of paladins currently triggering the aura. add to defense computation functions
- */
-  attack(_target: Hero | Crystal): void {
+  attack(target: Hero | Crystal): void {
+    this.flashActingUnit();
+    turnIfBehind(this.context, this, target);
 
+    // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
+    if (
+      target instanceof Hero &&
+      target.stats.isKO &&
+      isEnemySpawn(this.context, target.getTile())
+    ) {
+      playSound(this.scene, EGameSounds.KNIGHT_ATTACK);
+      target.removeFromGame();
+    } else {
+      if (this.stats.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
+      if (!this.stats.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+
+      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      this.removeAttackModifiers();
+    }
+
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  heal(_target: Hero): void {
-    // TODO:
+  heal(target: Hero): void {
+    this.flashActingUnit();
+    turnIfBehind(this.context, this, target);
+
+    if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
+    if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
+
+    let actualHealingDone: number;
+    if (target.stats.isKO) {
+      const healingAmount = this.getTotalHealing(0.5);
+      actualHealingDone = target.getsHealed(healingAmount);
+    } else {
+      const healingAmount = this.getTotalHealing(2);
+      actualHealingDone = target.getsHealed(healingAmount);
+    }
+
+    this.getsHealed(actualHealingDone / 2);
+    this.removeAttackModifiers();
+
+    this.context.gameController?.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
   };
 
   teleport(_target: Hero): void {};

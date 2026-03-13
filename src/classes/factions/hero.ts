@@ -88,6 +88,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   exportData(): IHero {
+    this.getMagicalDamageResistance();
+    this.getPhysicalDamageResistance();
     return { ...this.stats };
   }
 
@@ -151,14 +153,62 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
     const superCharge = this.stats.superCharge ? 3 : 1;
     const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
+    const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;
 
-    return (this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff;
+    return (this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura;
+  }
+
+  getPhysicalDamageResistance(): number {
+    let total = this.stats.basePhysicalDamageResistance;
+
+    if (this.stats.annihilatorDebuff) total -= 50;
+    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    if (this.stats.dwarvenBrew) total += 50;
+    if (this.stats.factionEquipment && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
+
+    if (this.stats.physicalResistanceTile) {
+      if (this.stats.faction === EFaction.DWARVES) {
+        total += this.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
+      } else {
+        total += 20;
+      }
+    }
+
+    this.setPhysicalDamageResistance(total);
+    return total;
+  }
+
+  getMagicalDamageResistance(): number {
+    let total = this.stats.baseMagicalDamageResistance;
+
+    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    if (this.stats.dwarvenBrew) total += 50;
+    if (this.stats.shiningHelm) total += 20;
+
+    if (this.stats.magicalResistanceTile) {
+      if (this.stats.faction === EFaction.DWARVES) {
+        total += this.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
+      } else {
+        total += 20;
+      }
+    }
+
+    this.setMagicalDamageResistance(total);
+    return total;
+  }
+
+  setPhysicalDamageResistance(total: number): void {
+    this.stats.physicalDamageResistance = total;
+  }
+
+  setMagicalDamageResistance(total: number): void {
+    this.stats.magicalDamageResistance = total;
   }
 
   getLifeLost(damage: number, attackType: EAttackType) {
     const resistance = {
-      [EAttackType.MAGICAL]: this.stats.magicalDamageResistance,
-      [EAttackType.PHYSICAL]: this.stats.physicalDamageResistance
+      [EAttackType.MAGICAL]: this.getMagicalDamageResistance(),
+      [EAttackType.PHYSICAL]: this.getPhysicalDamageResistance()
     };
 
     const reduction = resistance[attackType];
@@ -217,7 +267,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.lastBreath = false;
     this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
+
+    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     specialTileCheck(this, this.getTile().tileType);
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -262,8 +315,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.currentHealth = 0;
     this.stats.isKO = true;
 
-    const tile = this.getTile();
-    tile.hero = this.exportData();
+    this.updateTileData();
+
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
@@ -349,10 +403,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
+    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     specialTileCheck(this, targetTile.tileType, startTile.tileType);
     this.updatePosition(targetTile);
     targetTile.hero = this.exportData();
     startTile.removeHero();
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
     gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
   }
@@ -383,6 +439,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // Update vertical positioning of the info card
     this.unitCard.y = 0;
+    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     // A Wraith can spawn on a special tile. Phantom spawning is handled within its class
     specialTileCheck(this, tile.tileType);
     // Position hero on the board
@@ -393,6 +450,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.healthBar.setVisible(true);
 
     playSound(this.context, EGameSounds.HERO_SPAWN);
+
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
     gameController.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
   }
@@ -419,7 +478,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     useAnimation(helmImage);
 
     this.stats.shiningHelm = true;
-    this.stats.magicalDamageResistance += 20;
 
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 

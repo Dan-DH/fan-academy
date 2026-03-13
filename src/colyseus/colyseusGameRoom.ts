@@ -80,6 +80,8 @@ export function sendTurnMessage(currentRoom: Room, currentTurn: IGameState[], ne
     return;
   }
 
+  // FIXME: add a check for connection that will throw is someone is offline to avoid them drawing exploit
+
   currentRoom.send("turnSent", {
     _id: currentRoom.roomId,
     currentTurn,

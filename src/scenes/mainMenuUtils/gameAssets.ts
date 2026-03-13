@@ -125,6 +125,7 @@ export function loadGameAssets(context: GameScene) {
   context.load.image('dwarvenBrew', `./assetsd/images/factions/dwarves/dwarven_brew.webp`);
   context.load.image('pulverizer', `./assetsd/images/factions/dwarves/pulverizer.webp`);
   context.load.image('enginnerShield', `./assetsd/images/factions/dwarves/EngineerShield-hd.png`);
+  context.load.image('paladinAura', `./assetsd/images/factions/dwarves/PaladinAura_Glow-hd.png`);
 
   // Shared items
   context.load.image('superCharge', `${CDN_PATH}/images/factions/common/super_charge.webp`);

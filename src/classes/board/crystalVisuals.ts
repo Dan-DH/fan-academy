@@ -1,6 +1,6 @@
 import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { addCirclingTween, continuousAnimation } from "../../utils/unitAnimations";
+import { addCirclingTween, continuousAnimation, engineerShieldAnimation } from "../../utils/unitAnimations";
 
 export class CrystalVisuals extends Phaser.GameObjects.Container {
   pedestalImage: Phaser.GameObjects.Image;
@@ -34,6 +34,7 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
 
     const isShielded = data.engineerShield ? true : false;
     this.engineerShieldImage = context.add.image(0, -20, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
+    engineerShieldAnimation(this.engineerShieldImage);
 
     this.debuffEventSingle = continuousAnimation(this.singleCrystalDebuff, ['crystalDebuff_1', 'crystalDebuff_2']);
     this.debuffEventDouble = continuousAnimation(this.doubleCrystalDebuff, ['crystalDebuff_3', 'crystalDebuff_4']);

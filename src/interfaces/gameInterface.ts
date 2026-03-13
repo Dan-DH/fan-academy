@@ -67,15 +67,18 @@ export interface IHero {
   belongsTo: number;
   canHeal: boolean;
   canBuff: boolean;
-  unitsConsumed?: number;
+  unitsConsumed: number;
   priestessDebuff: boolean;
   attackTile: boolean;
-  manaVial?: boolean;
+  magicalResistanceTile: boolean;
+  physicalResistanceTile: boolean;
+  manaVial: boolean;
   speedTile: boolean;
-  dwarvenBrew?: boolean;
+  dwarvenBrew: boolean;
   engineerShield?: string;
-  annihilatorDebuff: boolean;
   shieldingAlly?: string;
+  annihilatorDebuff: boolean;
+  paladinAura: number;
 }
 
 /**
@@ -136,6 +139,11 @@ export interface ICrystal {
   boardPosition: number;
   debuffLevel: number;
   engineerShield?: string;
+  paladinAura: number;
+  physicalDamageResistance: number;
+  magicalDamageResistance: number;
+  basePhysicalDamageResistance: number;
+  baseMagicalDamageResistance: number;
 }
 
 /**

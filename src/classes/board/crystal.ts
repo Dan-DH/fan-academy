@@ -50,6 +50,9 @@ export class Crystal extends Phaser.GameObjects.Container {
       this.updateCrystalDebuffAnimation(this.stats.debuffLevel);
     }
 
+    this.getMagicalDamageResistance();
+    this.getPhysicalDamageResistance();
+
     tile.crystal = { ...this.stats };
   }
 
@@ -65,12 +68,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.updateTileData();
   }
 
-  getsDamaged(damage: number, _attackType: EAttackType, unit: Hero | Item, splashDamage = false): void {
-    /*
-    *
-    *
-    */
-
+  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, splashDamage = false): void {
     if (this.stats.engineerShield) {
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
       this.removeEngineerShield();
@@ -93,7 +91,7 @@ export class Crystal extends Phaser.GameObjects.Container {
       assaultBoostDamage = 300;
     }
     const damageMultiplier = assaultBoostDamage  *  this.stats.debuffLevel;
-    const totalDamage = roundToFive(damage + damageMultiplier);
+    const totalDamage = roundToFive(this.getLifeLost(damage + damageMultiplier, attackType));
     const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
     this.stats.currentHealth -= damageTaken;
 
@@ -107,7 +105,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     // Show damage numbers
     if (damageTaken > 0) new FloatingText(this.context, this.x, this.y - 50, damageTaken.toString());
 
-    this.unitCard.updateCardHealth(this.stats.currentHealth, this.stats.maxHealth);
+    this.unitCard.updateCardHealth(this);
     this.updateTileData();
 
     // Update player HP bar
@@ -187,5 +185,39 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     this.stats.debuffLevel = newLevel;
     this.updateTileData();
+  }
+
+  getPhysicalDamageResistance(): number {
+    let total = this.stats.basePhysicalDamageResistance;
+    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    this.setPhysicalDamageResistance(total);
+    return total;
+  }
+
+  getMagicalDamageResistance(): number {
+    let total = this.stats.baseMagicalDamageResistance;
+    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    this.setMagicalDamageResistance(total);
+    return total;
+  }
+
+  setPhysicalDamageResistance(total: number): void {
+    this.stats.physicalDamageResistance = total;
+  }
+
+  setMagicalDamageResistance(total: number): void {
+    this.stats.magicalDamageResistance = total;
+  }
+
+  getLifeLost(damage: number, attackType: EAttackType) {
+    const resistance = {
+      [EAttackType.MAGICAL]: this.getMagicalDamageResistance(),
+      [EAttackType.PHYSICAL]: this.getPhysicalDamageResistance()
+    };
+
+    const reduction = resistance[attackType];
+
+    const totalDamage = resistance ? damage - damage * reduction / 100 : damage;
+    return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
   }
 }

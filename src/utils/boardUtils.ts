@@ -32,13 +32,6 @@ export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
 }
 
 export function specialTileCheck(hero: Hero, targetTile: ETiles, currentTile?: ETiles): void {
-  let damageResistance;
-  if (hero.stats.faction === EFaction.DWARVES) {
-    damageResistance = hero.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
-  } else {
-    damageResistance = 20;
-  }
-
   // If hero is leaving a special tile
   if (currentTile === ETiles.CRYSTAL_DAMAGE) {
     hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
@@ -49,11 +42,11 @@ export function specialTileCheck(hero: Hero, targetTile: ETiles, currentTile?: E
     hero.visuals.powerTileAnim.setVisible(false);
   }
   if (currentTile === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalDamageResistance -= damageResistance;
+    hero.stats.magicalResistanceTile = false;
     hero.visuals.magicalResistanceTileAnim.setVisible(false);
   }
   if (currentTile === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalDamageResistance -= damageResistance;
+    hero.stats.physicalResistanceTile = false;
     hero.visuals.physicalResistanceTileAnim.setVisible(false);
   }
   if (currentTile === ETiles.SPEED) {
@@ -73,12 +66,12 @@ export function specialTileCheck(hero: Hero, targetTile: ETiles, currentTile?: E
     playSound(hero.scene, EGameSounds.SWORD_TILE);
   }
   if (targetTile === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalDamageResistance += damageResistance;
+    hero.stats.magicalResistanceTile = true;
     hero.visuals.magicalResistanceTileAnim.setVisible(true);
     playSound(hero.scene, EGameSounds.HELM_TILE);
   }
   if (targetTile === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalDamageResistance += damageResistance;
+    hero.stats.physicalResistanceTile = true;
     hero.visuals.physicalResistanceTileAnim.setVisible(true);
     playSound(hero.scene, EGameSounds.SHIELD_TILE);
   }
@@ -109,11 +102,9 @@ export function removeSpecialTileOnKo(hero: Hero): void {
     hero.visuals.powerTileAnim.setVisible(false);
   }
   if (currentTile.tileType === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalDamageResistance -= damageResistance;
     hero.visuals.magicalResistanceTileAnim.setVisible(false);
   }
   if (currentTile.tileType === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalDamageResistance -= damageResistance;
     hero.visuals.physicalResistanceTileAnim.setVisible(false);
   }
 

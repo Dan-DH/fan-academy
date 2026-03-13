@@ -3,7 +3,7 @@ import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";
 import { positionHeroImage } from "../../utils/heroImagePosition";
-import { addCirclingTween, continuousAnimation } from "../../utils/unitAnimations";
+import { addCirclingTween, continuousAnimation, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
 import { Tile } from "../board/tile";
 
 export class HeroVisuals extends Phaser.GameObjects.Container {
@@ -26,6 +26,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   dwarvenBrewImage: Phaser.GameObjects.Image;
   engineerShieldImage: Phaser.GameObjects.Image;
   annihilatorDebuffImage: Phaser.GameObjects.Image;
+  paladinAuraImage: Phaser.GameObjects.Image;
 
   crystalDebuffEvent: Phaser.Time.TimerEvent;
   powerTileEvent: Phaser.Time.TimerEvent;
@@ -69,7 +70,12 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
     this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5);
+    engineerShieldAnimation(this.engineerShieldImage);
     if (!data.engineerShield) this.engineerShieldImage.setVisible(false);
+
+    this.paladinAuraImage = context.add.image(0, 30, 'paladinAura').setOrigin(0.5);
+    paladinAuraAnimation(this.paladinAuraImage);
+    if (data.unitType !== EHeroes.PALADIN || data.isKO) this.paladinAuraImage.setVisible(false);
 
     /**
      * RETICLES
@@ -138,6 +144,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.reviveAnim = context.add.image(0, -10, 'reviveAnim_1').setOrigin(0.5).setScale(0.7).setVisible(false);
 
     this.add([
+      this.paladinAuraImage,
       this.debuffImage,
       this.superChargeAnim,
       this.reviveAnim,

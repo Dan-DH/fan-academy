@@ -57,6 +57,7 @@ export function createElvesPhantomData(data: Partial<IHero>): IHero {
     magicalDamageResistance: 0,
     baseMagicalDamageResistance: 0,
     canHeal: false,
+    manaVial: false,
     ...createGenericElvesData(data)
   };
 }
@@ -80,7 +81,10 @@ export function createGenericElvesData(data: Partial<IHero>): {
   attackTile: boolean,
   speedTile: boolean,
   buffRange: number,
-  canBuff: boolean
+  canBuff: boolean,
+  paladinAura: number,
+  unitsConsumed: number,
+  dwarvenBrew: boolean
 } {
   return {
     class: EClass.HERO,
@@ -101,6 +105,9 @@ export function createGenericElvesData(data: Partial<IHero>): {
     attackTile: data.attackTile ?? false,
     speedTile: data.speedTile ?? false,
     buffRange: 0,
-    canBuff: false
+    canBuff: false,
+    paladinAura: data.paladinAura ?? 0,
+    unitsConsumed: data.unitsConsumed ?? 0,
+    dwarvenBrew: data.dwarvenBrew ?? false
   };
 }

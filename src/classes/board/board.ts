@@ -467,9 +467,9 @@ export class Board {
   }
 
   // Includes diagonally adjacent
-  isAdjacent(hero: Hero, unitToCompare: Hero | Crystal): boolean {
-    const row = Math.abs(hero.stats.row - unitToCompare.stats.row);
-    const col = Math.abs(hero.stats.col - unitToCompare.stats.col);
+  isAdjacent(target: Hero | Crystal, unitToCompare: Hero | Crystal): boolean {
+    const row = Math.abs(target.stats.row - unitToCompare.stats.row);
+    const col = Math.abs(target.stats.col - unitToCompare.stats.col);
 
     return col <= 1 && row <= 1 && !(row === 0 && col === 0);
   }
@@ -479,6 +479,32 @@ export class Board {
     const col = Math.abs(hero.stats.col - unitToCompare.stats.col);
 
     return row === 1 && col === 0 || row === 0 && col === 1;
+  }
+
+  getAdjacentFriendlyUnitsOnBoard(hero: Hero): Hero[] {
+    return this.units.filter(unit => hero.stats.belongsTo === unit.stats.belongsTo && this.isAdjacent(hero, unit));
+  } // FIXME: not used atm
+
+  searchForAliveAdjacentFriendlyUnit(target: Hero | Crystal, unitToSearch: EHeroes): number {
+    return this.units.filter(unit =>
+      unit.stats.unitType === unitToSearch &&
+      target.stats.belongsTo === unit.stats.belongsTo &&
+      this.isAdjacent(target, unit) &&
+      !unit.stats.isKO).length;
+  }
+
+  updatePaladinAurasAcrossBoard(): void {
+    this.units.map(unit => {
+      unit.stats.paladinAura = this.searchForAliveAdjacentFriendlyUnit(unit, EHeroes.PALADIN);
+      unit.updateTileData();
+      unit.unitCard.updateCardData(unit);
+    });
+
+    this.crystals.map(crystal => {
+      crystal.stats.paladinAura = this.searchForAliveAdjacentFriendlyUnit(crystal, EHeroes.PALADIN);
+      crystal.updateTileData();
+      crystal.unitCard.updateCardData(crystal);
+    });
   }
 
   // Check if a Necromancer should stomp an enemit unit or create a phantom
