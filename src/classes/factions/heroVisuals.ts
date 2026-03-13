@@ -15,7 +15,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   healReticle: Phaser.GameObjects.Image;
   allyReticle: Phaser.GameObjects.Image;
   blockedLOS: Phaser.GameObjects.Image;
-  debuffImage: Phaser.GameObjects.Image;
+  priestessDebuffImage: Phaser.GameObjects.Image;
   crystalDebuffTileAnim: Phaser.GameObjects.Image;
   powerTileAnim: Phaser.GameObjects.Image;
   magicalResistanceTileAnim: Phaser.GameObjects.Image;
@@ -28,6 +28,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   annihilatorDebuffImage: Phaser.GameObjects.Image;
   paladinAuraImage: Phaser.GameObjects.Image;
 
+  annihilatorDebuffEvent: Phaser.Time.TimerEvent;
   crystalDebuffEvent: Phaser.Time.TimerEvent;
   powerTileEvent: Phaser.Time.TimerEvent;
   magicalResistanceTileEvent: Phaser.Time.TimerEvent;
@@ -66,7 +67,8 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
     if (!data.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
 
-    this.annihilatorDebuffImage = context.add.image(5, 25, 'annihilatorDebuff').setOrigin(0.5).setScale(0.4).setName('annihilatorDebuff');
+    this.annihilatorDebuffImage = context.add.image(25, -30, 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
+    this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
     if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
     this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5);
@@ -88,9 +90,9 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     addCirclingTween(this.healReticle);
     this.allyReticle = context.add.image(0, -10, 'allyReticle').setOrigin(0.5).setScale(0.6).setName('allyReticle').setVisible(false);
     addCirclingTween(this.allyReticle);
-    this.debuffImage = context.add.image(0, -10, 'debuff').setOrigin(0.5).setScale(2.5).setName('debuff');
-    addCirclingTween(this.debuffImage);
-    if (!data.priestessDebuff) this.debuffImage.setVisible(false);
+    this.priestessDebuffImage = context.add.image(0, -10, 'debuff').setOrigin(0.5).setScale(2.5).setName('debuff');
+    addCirclingTween(this.priestessDebuffImage);
+    if (!data.priestessDebuff) this.priestessDebuffImage.setVisible(false);
     this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
     this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
 
@@ -145,7 +147,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.add([
       this.paladinAuraImage,
-      this.debuffImage,
+      this.priestessDebuffImage,
       this.superChargeAnim,
       this.reviveAnim,
       this.characterImage,

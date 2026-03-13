@@ -166,11 +166,11 @@ export function singleTween(image: Phaser.GameObjects.Image, duration: number): 
   });
 }
 
-export function continuousAnimation(image: Phaser.GameObjects.Image, textures: string[]): Phaser.Time.TimerEvent {
+export function continuousAnimation(image: Phaser.GameObjects.Image, textures: string[], delay = 100): Phaser.Time.TimerEvent {
   let frame = 0;
 
   return image.scene.time.addEvent({
-    delay: 100, // milliseconds between frames
+    delay, // milliseconds between frames
     loop: true,
     callback: () => {
       image.setTexture(textures[frame]);

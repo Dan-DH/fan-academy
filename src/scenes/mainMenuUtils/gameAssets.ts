@@ -63,7 +63,8 @@ export function loadGameAssets(context: GameScene) {
   context.load.image('phantomSpawnAnim_2', `${CDN_PATH}/images/gameItems/animations/PhantomSpawn_Explosion02-hd.webp`);
 
   context.load.image('debuff', `${CDN_PATH}/images/gameItems/animations/MoveDebuff_PurpleGlow-hd.webp`); // priestess debuff
-  context.load.image('annihilatorDebuff', `./assetsd/images/factions/dwarves/annihilator_debuff.png`); // TODO: update
+  context.load.image('annihilatorDebuff_1', `./assetsd/images/factions/dwarves/annihilator_debuff_1.png`); // TODO: update
+  context.load.image('annihilatorDebuff_2', `./assetsd/images/factions/dwarves/annihilator_debuff_2.png`); // TODO: update
 
   // Crystal tile images
   context.load.image('crystalFull', `${CDN_PATH}/images/gameItems/crystal_full.webp`);

@@ -26,6 +26,7 @@ export class Grenadier extends Dwarf {
       this.rangedAttack(target);
     }
 
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
     this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
@@ -54,8 +55,6 @@ export class Grenadier extends Dwarf {
       } else {
         enemyHero.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL);
       }
-
-      if (enemyHero && enemyHero instanceof Hero && enemyHero.stats.unitType === EHeroes.PHANTOM) enemyHero.removeFromGame(); // TODO: is this needed? can't we do the check on the phantom side? I remember there was a reason I put the check here...
     });
 
     enemyCrystalTiles.forEach(tile => {

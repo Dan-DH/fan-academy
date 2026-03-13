@@ -23,6 +23,7 @@ import { ConcedeWarningPopup } from "./popups/concedePopup";
 import { TurnWarningPopup } from "./popups/turnPopup";
 import { getActionClass } from "../utils/gameUtils";
 import { specialTileCheck } from "../utils/boardUtils";
+import { Crystal } from "./board/crystal";
 
 export class GameController {
   context: GameScene;
@@ -319,7 +320,7 @@ export class GameController {
     });
   }
 
-  async pushEnemy(attacker: Hero, target: Hero): Promise<void> {
+  async pushEnemy(attacker: Hero | Crystal, target: Hero): Promise<void> {
     const attackerTile = this.board.getTileFromBoardPosition(attacker.stats.boardPosition);
     const targetTile = this.board.getTileFromBoardPosition(target.stats.boardPosition);
     if (!attackerTile || !targetTile) {
@@ -346,7 +347,7 @@ export class GameController {
       console.error('pushEnemy() Destination tile is occupied');
       return;
     }
-    if (targetNewTile.tileType == ETiles.SPAWN && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) {
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) {
       console.error(`pushEnemy() Can't push a non-KO'd enemy onto a friendly spawn`);
       return;
     }

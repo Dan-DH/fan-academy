@@ -127,6 +127,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Show damage numbers
     if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
 
+    // Remove 1-hit buffs and debuffs
+    this.stats.annihilatorDebuff = false;
+    this.visuals.annihilatorDebuffImage.setVisible(false);
+    this.stats.dwarvenBrew = false;
+    this.visuals.dwarvenBrewImage.setVisible(false);
+
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
@@ -519,7 +525,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   removeAttackModifiers() {
     this.stats.priestessDebuff = false;
-    this.visuals.debuffImage.setVisible(false);
+    this.visuals.priestessDebuffImage.setVisible(false);
     this.stats.superCharge = false;
     this.visuals.superChargeAnim.setVisible(false);
 

@@ -481,9 +481,9 @@ export class Board {
     return row === 1 && col === 0 || row === 0 && col === 1;
   }
 
-  getAdjacentFriendlyUnitsOnBoard(hero: Hero): Hero[] {
+  getAdjacentFriendlyUnitsOnBoard(hero: Hero | Crystal): Hero[] {
     return this.units.filter(unit => hero.stats.belongsTo === unit.stats.belongsTo && this.isAdjacent(hero, unit));
-  } // FIXME: not used atm
+  }
 
   searchForAliveAdjacentFriendlyUnit(target: Hero | Crystal, unitToSearch: EHeroes): number {
     return this.units.filter(unit =>

@@ -33,14 +33,14 @@ export class Priestess extends DarkElf {
     } else {
       playSound(this.scene, EGameSounds.PRIESTESS_ATTACK);
 
+      const isTargetShielded = target.stats.engineerShield;
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
-
       if (damageDone) this.lifeSteal(damageDone);
 
       // Apply a 50% debuff to the target's next attack or heal
-      if (target instanceof Hero) {
+      if (target instanceof Hero && !isTargetShielded) {
         target.stats.priestessDebuff = true;
-        target.visuals.debuffImage.setVisible(true);
+        target.visuals.priestessDebuffImage.setVisible(true);
         target.updateTileData();
         target.unitCard.updateCardData(target);
       }
