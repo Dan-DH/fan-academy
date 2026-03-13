@@ -95,12 +95,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   onActivate(): void {
     console.log(`${this.stats.unitId} is now active`);
-    this.setScale(1.2);
+    this.visuals.characterImage.setScale(1.2);
   }
 
   onDeactivate() {
     console.log(`${this.stats.unitId} is now inactive`);
-    this.setScale(1);
+    this.visuals.characterImage.setScale(1);
   }
 
   getsDamaged(damage: number, attackType: EAttackType): number {
