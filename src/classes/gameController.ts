@@ -61,9 +61,9 @@ export class GameController {
 
     // If we are in a replay we set everything to the last turn
     if (context.triggerReplay) {
-      this.lastTurnState =  this.game.previousTurn[0];
+      this.lastTurnState =  structuredClone(this.game.previousTurn[0]);
     } else {
-      this.lastTurnState =  this.game.previousTurn[this.game.previousTurn.length - 1];
+      this.lastTurnState =  structuredClone(this.game.previousTurn[this.game.previousTurn.length - 1]);
     }
 
     context.player1 = this.lastTurnState.player1;
@@ -227,13 +227,13 @@ export class GameController {
     // If a unit was currently selected, de-select it
     if (this.context.activeUnit) deselectUnit(this.context);
 
-    // Refresh actionPie, draw units and update door banner
     this.actionPie.resetActionPie();
     this.drawUnits(); // FIXME: move this until after the sedTurnMessage succeeds (or show an error)
+    await this.removeKOUnits();
     this.door.updateBannerText();
 
     // Add the last action of the previous turn at index 0 of the actions array to serve as the base for the replay
-    this.currentTurn.unshift(this.lastTurnState);
+    this.currentTurn.unshift(this.game.previousTurn[this.game.previousTurn.length - 1]);
 
     this.context.activePlayer = this.context.opponentId;
     this.context.turnNumber!++;

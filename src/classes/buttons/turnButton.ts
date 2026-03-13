@@ -27,10 +27,7 @@ export class TurnButton {
 
   async handleSendingTurn(): Promise<void> {
     const gameController = this.context.gameController!;
-    if (this.context.currentTurnAction!  < 5 ) gameController.addActionToState(EActionType.PASS); // FIXME: why was this only triggered on action === 1?
-
-    // Remove KO'd units before end of turn actions to handle a possible game over
-    await gameController.removeKOUnits();
+    if (this.context.currentTurnAction!  < 5 ) gameController.addActionToState(EActionType.PASS);
 
     await gameController.endOfTurnActions();
   }

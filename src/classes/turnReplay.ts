@@ -20,7 +20,7 @@ export class TurnReplay {
   async replayTurn() {
     const opponentHand = this.fakeOpponentHand();
 
-    for (let i = 0; i < this.gameController.game.previousTurn.length; i++) {
+    for (let i = 1; i < this.gameController.game.previousTurn.length; i++) {
       const turn = this.gameController.game.previousTurn[i];
 
       const actionsToIgnore = [EActionType.DRAW, EActionType.PASS];
