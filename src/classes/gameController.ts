@@ -333,24 +333,13 @@ export class GameController {
     // If the tile is beyond the boundaries of the map, ignore
     const isWrongRow = newPosition.row < 0 || newPosition.row > 4;
     const isWrongCol = newPosition.col < 0 || newPosition.col > 8;
-    if (isWrongRow || isWrongCol) {
-      console.error('pushEnemy() Cant push enemy out of the map');
-      return;
-    }
+    if (isWrongRow || isWrongCol) return;
 
     const targetNewTile = this.board.getTileFromCoordinates(newPosition.row, newPosition.col);
-    if (!targetNewTile) {
-      console.error('pushEnemy() No destination tile found');
-      return;
-    }
-    if (targetNewTile.crystal || targetNewTile.hero) {
-      console.error('pushEnemy() Destination tile is occupied');
-      return;
-    }
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) {
-      console.error(`pushEnemy() Can't push a non-KO'd enemy onto a friendly spawn`);
-      return;
-    }
+
+    if (!targetNewTile) return;
+    if (targetNewTile.crystal || targetNewTile.hero) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
@@ -372,18 +361,10 @@ export class GameController {
     const newPosition = getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, false);
 
     const targetNewTile = this.board.getTileFromCoordinates(newPosition.row, newPosition.col);
-    if (!targetNewTile) {
-      console.error('pullEnemy() No destination tile found');
-      return;
-    }
-    if (targetNewTile.crystal || targetNewTile.hero) {
-      console.error('pullEnemy() Destination tile is occupied');
-      return;
-    }
-    if (targetNewTile.tileType == ETiles.SPAWN && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) {
-      console.error(`pushEnemy() Can't pull a non-KO'd enemy onto a friendly spawn`);
-      return;
-    }
+
+    if (!targetNewTile) return;
+    if (targetNewTile.crystal || targetNewTile.hero) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
