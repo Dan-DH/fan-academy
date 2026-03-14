@@ -320,7 +320,7 @@ export class GameController {
     });
   }
 
-  async pushEnemy(attacker: Hero | Crystal, target: Hero): Promise<void> {
+  async pushEnemy(attacker: Hero | Crystal, target: Hero, angle = 0): Promise<void> {
     const attackerTile = this.board.getTileFromBoardPosition(attacker.stats.boardPosition);
     const targetTile = this.board.getTileFromBoardPosition(target.stats.boardPosition);
     if (!attackerTile || !targetTile) {
@@ -343,7 +343,7 @@ export class GameController {
 
     if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
-    await forcedMoveAnimation(this.context, target, targetNewTile);
+    await forcedMoveAnimation(this.context, target, targetNewTile, angle);
 
     target.updatePosition(targetNewTile);
     targetNewTile.hero = target.exportData();

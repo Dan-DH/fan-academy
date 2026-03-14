@@ -52,7 +52,7 @@ export async function moveAnimation(context: GameScene, hero: Hero, targetTile: 
   await animation.call(context, hero, targetTile);
 }
 
-export async function forcedMoveAnimation(context: GameScene, hero: Hero, targetTile: Tile): Promise<void> {
+export async function forcedMoveAnimation(context: GameScene, hero: Hero, targetTile: Tile, angle = 0): Promise<void> {
   context.input.enabled = false;
 
   const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
@@ -61,6 +61,7 @@ export async function forcedMoveAnimation(context: GameScene, hero: Hero, target
         targets: hero,
         x: targetTile.x,
         y: targetTile.y,
+        angle,
         duration: 200,
         ease: 'Linear',
         onComplete: () => {
