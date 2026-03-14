@@ -335,7 +335,6 @@ export class Board {
     return areaTiles;
   }
 
-  // Used for Wizard, Gunner and VoidMonk's attacks
   getAttackDirection(attackerBP: number, targetBP: number): number {
     const distance =  targetBP - attackerBP;
 
@@ -547,4 +546,97 @@ export class Board {
     engineer.stats.shieldingAlly = undefined;
     engineer.updateTileData();
   }
+
+  getGunnerSplashTargets(attacker: Hero, target: Hero | Crystal) {
+    const dx = target.stats.col - attacker.stats.col;
+    const dy = target.stats.row - attacker.stats.row;
+
+    let targetPairs = [];
+
+    if (Math.abs(dx) === 2 || Math.abs(dy) === 2) {
+      // Orthogonal target
+      const mx = dx / 2;
+      const my = dy / 2;
+      const sx = dx === 0 ? 1 : 0;
+      const sy = dy === 0 ? 1 : 0;
+
+      targetPairs = [
+        {
+          p1: {
+            x: attacker.stats.col + mx + sx,
+            y: attacker.stats.row + my + sy
+          },
+          p2: {
+            x: attacker.stats.col + dx + sx,
+            y: attacker.stats.row + dy + sy
+          }
+        },
+        {
+          p1: {
+            x: attacker.stats.col + mx - sx,
+            y: attacker.stats.row + my - sy
+          },
+          p2: {
+            x: attacker.stats.col + dx - sx,
+            y: attacker.stats.row + dy - sy
+          }
+        }
+      ];
+    } else {
+      // Diagonally adjacent
+      targetPairs = [
+        {
+          p1: {
+            x: attacker.stats.col + dx,
+            y: attacker.stats.row
+          },
+          p2: {
+            x: attacker.stats.col + 2 * dx,
+            y: attacker.stats.row
+          }
+        },
+        {
+          p1: {
+            x: attacker.stats.col,
+            y: attacker.stats.row + dy
+          },
+          p2: {
+            x: attacker.stats.col,
+            y: attacker.stats.row + 2 * dy
+          }
+        }
+      ];
+    }
+
+    const result: (Hero | Crystal)[] = [];
+
+    targetPairs.forEach(pair => {
+      const unitAtP1 = this.checkIfEnemyHeroOrCrystalOnCoordinates(attacker, pair.p1);
+
+      if (unitAtP1) {
+        result.push(unitAtP1);
+      } else {
+        const unitAtP2 = this.checkIfEnemyHeroOrCrystalOnCoordinates(attacker, pair.p2);
+        if (unitAtP2) result.push(unitAtP2);
+      }
+    });
+
+    return result;
+  }
+
+  checkIfEnemyHeroOrCrystalOnCoordinates(attacker: Hero, pair: {
+    x: number,
+    y: number
+  }): Hero | Crystal | undefined {
+    if (this.isOffBoard(pair)) return undefined;
+
+    const found = this.units.find(unit => unit.stats.col === pair.x && unit.stats.row === pair.y && unit.stats.belongsTo !== attacker.stats.belongsTo) || this.crystals.find(unit => unit.stats.col === pair.x && unit.stats.row === pair.y && unit.stats.belongsTo !== attacker.stats.belongsTo);
+
+    return found || undefined;
+  }
+
+  isOffBoard(unit: {
+    x: number,
+    y: number
+  }): boolean { return unit.x < 0 || unit.x >= 9 || unit.y < 0 || unit.y >= 5 ;}
 }

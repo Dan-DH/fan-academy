@@ -1,5 +1,9 @@
+import { EGameSounds, EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
+import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { playSound } from "../../../utils/gameSounds";
+import { turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
@@ -10,8 +14,50 @@ export class Gunner extends Dwarf {
     super(context, data, tile);
   }
 
-  attack(_target: Hero | Crystal): void {
+  attack(target: Hero | Crystal): void {
     // add check for splash attack damage on crystals
+    this.flashActingUnit();
+    turnIfBehind(this.context, this, target); // Ensure turnIfBehind is imported/defined
+
+    const distance = getDistanceToTarget(this, target);
+
+    if (distance === 1) {
+      this.singleTargetAttack(target);
+    } else {
+      this.multiTargetAttack(target);
+    }
+
+    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+
+    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+  }
+
+  singleTargetAttack(target: Hero | Crystal): void {
+    // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
+    if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())) {
+      playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE); // TODO:
+      target.removeFromGame();
+    } else {
+      if (this.stats.superCharge) {
+        playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+      } else {
+        playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+      } // TODO:
+      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      this.removeAttackModifiers();
+    }
+  }
+
+  multiTargetAttack(target: Hero | Crystal): void {
+    const splashedUnits = this.context.gameController?.board.getGunnerSplashTargets(this, target);
+
+    splashedUnits?.forEach(unit =>  {
+      unit.getsDamaged(this.getTotalPower(0.66), EAttackType.PHYSICAL, this, true);
+      if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
+    });
+
+    target.getsDamaged(this.getTotalPower(0.66), EAttackType.PHYSICAL, this);
+    this.removeAttackModifiers();
   }
 
   heal(_target: Hero): void {};
