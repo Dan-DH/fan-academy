@@ -54,6 +54,7 @@ export class Grenadier extends Dwarf {
         enemyHero.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL);
       } else {
         enemyHero.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL);
+        if (enemyHero.stats.isKO && enemyHero.stats.unitType === EHeroes.PHANTOM) enemyHero.removeFromGame();
       }
     });
 

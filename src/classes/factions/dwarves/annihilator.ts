@@ -51,7 +51,8 @@ export class Annihilator extends Dwarf {
       if (adjacentFriendlyUnits.length) {
         adjacentFriendlyUnits.forEach(unit =>{
           unit.getsDamaged(this.getTotalPower(0.2), this.stats.attackType, this, true);
-          if (unit instanceof Hero && !unit.stats.isKO) gameController.pushEnemy(target, unit);
+          if (unit instanceof Hero && !unit.stats.isKO) gameController.pushEnemy(target, unit, 360);
+          if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
         });
       }
 
