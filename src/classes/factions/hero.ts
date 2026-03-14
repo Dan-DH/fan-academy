@@ -373,6 +373,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.magicalResistanceTileEvent.remove(false);
     this.visuals.physicalResistanceTileEvent.remove(false);
     this.visuals.superChargeEvent.remove(false);
+    this.visuals.annihilatorDebuffEvent.remove(false);
+
     if (this.visuals.spawnEvent) this.visuals.spawnEvent?.remove(false);
 
     if (board) removeFromBoard(this);
