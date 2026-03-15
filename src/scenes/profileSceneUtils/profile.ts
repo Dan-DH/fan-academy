@@ -104,22 +104,27 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 40,
       color: '#ffffff'
     });
-    context.add.text(1000, 440, `Games: ${context.userData?.stats.totalGames}`, {
+    context.add.text(900, 440, `Games: ${context.userData?.stats.totalGames}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1000, 490, `Wins: ${context.userData?.stats.totalWins}`, {
+    context.add.text(900, 490, `Wins: ${context.userData?.stats.totalWins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1000, 540, `Council wins: ${context.userData?.stats.councilWins}`, {
+    context.add.text(1100, 440, `Council wins: ${context.userData?.stats.councilWins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1000, 590, `Elves wins: ${context.userData?.stats.elvesWins}`, {
+    context.add.text(1100, 490, `Elves wins: ${context.userData?.stats.elvesWins}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1100, 540, `Dwarves wins: ${context.userData?.stats.dwarvesWins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
