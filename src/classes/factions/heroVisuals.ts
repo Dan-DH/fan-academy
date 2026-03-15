@@ -63,8 +63,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     }
     if (!data.factionEquipment) this.factionEquipmentImage.setVisible(false);
 
-    // TODO: place correctly
-    this.dwarvenBrewImage = context.add.image(5, 25, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
+    this.dwarvenBrewImage = context.add.image(-25, -35, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
     if (!data.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
 
     this.annihilatorDebuffImage = context.add.image(25, -30, 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');

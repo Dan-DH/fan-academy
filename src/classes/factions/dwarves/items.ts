@@ -30,10 +30,11 @@ export class DwarvenBrew extends Item {
 
     playSound(this.scene, EGameSounds.POTION_USE); // TODO: correct sound and animation icon
 
-    const potionImage = this.scene.add.image(target.x, target.y - 10, 'healingPotion').setDepth(100);
-    useAnimation(potionImage);
+    const dwarvenBrewImage = this.scene.add.image(target.x, target.y - 10, 'dwarvenBrew').setDepth(100);
+    useAnimation(dwarvenBrewImage);
 
     target.stats.dwarvenBrew = true;
+    target.visuals.dwarvenBrewImage.setVisible(true);
     target.getsHealed(1000);
 
     this.removeFromGame();
