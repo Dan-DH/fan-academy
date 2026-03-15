@@ -6,7 +6,8 @@ import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { useAnimation } from "../../../utils/unitAnimations";
+import { pulverizerAnimation, useAnimation } from "../../../utils/unitAnimations";
+import { roundToFive } from "../../../utils/gameUtils";
 
 export class DragonScale extends Item {
   constructor(context: GameScene, data: IItem) {
@@ -49,41 +50,50 @@ export class Pulverizer extends Item {
     super(context, data);
   };
 
-  // TODO: implement
-
   use(targetTile: Tile): void {
-    const infernoImage = this.scene.add.image(targetTile.x, targetTile.y, 'infernoShockWave').setDepth(100);
-    useAnimation(infernoImage, 3);
-    playSound(this.scene, EGameSounds.INFERNO_USE);
+    const pulverizerImage = this.scene.add.image(targetTile.x, targetTile.y, 'pulverizer').setDepth(100);
+    pulverizerAnimation(pulverizerImage, targetTile.y);
+    playSound(this.scene, EGameSounds.INFERNO_USE); // TODO:
 
-    // Damages enemy units and crystals, and removes enemy KO'd units
-    const damage = 350;
+    if (targetTile.hero) this.directHitOnHero(targetTile);
+    if (targetTile.crystal) this.directHitOnCrystal(targetTile);
 
+    this.removeFromGame();
+    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+  }
+
+  directHitOnHero(targetTile: Tile): void {
+    const hero = this.context.gameController?.board.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
+    if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
+    const directHitDamage = 600;
+    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL);
+    if (hero.stats.factionEquipment) {
+      hero.stats.factionEquipment = false; // TODO: might need to refactor this for future factions
+      hero.visuals.factionEquipmentImage.setVisible(false);
+      hero.visuals.characterImage.setTexture(hero.visuals.updateCharacterImage(hero.stats));
+    }
+  }
+
+  directHitOnCrystal(targetTile: Tile): void {
     const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
+
+    const directHitDamage = 600;
+    const splashDamage = roundToFive(600 * 0.33);
 
     enemyHeroTiles?.forEach(tile => {
       const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      if (!hero) throw new Error('Inferno use() hero not found');
-
-      // Inferno removes KO'd enemy units
-      if (hero.stats.isKO){
-        hero.removeFromGame(true);
-        return;
-      }
-
-      hero.getsDamaged(damage, EAttackType.MAGICAL);
-
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM) hero.removeFromGame();
+      hero!.getsDamaged(splashDamage, EAttackType.PHYSICAL);
+      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
     });
 
     enemyCrystalTiles.forEach(tile => {
       const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!crystal) throw new Error('Inferno use() crystal not found');
 
-      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this); // FIXME: we check for this already on getAOETiles. Remove from all AOE item attacks
+      if (crystal?.stats.boardPosition === targetTile.boardPosition) {
+        crystal?.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, true);
+      } else {
+        crystal?.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, true);
+      }
     });
-
-    this.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
   }
 }

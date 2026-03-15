@@ -1,5 +1,5 @@
 import { sendTurnMessage } from "../colyseus/colyseusGameRoom";
-import { EActionClass, EActionType, EGameSounds, EGameStatus, EHeroes, ETiles, EUiSounds } from "../enums/gameEnums";
+import { EActionClass, EActionType, EGameSounds, EGameStatus, EHeroes, EItems, ETiles, EUiSounds } from "../enums/gameEnums";
 import { IGame, IGameOver, IGameState, IPlayerState, IUserData } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { replayButton } from "../scenes/gameSceneUtils/replayButton";
@@ -266,7 +266,9 @@ export class GameController {
 
   onItemClicked(item: Item) {
     console.log(`An item ${item.stats.unitId} has been clicked`);
-    if (item.stats.dealsDamage) {
+    if (item.stats.dealsDamage && item.stats.itemType === EItems.PULVERIZER) {
+      this.board.highlightAllLivingEnemyTargets(item);
+    } else if (item.stats.dealsDamage) {
       this.board.highlightAllBoard();
     } else {
       this.board.highlightEquipmentTargets(item);

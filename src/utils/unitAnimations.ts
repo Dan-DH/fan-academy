@@ -225,3 +225,35 @@ export function engineerShieldAnimation(image: Phaser.GameObjects.Image): void {
     repeatDelay: 2000
   });
 }
+
+export function pulverizerAnimation(image: Phaser.GameObjects.Image, targetY: number): void {
+  const hoverY = targetY - 80;
+  image.setScale(1.5);
+  image.y = hoverY - 20;
+
+  image.scene.tweens.chain({
+    targets: image,
+    tweens: [
+      {
+        y: hoverY,
+        duration: 100,
+        ease: 'Cubic.easeIn'
+      },
+      {
+        y: '+=8',
+        duration: 40,
+        yoyo: true,
+        repeat: 8,
+        ease: 'Sine.easeInOut'
+      },
+      {
+        y: hoverY + 5,
+        duration: 150,
+        ease: 'Power2'
+      }
+    ],
+    onComplete: () => {
+      image.destroy(true);
+    }
+  });
+}

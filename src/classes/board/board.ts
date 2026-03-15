@@ -98,6 +98,11 @@ export class Board {
     this.highlightTiles([...spawns]);
   }
 
+  highlightAllLivingEnemyTargets(unit: Hero | Item): void {
+    this.crystals.map(crystal => { if (crystal.stats.belongsTo !== unit.stats.belongsTo) crystal.getTile().setHighlight();});
+    this.units.map(u => {if (u.stats.belongsTo !== unit.stats.belongsTo && !u.stats.isKO) u.getTile().setHighlight();});
+  }
+
   highlightEnemyTargets(hero: Hero): void {
     const tilesInRange: Tile[] = this.getHeroTilesInRange(hero, ERange.ATTACK);
     if (!tilesInRange.length) return;
@@ -307,7 +312,6 @@ export class Board {
     return [...inRangeTiles];
   }
 
-  // TODO: DWARVES can use this for the grenadier and the drill effects
   get3x3AreaOfEffectTiles(tile: Tile): Tile[] {
     const totalRows = 4;
     const totalCols = 8;
