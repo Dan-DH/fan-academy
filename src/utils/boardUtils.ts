@@ -2,7 +2,7 @@ import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EFaction, EGameSounds, EHeroes, ETiles } from "../enums/gameEnums";
+import { EGameSounds, ETiles } from "../enums/gameEnums";
 import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
@@ -86,13 +86,6 @@ export function specialTileCheck(hero: Hero, targetTile: ETiles, currentTile?: E
 export function removeSpecialTileOnKo(hero: Hero): void {
   const currentTile = hero.getTile();
 
-  let damageResistance;
-  if (hero.stats.faction === EFaction.DWARVES) {
-    damageResistance = hero.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
-  } else {
-    damageResistance = 20;
-  }
-
   if (currentTile.tileType === ETiles.CRYSTAL_DAMAGE) {
     hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
     hero.visuals.crystalDebuffTileAnim.setVisible(false);
@@ -102,9 +95,11 @@ export function removeSpecialTileOnKo(hero: Hero): void {
     hero.visuals.powerTileAnim.setVisible(false);
   }
   if (currentTile.tileType === ETiles.MAGICAL_RESISTANCE) {
+    hero.stats.magicalResistanceTile = false;
     hero.visuals.magicalResistanceTileAnim.setVisible(false);
   }
   if (currentTile.tileType === ETiles.PHYSICAL_RESISTANCE) {
+    hero.stats.physicalResistanceTile = false;
     hero.visuals.physicalResistanceTileAnim.setVisible(false);
   }
 
