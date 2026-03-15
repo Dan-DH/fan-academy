@@ -281,20 +281,20 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.PALADIN]: {
       1: {
         charImageX: x,
-        charImageY: y
+        charImageY: y + 2
       },
       2: {
         charImageX: x,
-        charImageY: y
+        charImageY: y + 2
       },
       KO: {
         1: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         },
         2: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         }
       },
       hand: {
@@ -305,20 +305,20 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.GUNNER]: {
       1: {
         charImageX: x,
-        charImageY: y
+        charImageY: y + 10
       },
       2: {
         charImageX: x,
-        charImageY: y
+        charImageY: y + 10
       },
       KO: {
         1: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         },
         2: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         }
       },
       hand: {
@@ -328,26 +328,26 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     },
     [EHeroes.ENGINEER]: {
       1: {
-        charImageX: x + 5,
-        charImageY: y - 5
+        charImageX: x + 10,
+        charImageY: y + 6
       },
       2: {
         charImageX: x,
-        charImageY: y - 5
+        charImageY: y + 3
       },
       KO: {
         1: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         },
         2: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         }
       },
       hand: {
         charImageX: x,
-        charImageY: y - 15
+        charImageY: y - 10
       }
     },
     [EHeroes.ANNIHILATOR]: {
@@ -376,21 +376,21 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     },
     [EHeroes.GRENADIER]: {
       1: {
-        charImageX: x + 10,
-        charImageY: y - 5
+        charImageX: x,
+        charImageY: y + 10
       },
       2: {
-        charImageX: x - 10,
-        charImageY: y - 5
+        charImageX: x,
+        charImageY: y + 10
       },
       KO: {
         1: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         },
         2: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         }
       },
       hand: {

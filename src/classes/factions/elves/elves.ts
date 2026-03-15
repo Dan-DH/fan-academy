@@ -58,6 +58,8 @@ export function createElvesPhantomData(data: Partial<IHero>): IHero {
     baseMagicalDamageResistance: 0,
     canHeal: false,
     manaVial: false,
+    magicalResistanceTile: data.magicalResistanceTile ?? false,
+    physicalResistanceTile: data.physicalResistanceTile ?? false,
     ...createGenericElvesData(data)
   };
 }

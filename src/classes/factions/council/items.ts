@@ -66,7 +66,7 @@ export class Inferno extends Item {
 
       hero.getsDamaged(damage, EAttackType.MAGICAL);
 
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM) hero.removeFromGame();
+      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
     });
 
     enemyCrystalTiles.forEach(tile => {
