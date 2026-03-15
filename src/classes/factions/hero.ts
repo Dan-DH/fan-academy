@@ -14,6 +14,7 @@ import { roundToFive, checkUnitGameOver } from "../../utils/gameUtils";
 import { moveAnimation, singleAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
 import { removeFromBoard, removeSpecialTileOnKo, specialTileCheck } from "../../utils/boardUtils";
+import { Pulverizer } from "./dwarves/items";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   context: GameScene;
@@ -103,7 +104,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setScale(1);
   }
 
-  getsDamaged(damage: number, attackType: EAttackType): number {
+  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item): number {
     if (this.stats.engineerShield) {
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
       this.removeEngineerShield();
@@ -115,7 +116,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.scene.time.delayedCall(500, () => this.visuals.characterImage.clearTint());
 
     // Calculate damage after applying resistances
-    const totalDamage = roundToFive(this.getLifeLost(damage, attackType));
+    const totalAttackDamage = roundToFive(this.getLifeLost(damage, attackType));
+    // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
+    let assaultTileDamage = 0;
+    if (unit instanceof Pulverizer) {
+      const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
+      assaultTileDamage = 300 * (debuffLevel ?? 0);
+    }
+    const totalDamage = totalAttackDamage + assaultTileDamage;
 
     this.stats.currentHealth -= totalDamage;
 

@@ -33,10 +33,7 @@ export class DwarvenBrew extends Item {
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'healingPotion').setDepth(100);
     useAnimation(potionImage);
 
-    if (!target.stats.dwarvenBrew) {
-      // TODO: increase damage reduction;
-    }
-
+    target.stats.dwarvenBrew = true;
     target.getsHealed(1000);
 
     this.removeFromGame();
@@ -66,8 +63,9 @@ export class Pulverizer extends Item {
     const hero = this.context.gameController?.board.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
     if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
     const directHitDamage = 600;
-    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL);
-    if (hero.stats.factionEquipment) {
+
+    const damage = hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
+    if (damage > 0 && hero.stats.factionEquipment) {
       hero.stats.factionEquipment = false; // TODO: might need to refactor this for future factions
       hero.visuals.factionEquipmentImage.setVisible(false);
       hero.visuals.characterImage.setTexture(hero.visuals.updateCharacterImage(hero.stats));
@@ -82,13 +80,12 @@ export class Pulverizer extends Item {
 
     enemyHeroTiles?.forEach(tile => {
       const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      hero!.getsDamaged(splashDamage, EAttackType.PHYSICAL);
+      hero!.getsDamaged(splashDamage, EAttackType.PHYSICAL, this);
       if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
     });
 
     enemyCrystalTiles.forEach(tile => {
       const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-
       if (crystal?.stats.boardPosition === targetTile.boardPosition) {
         crystal?.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, true);
       } else {

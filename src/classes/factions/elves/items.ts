@@ -77,7 +77,7 @@ export class SoulHarvest extends Item {
       if (!hero) throw new Error('SoulHarvest use() hero not found');
       if (hero.stats.isKO) return;
 
-      totalDamageInflicted += hero.getsDamaged(damage, EAttackType.MAGICAL);
+      totalDamageInflicted += hero.getsDamaged(damage, EAttackType.MAGICAL, this);
 
       if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
     });

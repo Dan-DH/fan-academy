@@ -64,7 +64,7 @@ export class Inferno extends Item {
         return;
       }
 
-      hero.getsDamaged(damage, EAttackType.MAGICAL);
+      hero.getsDamaged(damage, EAttackType.MAGICAL, this);
 
       if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
     });

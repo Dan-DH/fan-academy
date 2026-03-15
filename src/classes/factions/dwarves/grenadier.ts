@@ -51,9 +51,9 @@ export class Grenadier extends Dwarf {
       if (!enemyHero) throw new Error('Grenadier attack() hero not found');
 
       if (enemyHero.stats.boardPosition === target.stats.boardPosition) {
-        enemyHero.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL);
+        enemyHero.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
       } else {
-        enemyHero.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL);
+        enemyHero.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this);
         if (enemyHero.stats.isKO && enemyHero.stats.unitType === EHeroes.PHANTOM) enemyHero.removeFromGame();
       }
     });
