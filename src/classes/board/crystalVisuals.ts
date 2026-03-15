@@ -39,6 +39,9 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     this.debuffEventSingle = continuousAnimation(this.singleCrystalDebuff, ['crystalDebuff_1', 'crystalDebuff_2']);
     this.debuffEventDouble = continuousAnimation(this.doubleCrystalDebuff, ['crystalDebuff_3', 'crystalDebuff_4']);
 
+    if (data.debuffLevel === 1) this.singleCrystalDebuff.setVisible(true);
+    if (data.debuffLevel === 2) this.doubleCrystalDebuff.setVisible(true);
+
     // Attack  and healing reticle animations
     this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
     addCirclingTween(this.attackReticle);
