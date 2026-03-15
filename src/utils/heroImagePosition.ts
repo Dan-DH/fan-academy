@@ -281,11 +281,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.PALADIN]: {
       1: {
         charImageX: x,
-        charImageY: y + 2
+        charImageY: y - 3
       },
       2: {
         charImageX: x,
-        charImageY: y + 2
+        charImageY: y - 3
       },
       KO: {
         1: {
@@ -305,11 +305,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.GUNNER]: {
       1: {
         charImageX: x,
-        charImageY: y + 10
+        charImageY: y + 5
       },
       2: {
         charImageX: x,
-        charImageY: y + 10
+        charImageY: y + 5
       },
       KO: {
         1: {
@@ -329,11 +329,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.ENGINEER]: {
       1: {
         charImageX: x + 10,
-        charImageY: y + 6
+        charImageY: y
       },
       2: {
         charImageX: x,
-        charImageY: y + 3
+        charImageY: y
       },
       KO: {
         1: {
@@ -353,20 +353,20 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.ANNIHILATOR]: {
       1: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 5
       },
       2: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 5
       },
       KO: {
         1: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         },
         2: {
           charImageX: x,
-          charImageY: y
+          charImageY: y + 10
         }
       },
       hand: {
@@ -377,11 +377,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.GRENADIER]: {
       1: {
         charImageX: x,
-        charImageY: y + 10
+        charImageY: y + 2
       },
       2: {
         charImageX: x,
-        charImageY: y + 10
+        charImageY: y + 2
       },
       KO: {
         1: {
