@@ -89,7 +89,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     addCirclingTween(this.healReticle);
     this.allyReticle = context.add.image(0, -10, 'allyReticle').setOrigin(0.5).setScale(0.6).setName('allyReticle').setVisible(false);
     addCirclingTween(this.allyReticle);
-    this.priestessDebuffImage = context.add.image(0, -10, 'debuff').setOrigin(0.5).setScale(2.5).setName('debuff');
+    this.priestessDebuffImage = context.add.image(0, -10, 'priestessDebuff').setOrigin(0.5).setScale(2.5).setName('priestessDebuff');
     addCirclingTween(this.priestessDebuffImage);
     if (!data.priestessDebuff) this.priestessDebuffImage.setVisible(false);
     this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
