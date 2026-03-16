@@ -171,6 +171,7 @@ export enum EGameSounds {
   HERO_STOMP = 'stompSound',
   VANISH = 'vanishSound',
   HERO_REVIVE = 'reviveHeroSound',
+  HERO_DEATH = 'heroDeathSound',
 
   SCROLL_SELECT = 'selectScrollSound',
   RUNE_METAL_SELECT = 'selectRuneMetalSound',
@@ -237,7 +238,19 @@ export enum EGameSounds {
   WRAITH_ATTACK_BIG = 'wraithAttackBigSound',
   WRAITH_DEATH = 'wraithDeathSound', // used also for Necromancer's death
   WRAITH_CONSUME = 'wraithConsumeSound',
-  USE_HARVEST = 'useHarvestSound'
+  USE_HARVEST = 'useHarvestSound',
 
-  // TODO: dwarven noises
+  // Dwarven noises
+  ANNIHILATOR_ATTACK = 'annihilatorAttackSound',
+  ENGINEER_ATTACK = 'engineerAttackSound',
+  ENGINEER_SHIELD_CAST = 'engineerShieldCastSound',
+  ENGINEER_SHIELD_SHATTER = 'engineerShieldShatterSound',
+  GRENADIER_ATTACK_MELEE = 'grenadierAttackMeleeSound',
+  GRENADIER_ATTACK = 'grenadierAttackSound',
+  GUNNER_ATTACK = 'gunnerAttackSound',
+  PALADIN_ATTACK = 'paladinAttackSound',
+  DWARVEN_BREW_SELECT = 'selectDwarvenBrewSound',
+  DWARVEN_BREW_USE = 'useDwarvenBrewSound',
+  PULVERIZER_SELECT = 'selectPulverizerSound',
+  PULVERIZER_USE = 'usePulverizerSound'
 }

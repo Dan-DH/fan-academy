@@ -106,6 +106,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item): number {
     if (this.stats.engineerShield) {
+      playSound(this.context, EGameSounds.ENGINEER_SHIELD_SHATTER);
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
       this.removeEngineerShield();
       return 0;

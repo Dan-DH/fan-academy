@@ -40,7 +40,7 @@ export class DeckPopup extends Phaser.GameObjects.Container {
   }
 
   showDeckContents(deck: (IHero | IItem)[]) {
-  // Clear old card images
+    // Clear old card images
     this.cardImages.forEach(img => img.destroy());
     this.cardImages = [];
 

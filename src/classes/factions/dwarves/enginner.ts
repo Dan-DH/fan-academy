@@ -17,6 +17,7 @@ export class Engineer extends Dwarf {
   attack(target: Hero | Crystal): void {
     this.flashActingUnit();
     turnIfBehind(this.context, this, target);
+    playSound(this.scene, EGameSounds.ENGINEER_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
@@ -24,12 +25,8 @@ export class Engineer extends Dwarf {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      playSound(this.scene, EGameSounds.KNIGHT_ATTACK);
       target.removeFromGame();
     } else {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
-      if (!this.stats.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
-
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
       this.removeAttackModifiers();
@@ -42,6 +39,7 @@ export class Engineer extends Dwarf {
   shieldAlly(target: Hero | Crystal): void {
     this.flashActingUnit();
     turnIfBehind(this.context, this, target);
+    playSound(this.scene, EGameSounds.ENGINEER_SHIELD_CAST);
 
     if (this.stats.shieldingAlly) {
       if (this.stats.shieldingAlly === target.stats.unitId) return;

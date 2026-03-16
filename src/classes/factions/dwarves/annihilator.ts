@@ -30,11 +30,10 @@ export class Annihilator extends Dwarf {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      playSound(this.scene, EGameSounds.WIZARD_ATTACK);
+      playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK_BIG);
-      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK);
+      playSound(this.scene, EGameSounds.ANNIHILATOR_ATTACK);
 
       const isTargetShielded = target.stats.engineerShield;
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);

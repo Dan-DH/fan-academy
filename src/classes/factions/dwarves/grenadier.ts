@@ -31,13 +31,12 @@ export class Grenadier extends Dwarf {
   }
 
   meleeAttack(target: Hero | Crystal): void {
+    playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())
     ) {
-      playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE); // TODO:
       target.removeFromGame();
     } else {
-      playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE); // TODO:
       target.getsDamaged(this.getTotalPower(0.5), this.stats.attackType, this);
       this.removeAttackModifiers();
     }
@@ -45,6 +44,7 @@ export class Grenadier extends Dwarf {
 
   rangedAttack(target: Hero | Crystal): void {
     const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, target.getTile());
+    playSound(this.scene, EGameSounds.GRENADIER_ATTACK);
 
     enemyHeroTiles?.forEach(tile => {
       const enemyHero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
