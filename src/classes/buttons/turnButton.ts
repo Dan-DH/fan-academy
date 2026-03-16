@@ -29,6 +29,11 @@ export class TurnButton {
     const gameController = this.context.gameController!;
     if (this.context.currentTurnAction!  < 5 ) gameController.addActionToState(EActionType.PASS);
 
-    await gameController.endOfTurnActions();
+    const status = this.context.registry.get('networkStatus');
+    if (status === 'online') {
+      await gameController.endOfTurnActions();
+    } else {
+      console.log('No internet connection detected, unable to send turn');
+    }
   }
 }

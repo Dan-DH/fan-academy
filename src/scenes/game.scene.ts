@@ -40,9 +40,12 @@ export default class GameScene extends Phaser.Scene {
 
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
 
+  // isInternetUp: boolean;
+
   constructor() {
     super({ key: 'GameScene' });
     this.centerPoints = calculateAllCenterPoints();
+    // this.isInternetUp = true;
   }
 
   init(data: {
@@ -68,6 +71,14 @@ export default class GameScene extends Phaser.Scene {
     this.currentTurnAction = this.turnNumber === 0 ? 3 : 1;
 
     this.activeUnit = undefined;
+
+    window.addEventListener('offline', () => {
+      this.registry.set('networkStatus', 'offline');
+    });
+    window.addEventListener('online', () => {
+      this.registry.set('networkStatus', 'online');
+    });
+    this.registry.set('networkStatus', 'online');
   }
 
   preload() {
