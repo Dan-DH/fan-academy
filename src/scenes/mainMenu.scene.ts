@@ -26,7 +26,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // menu images
     this.load.image('uiBackground', `${CDN_PATH}/ui/game_screen.webp`);
     // this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image.webp`);
-    this.load.image('mainMenuImage', `./assetsd/ui/main_menu_image_dwarves.webp`);
+    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`);
     this.load.image('mainMenuBottom', `${CDN_PATH}/ui/main_menu_bottom.webp`);
     this.load.image('playButton', `${CDN_PATH}/ui/play_button.webp`);
     this.load.image('mainMenuButton', `${CDN_PATH}/ui/main_menu_button.webp`);
