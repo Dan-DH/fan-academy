@@ -69,9 +69,9 @@ export class Leaderboard extends Phaser.GameObjects.Container {
       const usernameText = context.add.text(100, 0, truncateText(player.username, 13), smallStyle);
       const totalGames = context.add.text(350, 0, `${player.stats.totalGames}`, smallStyle);
       const totalWins = context.add.text(530, 0, `${player.stats.totalWins}`, smallStyle);
-      const councilWins = context.add.text(690, 0, `${player.stats.councilWins}`, smallStyle);
-      const elvesWins = context.add.text(790, 0, `${player.stats.elvesWins}`, smallStyle);
-      const dwarvesWins = context.add.text(890, 0, `${player.stats.dwarvesWins}`, smallStyle);
+      const councilWins = context.add.text(690, 0, `${player.stats.council.wins}`, smallStyle);
+      const elvesWins = context.add.text(790, 0, `${player.stats.elves.wins}`, smallStyle);
+      const dwarvesWins = context.add.text(890, 0, `${player.stats.dwarves.wins}`, smallStyle);
 
       const challengeIcon = context.add.image(1030, 15, 'challengeIcon').setInteractive({ useHandCursor: true });
 

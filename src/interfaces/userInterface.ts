@@ -5,12 +5,18 @@ export interface IUserPreferences {
   chat: boolean;
 }
 
+export interface IUserFactionStats {
+  games: number,
+  wins: number,
+  rating: number
+}
+
 export interface IUserStats {
   totalGames: number,
   totalWins: number,
-  councilWins: number,
-  elvesWins: number,
-  dwarvesWins: number
+  council: IUserFactionStats,
+  elves: IUserFactionStats,
+  dwarves: IUserFactionStats
 }
 
 export interface IUser  {

@@ -114,17 +114,17 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1100, 440, `Council wins: ${context.userData?.stats.councilWins}`, {
+    context.add.text(1100, 440, `Council wins: ${context.userData?.stats.council.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1100, 490, `Elves wins: ${context.userData?.stats.elvesWins}`, {
+    context.add.text(1100, 490, `Elves wins: ${context.userData?.stats.elves.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1100, 540, `Dwarves wins: ${context.userData?.stats.dwarvesWins}`, {
+    context.add.text(1100, 540, `Dwarves wins: ${context.userData?.stats.dwarves.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
