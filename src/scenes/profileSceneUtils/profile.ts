@@ -104,27 +104,42 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 40,
       color: '#ffffff'
     });
-    context.add.text(900, 440, `Games: ${context.userData?.stats.totalGames}`, {
+    context.add.text(700, 440, `Games: ${context.userData?.stats.totalGames}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(900, 490, `Wins: ${context.userData?.stats.totalWins}`, {
+    context.add.text(700, 490, `Wins: ${context.userData?.stats.totalWins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1100, 440, `Council wins: ${context.userData?.stats.council.wins}`, {
+    context.add.text(900, 440, `Council wins: ${context.userData?.stats.council.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1100, 490, `Elves wins: ${context.userData?.stats.elves.wins}`, {
+    context.add.text(900, 490, `Elves wins: ${context.userData?.stats.elves.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1100, 540, `Dwarves wins: ${context.userData?.stats.dwarves.wins}`, {
+    context.add.text(900, 540, `Dwarves wins: ${context.userData?.stats.dwarves.wins}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1150, 440, `Council rating: ${context.userData?.stats.council.rating}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1150, 490, `Elves rating: ${context.userData?.stats.elves.rating}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1150, 540, `Dwarves rating: ${context.userData?.stats.dwarves.rating}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
