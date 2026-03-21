@@ -87,6 +87,35 @@ export async function signUpQuery(email: string, username: string, password: str
   }
 }
 
+export async function passwordRecoveryEmailQuery(email: string) {
+  const jwt = localStorage.getItem('jwt');
+
+  await fetch(`${import.meta.env.VITE_BE_URL}users/password-recovery`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwt}`
+    },
+    body: JSON.stringify({ email: email.trim() })
+  });
+}
+
+export async function passwordResetQuery(recoveryCode: string, newPassword: string) {
+  const jwt = localStorage.getItem('jwt');
+
+  await fetch(`${import.meta.env.VITE_BE_URL}users/password-reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwt}`
+    },
+    body: JSON.stringify({
+      recoveryCode: recoveryCode.trim(),
+      password: newPassword.trim()
+    })
+  });
+};
+
 /**
  * Used on MainMenuScene's onCreate() to check if the player is authenticated
  * @returns

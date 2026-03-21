@@ -1,6 +1,6 @@
 import { EUiSounds } from "../enums/gameEnums";
 import { IUserPreferences } from "../interfaces/userInterface";
-import { authCheck, loginQuery, signUpQuery } from "../queries/userQueries";
+import { authCheck, loginQuery, passwordRecoveryEmailQuery, passwordResetQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";
 import createMainMenuButton from "./mainMenuUtils/buttons";
 import { CDN_PATH } from "./preloader.scene";
@@ -22,6 +22,8 @@ export default class MainMenuScene extends Phaser.Scene {
     // login form
     this.load.html('loginForm', 'html/loginForm.html');
     this.load.html('signUpForm', 'html/signUpForm.html');
+    this.load.html('passwordRecoveryForm', 'html/passwordRecoveryForm.html');
+    this.load.html('passwordResetForm', 'html/passwordResetForm.html');
 
     // menu images
     this.load.image('uiBackground', `${CDN_PATH}/ui/game_screen.webp`);
@@ -50,7 +52,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // Background image
     const bg = this.add.image(0, 0, 'uiBackground').setOrigin(0);
     const menuImg = this.add.image(396, 15, 'mainMenuImage').setOrigin(0).setScale(1.065);
-    // Background game screen (to be used when a sub scene is running to avoid flickering) // FIXME:
+    // Background game screen (to be used when a sub scene is running to avoid flickering)
     const backgroundGameScreen = this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2).setVisible(false);
     // menuImg.x = bg.width - menuImg.width - 14;
     // menuImg.y += 14;
@@ -182,10 +184,13 @@ export default class MainMenuScene extends Phaser.Scene {
   createSignUpAndLoginForms(userId: string | undefined): {
     loginForm: Phaser.GameObjects.DOMElement,
     signUpForm: Phaser.GameObjects.DOMElement
+    passwordRecoveryForm: Phaser.GameObjects.DOMElement
+    passwordResetForm: Phaser.GameObjects.DOMElement
   } {
-    const loginForm = this.add.dom(800, 400).createFromCache('loginForm');
-    const signUpForm = this.add.dom(800, 400).createFromCache('signUpForm');
-    signUpForm.setVisible(false);
+    const loginForm = this.add.dom(800, 400).createFromCache('loginForm').setVisible(true);
+    const signUpForm = this.add.dom(800, 400).createFromCache('signUpForm').setVisible(false);
+    const passwordRecoveryForm = this.add.dom(800, 400).createFromCache('passwordRecoveryForm').setVisible(false);
+    const passwordResetForm = this.add.dom(800, 400).createFromCache('passwordResetForm').setVisible(false);
 
     // Used to block the user from clicking on some other part of the game
     const blockingLayer = this.add.rectangle(0, 0, 2900, 2000, 0x000000, 0.001).setOrigin(0.5).setInteractive();
@@ -195,16 +200,29 @@ export default class MainMenuScene extends Phaser.Scene {
     const loginPasswordInput = loginForm.getChildByID('password') as HTMLInputElement;
     const loginButton = loginForm.getChildByID('loginButton') as HTMLInputElement;
     const linkToSignUp = loginForm.getChildByID('linkToSignUp') as HTMLInputElement;
+    const linkToPasswordRecovery = loginForm.getChildByID('linkToPasswordRecovery') as HTMLInputElement;
     const loginError = loginForm.getChildByID('loginError') as HTMLDivElement;
 
     // Sign up form elements
     const signUpEmailInput = signUpForm.getChildByID('email') as HTMLInputElement;
     const signUpUsernameInput = signUpForm.getChildByID('username') as HTMLInputElement;
     const signUpPasswordInput = signUpForm.getChildByID('password') as HTMLInputElement;
-    const signUpPasswordConfirm = signUpForm.getChildByID('passwordConfirm') as HTMLInputElement;
+    const signUpPasswordConfirmInput = signUpForm.getChildByID('passwordConfirm') as HTMLInputElement;
     const signUpButton = signUpForm.getChildByID('signUpButton') as HTMLInputElement;
     const linkToLogin = signUpForm.getChildByID('linkToLogin') as HTMLInputElement;
     const signUpError = signUpForm.getChildByID('signUpError') as HTMLDivElement;
+
+    // Password recovery form elements
+    const passwordRecoveryEmailInput = passwordRecoveryForm.getChildByID('email') as HTMLInputElement;
+    const passwordRecoveryButton = passwordRecoveryForm.getChildByID('passwordRecoveryButton') as HTMLInputElement;
+    const linkToPasswordReset = passwordRecoveryForm.getChildByID('linkToPasswordReset') as HTMLInputElement;
+
+    // Password reset form elements
+    const passwordResetRecoveryCodeInput = passwordResetForm.getChildByID('recoveryCode') as HTMLInputElement;
+    const passwordResetPasswordInput = passwordResetForm.getChildByID('password') as HTMLInputElement;
+    const passwordResetPasswordConfirmInput = passwordResetForm.getChildByID('passwordConfirm') as HTMLInputElement;
+    const passwordResetError = passwordResetForm.getChildByID('passwordResetError') as HTMLDivElement;
+    const passwordResetButton = passwordResetForm.getChildByID('passwordResetButton') as HTMLInputElement;
 
     const showFormError = (element: HTMLDivElement, message: string) => {
       element.innerText = message;
@@ -222,7 +240,7 @@ export default class MainMenuScene extends Phaser.Scene {
         const result = await loginQuery(loginUsernameInput.value, loginPasswordInput.value);
         if (result.success) {
           if (result.userData) this.updateUserPreferences(result.userData);
-          loginForm.setVisible(false);
+          cleanLoginFormFields();
           blockingLayer.setVisible(false);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
         }else {
@@ -239,7 +257,7 @@ export default class MainMenuScene extends Phaser.Scene {
     signUpButton.addEventListener('click', async () => {
       hideFormError(signUpError);
 
-      if (signUpPasswordInput.value !== signUpPasswordConfirm.value) {
+      if (signUpPasswordInput.value !== signUpPasswordConfirmInput.value) {
         this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Passwords do not match');
         return;
@@ -260,7 +278,7 @@ export default class MainMenuScene extends Phaser.Scene {
         const result = await signUpQuery(signUpEmailInput.value, signUpUsernameInput.value, signUpPasswordInput.value);
         if (result.success) {
           if (result.userData) this.updateUserPreferences(result.userData);
-          signUpForm.setVisible(false);
+          cleanSignUpFormFields();
           blockingLayer.setVisible(false);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
           console.log('UserId after sign up:', this.userId);
@@ -269,6 +287,40 @@ export default class MainMenuScene extends Phaser.Scene {
           showFormError(signUpError, result.error); // Show server error to user
         }
       }
+    });
+
+    // Password recovery button click
+    passwordRecoveryButton.addEventListener('click', async () => {
+      passwordRecoveryEmailQuery(passwordRecoveryEmailInput.value);
+
+      cleanPasswordRecoveryFormFields();
+      passwordResetForm.setVisible(true);
+    });
+
+    // Password reset button click
+    passwordResetButton.addEventListener('click', async () => {
+      hideFormError(passwordResetError);
+
+      if (passwordResetRecoveryCodeInput.value.length !== 6) {
+        this.sound.play(EUiSounds.BUTTON_FAILED);
+        showFormError(passwordResetError, 'Invalid recovery code');
+        return;
+      };
+      if (passwordResetPasswordInput.value !== passwordResetPasswordConfirmInput.value) {
+        this.sound.play(EUiSounds.BUTTON_FAILED);
+        showFormError(passwordResetError, 'Passwords do not match');
+        return;
+      };
+      if (!isValidPassword(passwordResetPasswordInput.value)) {
+        this.sound.play(EUiSounds.BUTTON_FAILED);
+        showFormError(passwordResetError, 'Password must be at least 8 characters long and contain a letter and a number');
+        return;
+      };
+
+      passwordResetQuery(passwordResetRecoveryCodeInput.value, passwordResetPasswordInput.value);
+
+      cleanPasswordResetFormFields();
+      loginForm.setVisible(true);
     });
 
     // Listeners for login in pressing Enter
@@ -280,29 +332,69 @@ export default class MainMenuScene extends Phaser.Scene {
       });
     };
     [loginUsernameInput, loginPasswordInput].forEach(field => addEnterKeyListener(field, loginButton));
-    [signUpEmailInput, signUpUsernameInput, signUpPasswordInput, signUpPasswordConfirm].forEach(field => addEnterKeyListener(field, signUpButton));
+    [signUpEmailInput, signUpUsernameInput, signUpPasswordInput, signUpPasswordConfirmInput].forEach(field => addEnterKeyListener(field, signUpButton));
+    addEnterKeyListener(passwordRecoveryEmailInput, passwordRecoveryButton);
+    [passwordResetRecoveryCodeInput, passwordResetPasswordInput, passwordResetPasswordConfirmInput].forEach(field => addEnterKeyListener(field, passwordResetButton));
 
     // Switch forms
     linkToSignUp.addEventListener('click', () => {
-      loginForm.setVisible(false);
+      cleanLoginFormFields();
       signUpForm.setVisible(true);
     });
 
     linkToLogin.addEventListener('click', () => {
-      signUpForm.setVisible(false);
+      cleanSignUpFormFields();
       loginForm.setVisible(true);
     });
+
+    linkToPasswordRecovery.addEventListener('click', () => {
+      cleanLoginFormFields();
+      passwordRecoveryForm.setVisible(true);
+    });
+
+    linkToPasswordReset.addEventListener('click', () => {
+      cleanPasswordRecoveryFormFields();
+      passwordResetForm.setVisible(true);
+    });
+
+    // Clean forms
+    const cleanLoginFormFields = () => {
+      loginUsernameInput.value = "";
+      loginPasswordInput.value = "";
+      loginForm.setVisible(false);
+    };
+    const cleanSignUpFormFields = () => {
+      signUpEmailInput.value = "";
+      signUpUsernameInput.value = "";
+      signUpPasswordInput.value = "";
+      signUpPasswordConfirmInput.value = "";
+      signUpForm.setVisible(false);
+    };
+    const cleanPasswordRecoveryFormFields = () => {
+      passwordRecoveryEmailInput.value = "";
+      passwordRecoveryForm.setVisible(false);
+    };
+    const cleanPasswordResetFormFields = () => {
+      passwordResetPasswordInput.value = "";
+      passwordResetPasswordConfirmInput.value = "";
+      passwordResetRecoveryCodeInput.value = "";
+      passwordResetForm.setVisible(false);
+    };
 
     // If already logged in
     if (userId) {
       loginForm.setVisible(false);
       signUpForm.setVisible(false);
+      passwordRecoveryForm.setVisible(false);
+      passwordResetForm.setVisible(false);
       blockingLayer.setVisible(false);
     }
 
     return {
       loginForm,
-      signUpForm
+      signUpForm,
+      passwordRecoveryForm,
+      passwordResetForm
     };
   }
 
