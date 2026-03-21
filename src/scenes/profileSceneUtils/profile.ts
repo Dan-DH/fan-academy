@@ -99,47 +99,87 @@ export class Profile extends Phaser.GameObjects.Container {
     /**
      * STATS
      */
-    context.add.text(1000, 390, 'STATS', {
+    context.add.text(990, 390, 'STATS', {
       fontFamily: 'proHeavy',
       fontSize: 40,
       color: '#ffffff'
     });
-    context.add.text(700, 440, `Games: ${context.userData?.stats.totalGames}`, {
+    context.add.text(680, 440, `Games:`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(700, 490, `Wins: ${context.userData?.stats.totalWins}`, {
+    context.add.text(775, 440, `${context.userData?.stats.totalGames}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(900, 440, `Council wins: ${context.userData?.stats.council.wins}`, {
+    context.add.text(680, 490, `Wins:`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(900, 490, `Elves wins: ${context.userData?.stats.elves.wins}`, {
+    context.add.text(775, 490, `${context.userData?.stats.totalWins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(900, 540, `Dwarves wins: ${context.userData?.stats.dwarves.wins}`, {
+    context.add.text(870, 440, `Council wins:`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1150, 440, `Council rating: ${context.userData?.stats.council.rating}`, {
+    context.add.text(1050, 440, `${context.userData?.stats.council.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1150, 490, `Elves rating: ${context.userData?.stats.elves.rating}`, {
+    context.add.text(870, 490, `Elves wins:`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1150, 540, `Dwarves rating: ${context.userData?.stats.dwarves.rating}`, {
+    context.add.text(1050, 490, `${context.userData?.stats.elves.wins}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(870, 540, `Dwarves wins:`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1050, 540, `${context.userData?.stats.dwarves.wins}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1140, 440, `Council rating:`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1340, 440, `${context.userData?.stats.council.rating}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1140, 490, `Elves rating:`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1340, 490, `${context.userData?.stats.elves.rating}`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1140, 540, `Dwarves rating:`, {
+      fontFamily: 'proLight',
+      fontSize: 35,
+      color: '#ffffff'
+    });
+    context.add.text(1340, 540, `${context.userData?.stats.dwarves.rating}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
