@@ -129,7 +129,7 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1050, 440, `${context.userData?.stats.council.wins}`, {
+    context.add.text(1050, 440, `${context.userData?.stats.factions.council.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
@@ -139,7 +139,7 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1050, 490, `${context.userData?.stats.elves.wins}`, {
+    context.add.text(1050, 490, `${context.userData?.stats.factions.elves.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
@@ -149,7 +149,7 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1050, 540, `${context.userData?.stats.dwarves.wins}`, {
+    context.add.text(1050, 540, `${context.userData?.stats.factions.dwarves.wins}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
@@ -159,7 +159,7 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1340, 440, `${context.userData?.stats.council.rating}`, {
+    context.add.text(1340, 440, `${context.userData?.stats.factions.council.rating}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
@@ -169,7 +169,7 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1340, 490, `${context.userData?.stats.elves.rating}`, {
+    context.add.text(1340, 490, `${context.userData?.stats.factions.elves.rating}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
@@ -179,7 +179,7 @@ export class Profile extends Phaser.GameObjects.Container {
       fontSize: 35,
       color: '#ffffff'
     });
-    context.add.text(1340, 540, `${context.userData?.stats.dwarves.rating}`, {
+    context.add.text(1340, 540, `${context.userData?.stats.factions.dwarves.rating}`, {
       fontFamily: 'proLight',
       fontSize: 35,
       color: '#ffffff'
