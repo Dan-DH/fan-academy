@@ -1,19 +1,22 @@
 import { EChallengePopup, EFaction, EUiSounds } from "../../enums/gameEnums";
-import { IUserStats } from "../../interfaces/userInterface";
-import { getLeaderBoard } from "../../queries/userQueries";
+import { IUserFactions, IUserStats } from "../../interfaces/userInterface";
 import LeaderboardScene from "../leaderboard.scene";
 import { playSound } from "../../utils/gameSounds";
 import { truncateText } from "../../utils/textAnimations";
 import { ChallengePopup } from "../../classes/popups/challengePopup";
+import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
+import { getLeaderBoardQuery } from "../../queries/userQueries";
+import { mapFactionEnumsToLowerCase } from "./getLeaderboardData";
 
-export class Leaderboard extends Phaser.GameObjects.Container {
+export class FactionLeaderboard extends Phaser.GameObjects.Container {
   header: Phaser.GameObjects.Container;
   rows: Phaser.GameObjects.Container[];
   paginationBar: Phaser.GameObjects.Container;
 
   context: LeaderboardScene;
+  factionKey: keyof IUserFactions;
 
-  constructor(context: LeaderboardScene, data: {
+  constructor(context: LeaderboardScene, faction: EFaction, data: {
     players: {
       _id: string,
       username: string,
@@ -31,12 +34,13 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     super(context, 0, 0);
 
     this.context = context;
+    this.factionKey = mapFactionEnumsToLowerCase(faction) as keyof IUserFactions;
 
     const style = {
       fontFamily: "proLight",
       color: '#ffffff',
       wordWrap: {
-        width: 190,
+        width: 500,
         useAdvancedWrap: true
       }
     };
@@ -51,14 +55,14 @@ export class Leaderboard extends Phaser.GameObjects.Container {
 
     this.header = context.add.container(startingCoords.x, startingCoords.y);
 
-    const usernameText = context.add.text(100, 0, 'Username', bigStyle);
-    const totalGames = context.add.text(320, 0, `Games`, bigStyle);
-    const totalWins = context.add.text(520, 0, `Wins`, bigStyle);
-    const councilWins = context.add.image(700, 25, EFaction.COUNCIL).setScale(0.2);
-    const elvesWins = context.add.image(800, 25, EFaction.DARK_ELVES).setScale(0.2);
-    const dwarvesWins = context.add.image(900, 25, EFaction.DWARVES).setScale(0.2);
+    const factionImage = context.add.image(950, 25, faction).setScale(0.35);
 
-    this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins]);
+    const usernameText = context.add.text(100, 0, 'Username', bigStyle);
+    const factionRating = context.add.text(420, 0, `Rating`, bigStyle);
+    const totalWins = context.add.text(600, 0, `Wins`, bigStyle);
+    const totalGames = context.add.text(750, 0, `Games`, bigStyle);
+
+    this.header.add([factionImage, usernameText, factionRating, totalWins, totalGames]);
 
     startingCoords.y += 20;
 
@@ -66,12 +70,10 @@ export class Leaderboard extends Phaser.GameObjects.Container {
       startingCoords.y += 50;
       const row = context.add.container(startingCoords.x, startingCoords.y);
 
-      const usernameText = context.add.text(100, 0, truncateText(player.username, 13), smallStyle);
-      const totalGames = context.add.text(350, 0, `${player.stats.totalGames}`, smallStyle);
-      const totalWins = context.add.text(530, 0, `${player.stats.totalWins}`, smallStyle);
-      const councilWins = context.add.text(690, 0, `${player.stats.council.wins}`, smallStyle);
-      const elvesWins = context.add.text(790, 0, `${player.stats.elves.wins}`, smallStyle);
-      const dwarvesWins = context.add.text(890, 0, `${player.stats.dwarves.wins}`, smallStyle);
+      const usernameText = context.add.text(100, 0, truncateText(player.username, 20), smallStyle);
+      const factionRating = context.add.text(450, 0, `${player.stats.factions[this.factionKey].rating}`, smallStyle);
+      const factionWins = context.add.text(615, 0, `${player.stats.factions[this.factionKey].wins}`, smallStyle);
+      const factionGames = context.add.text(780, 0, `${player.stats.factions[this.factionKey].games}`, smallStyle);
 
       const challengeIcon = context.add.image(1030, 15, 'challengeIcon').setInteractive({ useHandCursor: true });
 
@@ -88,7 +90,7 @@ export class Leaderboard extends Phaser.GameObjects.Container {
 
       if (player._id === context.userId) challengeIcon.setVisible(false).disableInteractive();
 
-      row.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins, challengeIcon]);
+      row.add([usernameText, factionRating, factionWins, factionGames, challengeIcon]);
 
       return row;
     });
@@ -112,9 +114,9 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     firstPageButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page > 1) {
-        const leaderboardData = await getLeaderBoard(1);
+        const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, 1);
         if (leaderboardData) {
-          new Leaderboard(this.context, leaderboardData);
+          this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
           this.destroy();
         }
       }
@@ -126,9 +128,9 @@ export class Leaderboard extends Phaser.GameObjects.Container {
 
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page > 1) {
-        const leaderboardData = await getLeaderBoard(--page);
+        const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, --page);
         if (leaderboardData) {
-          new Leaderboard(this.context, leaderboardData);
+          this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
           this.destroy();
         }
         isQuerying = false;
@@ -140,9 +142,9 @@ export class Leaderboard extends Phaser.GameObjects.Container {
       isQuerying = true;
 
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
-      const leaderboardData = await getLeaderBoard(++page);
+      const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, ++page);
       if (leaderboardData) {
-        new Leaderboard(this.context, leaderboardData);
+        this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
         this.destroy();
       }
       isQuerying = false;
@@ -151,9 +153,9 @@ export class Leaderboard extends Phaser.GameObjects.Container {
     lastPageButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page !== data.totalPages) {
-        const leaderboardData = await getLeaderBoard(data.totalPages);
+        const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, data.totalPages);
         if (leaderboardData) {
-          new Leaderboard(this.context, leaderboardData);
+          this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
           this.destroy();
         }
       }
