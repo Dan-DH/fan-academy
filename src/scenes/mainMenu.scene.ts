@@ -178,10 +178,45 @@ export default class MainMenuScene extends Phaser.Scene {
   /*
   HELPER FUNCTIONS
   */
-  createSignUpAndLoginForms(userId: string | undefined): {
-    loginForm: Phaser.GameObjects.DOMElement,
-    signUpForm: Phaser.GameObjects.DOMElement
-  } {
+  createMainMenuMessageBox(): Phaser.GameObjects.Container {
+    // const messageBackground = this.add.rectangle(800, 400, 600, 600, 0x000000, 0.8).fillRoundedRect(650, 250, 300, 150, 15);
+    const messageBoxContainer = this.add.container(0);
+
+    const bg = this.add.graphics().fillStyle(0x000000, 0.8).fillRoundedRect(500, 90, 600, 670, 15);
+
+    const title = this.add.text(800, 150, `UPCOMING PATCH NOTICE - DWARVES`, {
+      fontFamily: 'proHeavy',
+      fontSize: '38px'
+    }).setOrigin(0.5);
+
+    const body = this.add.text(550, 200,
+      `The Dwarves are coming! They will be joining the Academy on March 29th, noon-ish (EU time).\n
+      Current games are not compatible with the update, so any unfinished games will be removed when the patch is out.\n
+      No wins or loses will be awarded for unfinished games.\n
+      As usual, the full patch notes will be available on Discord once the patch is live.\n
+      Happy gaming!`,
+      {
+        fontFamily: 'proLight',
+        fontSize: '32px',
+        color: '#ffffff',
+        wordWrap: {
+          width: 520,
+          useAdvancedWrap: true
+        }
+      }
+    );
+
+    const signature = this.add.text(900, 690, `- dadazbk`, {
+      fontFamily: 'proLight',
+      fontSize: '38px'
+    });
+
+    messageBoxContainer.add([bg, title, body, signature]);
+    return messageBoxContainer;
+  }
+  createSignUpAndLoginForms(userId: string | undefined): void {
+    const patchNotice = this.createMainMenuMessageBox().setVisible(false); // TODO: remove once patch is out
+
     const loginForm = this.add.dom(800, 400).createFromCache('loginForm');
     const signUpForm = this.add.dom(800, 400).createFromCache('signUpForm');
     signUpForm.setVisible(false);
@@ -223,6 +258,7 @@ export default class MainMenuScene extends Phaser.Scene {
           if (result.userData) this.updateUserPreferences(result.userData);
           loginForm.setVisible(false);
           blockingLayer.setVisible(false);
+          patchNotice.setVisible(true);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
         }else {
           this.sound.play(EUiSounds.BUTTON_FAILED);
@@ -261,6 +297,7 @@ export default class MainMenuScene extends Phaser.Scene {
           if (result.userData) this.updateUserPreferences(result.userData);
           signUpForm.setVisible(false);
           blockingLayer.setVisible(false);
+          patchNotice.setVisible(true);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
           console.log('UserId after sign up:', this.userId);
         } else {
@@ -297,12 +334,8 @@ export default class MainMenuScene extends Phaser.Scene {
       loginForm.setVisible(false);
       signUpForm.setVisible(false);
       blockingLayer.setVisible(false);
+      patchNotice.setVisible(true);
     }
-
-    return {
-      loginForm,
-      signUpForm
-    };
   }
 
   updateUserPreferences(userData: {
