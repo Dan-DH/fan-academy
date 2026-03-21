@@ -234,7 +234,7 @@ export class GameController {
     if (this.context.activeUnit) deselectUnit(this.context);
 
     this.actionPie.resetActionPie();
-    this.drawUnits(); // FIXME: move this until after the sedTurnMessage succeeds (or show an error)
+    this.drawUnits();
     await this.removeKOUnits();
     this.door.updateBannerText();
 
