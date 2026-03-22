@@ -68,7 +68,7 @@ export default class GameScene extends Phaser.Scene {
     // Updating GameScene properties
     this.activePlayer = this.currentGame.activePlayer.toString();
     this.isPlayerOne = this.currentGame?.players[0].userData._id === this.userId;
-    this.currentTurnAction = this.turnNumber === 0 ? 3 : 1;
+    this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
 
     this.activeUnit = undefined;
 

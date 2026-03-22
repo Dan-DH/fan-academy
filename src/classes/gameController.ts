@@ -224,7 +224,7 @@ export class GameController {
   }
 
   hasActionsLeft(): boolean {
-    if (this.context.turnNumber === 0 && this.context.currentTurnAction! < 4) return true;
+    if (this.context.turnNumber === 1 && this.context.currentTurnAction! < 4) return true;
     if (this.context.currentTurnAction! < 6) return true;
     return false;
   }

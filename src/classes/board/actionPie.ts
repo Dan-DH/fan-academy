@@ -28,7 +28,7 @@ export class ActionPie extends Phaser.GameObjects.Container {
     this.actionPie5 = context.add.image(-15, -15, 'actionPie').setOrigin(0.5).setRotation(4.7).setName('actionPie5');
     this.actionArrow = context.add.image(-35, 0, 'actionArrow').setOrigin(0.5).setRotation(-0.1).setName('actionArrow').setVisible(false);
 
-    if (context.turnNumber === 0 && context.activePlayer === context.userId) {
+    if (context.turnNumber === 1 && context.activePlayer === context.userId) {
       this.actionPie1.setVisible(false);
       this.actionPie2.setVisible(false);
     }
@@ -39,7 +39,7 @@ export class ActionPie extends Phaser.GameObjects.Container {
   }
 
   resetActionPie() {
-    if (this.context.turnNumber !== 0) {
+    if (this.context.turnNumber !== 1) {
       this.actionPie1.setVisible(true);
       this.popAnimation(this.actionPie1, true);
 
