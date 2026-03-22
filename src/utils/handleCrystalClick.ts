@@ -5,6 +5,7 @@ import { Item } from "../classes/factions/item";
 import { EGameStatus } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
 import { visibleUnitCardCheck } from "./unitCards";
+import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleCrystalClick(crystal: Crystal, context: GameScene): void {
   crystal.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _Y: number, event: Types.Input.EventData) => {
@@ -15,7 +16,7 @@ export function handleCrystalClick(crystal: Crystal, context: GameScene): void {
     // Handling right click
     if (pointer.button === 2) {
       crystal.setDepth(1001);
-      crystal.unitCard.setVisible(true);
+      adjustUnitCardPositionAndMakeVisible(crystal);
       context.visibleUnitCard = crystal;
       event.stopPropagation();
       return;
@@ -52,7 +53,7 @@ export function handleCrystalClick(crystal: Crystal, context: GameScene): void {
 
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       crystal.setDepth(1001);
-      crystal.unitCard.setVisible(true);
+      adjustUnitCardPositionAndMakeVisible(crystal);
       context.visibleUnitCard = crystal;
     }
   });

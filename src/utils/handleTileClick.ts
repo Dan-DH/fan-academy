@@ -6,6 +6,7 @@ import { EGameStatus, ETiles, EGameSounds } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";
+import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleTileClick(tile: Tile, context: GameScene): void {
   tile.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
@@ -20,7 +21,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
       const isEmpty = !tile.hero && !tile.crystal;
       if (isSpecial && isEmpty) {
         tile.setDepth(1001);
-        if (tile.unitCard) tile.unitCard.setVisible(true);
+        if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);
         context.visibleUnitCard = tile;
         event.stopPropagation();
       }
@@ -61,7 +62,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       tile.setDepth(1001);
 
-      if (tile.unitCard) tile.unitCard.setVisible(true);
+      if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);
       context.visibleUnitCard = tile;
     }
   });

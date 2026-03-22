@@ -160,3 +160,26 @@ export function createBasicTileData(coordinates: Coordinates): ITile {
     crystal: undefined
   };
 }
+
+export function adjustUnitCardPositionAndMakeVisible(unit: Hero | Item | Tile | Crystal): void {
+  const boardPosition = unit instanceof Tile ? unit.boardPosition : unit.stats.boardPosition;
+
+  if (boardPosition <= 44) {
+    const lastColumPositions = [8, 17, 26, 35, 44];
+    const lastRowPositions = [36, 37, 38, 39, 40, 41, 42, 43, 44];
+
+    if (lastColumPositions.includes(boardPosition)) {
+      unit.unitCard?.setX(-70);
+    } else {
+      unit.unitCard?.setX(0);
+    }
+
+    if (lastRowPositions.includes(boardPosition)) {
+      unit.unitCard?.setY(-50);
+    } else {
+      unit.unitCard?.setY(0);
+    }
+  }
+
+  unit.unitCard?.setVisible(true);
+}

@@ -4,7 +4,7 @@ import { Item } from "../classes/factions/item";
 import { EGameSounds, EGameStatus, EHeroes, EItems, ERange, ETiles } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
 import { deselectUnit, selectUnit } from "./playerUtils";
-import { isEnemySpawn } from "./boardUtils";
+import { adjustUnitCardPositionAndMakeVisible, isEnemySpawn } from "./boardUtils";
 import { playSound, selectItemSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";
 import { belongsToPlayer } from "./gameUtils";
@@ -17,7 +17,7 @@ export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
 
     if (pointer.button === 2) {
       unit.setDepth(1001);
-      unit.unitCard.setVisible(true);
+      adjustUnitCardPositionAndMakeVisible(unit);
       context.visibleUnitCard = unit;
       event.stopPropagation();
       return;
@@ -33,7 +33,7 @@ export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
 
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       unit.setDepth(1001);
-      unit.unitCard.setVisible(true);
+      adjustUnitCardPositionAndMakeVisible(unit);
       context.visibleUnitCard = unit;
     }
   });
