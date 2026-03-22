@@ -5,7 +5,7 @@ import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 
@@ -15,7 +15,7 @@ export class Engineer extends Dwarf {
   }
 
   attack(target: Hero | Crystal): void {
-    this.flashActingUnit();
+    actionAnimation(this);
     turnIfBehind(this.context, this, target);
     playSound(this.scene, EGameSounds.ENGINEER_ATTACK);
 
@@ -37,7 +37,7 @@ export class Engineer extends Dwarf {
   }
 
   shieldAlly(target: Hero | Crystal): void {
-    this.flashActingUnit();
+    actionAnimation(this);
     turnIfBehind(this.context, this, target);
     playSound(this.scene, EGameSounds.ENGINEER_SHIELD_CAST);
 

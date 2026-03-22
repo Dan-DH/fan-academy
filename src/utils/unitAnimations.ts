@@ -7,6 +7,33 @@ import { ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 
+export function actionAnimation(hero: Hero): void {
+  hero.visuals.characterImage.setTint(0x3399ff);
+  hero.scene.time.delayedCall(800, () => hero.visuals.characterImage.clearTint());
+  hero.visuals.characterImage.scene.tweens.add({
+    targets: hero.visuals.characterImage,
+    x: `+=${15}`,
+    duration: 50,
+    yoyo: true,
+    ease: 'Cubic.easeOut'
+  });
+}
+
+export function getDamagedAnimation(hero: Hero): void {
+  hero.visuals.characterImage.setTint(0xff0000);
+  hero.scene.time.delayedCall(500, () => hero.visuals.characterImage.clearTint());
+  hero.visuals.characterImage.scene.tweens.add({
+    targets: hero.visuals.characterImage,
+    x: {
+      from: -5,
+      to: 5
+    },
+    duration: 50,
+    repeat: 3,
+    yoyo: true
+  });
+}
+
 export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
   const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType);
 

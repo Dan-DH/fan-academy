@@ -6,7 +6,7 @@ import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn, specialTileCheck } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { singleTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
@@ -24,7 +24,7 @@ export class Phantom extends Hero {
   }
 
   async attack(target: Hero | Crystal): Promise<void> {
-    this.flashActingUnit();
+    actionAnimation(this);
 
     turnIfBehind(this.context, this, target);
 

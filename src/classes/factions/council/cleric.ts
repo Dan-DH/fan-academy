@@ -7,7 +7,7 @@ import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Cleric extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Cleric extends Council {
   }
 
   attack(target: Hero | Crystal): void {
-    this.flashActingUnit();
+    actionAnimation(this);
 
     turnIfBehind(this.context, this, target);
 
@@ -41,7 +41,7 @@ export class Cleric extends Council {
   }
 
   heal(target: Hero): void {
-    this.flashActingUnit();
+    actionAnimation(this);
 
     if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
     if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);

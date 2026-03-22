@@ -11,7 +11,7 @@ import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
 import { selectDeathSound, playSound } from "../../utils/gameSounds";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
-import { moveAnimation, singleAnimation, useAnimation } from "../../utils/unitAnimations";
+import { getDamagedAnimation, moveAnimation, singleAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
 import { removeFromBoard, removeSpecialTileOnKo, specialTileCheck } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
@@ -114,9 +114,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       return 0;
     }
 
-    // Flash the unit red
-    this.visuals.characterImage.setTint(0xff0000);
-    this.scene.time.delayedCall(500, () => this.visuals.characterImage.clearTint());
+    getDamagedAnimation(this);
 
     // Calculate damage after applying resistances
     const totalAttackDamage = roundToFive(this.getLifeLost(damage, attackType));
@@ -550,11 +548,5 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const tile = this.getTile();
     tile.hero = this.exportData();
-  }
-
-  flashActingUnit(): void {
-    // Flash the unit blue to better identify which unit is attacking / healing on a replay
-    this.visuals.characterImage.setTint(0x3399ff);
-    this.scene.time.delayedCall(800, () => this.visuals.characterImage.clearTint());
   }
 }

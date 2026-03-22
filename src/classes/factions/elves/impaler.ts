@@ -7,7 +7,7 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Impaler extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Impaler extends DarkElf {
   }
 
   async attack(target: Hero | Crystal): Promise<void> {
-    this.flashActingUnit();
+    actionAnimation(this);
     turnIfBehind(this.context, this, target); // Ensure turnIfBehind is imported/defined
 
     const distance = getDistanceToTarget(this, target);

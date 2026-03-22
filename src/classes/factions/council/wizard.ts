@@ -10,7 +10,7 @@ import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
 import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Wizard extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -18,7 +18,7 @@ export class Wizard extends Council {
   }
 
   attack(target: Hero | Crystal): void {
-    this.flashActingUnit();
+    actionAnimation(this);
 
     const gameController = this.context.gameController!;
     turnIfBehind(this.context, this, target);

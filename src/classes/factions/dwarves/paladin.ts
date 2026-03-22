@@ -3,7 +3,7 @@ import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
@@ -15,7 +15,7 @@ export class Paladin extends Dwarf {
   }
 
   attack(target: Hero | Crystal): void {
-    this.flashActingUnit();
+    actionAnimation(this);
     turnIfBehind(this.context, this, target);
     playSound(this.scene, EGameSounds.PALADIN_ATTACK);
 
@@ -36,7 +36,7 @@ export class Paladin extends Dwarf {
   }
 
   heal(target: Hero): void {
-    this.flashActingUnit();
+    actionAnimation(this);
     turnIfBehind(this.context, this, target);
 
     if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);

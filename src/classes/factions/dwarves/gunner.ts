@@ -3,7 +3,7 @@ import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
@@ -15,9 +15,8 @@ export class Gunner extends Dwarf {
   }
 
   attack(target: Hero | Crystal): void {
-    // add check for splash attack damage on crystals
-    this.flashActingUnit();
-    turnIfBehind(this.context, this, target); // Ensure turnIfBehind is imported/defined
+    actionAnimation(this);
+    turnIfBehind(this.context, this, target);
 
     const distance = getDistanceToTarget(this, target);
 

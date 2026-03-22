@@ -8,7 +8,7 @@ import { Phantom } from "./phantom";
 import { Crystal } from "../../board/crystal";
 import { playSound } from "../../../utils/gameSounds";
 import { generateFourDigitId } from "../../../utils/gameUtils";
-import { turnIfBehind } from "../../../utils/unitAnimations";
+import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Necromancer extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -16,8 +16,7 @@ export class Necromancer extends DarkElf {
   }
 
   attack(target: Hero | Crystal): void {
-    this.flashActingUnit();
-
+    actionAnimation(this);
     turnIfBehind(this.context, this, target);
 
     if (target instanceof Hero && target.stats.isKO) {
