@@ -13,6 +13,8 @@ import { Engineer } from "../factions/dwarves/enginner";
 import { Dwarf } from "../factions/dwarves/dwarves";
 import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
+import { HealingPotion } from "../factions/council/items";
+import { DwarvenBrew } from "../factions/dwarves/items";
 
 export class Board {
   tileSize: number = 90;
@@ -212,11 +214,11 @@ export class Board {
       if (hero.stats.belongsTo !== item.stats.belongsTo) return;
       if (hero instanceof Phantom) return;
       if (hero.isAlreadyEquipped(item)) return;
-      if (item.stats.canHeal && hero.isFullHP()) return;
+      if (item instanceof HealingPotion && hero.isFullHP()) return;
       if (!item.stats.canHeal && hero.stats.isKO) return;
       if (item.stats.canHeal &&  hero.stats.isKO) {
         if (item instanceof ManaVial) return;
-        // DWARVES: add brew check
+        if (item instanceof DwarvenBrew) return;
       }
 
       tilesToHighlight.push(hero.getTile());

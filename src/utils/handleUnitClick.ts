@@ -8,6 +8,7 @@ import { isEnemySpawn } from "./boardUtils";
 import { playSound, selectItemSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";
 import { belongsToPlayer } from "./gameUtils";
+import { HealingPotion } from "../classes/factions/council/items";
 
 export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
@@ -71,14 +72,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
     return;
   }
 
-  // CASE 2: Clicking the active unit deselects it, unless it's a healer
+  // CASE 2: Clicking the active unit deselects it
   if (isSameUnit) {
-    if (activeUnit instanceof Hero && activeUnit.stats.canHeal && healReticle?.visible && unit instanceof Hero) {
-      activeUnit.heal(unit);
-      return;
-    } else {
-      deselectUnit(context);
-    }
+    deselectUnit(context);
     return;
   }
 
@@ -215,7 +211,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
         if (activeUnit.stats.dealsDamage) activeUnit.use(unit.getTile());
 
-        if (!activeUnit.stats.dealsDamage && (!unit.stats.isKO || activeUnit.stats.itemType === EItems.HEALING_POTION)) activeUnit.use(unit);
+        if (activeUnit instanceof HealingPotion && unit.isFullHP()) return;
+
+        if (!activeUnit.stats.dealsDamage && (!unit.stats.isKO || activeUnit.stats.itemType !== EItems.HEALING_POTION)) activeUnit.use(unit);
 
         return;
       }
