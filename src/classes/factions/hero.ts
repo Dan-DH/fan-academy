@@ -117,14 +117,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     getDamagedAnimation(this);
 
     // Calculate damage after applying resistances
-    const totalAttackDamage = roundToFive(this.getLifeLost(damage, attackType));
+    const totalAttackDamage = this.getLifeLost(damage, attackType);
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
     if (unit instanceof Pulverizer) {
       const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
       assaultTileDamage = 300 * (debuffLevel ?? 0);
     }
-    const totalDamage = totalAttackDamage + assaultTileDamage;
+    const totalDamage = roundToFive(totalAttackDamage + assaultTileDamage);
 
     this.stats.currentHealth -= totalDamage;
 
@@ -172,7 +172,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;
 
-    return (this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura;
+    return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
 
   getPhysicalDamageResistance(): number {
@@ -247,7 +247,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const superCharge = this.stats.superCharge ? 3 : 1;
     const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
 
-    return (this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff;
+    return roundToFive((this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff);
   }
 
   getsHealed(healing: number, addText = true): number {
