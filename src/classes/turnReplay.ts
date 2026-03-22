@@ -98,7 +98,7 @@ export class TurnReplay {
 
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
-    if (actionTaken === EActionType.MOVE) hero.move(tile);
+    if (actionTaken === EActionType.MOVE) hero.move(hero.getTile(), tile);
     if (actionTaken === EActionType.SPAWN) hero.setVisible(true).spawn(tile);
   };
 

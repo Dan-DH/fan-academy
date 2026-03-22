@@ -120,13 +120,13 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
           necromancerStompCheck &&
           (withinStompingRange || unitTile.isHighlighted)
         ) {
-          activeUnit.move(unitTile);
+          activeUnit.move(activeUnit.getTile(), unitTile);
           return;
         }
         if (
           unit.stats.isKO && unitTile.tileType === ETiles.TELEPORTER && activeUnitTile?.tileType === ETiles.TELEPORTER
         ) {
-          activeUnit.move(unitTile);
+          activeUnit.move(activeUnit.getTile(), unitTile);
           return;
         }
       }
@@ -204,7 +204,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
             (withinStompingRange || unitTile.isHighlighted)
           ) {
             const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.stats.boardPosition);
-            activeUnit.move(unitTile);
+            activeUnit.move(activeUnit.getTile(), unitTile);
             return;
           }
         }

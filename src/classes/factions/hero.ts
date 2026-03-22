@@ -10,7 +10,7 @@ import { HeroCard } from "../cards/heroCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
 import { selectDeathSound, playSound } from "../../utils/gameSounds";
-import { roundToFive, checkUnitGameOver } from "../../utils/gameUtils";
+import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
 import { moveAnimation, singleAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
 import { removeFromBoard, removeSpecialTileOnKo, specialTileCheck } from "../../utils/boardUtils";
@@ -96,12 +96,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   onActivate(): void {
     console.log(`${this.stats.unitId} is now active`);
-    this.visuals.characterImage.setScale(1.2);
+    const scale = this.stats.boardPosition >= 45 ? 1 : 1.2;
+    this.visuals.characterImage.setScale(scale);
   }
 
   onDeactivate() {
     console.log(`${this.stats.unitId} is now inactive`);
-    this.visuals.characterImage.setScale(1);
+    const scale = this.stats.boardPosition >= 45 ? 0.8 : 1;
+    this.visuals.characterImage.setScale(scale);
   }
 
   getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item): number {
@@ -404,14 +406,16 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.updateTileData();
   }
 
-  async move(targetTile: Tile): Promise<void> {
+  async move(currentTile: Tile, targetTile: Tile): Promise<void> {
     const gameController = this.context.gameController!;
+
+    const tilesMoved = getGridDistance(currentTile.row, currentTile.col, targetTile.row, targetTile.col);
 
     const startTile = gameController.board.getTileFromBoardPosition(this.stats.boardPosition);
     if (!startTile) return;
 
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
-    await moveAnimation(this.context, this, targetTile);
+    await moveAnimation(this, targetTile, tilesMoved);
 
     // Stomp KO'd units
     if (targetTile.hero && targetTile.hero.isKO) {

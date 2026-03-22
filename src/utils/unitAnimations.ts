@@ -7,49 +7,98 @@ import { ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 
-export async function moveAnimation(context: GameScene, hero: Hero, targetTile: Tile): Promise<void> {
-  const flyingUnits = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM];
-  if (flyingUnits.includes(hero.stats.unitType)) {
-    playSound(context, EGameSounds.MOVE_FLY);
+export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
+  const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType);
+
+  hero.context.input.enabled = false;
+  const unitImage = hero.visuals.characterImage;
+
+  let temporaryFlip = false;
+  if (hero.stats.belongsTo === 1 && targetTile.x < hero.x ||
+      hero.stats.belongsTo === 2 && targetTile.x > hero.x) {
+    unitImage.setFlipX(!unitImage.flipX);
+    temporaryFlip = true;
+  }
+
+  if (isFlying) {
+    await flyingAnimation(hero, targetTile, tilesMoved);
   } else {
-    playSound(context, EGameSounds.MOVE_WALK);
+    await hoppingAnimation(hero, targetTile, tilesMoved);
   }
 
-  // Stop user input until the animation finishes playing
-  context.input.enabled = false;
+  hero.context.input.enabled = true;
+  if (temporaryFlip) unitImage.setFlipX(!unitImage.flipX);
+}
 
-  const unitImage: Phaser.GameObjects.Image = hero.visuals.getByName('body');
+async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
+  playSound(hero.context, EGameSounds.MOVE_FLY);
 
-  // If the unit is moving backwards, flip the unit's image for the duration of the animation
-  let temporaryFlip: boolean;
-  if (hero.stats.belongsTo === 1 && targetTile.x < hero.x) {
-    unitImage.setFlipX(true);
-    temporaryFlip = true;
-  }
+  const unitImage = hero.visuals.characterImage;
+  const moveDuration = 200 * tilesMoved;
+  const isMovingRight = targetTile.x >= hero.x;
+  const baseTiltAngle = hero.stats.unitType === EHeroes.NECROMANCER ? 0 : 10;
+  const tiltAngle = isMovingRight ? baseTiltAngle + 15 : -(baseTiltAngle + 15);
 
-  if (hero.stats.belongsTo === 2 &&  targetTile.x > hero.x ) {
-    unitImage.setFlipX(false);
-    temporaryFlip = true;
-  }
-
-  const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
-    return new Promise((resolve) => {
-      context.tweens.add({
-        targets: hero,
-        x: targetTile.x,
-        y: targetTile.y,
-        duration: 400,
-        ease: 'Linear',
-        onComplete: () => {
-          context.input.enabled = true;
-          if (temporaryFlip) unitImage.setFlipX(!unitImage.flipX);
-          resolve();
-        }
-      });
+  return new Promise((resolve) => {
+    unitImage.scene.tweens.add({
+      targets: unitImage,
+      angle: tiltAngle,
+      duration: 100,
+      ease: 'Cubic.easeInOut'
     });
-  };
 
-  await animation.call(context, hero, targetTile);
+    unitImage.scene.tweens.add({
+      targets: hero,
+      x: targetTile.x,
+      y: targetTile.y,
+      duration: moveDuration,
+      ease: 'Power1',
+      onComplete: () => {
+        unitImage.scene.tweens.add({
+          targets: unitImage,
+          angle: 0,
+          duration: 50
+        });
+        resolve();
+      }
+    });
+  });
+}
+
+async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
+  playSound(hero.context, EGameSounds.MOVE_WALK);
+  const hopSpeed = 100;
+  const moveDuration = hopSpeed * 2 * tilesMoved;
+  const unitImage = hero.visuals.characterImage;
+  const unitBaseY = unitImage.y;
+
+  return new Promise((resolve) => {
+    unitImage.scene.tweens.add({
+      targets: hero,
+      x: targetTile.x,
+      y: targetTile.y,
+      duration: moveDuration,
+      ease: 'Power1',
+      onComplete: () => {
+        hop.stop();
+        resolve();
+      }
+    });
+
+    const hop = unitImage.scene.tweens.add({
+      targets: unitImage,
+      scale: 1.2,
+      y: '-=20',
+      duration: hopSpeed,
+      yoyo: true,
+      repeat: tilesMoved - 1,
+      ease: 'Sine.easeOut',
+      onStop: () => {
+        unitImage.y = unitBaseY;
+        unitImage.setScale(1);
+      }
+    });
+  });
 }
 
 export async function forcedMoveAnimation(context: GameScene, hero: Hero, targetTile: Tile, angle = 0): Promise<void> {
