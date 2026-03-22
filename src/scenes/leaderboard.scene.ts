@@ -1,8 +1,9 @@
 import { MainLeaderboard } from "./leaderboardSceneUtils/mainLeaderboard";
 import { loadLeaderboardUI } from "./leaderboardSceneUtils/leaderboardUI";
-import { EFaction } from "../enums/gameEnums";
+import { EFaction, EUiSounds } from "../enums/gameEnums";
 import { getLeaderboardData } from "./leaderboardSceneUtils/getLeaderboardData";
 import { FactionLeaderboard } from "./leaderboardSceneUtils/factionLeaderboard";
+import { playSound } from "../utils/gameSounds";
 
 export default class LeaderboardScene extends Phaser.Scene {
   userId!: string;
@@ -33,21 +34,25 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
+      playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new MainLeaderboard(this, leaderboardData.mainBoard);
     });
 
     councilLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
+      playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.COUNCIL, leaderboardData.councilBoard);
     });
 
     elvesLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
+      playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DARK_ELVES, leaderboardData.elvesBoard);
     });
 
     dwarvesLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
+      playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DWARVES, leaderboardData.dwarvesBoard);
     });
 
