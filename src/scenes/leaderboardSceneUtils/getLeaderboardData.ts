@@ -19,20 +19,6 @@ export async function getLeaderboardData() {
   };
 }
 
-export function getLeaderboardSortHeader(boardType: ELeaderboardEnum): {
-  header: string,
-  field: keyof IUserFactionStats
-} {
-  const resultMap = {
-    [ELeaderboardEnum.MAIN]: {
-      header: 'Wins',
-      field: 'wins'
-    }
-  } as const;
-
-  return resultMap[ELeaderboardEnum.MAIN];
-}
-
 export function mapFactionEnumsToLowerCase(faction: EFaction): string {
   const factionMap = {
     [EFaction.COUNCIL]: 'council',
