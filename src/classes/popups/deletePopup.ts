@@ -31,7 +31,7 @@ export class DeleteWarningPopup extends Phaser.GameObjects.Container {
     this.cancelButtonImage = context.add.image(90, 60, 'popupButton').setTint(0x007BFF).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
 
     // Warning text
-    this.popupText = context.add.text(0, -50, "Delete account? All data will be lost", {
+    this.popupText = context.add.text(0, -50, "Delete account?\nData can't be recovered", {
       fontFamily: "proLight",
       fontSize: 40,
       color: '#ffffff',
