@@ -76,7 +76,7 @@ export function checkUnitGameOver(hero: Hero): void {
   const attackingPlayer = hero.stats.unitId.includes(hero.context.player1!.playerId) ? hero.context.player2 : hero.context.player1;
 
   hero.context.gameController!.gameOver = {
-    winCondition: EWinConditions.UNITS,
+    winCondition: EWinConditions.HERO,
     winner: attackingPlayer!.playerId
   };
 }
