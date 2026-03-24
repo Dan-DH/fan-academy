@@ -1,6 +1,5 @@
 import { EFaction } from "../../enums/gameEnums";
 import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
-import { IUserFactionStats } from "../../interfaces/userInterface";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
 
 export async function getLeaderboardData() {

@@ -4,8 +4,8 @@ import LeaderboardScene from "../leaderboard.scene";
 import { playSound } from "../../utils/gameSounds";
 import { truncateText } from "../../utils/textAnimations";
 import { ChallengePopup } from "../../classes/popups/challengePopup";
-import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
+import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
 import { mapFactionEnumsToLowerCase } from "./getLeaderboardData";
 
 export class FactionLeaderboard extends Phaser.GameObjects.Container {
@@ -14,6 +14,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
   paginationBar: Phaser.GameObjects.Container;
 
   context: LeaderboardScene;
+  faction: EFaction;
   factionKey: keyof IUserFactions;
 
   constructor(context: LeaderboardScene, faction: EFaction, data: {
@@ -34,6 +35,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
     super(context, 0, 0);
 
     this.context = context;
+    this.faction = faction;
     this.factionKey = mapFactionEnumsToLowerCase(faction) as keyof IUserFactions;
 
     const style = {
@@ -114,7 +116,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
     firstPageButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page > 1) {
-        const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, 1);
+        const leaderboardData = await getLeaderBoardQuery(this.factionKey as ELeaderboardEnum, 1);
         if (leaderboardData) {
           this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
           this.destroy();
@@ -128,7 +130,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
 
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page > 1) {
-        const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, --page);
+        const leaderboardData = await getLeaderBoardQuery(this.factionKey as ELeaderboardEnum, --page);
         if (leaderboardData) {
           this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
           this.destroy();
@@ -142,7 +144,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
       isQuerying = true;
 
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
-      const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, ++page);
+      const leaderboardData = await getLeaderBoardQuery(this.factionKey as ELeaderboardEnum, ++page);
       if (leaderboardData) {
         this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
         this.destroy();
@@ -153,7 +155,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
     lastPageButton.setInteractive({ useHandCursor: true }).on('pointerdown', async () => {
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       if (page !== data.totalPages) {
-        const leaderboardData = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL, data.totalPages);
+        const leaderboardData = await getLeaderBoardQuery(this.factionKey as ELeaderboardEnum, data.totalPages);
         if (leaderboardData) {
           this.context.leaderBoard = new FactionLeaderboard(this.context, faction, leaderboardData);
           this.destroy();
