@@ -179,8 +179,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     let total = this.stats.basePhysicalDamageResistance;
 
     if (this.stats.annihilatorDebuff) total -= 50;
-    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     if (this.stats.dwarvenBrew) total += 50;
+    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     if (this.stats.factionEquipment && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
 
     if (this.stats.physicalResistanceTile) {
@@ -198,8 +198,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   getMagicalDamageResistance(): number {
     let total = this.stats.baseMagicalDamageResistance;
 
-    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     if (this.stats.dwarvenBrew) total += 50;
+    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     if (this.stats.shiningHelm) total += 20;
 
     if (this.stats.magicalResistanceTile) {

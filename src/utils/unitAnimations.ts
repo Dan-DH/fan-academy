@@ -63,8 +63,8 @@ async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number)
   const unitImage = hero.visuals.characterImage;
   const moveDuration = 200 * tilesMoved;
   const isMovingRight = targetTile.x >= hero.x;
-  const baseTiltAngle = hero.stats.unitType === EHeroes.NECROMANCER ? 0 : 10;
-  const tiltAngle = isMovingRight ? baseTiltAngle + 15 : -(baseTiltAngle + 15);
+  const baseTiltAngle = hero.stats.unitType === EHeroes.NECROMANCER ? 0 : 25;
+  const tiltAngle = isMovingRight ? baseTiltAngle : -baseTiltAngle;
 
   return new Promise((resolve) => {
     unitImage.scene.tweens.add({
