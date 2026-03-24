@@ -76,7 +76,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.paladinAuraImage = context.add.image(0, 30, 'paladinAura').setOrigin(0.5);
     paladinAuraAnimation(this.paladinAuraImage);
-    if (data.unitType !== EHeroes.PALADIN || data.isKO) this.paladinAuraImage.setVisible(false);
+    if (data.boardPosition >= 45 || data.unitType !== EHeroes.PALADIN || data.isKO) this.paladinAuraImage.setVisible(false);
 
     /**
      * RETICLES
