@@ -1,5 +1,5 @@
 import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
-import { ITile } from "../../interfaces/gameInterface";
+import { IHero, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
 import { createBasicTileData, isEnemySpawn } from "../../utils/boardUtils";
@@ -645,4 +645,8 @@ export class Board {
     x: number,
     y: number
   }): boolean { return unit.x < 0 || unit.x >= 9 || unit.y < 0 || unit.y >= 5 ;}
+
+  getUnitsOnAssaultTiles(belongsTo: number): IHero[] {
+    return this.tiles.filter(tile => tile.tileType === ETiles.CRYSTAL_DAMAGE && tile.hero && tile.hero.belongsTo !== belongsTo).map(tile => {return tile.hero!;});
+  }
 }

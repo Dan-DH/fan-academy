@@ -1,5 +1,5 @@
 import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
-import { ICrystal } from "../../interfaces/gameInterface";
+import { ICrystal, IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
 import { playSound } from "../../utils/gameSounds";
@@ -75,21 +75,26 @@ export class Crystal extends Phaser.GameObjects.Container {
       return;
     }
 
-    if (this.stats.debuffLevel > 0) {
-      playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
-    } else {
+    let assaultBoostDamage = 0;
+
+    if (this.stats.debuffLevel === 0) {
       playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE);
+    } else {
+      playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
+
+      const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getUnitsOnAssaultTiles(this.stats.belongsTo);
+
+      if (enemyUnitsOnAssaultTiles?.length) enemyUnitsOnAssaultTiles.forEach(unitOnTile => {
+        assaultBoostDamage += this.calculateAssaultBoost(unitOnTile);
+      });
     }
 
-    let assaultBoostDamage;
-    if (unit.stats.faction === EFaction.DWARVES) {
-      assaultBoostDamage = 360;
-      if (unit instanceof Hero && unit.stats.unitType === EHeroes.ENGINEER) assaultBoostDamage = 420;
-      if (unit instanceof Hero && unit.stats.unitType === EHeroes.ANNIHILATOR && splashDamage) assaultBoostDamage = 72; // TODO: make sure to implement
-      if (unit instanceof Hero && unit.stats.unitType === EHeroes.GRENADIER && splashDamage) assaultBoostDamage = 180;
-    } else {
-      assaultBoostDamage = 300;
-    }
+    if (unit instanceof Hero && unit.stats.unitType === EHeroes.ANNIHILATOR && splashDamage) assaultBoostDamage *= 0.2;
+
+    if (unit instanceof Hero && unit.stats.unitType === EHeroes.GRENADIER && splashDamage) assaultBoostDamage *= 0.5;
+
+    if (unit instanceof Hero && unit.stats.unitType === EHeroes.GUNNER && splashDamage) assaultBoostDamage *= 0.666;
+
     const damageMultiplier = assaultBoostDamage  *  this.stats.debuffLevel;
     const totalDamage = roundToFive(this.getLifeLost(damage + damageMultiplier, attackType));
     const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
@@ -219,5 +224,13 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     const totalDamage = resistance ? damage - damage * reduction / 100 : damage;
     return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
+  }
+
+  calculateAssaultBoost(unitOnTile: IHero): number {
+    if (unitOnTile.unitType === EHeroes.ENGINEER) return 420;
+
+    if (unitOnTile.faction === EFaction.DWARVES) return 360;
+
+    return 300;
   }
 }
