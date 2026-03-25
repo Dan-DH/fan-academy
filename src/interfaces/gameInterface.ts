@@ -140,6 +140,7 @@ export interface ICrystal {
   debuffLevel: number;
   engineerShield?: string;
   paladinAura: number;
+  annihilatorDebuff: boolean;
   physicalDamageResistance: number;
   magicalDamageResistance: number;
   basePhysicalDamageResistance: number;

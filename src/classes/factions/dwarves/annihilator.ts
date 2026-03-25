@@ -37,11 +37,12 @@ export class Annihilator extends Dwarf {
       const isTargetShielded = target.stats.engineerShield;
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
-      if (target instanceof Hero && !isTargetShielded) {
+      if (!isTargetShielded && target.active) {
         target.stats.annihilatorDebuff = true;
         target.visuals.annihilatorDebuffImage.setVisible(true);
         target.updateTileData();
-        target.unitCard.updateCardData(target);
+        if (target instanceof Hero) target.unitCard.updateCardData(target);
+        if (target instanceof Crystal) target.unitCard.updateCardData(target);
       }
 
       const adjacentFriendlyUnits = gameController.board.getAliveAdjacentFriendlyUnitsOnBoard(target);

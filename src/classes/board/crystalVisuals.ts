@@ -11,6 +11,8 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
   healReticle: Phaser.GameObjects.Image;
   blockedLOS: Phaser.GameObjects.Image;
   engineerShieldImage: Phaser.GameObjects.Image;
+  annihilatorDebuffImage: Phaser.GameObjects.Image;
+  annihilatorDebuffEvent: Phaser.Time.TimerEvent;
 
   debuffEventSingle: Phaser.Time.TimerEvent;
   debuffEventDouble: Phaser.Time.TimerEvent;
@@ -42,12 +44,16 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     if (data.debuffLevel === 1) this.singleCrystalDebuff.setVisible(true);
     if (data.debuffLevel === 2) this.doubleCrystalDebuff.setVisible(true);
 
+    this.annihilatorDebuffImage = context.add.image(25, -30, 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
+    this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
+    if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
+
     // Attack  and healing reticle animations
     this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
     addCirclingTween(this.attackReticle);
     this.healReticle = context.add.image(0, -10, 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
     addCirclingTween(this.healReticle);
 
-    this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.doubleCrystalDebuff, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS]);
+    this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.annihilatorDebuffImage, this.doubleCrystalDebuff, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS]);
   }
 }

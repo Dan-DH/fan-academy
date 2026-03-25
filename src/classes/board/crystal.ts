@@ -104,13 +104,19 @@ export class Crystal extends Phaser.GameObjects.Container {
       this.visuals.crystalImage.setTexture('crystalDamaged');
     }
 
+    // Remove 1-hit buffs and debuffs
+    if (attackType === EAttackType.PHYSICAL) {
+      this.stats.annihilatorDebuff = false;
+      this.visuals.annihilatorDebuffImage.setVisible(false);
+    }
+
     // Update hp bar
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
 
     // Show damage numbers
     if (damageTaken > 0) new FloatingText(this.context, this.x, this.y - 50, damageTaken.toString());
 
-    this.unitCard.updateCardHealth(this);
+    this.unitCard.updateCardData(this);
     this.updateTileData();
 
     // Update player HP bar
@@ -151,6 +157,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     // Remove animations
     this.scene.tweens.killTweensOf(this);
+    this.scene.tweens.killTweensOf(this.visuals);
 
     this.list.forEach(child => {
       this.scene.tweens.killTweensOf(child);
@@ -159,6 +166,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     // Remove events
     this.visuals.debuffEventSingle.remove(false);
     this.visuals.debuffEventDouble.remove(false);
+    this.visuals.annihilatorDebuffEvent.remove(false);
 
     // Destroy container and children
     this.destroy(true);
@@ -195,6 +203,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   getPhysicalDamageResistance(): number {
     let total = this.stats.basePhysicalDamageResistance;
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    if (this.stats.annihilatorDebuff) total -= 50;
     this.setPhysicalDamageResistance(total);
     return total;
   }
