@@ -65,12 +65,7 @@ export class Pulverizer extends Item {
     if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
     const directHitDamage = 600;
 
-    const damage = hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
-    if (damage > 0 && hero.stats.factionEquipment) {
-      hero.stats.factionEquipment = false; // TODO: might need to refactor this for future factions
-      hero.visuals.factionEquipmentImage.setVisible(false);
-      hero.visuals.characterImage.setTexture(hero.visuals.updateCharacterImage(hero.stats));
-    }
+    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this); // moved armour removel to getsDamaged
   }
 
   directHitOnCrystal(targetTile: Tile): void {

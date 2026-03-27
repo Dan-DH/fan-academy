@@ -117,13 +117,22 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     getDamagedAnimation(this);
 
     // Calculate damage after applying resistances
-    const totalAttackDamage = this.getLifeLost(damage, attackType);
+    let totalAttackDamage = this.getLifeLost(damage, attackType);
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
     if (unit instanceof Pulverizer) {
       const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
       assaultTileDamage = 300 * (debuffLevel ?? 0);
+
+      if (this.stats.factionEquipment) {
+        // TODO: might need to refactor this for future factions
+        this.stats.factionEquipment = false;
+        totalAttackDamage += this.reduceMaxHealth(this.stats.baseHealth * 0.1);
+        this.visuals.factionEquipmentImage.setVisible(false);
+        this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+      }
     }
+
     const totalDamage = roundToFive(totalAttackDamage + assaultTileDamage);
 
     this.stats.currentHealth -= totalDamage;
@@ -297,9 +306,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (amount <= 0) return;
     if (this.stats.isKO) this.getsRevived(); // for Soul Harvest
 
-    const roundedHealtGain = roundToFive(amount);
-    this.stats.maxHealth += roundedHealtGain;
-    this.stats.currentHealth += roundedHealtGain;
+    const roundedHealthGain = roundToFive(amount);
+    this.stats.maxHealth += roundedHealthGain;
+    this.stats.currentHealth += roundedHealthGain;
 
     // Update hp bar
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
@@ -319,6 +328,24 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const textFigure = actualHealing ? actualHealing + increase : increase;
     new FloatingText(this.context, this.x, this.y - 50, textFigure.toString(), true);
   };
+
+  reduceMaxHealth(amount: number, addText = false): number {
+    if (amount <= 0) return 0;
+
+    const roundedHealthLoss = roundToFive(amount);
+    this.stats.maxHealth -= roundedHealthLoss;
+    this.stats.currentHealth -= roundedHealthLoss;
+
+    // Update hp bar
+    this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
+
+    if (addText) new FloatingText(this.context, this.x, this.y - 90, amount.toString(), false);
+
+    this.unitCard.updateCardData(this);
+    this.updateTileData();
+
+    return amount;
+  }
 
   getsKnockedDown(): void {
     if (this.stats.unitType !== EHeroes.PHANTOM) selectDeathSound(this.scene, this.stats.unitType);
