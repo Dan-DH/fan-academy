@@ -121,7 +121,7 @@ export function loadGameAssets(context: GameScene) {
   context.load.image('soulHarvest', `${CDN_PATH}/images/factions/darkElves/soul_harvest.webp`);
   context.load.image('manaVial', `${CDN_PATH}/images/factions/darkElves/mana_vial.webp`);
 
-  // Dwarves // TODO:
+  // Dwarves
   context.load.image('dwarvenBrew', `${CDN_PATH}/images/factions/dwarves/dwarven_brew.webp`);
   context.load.image('pulverizer', `${CDN_PATH}/images/factions/dwarves/pulverizer.webp`);
   context.load.image('enginnerShield', `${CDN_PATH}/images/factions/dwarves/EngineerShield-hd.webp`);

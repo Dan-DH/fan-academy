@@ -58,7 +58,6 @@ export class TurnReplay {
       currentGame: this.context.currentGame,
       currentRoom: this.context.currentRoom,
       triggerReplay: false
-      // gameOver: undefined // FIXME: is this used at all?
     } );
   }
 
