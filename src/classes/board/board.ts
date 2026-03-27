@@ -173,8 +173,10 @@ export class Board {
       if (target instanceof Hero && hero.stats.canHeal && target.stats.belongsTo === hero.stats.belongsTo && currentHealth! < maxHealth!) {
         target.visuals.healReticle.setVisible(true);
       }
+      // Will need to update this logic for any future buffs by other units
       if (hero.stats.canBuff && target.stats.belongsTo === hero.stats.belongsTo && !target.stats.engineerShield) {
-        target.visuals.healReticle.setVisible(true); // will need to update this logic for any future buffs by other units
+        if (target instanceof Crystal) target.visuals.healReticle.setVisible(true);
+        if (target instanceof Hero && !target.stats.isKO) target.visuals.healReticle.setVisible(true);
       }
     });
   }
