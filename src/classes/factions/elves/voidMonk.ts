@@ -79,7 +79,7 @@ export class VoidMonk extends DarkElf {
     }
 
     splashedEnemies.forEach(enemy => {
-      if (enemy instanceof Hero && enemy.stats.unitType === EHeroes.PHANTOM && enemy.stats.isKO) enemy.removeFromGame(true);
+      if (enemy instanceof Hero && enemy.stats.unitType === EHeroes.PHANTOM && enemy.stats.isKO) enemy.removeFromGame();
     });
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();

@@ -40,12 +40,11 @@ export class Wizard extends Council {
 
       // Get directions for finding out the next targets
       const attackDirection = gameController.board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
-      const opponentDirection = this.stats.belongsTo === 1 ? [2, 3, 4] : [6, 7, 8];
 
       // Collect all targets
-      const secondTarget = this.getNextTarget(target, attackDirection, opponentDirection, gameController.board, false);
+      const secondTarget = this.getNextTarget(target, attackDirection, gameController.board, false);
       let thirdTarget: Hero | Crystal | undefined;
-      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, opponentDirection, gameController.board, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
+      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, gameController.board, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
 
       // Apply damage to targets
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
@@ -62,7 +61,7 @@ export class Wizard extends Council {
     this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  getNextTarget(target: Hero | Crystal, attackDirection: number, opponentDirection: number[], board: Board, isLastTarget: boolean, toIgnore?: number[]): Hero | Crystal | undefined {
+  getNextTarget(target: Hero | Crystal, attackDirection: number, board: Board, isLastTarget: boolean, toIgnore?: number[]): Hero | Crystal | undefined {
     const positionsToIgnore = toIgnore ? toIgnore : [target.stats.boardPosition];
     const adjacentEnemies = this.getAdjacentEnemyTiles(target.stats.boardPosition, positionsToIgnore);
 
