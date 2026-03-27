@@ -7,7 +7,7 @@ import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Knight extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Knight extends Council {
   }
 
   async attack(target: Hero | Crystal): Promise<void> {
-    actionAnimation(this);
+    attackAnimation(this);
 
     const gameController = this.context.gameController!;
     turnIfBehind(this.context, this, target);

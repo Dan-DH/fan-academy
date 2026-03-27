@@ -7,9 +7,13 @@ import { ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 
-export function actionAnimation(hero: Hero): void {
+export function flashActingUnit(hero: Hero): void {
   hero.visuals.characterImage.setTint(0x3399ff);
   hero.scene.time.delayedCall(800, () => hero.visuals.characterImage.clearTint());
+}
+
+export function attackAnimation(hero: Hero): void {
+  flashActingUnit(hero);
   hero.visuals.characterImage.scene.tweens.add({
     targets: hero.visuals.characterImage,
     x: `+=${15}`,

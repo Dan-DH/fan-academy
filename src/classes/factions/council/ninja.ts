@@ -7,7 +7,7 @@ import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn, specialTileCheck } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { actionAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Ninja extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Ninja extends Council {
   }
 
   attack(target: Hero | Crystal): void {
-    actionAnimation(this);
+    attackAnimation(this);
 
     turnIfBehind(this.context, this, target);
 

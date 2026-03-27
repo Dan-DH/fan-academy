@@ -6,7 +6,7 @@ import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { playSound } from "../../../utils/gameSounds";
-import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Wraith extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -14,7 +14,7 @@ export class Wraith extends DarkElf {
   }
 
   attack(target: Hero | Crystal): void {
-    actionAnimation(this);
+    attackAnimation(this);
     turnIfBehind(this.context, this, target);
 
     if (target instanceof Hero && target.stats.isKO) {

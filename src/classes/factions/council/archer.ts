@@ -7,7 +7,7 @@ import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Archer extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Archer extends Council {
   }
 
   attack(target: Hero | Crystal): void {
-    actionAnimation(this);
+    attackAnimation(this);
     const distance = getDistanceToTarget(this, target);
     turnIfBehind(this.context, this, target);
 

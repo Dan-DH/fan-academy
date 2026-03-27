@@ -7,7 +7,7 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Priestess extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Priestess extends DarkElf {
   }
 
   attack(target: Hero | Crystal): void {
-    actionAnimation(this);
+    attackAnimation(this);
     turnIfBehind(this.context, this, target);
 
     const distance = getDistanceToTarget(this, target);
@@ -52,10 +52,11 @@ export class Priestess extends DarkElf {
   }
 
   async heal(target: Hero): Promise<void> {
-    actionAnimation(this);
+    flashActingUnit(this);
     turnIfBehind(this.context, this, target);
+
     if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    if (this.stats.superCharge)  playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
 
     if (target.stats.isKO) {
       const healingAmount = this.getTotalHealing(0.5);

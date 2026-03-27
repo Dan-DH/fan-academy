@@ -7,7 +7,7 @@ import { Hero } from "../hero";
 import { EActionType, EGameSounds, EHeroes } from "../../../enums/gameEnums";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
-import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Annihilator extends Dwarf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -15,7 +15,7 @@ export class Annihilator extends Dwarf {
   }
 
   attack(target: Hero | Crystal): void {
-    actionAnimation(this);
+    attackAnimation(this);
 
     const gameController = this.context.gameController!;
     turnIfBehind(this.context, this, target);

@@ -8,7 +8,7 @@ import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
 import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
-import { actionAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class VoidMonk extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -16,7 +16,7 @@ export class VoidMonk extends DarkElf {
   }
 
   attack(target: Hero | Crystal): void {
-    actionAnimation(this);
+    attackAnimation(this);
     turnIfBehind(this.context, this, target);
 
     const splashedEnemies: (Hero | Crystal)[] = [];
