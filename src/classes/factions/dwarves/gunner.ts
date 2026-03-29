@@ -54,7 +54,7 @@ export class Gunner extends Dwarf {
       if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
     });
 
-    target.getsDamaged(this.getTotalPower(0.66), EAttackType.PHYSICAL, this);
+    target.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this);
     this.removeAttackModifiers();
   }
 
