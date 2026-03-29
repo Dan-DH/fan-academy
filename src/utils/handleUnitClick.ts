@@ -200,8 +200,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
             activeUnit.stats.unitType !== EHeroes.NECROMANCER &&
             (withinStompingRange || unitTile.isHighlighted)
           ) {
-            const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.stats.boardPosition);
-            activeUnit.move(activeUnit.getTile(), unitTile);
+            activeUnit.move(activeUnit.getTile(), unit.getTile());
             return;
           }
         }
@@ -210,13 +209,9 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       if (activeUnit instanceof Item) {
         if (unit.isAlreadyEquipped(activeUnit) || unit.stats.unitType === EHeroes.PHANTOM && !activeUnit.stats.dealsDamage) return;
 
-        if (activeUnit.stats.dealsDamage) activeUnit.use(unit.getTile());
+        if (activeUnit.stats.dealsDamage && unit.getTile().isHighlighted) activeUnit.use(unit.getTile());
 
-        if (activeUnit instanceof HealingPotion && unit.isFullHP()) {
-          console.log('this triggers');
-
-          return;
-        }
+        if (activeUnit instanceof HealingPotion && unit.isFullHP()) return;
 
         if (!activeUnit.stats.dealsDamage &&
           (unit.stats.isKO && activeUnit.stats.itemType === EItems.HEALING_POTION ||
