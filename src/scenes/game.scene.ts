@@ -1,15 +1,16 @@
 import { Client, Room } from "colyseus.js";
-import { Crystal } from "../classes/crystal";
 import { GameController } from "../classes/gameController";
-import { Hero } from "../classes/hero";
-import { Item } from "../classes/item";
+import { Hero } from "../classes/factions/hero";
+import { Item } from "../classes/factions/item";
 import { Coordinates, IGame, IPlayerData, IPlayerState } from "../interfaces/gameInterface";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 import { createChatComponent } from "./gameSceneUtils/chatComponent";
 import { loadGameBoardUI } from "./gameSceneUtils/gameBoardUI";
 import { loadGameAssets } from "./mainMenuUtils/gameAssets";
-import { Tile } from "../classes/tile";
-import { gameListFadeOutText, textAnimationFadeOut } from "../utils/gameUtils";
+import { Tile } from "../classes/board/tile";
+import { Crystal } from "../classes/board/crystal";
+import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
+import { TurnReplay } from "../classes/turnReplay";
 
 export default class GameScene extends Phaser.Scene {
   userId!: string;
@@ -39,9 +40,12 @@ export default class GameScene extends Phaser.Scene {
 
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
 
+  // isInternetUp: boolean;
+
   constructor() {
     super({ key: 'GameScene' });
     this.centerPoints = calculateAllCenterPoints();
+    // this.isInternetUp = true;
   }
 
   init(data: {
@@ -64,9 +68,17 @@ export default class GameScene extends Phaser.Scene {
     // Updating GameScene properties
     this.activePlayer = this.currentGame.activePlayer.toString();
     this.isPlayerOne = this.currentGame?.players[0].userData._id === this.userId;
-    this.currentTurnAction = this.turnNumber === 0 ? 3 : 1;
+    this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
 
     this.activeUnit = undefined;
+
+    window.addEventListener('offline', () => {
+      this.registry.set('networkStatus', 'offline');
+    });
+    window.addEventListener('online', () => {
+      this.registry.set('networkStatus', 'online');
+    });
+    this.registry.set('networkStatus', 'online');
   }
 
   preload() {
@@ -89,8 +101,9 @@ export default class GameScene extends Phaser.Scene {
 
     this.input.mouse!.disableContextMenu();
     this.gameController = new GameController(this);
-    if (this.triggerReplay) this.gameController.replayTurn();
-
+    if (this.triggerReplay) {
+      new TurnReplay(this.gameController).replayTurn();
+    }
     this.game.events.on('messageToGameScene', (data: {
       x: number,
       y: number,

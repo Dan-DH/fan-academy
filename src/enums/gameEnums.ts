@@ -16,21 +16,23 @@ export enum EGameTermination {
 }
 
 export enum EWinConditions {
-  CRYSTAL = 'Crystal victory',
-  UNITS = 'Hero victory',
-  TIME = 'Timeout',
-  CONCEDED = 'Game conceded'
+  CRYSTAL = 'crystal',
+  HERO = 'hero',
+  TIMEOUT = 'timeout',
+  CONCEDED = 'conceded'
 };
 
 export enum EFaction {
-  COUNCIL = 'Council',
-  DARK_ELVES = 'Dark Elves'
+  COUNCIL = 'council',
+  DARK_ELVES = 'elves',
+  DWARVES = 'dwarves'
 }
 
 export enum EActionType {
   MOVE = 'move',
   ATTACK = 'attack',
   HEAL = 'heal',
+  BUFF = 'buff',
   SPAWN = 'spawn',
   SPAWN_PHANTOM = 'phantom',
   USE = 'use',
@@ -63,7 +65,11 @@ export enum EItems {
   // Dark elves
   SOUL_STONE = 'soulStone',
   SOUL_HARVEST = 'soulHarvest',
-  MANA_VIAL = 'manaVial'
+  MANA_VIAL = 'manaVial',
+
+  // Dwarves
+  DWARVEN_BREW = 'dwarvenBrew',
+  PULVERIZER = 'pulverizer'
 }
 
 export enum EClass {
@@ -85,7 +91,15 @@ export enum EHeroes {
   NECROMANCER = 'necromancer',
   PHANTOM = 'phantom',
   VOIDMONK = 'voidmonk',
-  WRAITH = 'wraith'
+  WRAITH = 'wraith',
+
+  // Dwarves
+  PALADIN = 'paladin',
+  GUNNER = 'gunner',
+  ENGINEER = 'engineer',
+  GRENADIER = 'grenadier',
+  ANNIHILATOR = 'annihilator'
+
 }
 
 export enum ETiles {
@@ -105,7 +119,8 @@ export enum ETiles {
 export enum ERange {
   MOVE = 'move',
   ATTACK = 'attack',
-  HEAL = 'healing'
+  HEAL = 'healing',
+  BUFF = 'buff'
 }
 
 export enum ECardType {
@@ -125,7 +140,8 @@ export enum ECardType {
 
 export enum EChallengePopup {
   SEND = 'send',
-  ACCEPT = 'accept'
+  ACCEPT = 'accept',
+  OPEN = 'open'
 }
 
 export enum EPopups {
@@ -155,6 +171,7 @@ export enum EGameSounds {
   HERO_STOMP = 'stompSound',
   VANISH = 'vanishSound',
   HERO_REVIVE = 'reviveHeroSound',
+  HERO_DEATH = 'heroDeathSound',
 
   SCROLL_SELECT = 'selectScrollSound',
   RUNE_METAL_SELECT = 'selectRuneMetalSound',
@@ -221,5 +238,19 @@ export enum EGameSounds {
   WRAITH_ATTACK_BIG = 'wraithAttackBigSound',
   WRAITH_DEATH = 'wraithDeathSound', // used also for Necromancer's death
   WRAITH_CONSUME = 'wraithConsumeSound',
-  USE_HARVEST = 'useHarvestSound'
+  USE_HARVEST = 'useHarvestSound',
+
+  // Dwarven noises
+  ANNIHILATOR_ATTACK = 'annihilatorAttackSound',
+  ENGINEER_ATTACK = 'engineerAttackSound',
+  ENGINEER_SHIELD_CAST = 'engineerShieldCastSound',
+  ENGINEER_SHIELD_SHATTER = 'engineerShieldShatterSound',
+  GRENADIER_ATTACK_MELEE = 'grenadierAttackMeleeSound',
+  GRENADIER_ATTACK = 'grenadierAttackSound',
+  GUNNER_ATTACK = 'gunnerAttackSound',
+  PALADIN_ATTACK = 'paladinAttackSound',
+  DWARVEN_BREW_SELECT = 'selectDwarvenBrewSound',
+  DWARVEN_BREW_USE = 'useDwarvenBrewSound',
+  PULVERIZER_SELECT = 'selectPulverizerSound',
+  PULVERIZER_USE = 'usePulverizerSound'
 }

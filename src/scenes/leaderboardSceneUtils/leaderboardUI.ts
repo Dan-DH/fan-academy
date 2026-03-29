@@ -8,7 +8,10 @@ export function loadLeaderboardUI(context: LeaderboardScene): void {
   context.load.image('arrowButton', `${CDN_PATH}/ui/arrow_button.webp`);
   context.load.image('curvedArrowButton', `${CDN_PATH}/ui/curved_arrow_button.webp`);
 
+  context.load.image('mainLeaderboard', `${CDN_PATH}/ui/UI_LeaderButton-hd.png`);
+
   // faction emblems
   context.load.image(EFaction.COUNCIL, `${CDN_PATH}/ui/council_emblem.webp`);
   context.load.image(EFaction.DARK_ELVES, `${CDN_PATH}/ui/elves_emblem.webp`);
+  context.load.image(EFaction.DWARVES, `${CDN_PATH}/ui/dwarves_emblem.webp`);
 }

@@ -1,4 +1,4 @@
-import { Profile } from "../classes/profile";
+import { Profile } from "./profileSceneUtils/profile";
 import { IUserPreferences, IUserStats } from "../interfaces/userInterface";
 import { getProfile } from "../queries/userQueries";
 import { CDN_PATH } from "./preloader.scene";

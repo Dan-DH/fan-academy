@@ -6,10 +6,21 @@ export interface IUserPreferences {
 }
 
 export interface IUserStats {
-  totalGames: number,
-  totalWins: number,
-  councilWins: number,
-  elvesWins: number
+  totalGames: number;
+  totalWins: number;
+  factions: IUserFactions;
+}
+
+export interface IUserFactions {
+  council: IUserFactionStats
+  elves: IUserFactionStats
+  dwarves: IUserFactionStats
+}
+
+export interface IUserFactionStats {
+  games: number,
+  wins: number,
+  rating: number
 }
 
 export interface IUser  {

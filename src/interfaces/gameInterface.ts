@@ -20,21 +20,6 @@ export type Coordinates = {
 };
 
 /**
- * Crystal Interface
- */
-export interface ICrystal {
-  belongsTo: number;
-  maxHealth: number;
-  currentHealth: number;
-  isDestroyed: boolean;
-  isLastCrystal: boolean;
-  boardPosition: number;
-  debuffLevel: number;
-  row: number;
-  col: number;
-}
-
-/**
  * Item Interface
  */
 export interface IItem {
@@ -44,6 +29,7 @@ export interface IItem {
   itemType: EItems;
   boardPosition: number // 45-51
   belongsTo: number;
+  row: number;
   canHeal: boolean;
   dealsDamage: boolean;
 }
@@ -67,23 +53,32 @@ export interface IHero {
   movement: number;
   attackRange: number;
   healingRange: number;
+  buffRange: number;
   attackType: EAttackType;
   basePower: number;
   physicalDamageResistance: number;
-  magicalDamageResistance: number;
   basePhysicalDamageResistance: number;
+  magicalDamageResistance: number;
   baseMagicalDamageResistance: number;
-  factionBuff: boolean;
+  factionEquipment: boolean;
   runeMetal: boolean;
   shiningHelm: boolean;
   superCharge: boolean;
   belongsTo: number;
   canHeal: boolean;
-  unitsConsumed?: number;
-  isDebuffed: boolean;
+  canBuff: boolean;
+  unitsConsumed: number;
+  priestessDebuff: boolean;
   attackTile: boolean;
-  manaVial?: boolean;
-  speedTile?: boolean;
+  magicalResistanceTile: boolean;
+  physicalResistanceTile: boolean;
+  manaVial: boolean;
+  speedTile: boolean;
+  dwarvenBrew: boolean;
+  engineerShield?: string;
+  shieldingAlly?: string;
+  annihilatorDebuff: boolean;
+  paladinAura: number;
 }
 
 /**
@@ -130,15 +125,38 @@ export interface IPlayerState {
 }
 
 /**
+ * Crystal Interface
+ */
+export interface ICrystal {
+  unitId?: string;
+  belongsTo: number;
+  maxHealth: number;
+  currentHealth: number;
+  row: number;
+  col: number;
+  isDestroyed: boolean;
+  isLastCrystal: boolean;
+  boardPosition: number;
+  debuffLevel: number;
+  engineerShield?: string;
+  paladinAura: number;
+  annihilatorDebuff: boolean;
+  physicalDamageResistance: number;
+  magicalDamageResistance: number;
+  basePhysicalDamageResistance: number;
+  baseMagicalDamageResistance: number;
+}
+
+/**
  * Tile Interface
  */
 export interface ITile {
   row: number;
   col: number;
+  boardPosition: number;
   tileType: ETiles;
   x: number;
   y: number;
-  boardPosition: number;
   obstacle: boolean;
   hero?: IHero | undefined;
   crystal?: ICrystal | undefined;
@@ -173,9 +191,9 @@ export interface IChat {
 export interface IGame {
   _id: string;
   players: IPlayerData[];
+  turnNumber: number;
   currentState: IGameState[];
   previousTurn: IGameState[];
-  turnNumber: number;
   gameOver?: IGameOver,
   status: EGameStatus;
   createdAt: Date;

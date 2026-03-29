@@ -1,13 +1,11 @@
-import { Hero } from "../classes/hero";
-import { Item } from "../classes/item";
-import { EClass } from "../enums/gameEnums";
+import { Hero } from "../classes/factions/hero";
+import { Item } from "../classes/factions/item";
 import { IPlayerState } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 
 export function getPlayersKey(context: GameScene): {
   player: 'player1' | 'player2',
-  opponent: 'player1' | 'player2',
-
+  opponent: 'player1' | 'player2'
 } {
   return context.player1?.playerId === context.userId ? {
     player: 'player1',
@@ -34,8 +32,8 @@ export function selectUnit(context: GameScene, unit: Hero | Item): void {
   context.activeUnit = unit;
 
   // Highlight tiles
-  if (unit.class === EClass.HERO) context.gameController?.onHeroClicked(unit as Hero);
-  if (unit.class === EClass.ITEM) context.gameController?.onItemClicked(unit as Item);
+  if (unit instanceof Hero) context.gameController?.onHeroClicked(unit);
+  if (unit instanceof Item) context.gameController?.onItemClicked(unit);
 }
 
 export function deselectUnit(context: GameScene): void {

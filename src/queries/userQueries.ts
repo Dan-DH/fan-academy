@@ -1,3 +1,4 @@
+import { ELeaderboardEnum } from "../enums/leaderboardEnum";
 import { IUserPreferences, IUserStats } from "../interfaces/userInterface";
 
 export async function loginQuery(username: string, password: string) {
@@ -87,6 +88,35 @@ export async function signUpQuery(email: string, username: string, password: str
   }
 }
 
+export async function passwordRecoveryEmailQuery(email: string) {
+  const jwt = localStorage.getItem('jwt');
+
+  await fetch(`${import.meta.env.VITE_BE_URL}users/password-recovery`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwt}`
+    },
+    body: JSON.stringify({ email: email.trim() })
+  });
+}
+
+export async function passwordResetQuery(recoveryCode: string, newPassword: string) {
+  const jwt = localStorage.getItem('jwt');
+
+  await fetch(`${import.meta.env.VITE_BE_URL}users/password-reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwt}`
+    },
+    body: JSON.stringify({
+      recoveryCode: recoveryCode.trim(),
+      password: newPassword.trim()
+    })
+  });
+};
+
 /**
  * Used on MainMenuScene's onCreate() to check if the player is authenticated
  * @returns
@@ -120,7 +150,7 @@ export async function authCheck(): Promise<{
 /**
  * Used to populate the leaderboard
  */
-export async function getLeaderBoard(page = 1): Promise<{
+export async function getLeaderBoardQuery(boardType: ELeaderboardEnum, page = 1): Promise<{
   players: {
     _id: string,
     username: string,
@@ -132,7 +162,7 @@ export async function getLeaderBoard(page = 1): Promise<{
 } | null> {
   const jwt = localStorage.getItem('jwt');
 
-  const result = await fetch(`${import.meta.env.VITE_BE_URL}users/leaderboard?page=${encodeURIComponent(page)}`, {
+  const result = await fetch(`${import.meta.env.VITE_BE_URL}users/leaderboard?type=${encodeURIComponent(boardType)}&page=${encodeURIComponent(page)}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -10,6 +10,7 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
   const playerIndex = belongsToP1 ? 1 : 2;
 
   const unitMap = {
+    // Council
     [EHeroes.ARCHER]: {
       1: {
         charImageX: x,
@@ -130,7 +131,7 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
         charImageY: y - 15
       }
     },
-
+    // Elves
     [EHeroes.PRIESTESS]: {
       1: {
         charImageX: x + 20,
@@ -268,6 +269,128 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
         2: {
           charImageX: x,
           charImageY: y
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+
+    // Dwarves
+    [EHeroes.PALADIN]: {
+      1: {
+        charImageX: x,
+        charImageY: y - 3
+      },
+      2: {
+        charImageX: x,
+        charImageY: y - 3
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y + 10
+        },
+        2: {
+          charImageX: x,
+          charImageY: y + 10
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.GUNNER]: {
+      1: {
+        charImageX: x,
+        charImageY: y + 5
+      },
+      2: {
+        charImageX: x,
+        charImageY: y + 5
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y + 10
+        },
+        2: {
+          charImageX: x,
+          charImageY: y + 10
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.ENGINEER]: {
+      1: {
+        charImageX: x + 10,
+        charImageY: y
+      },
+      2: {
+        charImageX: x,
+        charImageY: y
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y + 10
+        },
+        2: {
+          charImageX: x,
+          charImageY: y + 10
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 10
+      }
+    },
+    [EHeroes.ANNIHILATOR]: {
+      1: {
+        charImageX: x,
+        charImageY: y - 5
+      },
+      2: {
+        charImageX: x,
+        charImageY: y - 5
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y + 10
+        },
+        2: {
+          charImageX: x,
+          charImageY: y + 10
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.GRENADIER]: {
+      1: {
+        charImageX: x,
+        charImageY: y + 2
+      },
+      2: {
+        charImageX: x,
+        charImageY: y + 2
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y + 10
+        },
+        2: {
+          charImageX: x,
+          charImageY: y + 10
         }
       },
       hand: {

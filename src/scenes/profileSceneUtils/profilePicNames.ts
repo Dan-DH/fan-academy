@@ -55,6 +55,27 @@ export const profilePicNames = [
   "necromancer_v3-hd",
   "necromancer_v4-hd",
 
+  "annihilator_v1-hd",
+  "annihilator_v5-hd",
+
+  "engineer_v1-hd",
+  "engineer_v2-hd",
+  "engineer_v3-hd",
+  "engineer_v4-hd",
+
+  "grenadier_v1-hd",
+  "grenadier_v2-hd",
+  "grenadier_v3-hd",
+  "grenadier_v4-hd",
+
+  "gunner_v1-hd",
+  "gunner_v2-hd",
+  "gunner_v3-hd",
+
+  "paladin_v1-hd",
+  "paladin_v2-hd",
+  "paladin_v3-hd",
+
   "soulHarvestIcon",
   "soulStoneIcon",
   "shiningHelmIcon",
@@ -64,5 +85,7 @@ export const profilePicNames = [
   "manaVialIcon",
   "infernoIcon",
   "healingPotionIcon",
-  "dragonScaleIcon"
+  "dragonScaleIcon",
+  "pulverizerIcon",
+  "dwarvenBrewIcon"
 ];

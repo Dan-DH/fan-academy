@@ -1,5 +1,4 @@
 import { Client, Room } from "colyseus.js";
-import { HomeButton } from "../classes/homeButton";
 import { connectToGameLobby } from "../colyseus/colyseusLobbyRoom";
 import { EFaction } from "../enums/gameEnums"; // Import EGameSounds
 import { IGame } from "../interfaces/gameInterface";
@@ -8,6 +7,7 @@ import { createGameList } from "./gameSceneUtils/gameList";
 import { CDN_PATH } from "./preloader.scene";
 import { profilePicNames } from "./profileSceneUtils/profilePicNames";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
+import { HomeButton } from "../classes/buttons/homeButton";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
@@ -42,6 +42,7 @@ export default class UIScene extends Phaser.Scene {
     // faction emblems
     this.load.image(EFaction.COUNCIL, `${CDN_PATH}/ui/council_emblem.webp`);
     this.load.image(EFaction.DARK_ELVES, `${CDN_PATH}/ui/elves_emblem.webp`);
+    this.load.image(EFaction.DWARVES, `${CDN_PATH}/ui/dwarves_emblem.webp`);
 
     // profile pictures
     profilePicNames.forEach(name => {
