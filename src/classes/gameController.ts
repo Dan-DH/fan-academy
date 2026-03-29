@@ -119,7 +119,7 @@ export class GameController {
     // Add a generic gameobject pointer event to make it easier to hide a unit info card
     context.input.on('gameobjectdown', () => visibleUnitCardCheck(context));
 
-    context.add.text(850, 110, `TURN ${context.currentGame.turnNumber + 1}`, {
+    context.add.text(850, 110, `TURN ${context.currentGame.turnNumber }`, {
       fontFamily: 'proHeavy',
       fontSize: 35,
       color: '#ffffff'
