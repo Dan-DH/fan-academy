@@ -10,7 +10,6 @@ import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 export function handleCrystalClick(crystal: Crystal, context: GameScene): void {
   crystal.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _Y: number, event: Types.Input.EventData) => {
     if (context.currentGame.status === EGameStatus.FINISHED) return;
-    console.log('CRYSTAL CLICKED', crystal);
     visibleUnitCardCheck(context);
 
     // Handling right click

@@ -27,8 +27,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     // menu images
     this.load.image('uiBackground', `${CDN_PATH}/ui/game_screen.webp`);
-    // this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image.webp`);
-    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`);
+    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`); // 'main_menu_image.webp' for the original one
     this.load.image('mainMenuBottom', `${CDN_PATH}/ui/main_menu_bottom.webp`);
     this.load.image('playButton', `${CDN_PATH}/ui/play_button.webp`);
     this.load.image('mainMenuButton', `${CDN_PATH}/ui/main_menu_button.webp`);
@@ -54,6 +53,7 @@ export default class MainMenuScene extends Phaser.Scene {
     const menuImg = this.add.image(396, 15, 'mainMenuImage').setOrigin(0).setScale(1.065);
     // Background game screen (to be used when a sub scene is running to avoid flickering)
     const backgroundGameScreen = this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2).setVisible(false);
+    // Adjustments for the original bg image
     // menuImg.x = bg.width - menuImg.width - 14;
     // menuImg.y += 14;
 

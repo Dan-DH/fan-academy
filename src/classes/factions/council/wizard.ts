@@ -87,7 +87,6 @@ export class Wizard extends Council {
 
       if (!isLastTarget) {
         const enemyHasAdjacentEnemies = this.getAdjacentEnemyTiles(enemyTile.boardPosition, [...positionsToIgnore, enemyTile.boardPosition]);
-        console.log('adjacent enemies', enemyHasAdjacentEnemies);
         if (enemyHasAdjacentEnemies.length) {
           score += 2.5;
         }

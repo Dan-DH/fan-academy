@@ -40,7 +40,8 @@ export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
 }
 
 function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
-  console.log(`Unit in ${unit.stats.boardPosition}`, unit); // TODO: remove before release
+  // console.log(`Unit in ${unit.stats.boardPosition}`, unit);
+
   // Set a timer for the a hold press on mobile
   context.longPressStart = context.time.now;
 

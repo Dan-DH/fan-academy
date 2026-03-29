@@ -95,13 +95,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   onActivate(): void {
-    console.log(`${this.stats.unitId} is now active`);
     const scale = this.stats.boardPosition >= 45 ? 1 : 1.2;
     this.visuals.characterImage.setScale(scale);
   }
 
   onDeactivate() {
-    console.log(`${this.stats.unitId} is now inactive`);
     const scale = this.stats.boardPosition >= 45 ? 0.8 : 1;
     this.visuals.characterImage.setScale(scale);
   }

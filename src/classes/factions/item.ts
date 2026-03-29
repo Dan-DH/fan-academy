@@ -72,12 +72,10 @@ export abstract class Item extends Phaser.GameObjects.Container {
   }
 
   onActivate() {
-    console.log(`${this.stats.unitId} is now active`);
     this.setScale(1.2);
   }
 
   onDeactivate() {
-    console.log(`${this.stats.unitId} is now inactive`);
     this.setScale(1);
   }
 
