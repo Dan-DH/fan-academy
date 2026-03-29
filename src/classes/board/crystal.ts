@@ -95,8 +95,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     if (unit instanceof Hero && unit.stats.unitType === EHeroes.GUNNER && splashDamage) assaultBoostDamage *= 0.666;
 
-    const damageMultiplier = assaultBoostDamage  *  this.stats.debuffLevel;
-    const totalDamage = roundToFive(this.getLifeLost(damage + damageMultiplier, attackType));
+    const totalDamage = roundToFive(this.getLifeLost(damage + assaultBoostDamage, attackType));
     const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
     this.stats.currentHealth -= damageTaken;
 
