@@ -212,9 +212,15 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
         if (activeUnit.stats.dealsDamage) activeUnit.use(unit.getTile());
 
-        if (activeUnit instanceof HealingPotion && unit.isFullHP()) return;
+        if (activeUnit instanceof HealingPotion && unit.isFullHP()) {
+          console.log('this triggers');
 
-        if (!activeUnit.stats.dealsDamage && (!unit.stats.isKO || activeUnit.stats.itemType !== EItems.HEALING_POTION)) activeUnit.use(unit);
+          return;
+        }
+
+        if (!activeUnit.stats.dealsDamage &&
+          (unit.stats.isKO && activeUnit.stats.itemType === EItems.HEALING_POTION ||
+            !unit.stats.isKO)) activeUnit.use(unit);
 
         return;
       }
