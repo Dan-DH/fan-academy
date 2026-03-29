@@ -65,7 +65,7 @@ export class Pulverizer extends Item {
     if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
     const directHitDamage = 600;
 
-    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this); // moved armour removel to getsDamaged
+    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, true);
   }
 
   directHitOnCrystal(targetTile: Tile): void {
