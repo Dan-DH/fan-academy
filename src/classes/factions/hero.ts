@@ -108,7 +108,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setScale(scale);
   }
 
-  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item): number {
+  // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack
+  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit = false): number {
     if (this.stats.engineerShield) {
       playSound(this.context, EGameSounds.ENGINEER_SHIELD_SHATTER);
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
@@ -122,16 +123,18 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     let totalAttackDamage = this.getLifeLost(damage, attackType);
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
-    if (unit instanceof Pulverizer) {
-      const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
-      assaultTileDamage = 300 * (debuffLevel ?? 0);
 
-      if (this.stats.factionEquipment) {
-        // TODO: might need to refactor this for future factions
+    if (unit instanceof Pulverizer) {
+      if (directHit && this.stats.factionEquipment) {
         this.stats.factionEquipment = false;
         totalAttackDamage += this.reduceMaxHealth(this.stats.baseHealth * 0.1);
         this.visuals.factionEquipmentImage.setVisible(false);
         this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+      }
+
+      if (!directHit) {
+        const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
+        assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
       }
     }
 
