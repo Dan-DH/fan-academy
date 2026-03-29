@@ -223,7 +223,7 @@ export default class MainMenuScene extends Phaser.Scene {
     passwordRecoveryForm: Phaser.GameObjects.DOMElement
     passwordResetForm: Phaser.GameObjects.DOMElement
   } {
-    const patchNotice = this.createMainMenuMessageBox().setVisible(false); // TODO: remove once patch is out
+    // const patchNotice = this.createMainMenuMessageBox().setVisible(false);
 
     const loginForm = this.add.dom(800, 400).createFromCache('loginForm');
     const signUpForm = this.add.dom(800, 400).createFromCache('signUpForm');
@@ -281,7 +281,7 @@ export default class MainMenuScene extends Phaser.Scene {
           if (result.userData) this.updateUserPreferences(result.userData);
           cleanLoginFormFields();
           blockingLayer.setVisible(false);
-          patchNotice.setVisible(true);
+          // patchNotice.setVisible(true);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
         }else {
           this.sound.play(EUiSounds.BUTTON_FAILED);
@@ -320,7 +320,7 @@ export default class MainMenuScene extends Phaser.Scene {
           if (result.userData) this.updateUserPreferences(result.userData);
           cleanSignUpFormFields();
           blockingLayer.setVisible(false);
-          patchNotice.setVisible(true);
+          // patchNotice.setVisible(true);
           this.sound.play(EUiSounds.BUTTON_GENERIC);
           console.log('UserId after sign up:', this.userId);
         } else {
@@ -429,7 +429,7 @@ export default class MainMenuScene extends Phaser.Scene {
       passwordRecoveryForm.setVisible(false);
       passwordResetForm.setVisible(false);
       blockingLayer.setVisible(false);
-      patchNotice.setVisible(true);
+      // patchNotice.setVisible(true);
     }
 
     return {
