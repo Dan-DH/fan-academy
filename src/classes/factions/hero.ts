@@ -317,7 +317,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
 
     // Show healing numbers
-    if (addText) new FloatingText(this.context, this.x, this.y - 50, amount.toString(), true);
+    if (addText) new FloatingText(this.context, this.x, this.y - 50, roundedHealthGain.toString(), true);
 
     this.unitCard.updateCardData(this);
     this.updateTileData();
