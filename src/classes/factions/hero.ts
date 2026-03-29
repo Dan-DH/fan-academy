@@ -86,6 +86,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.row = tile.row;
     this.stats.col = tile.col;
     this.setDepth(this.stats.row + 10);
+    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    tile.hero = this.exportData();
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    this.unitCard.updateCardData(this);
   }
 
   exportData(): IHero {
@@ -451,11 +455,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Check if the unit is leaving or entering a special tile and apply any effects
     specialTileCheck(this, targetTile.tileType, startTile.tileType);
     this.updatePosition(targetTile);
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
-    targetTile.hero = this.exportData();
-    startTile.removeHero();
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
+    startTile.removeHero();
     this.unitCard.updateCardData(this);
     gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
   }
