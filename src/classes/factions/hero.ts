@@ -184,9 +184,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
     const superCharge = this.stats.superCharge ? 3 : 1;
     const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
-    const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;
+    const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 * this.stats.basePower : 0;
 
-    return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
+    return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff) + paladinAura;
   }
 
   getPhysicalDamageResistance(): number {
