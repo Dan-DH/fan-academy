@@ -1,6 +1,6 @@
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EGameStatus, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EGameModes, EGameStatus, EUiSounds } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
@@ -84,6 +84,8 @@ export async function createGameList(context: UIScene) {
       }).setOrigin(0);
 
       const playerFactionImage =  context.add.image(90, lastListItemY + gameListButtonHeight / 2, playerFactionIcon.faction).setScale(playerFactionIcon.scale);
+      const rankedIcon = context.add.image(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, "runeMetal").setScale(1).setVisible(false);
+      if (game.gameMode === EGameModes.RANKED) rankedIcon.setVisible(true);
 
       let opponentFactionImage;
       let opponentProfilePicture;
@@ -165,7 +167,7 @@ export async function createGameList(context: UIScene) {
         });
       }
 
-      gameListContainer.add([gameListButtonImage, playerFactionImage, opponentFactionImage, opponentNameText, opponentProfilePicture, closeButton, lastPlayedText]);
+      gameListContainer.add([gameListButtonImage, playerFactionImage, opponentFactionImage, opponentNameText, opponentProfilePicture, closeButton, lastPlayedText, rankedIcon]);
     });
   };
 
