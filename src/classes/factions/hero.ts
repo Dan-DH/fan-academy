@@ -267,6 +267,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   getsHealed(healing: number, addText = true): number {
     if (healing <= 0) return 0;
+    healing = roundToFive(healing);
 
     let actualHealing: number;
 
