@@ -254,3 +254,8 @@ export enum EGameSounds {
   PULVERIZER_SELECT = 'selectPulverizerSound',
   PULVERIZER_USE = 'usePulverizerSound'
 }
+
+export enum EGameModes {
+  RANKED = 'ranked',
+  CASUAL = 'casual'
+}

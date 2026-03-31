@@ -1,5 +1,5 @@
 import { Client, Room } from "colyseus.js";
-import { EFaction, EGameStatus } from "../enums/gameEnums";
+import { EFaction, EGameModes, EGameStatus } from "../enums/gameEnums";
 import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import UIScene from "../scenes/ui.scene";
@@ -169,12 +169,13 @@ export function sendDeletedGameMessage(lobby: Room, gameId: string, userId: stri
   });
 }
 
-export function sendChallengeAcceptedMessage(lobby: Room, gameId: string, userId: string, faction: EFaction): void {
+export function sendChallengeAcceptedMessage(lobby: Room, gameId: string, userId: string, faction: EFaction, gameMode: EGameModes): void {
   const token = localStorage.getItem("jwt");
   lobby.send('challengeAcceptedMessage', {
     gameId,
     userId,
     faction,
-    token
+    token,
+    gameMode
   });
 }
