@@ -67,6 +67,9 @@ export function isLastUnit(hero: Hero): boolean {
   const aliveBoardUnits = boardUnits!.filter(unit => unit.stats.belongsTo === hero.stats.belongsTo).find(unit => !unit.stats.isKO);
   if (aliveBoardUnits) return false;
 
+  const deckUnits = opponentData?.factionData.unitsInDeck.find(unit => unit.class === EClass.HERO && unit.belongsTo === hero.stats.belongsTo);
+  if (deckUnits) return false;
+
   return true;
 }
 
