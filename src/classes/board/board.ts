@@ -619,12 +619,12 @@ export class Board {
     const result: (Hero | Crystal)[] = [];
 
     targetPairs.forEach(pair => {
-      const unitAtP1 = this.checkIfEnemyHeroOrCrystalOnCoordinates(attacker, pair.p1);
+      const unitAtP1 = this.checkIfAliveEnemyHeroOrCrystalOnCoordinates(attacker, pair.p1);
 
       if (unitAtP1) {
         result.push(unitAtP1);
       } else {
-        const unitAtP2 = this.checkIfEnemyHeroOrCrystalOnCoordinates(attacker, pair.p2);
+        const unitAtP2 = this.checkIfAliveEnemyHeroOrCrystalOnCoordinates(attacker, pair.p2);
         if (unitAtP2) result.push(unitAtP2);
       }
     });
@@ -632,13 +632,17 @@ export class Board {
     return result;
   }
 
-  checkIfEnemyHeroOrCrystalOnCoordinates(attacker: Hero, pair: {
+  checkIfAliveEnemyHeroOrCrystalOnCoordinates(attacker: Hero, pair: {
     x: number,
     y: number
   }): Hero | Crystal | undefined {
     if (this.isOffBoard(pair)) return undefined;
 
-    const found = this.units.find(unit => unit.stats.col === pair.x && unit.stats.row === pair.y && unit.stats.belongsTo !== attacker.stats.belongsTo) || this.crystals.find(unit => unit.stats.col === pair.x && unit.stats.row === pair.y && unit.stats.belongsTo !== attacker.stats.belongsTo);
+    const found = this.units.find(unit => unit.stats.col === pair.x &&
+      unit.stats.row === pair.y &&
+      unit.stats.belongsTo !== attacker.stats.belongsTo &&
+      !unit.stats.isKO) ||
+      this.crystals.find(unit => unit.stats.col === pair.x && unit.stats.row === pair.y && unit.stats.belongsTo !== attacker.stats.belongsTo);
 
     return found || undefined;
   }
