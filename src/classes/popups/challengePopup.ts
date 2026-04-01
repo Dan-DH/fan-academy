@@ -24,8 +24,8 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
   popupText: Phaser.GameObjects.Text;
   cancelButtonText: Phaser.GameObjects.Text;
 
-  casualCheckBox: Phaser.GameObjects.DOMElement;
-  rankedCheckBox: Phaser.GameObjects.DOMElement;
+  casualButton: Phaser.GameObjects.DOMElement;
+  rankedButton: Phaser.GameObjects.DOMElement;
 
   constructor(params: {
     context: LeaderboardScene | UIScene | GameScene,
@@ -47,9 +47,18 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     this.councilButtonImage = context.add.image(-150, -20, EFaction.COUNCIL).setScale(0.4).setInteractive({ useHandCursor: true });
     this.elvesButtonImage = context.add.image(0, -20, EFaction.DARK_ELVES).setScale(0.4).setInteractive({ useHandCursor: true });
     this.dwarvesButtonImage = context.add.image(140, -15, EFaction.DWARVES).setScale(0.4).setInteractive({ useHandCursor: true });
-    this.casualCheckBox = this.createGameModeRadioButton(context, -100, 70, 'Casual');
-    this.rankedCheckBox = this.createGameModeRadioButton(context, 70, 70, 'Ranked');
+    this.casualButton = this.createGameModeRadioButton(context, -100, 70, 'Casual', true);
+    this.rankedButton = this.createGameModeRadioButton(context, 70, 70, 'Ranked', false);
     this.cancelButtonImage = context.add.image(0, 150, 'popupButton').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
+
+    if (challengeType === EChallengePopup.ACCEPT) {
+      this.casualButton.setVisible(false);
+      this.rankedButton.setVisible(false);
+
+      this.councilButtonImage.setY(20);
+      this.elvesButtonImage.setY(20);
+      this.dwarvesButtonImage.setY(25);
+    }
 
     let popupString: string;
 
@@ -80,17 +89,14 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     const buttonCallback = async (faction: EFaction) => {
-      const casualGame = (this.casualCheckBox!.getChildByName('') as HTMLInputElement).checked;
-
-      const gameMode = casualGame ? EGameModes.CASUAL : EGameModes.RANKED;
-
-      console.log(gameMode);
+      const rankedGame = (this.rankedButton!.node.querySelector('input') as HTMLInputElement).checked;
+      const gameMode = rankedGame ? EGameModes.RANKED : EGameModes.CASUAL;
 
       context.sound.play(EUiSounds.BUTTON_GENERIC);
 
       this.setVisible(false);
       if (challengeType === EChallengePopup.SEND) {
-        const result = await newGameChallenge(context.userId, faction, opponentId!);
+        const result = await newGameChallenge(context.userId, faction, opponentId!, gameMode);
         if (!result) {
           const openGameLimitText = () => {
             return context.add.text(200, 350, `A player has reached the max amount of open games`, {
@@ -103,7 +109,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
         }
       }
 
-      if (challengeType === EChallengePopup.ACCEPT && context instanceof UIScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction, gameMode);
+      if (challengeType === EChallengePopup.ACCEPT && context instanceof UIScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
 
       if (challengeType === EChallengePopup.OPEN && context instanceof UIScene) {
         createNewGame(context, faction, gameMode);
@@ -140,18 +146,18 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       this.dwarvesButtonImage,
       this.cancelButtonImage,
       this.cancelButtonText,
-      this.casualCheckBox,
-      this.rankedCheckBox
+      this.casualButton,
+      this.rankedButton
     ]);
     this.setDepth(1002);
 
     context.add.existing(this);
   }
 
-  createGameModeRadioButton(context: LeaderboardScene | UIScene | GameScene, x: number, y: number, label: string) {
+  createGameModeRadioButton(context: LeaderboardScene | UIScene | GameScene, x: number, y: number, label: string, isChecked: boolean) {
     const dom = context.add.dom(x, y).createFromHTML(`
     <label style="color:white; font-size: 40px; font-family: proLight; cursor: pointer;">
-      <input type="radio" name="gameMode" style="width: 20px; height: 20px;"/> ${label}
+      <input type="radio" name="gameMode" ${isChecked ? 'checked' : ''} style="width: 20px; height: 20px;"/> ${label}
     </label>
   `);
     return dom;
