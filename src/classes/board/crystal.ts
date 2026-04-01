@@ -82,7 +82,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     } else {
       playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
 
-      const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getUnitsOnAssaultTiles(this.stats.belongsTo);
+      const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getAliveUnitsOnAssaultTiles(this.stats.belongsTo);
 
       if (enemyUnitsOnAssaultTiles?.length) enemyUnitsOnAssaultTiles.forEach(unitOnTile => {
         assaultBoostDamage += this.calculateAssaultBoost(unitOnTile);

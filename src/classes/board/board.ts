@@ -652,7 +652,7 @@ export class Board {
     y: number
   }): boolean { return unit.x < 0 || unit.x >= 9 || unit.y < 0 || unit.y >= 5 ;}
 
-  getUnitsOnAssaultTiles(belongsTo: number): IHero[] {
-    return this.tiles.filter(tile => tile.tileType === ETiles.CRYSTAL_DAMAGE && tile.hero && tile.hero.belongsTo !== belongsTo).map(tile => {return tile.hero!;});
+  getAliveUnitsOnAssaultTiles(belongsTo: number): IHero[] {
+    return this.tiles.filter(tile => tile.tileType === ETiles.CRYSTAL_DAMAGE && tile.hero && tile.hero.belongsTo !== belongsTo && !tile.hero.isKO).map(tile => {return tile.hero!;});
   }
 }
