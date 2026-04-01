@@ -1,5 +1,5 @@
 import { sendChallengeAcceptedMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EFaction, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction, EGameModes, EUiSounds } from "../../enums/gameEnums";
 import { newGameChallenge } from "../../queries/gameQueries";
 import GameScene from "../../scenes/game.scene";
 import { createNewGame } from "../../scenes/gameSceneUtils/createGame";
@@ -24,6 +24,9 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
   popupText: Phaser.GameObjects.Text;
   cancelButtonText: Phaser.GameObjects.Text;
 
+  casualButton: Phaser.GameObjects.DOMElement;
+  rankedButton: Phaser.GameObjects.DOMElement;
+
   constructor(params: {
     context: LeaderboardScene | UIScene | GameScene,
     opponentId?: string,
@@ -39,11 +42,23 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       .setOrigin(0.5)
       .setInteractive();
 
-    this.backgroundImage = context.add.image(0, 0, 'popupBackground').setDisplaySize(500, 400);
-    this.councilButtonImage = context.add.image(-150, 30, EFaction.COUNCIL).setScale(0.4).setInteractive({ useHandCursor: true });
-    this.elvesButtonImage = context.add.image(0, 30, EFaction.DARK_ELVES).setScale(0.4).setInteractive({ useHandCursor: true });
-    this.dwarvesButtonImage = context.add.image(140, 35, EFaction.DWARVES).setScale(0.4).setInteractive({ useHandCursor: true });
-    this.cancelButtonImage = context.add.image(0, 120, 'popupButton').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
+    this.backgroundImage = context.add.image(0, 0, 'popupBackground').setDisplaySize(500, 500);
+
+    this.councilButtonImage = context.add.image(-150, -20, EFaction.COUNCIL).setScale(0.4).setInteractive({ useHandCursor: true });
+    this.elvesButtonImage = context.add.image(0, -20, EFaction.DARK_ELVES).setScale(0.4).setInteractive({ useHandCursor: true });
+    this.dwarvesButtonImage = context.add.image(140, -15, EFaction.DWARVES).setScale(0.4).setInteractive({ useHandCursor: true });
+    this.casualButton = this.createGameModeRadioButton(context, -100, 70, 'Casual', true);
+    this.rankedButton = this.createGameModeRadioButton(context, 70, 70, 'Ranked', false);
+    this.cancelButtonImage = context.add.image(0, 150, 'popupButton').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
+
+    if (challengeType === EChallengePopup.ACCEPT) {
+      this.casualButton.setVisible(false);
+      this.rankedButton.setVisible(false);
+
+      this.councilButtonImage.setY(20);
+      this.elvesButtonImage.setY(20);
+      this.dwarvesButtonImage.setY(25);
+    }
 
     let popupString: string;
 
@@ -55,7 +70,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       popupString = 'Pick a faction to search for an opponent!';
     }
 
-    this.popupText = context.add.text(0, -85, popupString, {
+    this.popupText = context.add.text(0, -120, popupString, {
       fontFamily: "proLight",
       fontSize: 40,
       color: '#ffffff',
@@ -67,18 +82,21 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       }
     }).setOrigin(0.5);
 
-    this.cancelButtonText = context.add.text(0, 120, "BACK", {
+    this.cancelButtonText = context.add.text(0, 150, "BACK", {
       fontFamily: "proLight",
       fontSize: 30,
       color: '#ffffff'
     }).setOrigin(0.5);
 
     const buttonCallback = async (faction: EFaction) => {
+      const rankedGame = (this.rankedButton!.node.querySelector('input') as HTMLInputElement).checked;
+      const gameMode = rankedGame ? EGameModes.RANKED : EGameModes.CASUAL;
+
       context.sound.play(EUiSounds.BUTTON_GENERIC);
 
       this.setVisible(false);
       if (challengeType === EChallengePopup.SEND) {
-        const result = await newGameChallenge(context.userId, faction, opponentId!);
+        const result = await newGameChallenge(context.userId, faction, opponentId!, gameMode);
         if (!result) {
           const openGameLimitText = () => {
             return context.add.text(200, 350, `A player has reached the max amount of open games`, {
@@ -94,7 +112,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       if (challengeType === EChallengePopup.ACCEPT && context instanceof UIScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
 
       if (challengeType === EChallengePopup.OPEN && context instanceof UIScene) {
-        createNewGame(context, faction);
+        createNewGame(context, faction, gameMode);
       }
     };
 
@@ -118,6 +136,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       this.setVisible(false);
       this.destroy();
     });
+
     this.add([
       this.blockingLayer,
       this.backgroundImage,
@@ -126,10 +145,21 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       this.elvesButtonImage,
       this.dwarvesButtonImage,
       this.cancelButtonImage,
-      this.cancelButtonText
+      this.cancelButtonText,
+      this.casualButton,
+      this.rankedButton
     ]);
     this.setDepth(1002);
 
     context.add.existing(this);
+  }
+
+  createGameModeRadioButton(context: LeaderboardScene | UIScene | GameScene, x: number, y: number, label: string, isChecked: boolean) {
+    const dom = context.add.dom(x, y).createFromHTML(`
+    <label style="color:white; font-size: 40px; font-family: proLight; cursor: pointer;">
+      <input type="radio" name="gameMode" ${isChecked ? 'checked' : ''} style="width: 20px; height: 20px;"/> ${label}
+    </label>
+  `);
+    return dom;
   }
 }

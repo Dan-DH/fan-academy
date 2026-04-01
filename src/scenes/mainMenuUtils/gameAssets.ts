@@ -129,7 +129,7 @@ export function loadGameAssets(context: GameScene) {
 
   // Shared items
   context.load.image('superCharge', `${CDN_PATH}/images/factions/common/super_charge.webp`);
-  context.load.image('runeMetal', `${CDN_PATH}/images/factions/common/rune_metal.webp`);
+  // context.load.image('runeMetal', `${CDN_PATH}/images/factions/common/rune_metal.webp`); // TODO:
   context.load.image('shiningHelm', `${CDN_PATH}/images/factions/common/shining_helm.webp`);
 
   // Load reticles (attack and healing)

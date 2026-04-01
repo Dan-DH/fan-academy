@@ -1,4 +1,4 @@
-import { EActionClass, EActionType, EAttackType, EClass, EFaction, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
+import { EActionClass, EActionType, EAttackType, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
 
 /**
  * Game Over Interface
@@ -201,4 +201,5 @@ export interface IGame {
   lastPlayedAt: Date;
   activePlayer: string;
   chatLogs: IChat;
+  gameMode: EGameModes
 }

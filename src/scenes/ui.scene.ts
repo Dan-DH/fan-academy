@@ -44,6 +44,9 @@ export default class UIScene extends Phaser.Scene {
     this.load.image(EFaction.DARK_ELVES, `${CDN_PATH}/ui/elves_emblem.webp`);
     this.load.image(EFaction.DWARVES, `${CDN_PATH}/ui/dwarves_emblem.webp`);
 
+    // ranked icon
+    this.load.image('runeMetal', `${CDN_PATH}/images/factions/common/rune_metal.webp`);
+
     // profile pictures
     profilePicNames.forEach(name => {
       this.load.image(name, `${CDN_PATH}/images/profilePics/${name}.webp`);

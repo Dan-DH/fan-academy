@@ -92,9 +92,9 @@ export class Profile extends Phaser.GameObjects.Container {
      */
 
     const preferences = context.userData!.preferences;
-    this.notificationsCheckBox = this.createCheckbox(1150, 230, 'Email notifications', preferences.emailNotifications);
-    this.chatCheckBox = this.createCheckbox(1087, 290, 'Enable chat', preferences.chat);
-    this.soundCheckBox = this.createCheckbox(1103, 350, 'Enable sound', preferences.sound);
+    this.notificationsCheckBox = this.createProfileCheckbox(1150, 230, 'Email notifications', preferences.emailNotifications);
+    this.chatCheckBox = this.createProfileCheckbox(1087, 290, 'Enable chat', preferences.chat);
+    this.soundCheckBox = this.createProfileCheckbox(1103, 350, 'Enable sound', preferences.sound);
 
     /**
      * STATS
@@ -264,7 +264,7 @@ export class Profile extends Phaser.GameObjects.Container {
     return this.context.add.dom(x, y).createFromHTML(html);
   }
 
-  createCheckbox(x: number, y: number, label: string, checked: boolean) {
+  createProfileCheckbox(x: number, y: number, label: string, checked: boolean) {
     const dom = this.context.add.dom(x, y).createFromHTML(`
       <label style="color:white; font-size: 50px; font-family: proLight">
         <input type="checkbox" ${checked ? 'checked' : ''} style="width: 35px; height: 35px;"/> ${label}

@@ -1,5 +1,5 @@
 import { Client, Room } from "colyseus.js";
-import { EFaction, EGameStatus } from "../enums/gameEnums";
+import { EFaction, EGameModes, EGameStatus } from "../enums/gameEnums";
 import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import UIScene from "../scenes/ui.scene";

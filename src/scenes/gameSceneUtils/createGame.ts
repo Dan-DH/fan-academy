@@ -1,9 +1,9 @@
-import { EFaction, EUiSounds } from "../../enums/gameEnums";
+import { EFaction, EGameModes, EUiSounds } from "../../enums/gameEnums";
 import UIScene from "../ui.scene";
 import { createGame } from "../../colyseus/colyseusGameRoom";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
 
-export const createNewGame = async (context: UIScene, faction: EFaction) => {
+export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
     if (context.currentRoom) {
       context.game.events.emit('messageToGameScene', {
@@ -21,7 +21,7 @@ export const createNewGame = async (context: UIScene, faction: EFaction) => {
   if (context.userId) {
     context.sound.play(EUiSounds.BUTTON_PLAY);
     const activeRoom = context.currentRoom ? context.currentRoom : undefined;
-    await createGame(context, faction);
+    await createGame(context, faction, gameMode);
     await context.currentRoom?.leave();
     context.currentRoom = undefined;
     if (activeRoom) context.currentRoom = activeRoom;
