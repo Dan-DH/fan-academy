@@ -176,7 +176,7 @@ export function getNewPositionAfterForce(attackerRow: number, attackerCol: numbe
   };
 }
 
-export function forcedMoveSpawnCheck(tile: Tile | ITile, hero: Hero): boolean {
+export function canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {
   const spawnBelongsTo = tile.col < 5 ? 1 : 2;
   return tile.tileType === ETiles.SPAWN && hero.stats.belongsTo === spawnBelongsTo;
 }

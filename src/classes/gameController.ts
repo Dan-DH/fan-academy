@@ -4,7 +4,7 @@ import { IGame, IGameOver, IGameState, IPlayerState, IUserData } from "../interf
 import GameScene from "../scenes/game.scene";
 import { replayButton } from "../scenes/gameSceneUtils/replayButton";
 import { playSound } from "../utils/gameSounds";
-import { getNewPositionAfterForce, forcedMoveSpawnCheck, forcedMoveAnimation } from "../utils/unitAnimations";
+import { getNewPositionAfterForce, canBeMovedIntoSpawn, forcedMoveAnimation } from "../utils/unitAnimations";
 import { visibleUnitCardCheck } from "../utils/unitCards";
 import { deselectUnit, getPlayersKey } from "../utils/playerUtils";
 import { ActionPie } from "./board/actionPie";
@@ -347,7 +347,7 @@ export class GameController {
 
     if (!targetNewTile) return;
     if (targetNewTile.crystal || targetNewTile.hero) return;
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
@@ -372,7 +372,7 @@ export class GameController {
 
     if (!targetNewTile) return;
     if (targetNewTile.crystal || targetNewTile.hero) return;
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && forcedMoveSpawnCheck(targetNewTile, attacker) && !target.stats.isKO) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
 
