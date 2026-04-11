@@ -1,10 +1,10 @@
 import { Client, Room } from "colyseus.js";
-import { EFaction, EGameModes } from "../enums/gameEnums";
+import { EFaction, EGameModes } from "../enums/gameEnum";
 import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
-import UIScene from "../scenes/ui.scene";
+import LobbyScene from "../scenes/lobby.scene";
 
-export async function createGame(context: UIScene, faction: EFaction, gameMode: EGameModes): Promise<void> {
+export async function createGame(context: LobbyScene, faction: EFaction, gameMode: EGameModes): Promise<void> {
   const { colyseusClient, userId } = context;
   const token = localStorage.getItem("jwt");
 
@@ -32,7 +32,7 @@ export async function createGame(context: UIScene, faction: EFaction, gameMode: 
   }
 }
 
-export async function joinGame(client: Client, userId: string, roomId: string, context: UIScene): Promise<Room | undefined> {
+export async function joinGame(client: Client, userId: string, roomId: string, context: LobbyScene): Promise<Room | undefined> {
   const token = localStorage.getItem("jwt");
 
   if(!client || !userId || !roomId || !token) {

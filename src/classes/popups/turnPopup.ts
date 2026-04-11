@@ -1,4 +1,4 @@
-import { EUiSounds } from "../../enums/gameEnums";
+import { EUiSounds } from "../../enums/gameEnum";
 import GameScene from "../../scenes/game.scene";
 
 const turnPopupCoordinates = {

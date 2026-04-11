@@ -1,4 +1,4 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnum";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { isEnemySpawn } from "../../../utils/boardUtils";

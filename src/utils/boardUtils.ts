@@ -2,7 +2,7 @@ import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameSounds, ETiles } from "../enums/gameEnums";
+import { EGameSounds, ETiles } from "../enums/gameEnum";
 import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";

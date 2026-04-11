@@ -1,5 +1,5 @@
 import { sendTurnMessage } from "../../colyseus/colyseusGameRoom";
-import { EUiSounds, EWinConditions, EActionType, EActionClass } from "../../enums/gameEnums";
+import { EUiSounds, EWinConditions, EActionType, EActionClass } from "../../enums/gameEnum";
 import GameScene from "../../scenes/game.scene";
 import { playSound } from "../../utils/gameSounds";
 

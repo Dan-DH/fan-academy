@@ -1,4 +1,4 @@
-import { EFaction } from "../../enums/gameEnums";
+import { EFaction } from "../../enums/gameEnum";
 import LeaderboardScene from "../leaderboard.scene";
 import { CDN_PATH } from "../preloader.scene";
 

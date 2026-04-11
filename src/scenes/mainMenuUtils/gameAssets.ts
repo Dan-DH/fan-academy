@@ -1,4 +1,4 @@
-import { EHeroes, EItems } from "../../enums/gameEnums";
+import { EHeroes, EItems } from "../../enums/gameEnum";
 import GameScene from "../game.scene";
 import { CDN_PATH } from "../preloader.scene";
 

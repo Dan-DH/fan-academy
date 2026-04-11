@@ -1,4 +1,4 @@
-import { EClass, EActionType, EGameSounds } from "../enums/gameEnums";
+import { EClass, EActionType, EGameSounds } from "../enums/gameEnum";
 import { IHero, IItem, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";

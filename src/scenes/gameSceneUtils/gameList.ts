@@ -1,13 +1,13 @@
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EGameModes, EGameStatus, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EGameModes, EGameStatus, EUiSounds } from "../../enums/gameEnum";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
-import UIScene from "../ui.scene";
+import LobbyScene from "../lobby.scene";
 import { accessGame } from "./gameMenuUI";
 
-export async function createGameList(context: UIScene) {
+export async function createGameList(context: LobbyScene) {
   if (!context.gameList) {
     console.error('createGameList() no gameList in context');
     return;

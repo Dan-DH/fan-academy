@@ -1,4 +1,4 @@
-import { EGameSounds, EActionType } from "../../enums/gameEnums";
+import { EGameSounds, EActionType } from "../../enums/gameEnum";
 import GameScene from "../../scenes/game.scene";
 import { playSound } from "../../utils/gameSounds";
 import { isInHand } from "../../utils/gameUtils";

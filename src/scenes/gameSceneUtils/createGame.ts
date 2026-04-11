@@ -1,9 +1,9 @@
-import { EFaction, EGameModes, EUiSounds } from "../../enums/gameEnums";
-import UIScene from "../ui.scene";
+import { EFaction, EGameModes, EUiSounds } from "../../enums/gameEnum";
+import LobbyScene from "../lobby.scene";
 import { createGame } from "../../colyseus/colyseusGameRoom";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
 
-export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes) => {
+export const createNewGame = async (context: LobbyScene, faction: EFaction, gameMode: EGameModes) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
     if (context.currentRoom) {
       context.game.events.emit('messageToGameScene', {

@@ -1,4 +1,4 @@
-import { EUiSounds } from "../../enums/gameEnums";
+import { EUiSounds } from "../../enums/gameEnum";
 import GameScene from "../game.scene";
 
 export function replayButton(context: GameScene): Phaser.GameObjects.Image {

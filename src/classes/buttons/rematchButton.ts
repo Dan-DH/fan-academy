@@ -1,4 +1,4 @@
-import { EChallengePopup } from "../../enums/gameEnums";
+import { EChallengePopup } from "../../enums/gameEnum";
 import GameScene from "../../scenes/game.scene";
 import { ChallengePopup } from "../popups/challengePopup";
 

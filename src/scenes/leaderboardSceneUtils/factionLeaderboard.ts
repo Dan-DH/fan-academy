@@ -1,4 +1,4 @@
-import { EChallengePopup, EFaction, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction, EUiSounds } from "../../enums/gameEnum";
 import { IUserFactions, IUserStats } from "../../interfaces/userInterface";
 import LeaderboardScene from "../leaderboard.scene";
 import { playSound } from "../../utils/gameSounds";

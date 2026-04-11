@@ -1,11 +1,12 @@
 import { Client, Room } from "colyseus.js";
-import { EFaction, EGameStatus } from "../enums/gameEnums";
+import { EFaction, EGameStatus } from "../enums/gameEnum";
 import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
-import UIScene from "../scenes/ui.scene";
-import { showDisconnectWarning } from "../scenes/uiSceneUtils/disconnectWarning";
+import LobbyScene from "../scenes/lobby.scene";
+import { showDisconnectWarning } from "../scenes/lobbySceneUtils/disconnectWarning";
+import { EColyseusMessages } from "../enums/colyseusMessageEnum";
 
-export async function connectToGameLobby(client: Client, userId: string, context: UIScene): Promise<Room | undefined> {
+export async function connectToGameLobby(client: Client, userId: string, context: LobbyScene): Promise<Room | undefined> {
   let lobby;
   const token = localStorage.getItem("jwt");
 
@@ -160,21 +161,26 @@ export async function connectToGameLobby(client: Client, userId: string, context
   return lobby;
 };
 
+/**
+ * MESSAGES
+ */
+export function sendGetGameListMessage(lobby: Room): void {
+  lobby.send(EColyseusMessages.GET_GAMELIST);
+}
+
+
+// NON UPDATED BELOW
 export function sendDeletedGameMessage(lobby: Room, gameId: string, userId: string): void {
-  const token = localStorage.getItem("jwt");
   lobby.send('gameDeletedMessage', {
     gameId,
     userId,
-    token
   });
 }
 
 export function sendChallengeAcceptedMessage(lobby: Room, gameId: string, userId: string, faction: EFaction): void {
-  const token = localStorage.getItem("jwt");
   lobby.send('challengeAcceptedMessage', {
     gameId,
     userId,
     faction,
-    token
   });
 }

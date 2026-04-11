@@ -1,5 +1,5 @@
 import { Tile } from "../classes/board/tile";
-import { EHeroes, EItems, ECardType } from "../enums/gameEnums";
+import { EHeroes, EItems, ECardType } from "../enums/gameEnum";
 import GameScene from "../scenes/game.scene";
 
 // Used to remove any visible unit cards from a mobile long press action

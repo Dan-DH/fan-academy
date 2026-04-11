@@ -1,10 +1,10 @@
-import { EUiSounds } from "../../enums/gameEnums";
-import UIScene from "../../scenes/ui.scene";
+import { EUiSounds } from "../../enums/gameEnum";
+import LobbyScene from "../../scenes/lobby.scene";
 
 export class HomeButton extends Phaser.GameObjects.Container {
   button: Phaser.GameObjects.Image;
   buttonText: Phaser.GameObjects.Text;
-  constructor(context: UIScene) {
+  constructor(context: LobbyScene) {
     const x = 50;
     const y = 50;
     super(context, x, y);

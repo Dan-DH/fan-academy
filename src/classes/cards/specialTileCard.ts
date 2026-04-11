@@ -1,4 +1,4 @@
-import { ETiles, ECardType } from "../../enums/gameEnums";
+import { ETiles, ECardType } from "../../enums/gameEnum";
 import GameScene from "../../scenes/game.scene";
 
 export class SpecialTileCard extends Phaser.GameObjects.Container {

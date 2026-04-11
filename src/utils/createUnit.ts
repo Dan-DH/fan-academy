@@ -21,7 +21,7 @@ import { Wraith } from "../classes/factions/elves/wraith";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
 import { ShiningHelm, SuperCharge, RuneMetal } from "../classes/factions/sharedItems";
-import { EItems, EHeroes } from "../enums/gameEnums";
+import { EItems, EHeroes } from "../enums/gameEnum";
 import { IItem, IHero } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 

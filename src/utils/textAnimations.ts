@@ -1,6 +1,6 @@
 import { GameObjects } from "phaser";
 import GameScene from "../scenes/game.scene";
-import UIScene from "../scenes/ui.scene";
+import LobbyScene from "../scenes/lobby.scene";
 
 export function textAnimationSizeIncrease(text: GameObjects.Text, scale = 2): Promise<void> {
   return new Promise((resolve) => {
@@ -32,7 +32,7 @@ export function textAnimationFadeOut(text: GameObjects.Text, duration = 1000): P
   });
 }
 
-export function gameListFadeOutText(context: UIScene | GameScene, x: number, y: number, message: string): Phaser.GameObjects.Text {
+export function gameListFadeOutText(context: LobbyScene | GameScene, x: number, y: number, message: string): Phaser.GameObjects.Text {
   return context.add.text(x, y, message, {
     fontFamily: "proLight",
     fontSize: 60,

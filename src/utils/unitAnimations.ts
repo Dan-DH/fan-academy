@@ -2,7 +2,7 @@ import { GameObjects } from "phaser";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
-import { EHeroes, EGameSounds, ETiles } from "../enums/gameEnums";
+import { EHeroes, EGameSounds, ETiles } from "../enums/gameEnum";
 import { ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";

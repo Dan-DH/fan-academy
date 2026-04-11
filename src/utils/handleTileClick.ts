@@ -2,7 +2,7 @@ import { Types } from "phaser";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameStatus, ETiles, EGameSounds } from "../enums/gameEnums";
+import { EGameStatus, ETiles, EGameSounds } from "../enums/gameEnum";
 import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";

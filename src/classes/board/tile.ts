@@ -1,4 +1,4 @@
-import { ETiles } from "../../enums/gameEnums";
+import { ETiles } from "../../enums/gameEnum";
 import { ICrystal, IHero, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { handleTileClick } from "../../utils/handleTileClick";

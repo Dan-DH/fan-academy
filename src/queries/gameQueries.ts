@@ -1,4 +1,4 @@
-import { EFaction, EGameModes } from "../enums/gameEnums";
+import { EFaction, EGameModes } from "../enums/gameEnum";
 import { IGame } from "../interfaces/gameInterface";
 
 export async function getGameList(userId: string): Promise<IGame[] | []> {

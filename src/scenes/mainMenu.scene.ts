@@ -1,4 +1,4 @@
-import { EUiSounds } from "../enums/gameEnums";
+import { EUiSounds } from "../enums/gameEnum";
 import { IUserPreferences } from "../interfaces/userInterface";
 import { authCheck, loginQuery, passwordRecoveryEmailQuery, passwordResetQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";
@@ -146,8 +146,8 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: () => {
         this.sound.play(EUiSounds.BUTTON_PLAY);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
-        this.scene.start('UIScene', { userId: this.userId });
-        this.currentSubScene = 'UIScene';
+        this.scene.start('LobbyScene', { userId: this.userId });
+        this.currentSubScene = 'LobbyScene';
       }
     });
 

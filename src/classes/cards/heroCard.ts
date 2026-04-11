@@ -1,4 +1,4 @@
-import { EAttackType, EHeroes } from "../../enums/gameEnums";
+import { EAttackType, EHeroes } from "../../enums/gameEnum";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { capitalize } from "../../utils/textAnimations";

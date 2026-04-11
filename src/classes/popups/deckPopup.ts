@@ -1,4 +1,4 @@
-import { EClass, EUiSounds } from "../../enums/gameEnums";
+import { EClass, EUiSounds } from "../../enums/gameEnum";
 import { IHero, IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { playSound } from "../../utils/gameSounds";

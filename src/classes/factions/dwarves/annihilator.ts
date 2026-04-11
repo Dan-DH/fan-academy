@@ -4,7 +4,7 @@ import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { Dwarf } from "./dwarves";
 import { Hero } from "../hero";
-import { EActionType, EGameSounds, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EGameSounds, EHeroes } from "../../../enums/gameEnum";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";

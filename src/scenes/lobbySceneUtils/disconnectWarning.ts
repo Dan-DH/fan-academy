@@ -1,4 +1,4 @@
-import UIScene from "../ui.scene";
+import LobbyScene from "../lobby.scene";
 
 export function showDisconnectWarning(): void {
   const warningDiv = document.getElementById('disconnect-warning');
@@ -10,6 +10,6 @@ export function hideDisconnectWarning(): void {
   if (warningDiv) warningDiv.style.display = 'none';
 }
 
-export function createWarningComponent(context: UIScene): void {
+export function createWarningComponent(context: LobbyScene): void {
   context.add.dom(700, 400).createFromCache('disconnectWarning');
 }

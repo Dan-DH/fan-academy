@@ -1,4 +1,4 @@
-import { EGameSounds } from "../../enums/gameEnums";
+import { EGameSounds } from "../../enums/gameEnum";
 import { IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { playSound } from "../../utils/gameSounds";

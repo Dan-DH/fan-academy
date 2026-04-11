@@ -1,6 +1,6 @@
-import UIScene from "../ui.scene";
+import LobbyScene from "../lobby.scene";
 
-export async function loadProfilePictures(context: UIScene): Promise<void> {
+export async function loadProfilePictures(context: LobbyScene): Promise<void> {
   if (!context.gameList?.length) return;
 
   const allPlayerObjects: {

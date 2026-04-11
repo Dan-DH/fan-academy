@@ -1,4 +1,4 @@
-import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
+import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnum";
 import { ICrystal, IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";

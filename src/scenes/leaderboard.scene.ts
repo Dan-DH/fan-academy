@@ -1,6 +1,6 @@
 import { MainLeaderboard } from "./leaderboardSceneUtils/mainLeaderboard";
 import { loadLeaderboardUI } from "./leaderboardSceneUtils/leaderboardUI";
-import { EFaction, EUiSounds } from "../enums/gameEnums";
+import { EFaction, EUiSounds } from "../enums/gameEnum";
 import { getLeaderboardData } from "./leaderboardSceneUtils/getLeaderboardData";
 import { FactionLeaderboard } from "./leaderboardSceneUtils/factionLeaderboard";
 import { playSound } from "../utils/gameSounds";

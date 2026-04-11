@@ -1,4 +1,4 @@
-import { EUiSounds, EActionType } from "../../enums/gameEnums";
+import { EUiSounds, EActionType } from "../../enums/gameEnum";
 import GameScene from "../../scenes/game.scene";
 
 export class TurnButton {

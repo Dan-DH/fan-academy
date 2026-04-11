@@ -1,7 +1,7 @@
 import { Types } from "phaser";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameSounds, EGameStatus, EHeroes, EItems, ERange, ETiles } from "../enums/gameEnums";
+import { EGameSounds, EGameStatus, EHeroes, EItems, ERange, ETiles } from "../enums/gameEnum";
 import GameScene from "../scenes/game.scene";
 import { deselectUnit, selectUnit } from "./playerUtils";
 import { adjustUnitCardPositionAndMakeVisible, isEnemySpawn } from "./boardUtils";

@@ -2,7 +2,7 @@ import { Types } from "phaser";
 import { Crystal } from "../classes/board/crystal";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameStatus } from "../enums/gameEnums";
+import { EGameStatus } from "../enums/gameEnum";
 import GameScene from "../scenes/game.scene";
 import { visibleUnitCardCheck } from "./unitCards";
 import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";

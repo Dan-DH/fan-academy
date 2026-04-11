@@ -1,8 +1,8 @@
 import { joinGame } from "../../colyseus/colyseusGameRoom";
 import { IGame } from "../../interfaces/gameInterface";
-import UIScene from "../ui.scene";
+import LobbyScene from "../lobby.scene";
 
-export async function accessGame(context: UIScene, game: IGame): Promise<void> {
+export async function accessGame(context: LobbyScene, game: IGame): Promise<void> {
   if (context.currentRoom) {
     console.log('Leaving game: ', context.currentRoom.roomId);
     await context.currentRoom.leave();

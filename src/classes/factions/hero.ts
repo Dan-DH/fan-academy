@@ -1,4 +1,4 @@
-import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes, EItems } from "../../enums/gameEnums";
+import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes, EItems } from "../../enums/gameEnum";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";

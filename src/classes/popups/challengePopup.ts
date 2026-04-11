@@ -1,10 +1,10 @@
 import { sendChallengeAcceptedMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EFaction, EGameModes, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction, EGameModes, EUiSounds } from "../../enums/gameEnum";
 import { newGameChallenge } from "../../queries/gameQueries";
 import GameScene from "../../scenes/game.scene";
 import { createNewGame } from "../../scenes/gameSceneUtils/createGame";
 import LeaderboardScene from "../../scenes/leaderboard.scene";
-import UIScene from "../../scenes/ui.scene";
+import LobbyScene from "../../scenes/lobby.scene";
 import { playSound } from "../../utils/gameSounds";
 import { truncateText, textAnimationFadeOut } from "../../utils/textAnimations";
 
@@ -28,7 +28,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
   rankedButton: Phaser.GameObjects.DOMElement;
 
   constructor(params: {
-    context: LeaderboardScene | UIScene | GameScene,
+    context: LeaderboardScene | LobbyScene | GameScene,
     opponentId?: string,
     challengeType: EChallengePopup,
     username?: string,
@@ -109,9 +109,9 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
         }
       }
 
-      if (challengeType === EChallengePopup.ACCEPT && context instanceof UIScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
+      if (challengeType === EChallengePopup.ACCEPT && context instanceof LobbyScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
 
-      if (challengeType === EChallengePopup.OPEN && context instanceof UIScene) {
+      if (challengeType === EChallengePopup.OPEN && context instanceof LobbyScene) {
         createNewGame(context, faction, gameMode);
       }
     };
@@ -154,7 +154,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     context.add.existing(this);
   }
 
-  createGameModeRadioButton(context: LeaderboardScene | UIScene | GameScene, x: number, y: number, label: string, isChecked: boolean) {
+  createGameModeRadioButton(context: LeaderboardScene | LobbyScene | GameScene, x: number, y: number, label: string, isChecked: boolean) {
     const dom = context.add.dom(x, y).createFromHTML(`
     <label style="color:white; font-size: 40px; font-family: proLight; cursor: pointer;">
       <input type="radio" name="gameMode" ${isChecked ? 'checked' : ''} style="width: 20px; height: 20px;"/> ${label}

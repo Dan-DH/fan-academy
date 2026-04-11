@@ -1,4 +1,4 @@
-import { EFaction } from "../../enums/gameEnums";
+import { EFaction } from "../../enums/gameEnum";
 import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
 

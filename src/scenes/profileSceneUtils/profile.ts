@@ -1,4 +1,4 @@
-import { EUiSounds } from "../../enums/gameEnums";
+import { EUiSounds } from "../../enums/gameEnum";
 import { deleteAccount, updateProfile } from "../../queries/userQueries";
 import ProfileScene from "../profile.scene";
 import { playSound } from "../../utils/gameSounds";

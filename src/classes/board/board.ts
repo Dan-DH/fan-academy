@@ -1,4 +1,4 @@
-import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
+import { EHeroes, ETiles, ERange } from "../../enums/gameEnum";
 import { IHero, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";

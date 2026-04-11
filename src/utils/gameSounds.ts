@@ -1,4 +1,4 @@
-import { EGameSounds, EUiSounds, EItems, EHeroes } from "../enums/gameEnums";
+import { EGameSounds, EUiSounds, EItems, EHeroes } from "../enums/gameEnum";
 
 export function playSound(scene: Phaser.Scene, sound: EGameSounds | EUiSounds): void {
   scene.sound.play(sound);

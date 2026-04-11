@@ -1,4 +1,4 @@
-import { EClass, EItems } from "../../enums/gameEnums";
+import { EClass, EItems } from "../../enums/gameEnum";
 import { IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { handleUnitClick } from "../../utils/handleUnitClick";

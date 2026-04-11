@@ -1,17 +1,17 @@
 import { Client, Room } from "colyseus.js";
 import { connectToGameLobby } from "../colyseus/colyseusLobbyRoom";
-import { EFaction } from "../enums/gameEnums"; // Import EGameSounds
+import { EFaction } from "../enums/gameEnum"; // Import EGameSounds
 import { IGame } from "../interfaces/gameInterface";
-import { getGameList } from "../queries/gameQueries";
 import { createGameList } from "./gameSceneUtils/gameList";
 import { CDN_PATH } from "./preloader.scene";
 import { profilePicNames } from "./profileSceneUtils/profilePicNames";
-import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
+import { createWarningComponent } from "./lobbySceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
+import { EColyseusMessages } from "../enums/colyseusMessageEnum";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
-export default class UIScene extends Phaser.Scene {
+export default class LobbyScene extends Phaser.Scene {
   colyseusClient: Client;
   lobbyRoom: Room | undefined;
   userId!: string;
@@ -30,7 +30,7 @@ export default class UIScene extends Phaser.Scene {
   activeGamesAmount = 0;
 
   constructor() {
-    super({ key: 'UIScene' });
+    super({ key: 'LobbyScene' });
     this.colyseusClient = new Client(`${import.meta.env.VITE_SOCKET}`);
   }
 
@@ -75,23 +75,28 @@ export default class UIScene extends Phaser.Scene {
     });
 
     createWarningComponent(this);
+    // this.add.image(0, 0, 'loadingScreen').setOrigin(0).setScale(2.8); // TODO: remove loading screens
 
-    this.add.image(0, 0, 'loadingScreen').setOrigin(0).setScale(2.8);
+    this.lobbyRoom = await connectToGameLobby(this.colyseusClient, this.userId, this);
+    this.lobbyRoom?.onMessage(EColyseusMessages.SEND_GAMELIST, message => {
+      this.gameList = message;
+      createGameList(this);
+      console.log("GameList", message)
+    })
+    this.lobbyRoom?.send(EColyseusMessages.GET_GAMELIST);
+
+    this.add.image(0, 0, 'uiBackground').setOrigin(0);
+    this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2);
+
 
     // Connect to lobby and get the list of games
-    this.lobbyRoom = await connectToGameLobby(this.colyseusClient, this.userId, this);
-    this.gameList = await getGameList(this.userId);
-
-    // UI background
-    this.add.image(0, 0, 'uiBackground').setOrigin(0);
-
-    // Create the game list UI
-    await createGameList(this);
 
     new HomeButton(this);
 
+    await createGameList(this);
+
+
     // Background game screen
-    this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2);
   }
 
   onShutdown() {

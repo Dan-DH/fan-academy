@@ -1,4 +1,4 @@
-import { EGameSounds, EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
+import { EGameSounds, EHeroes, EActionType, EAttackType } from "../../../enums/gameEnum";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";

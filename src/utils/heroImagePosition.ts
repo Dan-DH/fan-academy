@@ -1,4 +1,4 @@
-import { EHeroes } from "../enums/gameEnums";
+import { EHeroes } from "../enums/gameEnum";
 
 export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHand: boolean, isKO: boolean): {
   charImageX: number,

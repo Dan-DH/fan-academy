@@ -1,4 +1,4 @@
-import { EActionClass, EActionType, EAttackType, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
+import { EActionClass, EActionType, EAttackType, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnum";
 
 /**
  * Game Over Interface

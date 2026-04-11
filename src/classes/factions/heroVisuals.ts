@@ -1,4 +1,4 @@
-import { EFaction, EHeroes, ETiles } from "../../enums/gameEnums";
+import { EFaction, EHeroes, ETiles } from "../../enums/gameEnum";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";

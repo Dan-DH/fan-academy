@@ -1,4 +1,4 @@
-import { EClass } from "../enums/gameEnums";
+import { EClass } from "../enums/gameEnum";
 import { IGameState, IHero, IItem } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
