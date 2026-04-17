@@ -8,7 +8,7 @@ import GameScene from "../scenes/game.scene";
 import { playSound } from "./gameSounds";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
 
-export function getAOETiles(aoeAttack: Hero | Item,  targetTile: Tile): {
+export function getAOETiles(aoeAttack: Hero | Item, targetTile: Tile): {
   enemyHeroTiles: Tile[],
   enemyCrystalTiles: Tile[]
 } {
@@ -117,7 +117,7 @@ export function getDistanceToTarget(hero: Hero, target: Hero | Crystal): number 
     return 0;
   }
 
-  return getGridDistance(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col );
+  return getGridDistance(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col);
 }
 
 export function removeFromBoard(hero: Hero): void {
@@ -132,6 +132,7 @@ export function removeFromBoard(hero: Hero): void {
   checkUnitGameOver(hero);
 }
 
+// TODO: check where is this used
 export function getKeyMapTiles(tiles: Tile[]): Tile[] {
   const result: Tile[] = [];
 
@@ -182,4 +183,20 @@ export function adjustUnitCardPositionAndMakeVisible(unit: Hero | Item | Tile | 
   }
 
   unit.unitCard?.setVisible(true);
+}
+
+const BOARD_WIDTH = 9;
+
+export function getCoordinatesFromBoardPosition(boardPosition: number) {
+  const row = Math.floor(boardPosition / BOARD_WIDTH);
+  const col = boardPosition % BOARD_WIDTH;
+
+  return {
+    row,
+    col 
+  };
+}
+
+export function getBoardPositionFromCoordinates(row: number, col: number) {
+  return row * BOARD_WIDTH + col;
 }

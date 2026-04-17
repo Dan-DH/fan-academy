@@ -1,24 +1,27 @@
 import { Client, Room } from "colyseus.js";
 import { connectToGameLobby } from "../colyseus/colyseusLobbyRoom";
 import { EFaction } from "../enums/gameEnum"; // Import EGameSounds
-import { IGame } from "../interfaces/gameInterface";
-import { createGameList } from "./gameSceneUtils/gameList";
+import { Coordinates, IGame } from "../interfaces/gameInterface";
 import { CDN_PATH } from "./preloader.scene";
 import { profilePicNames } from "./profileSceneUtils/profilePicNames";
 import { createWarningComponent } from "./lobbySceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
 import { EColyseusMessages } from "../enums/colyseusMessageEnum";
+import { GameListContainer } from "../classes/gameList/gameListContainer";
+import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
 export default class LobbyScene extends Phaser.Scene {
+  userId!: string;
   colyseusClient: Client;
   lobbyRoom: Room | undefined;
-  userId!: string;
   gameListContainer: Phaser.GameObjects.Container | undefined;
-  gameList: IGame[] | undefined;
+  gameListData: IGame[] | undefined;
+  gameList: GameListContainer | undefined; // TODO: isn't this gameListData?
+  centerPoints: Coordinates[];
 
-  currentRoom: Room | undefined;
+  currentRoom: string | undefined; // Reuse and eventually rename to currentGame
   gameScene: Phaser.Scene | undefined;
 
   // Used to highlight the active game in the game list
@@ -32,6 +35,7 @@ export default class LobbyScene extends Phaser.Scene {
   constructor() {
     super({ key: 'LobbyScene' });
     this.colyseusClient = new Client(`${import.meta.env.VITE_SOCKET}`);
+    this.centerPoints = calculateAllCenterPoints(); // This apply to all games, no need to redo every time
   }
 
   init(data: { userId: string, }) {
@@ -50,7 +54,7 @@ export default class LobbyScene extends Phaser.Scene {
     // profile pictures
     profilePicNames.forEach(name => {
       this.load.image(name, `${CDN_PATH}/images/profilePics/${name}.webp`);
-    });
+    }); // TODO: load the necessary portraits from the player list only. No need to load everything if it's not used
 
     // UI
     this.load.image('gameListButton', `${CDN_PATH}/ui/game_list_premade.webp`);
@@ -66,6 +70,13 @@ export default class LobbyScene extends Phaser.Scene {
   }
 
   async create() {
+    this.lobbyRoom = await connectToGameLobby(this.colyseusClient, this.userId, this);
+    this.lobbyRoom?.onMessage(EColyseusMessages.SEND_GAMELIST, message => {
+      this.gameListData = message;
+      this.gameList = new GameListContainer(this, message);
+    });
+    this.lobbyRoom?.send(EColyseusMessages.GET_GAMELIST);
+
     this.time.addEvent({
       delay: 300000, // 5 minutes
       callback: () => {
@@ -75,28 +86,11 @@ export default class LobbyScene extends Phaser.Scene {
     });
 
     createWarningComponent(this);
-    // this.add.image(0, 0, 'loadingScreen').setOrigin(0).setScale(2.8); // TODO: remove loading screens
-
-    this.lobbyRoom = await connectToGameLobby(this.colyseusClient, this.userId, this);
-    this.lobbyRoom?.onMessage(EColyseusMessages.SEND_GAMELIST, message => {
-      this.gameList = message;
-      createGameList(this);
-      console.log("GameList", message)
-    })
-    this.lobbyRoom?.send(EColyseusMessages.GET_GAMELIST);
 
     this.add.image(0, 0, 'uiBackground').setOrigin(0);
     this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2);
 
-
-    // Connect to lobby and get the list of games
-
     new HomeButton(this);
-
-    await createGameList(this);
-
-
-    // Background game screen
   }
 
   onShutdown() {

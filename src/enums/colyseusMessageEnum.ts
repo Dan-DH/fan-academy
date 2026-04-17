@@ -21,3 +21,12 @@ export enum EColyseusMessages {
   CHALLENGE_REFUSED = 'challengeRefused',
   DELETED_GAME_UPDATE = 'deletedGameUpdate'
 }
+
+export enum EGameListHeaders {
+  PLAYER_TURN = 'Your turn',
+  OPPONENT_TURN = "Opponent's turn",
+  CHALLENGES_SENT = 'Challenges sent',
+  CHALLENGES_RECEIVED = 'Challenges received',
+  SEARCHING = 'Searching for players',
+  FINISHED = 'Finished'
+}

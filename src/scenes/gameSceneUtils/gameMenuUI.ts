@@ -1,25 +1,24 @@
 import { joinGame } from "../../colyseus/colyseusGameRoom";
-import { IGame } from "../../interfaces/gameInterface";
+import IGameBE from "../../interfaces/gameInterfaceServer";
 import LobbyScene from "../lobby.scene";
+import { mapToPhaserGame } from "../lobbySceneUtils/mapToPhaserGame";
 
-export async function accessGame(context: LobbyScene, game: IGame): Promise<void> {
+export async function accessGame(context: LobbyScene, game: IGameBE): Promise<void> {
   if (context.currentRoom) {
-    console.log('Leaving game: ', context.currentRoom.roomId);
-    await context.currentRoom.leave();
+    console.log('Leaving game: ', context.currentRoom);
     context.currentRoom = undefined;
     context.scene.stop('GameScene');
   }
 
   console.log('Accessing game: ', game._id);
   const room = await joinGame(context.colyseusClient, context.userId, game._id, context);
+  const gameData = mapToPhaserGame(context, game);
+  context.currentRoom = game._id;
 
-  if (!room) return;
-
-  context.currentRoom = room;
   context.scene.launch('GameScene', {
     userId: context.userId,
     colyseusClient: context.colyseusClient,
-    currentGame: game,
-    currentRoom: room
+    currentGame: gameData,
+    currentRoom: room // TODO: remove?
   });
 }

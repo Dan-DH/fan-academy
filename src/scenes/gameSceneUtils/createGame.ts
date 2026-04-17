@@ -17,14 +17,10 @@ export const createNewGame = async (context: LobbyScene, faction: EFaction, game
     }
     return;
   }
-  // Create the faction's deck and starting hand
+
   if (context.userId) {
     context.sound.play(EUiSounds.BUTTON_PLAY);
-    const activeRoom = context.currentRoom ? context.currentRoom : undefined;
-    await createGame(context, faction, gameMode);
-    await context.currentRoom?.leave();
-    context.currentRoom = undefined;
-    if (activeRoom) context.currentRoom = activeRoom;
+    await createGame(context, faction, gameMode); // Send message here
 
     if (context.currentRoom) {
       context.game.events.emit('messageToGameScene', {

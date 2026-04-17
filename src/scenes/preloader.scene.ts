@@ -8,7 +8,7 @@ export default class PreloaderScene extends Phaser.Scene {
 
   preload(): void {
     // load loading image
-    this.load.image('loadingScreen', `${CDN_PATH}/ui/loading.webp`);
+    this.load.image('loadingScreen', `${CDN_PATH}/ui/loading.webp`); // TODO:
     this.load.once('filecomplete-image-loadingScreen', () => {
       this.add.image(0, 0, 'loadingScreen').setOrigin(0).setScale(2.8);
       this.loadRestOfAssets();

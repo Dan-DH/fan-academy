@@ -4,6 +4,7 @@ import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 import LobbyScene from "../scenes/lobby.scene";
 
+// TODO: remove all this
 export async function createGame(context: LobbyScene, faction: EFaction, gameMode: EGameModes): Promise<void> {
   const { colyseusClient, userId } = context;
   const token = localStorage.getItem("jwt");
@@ -23,7 +24,7 @@ export async function createGame(context: LobbyScene, faction: EFaction, gameMod
       gameMode
     });
 
-    context.currentRoom = room;
+    context.currentRoom = "room";
     subscribeToListeners(room);
 
     console.log("Created and joined room:");
@@ -35,7 +36,7 @@ export async function createGame(context: LobbyScene, faction: EFaction, gameMod
 export async function joinGame(client: Client, userId: string, roomId: string, context: LobbyScene): Promise<Room | undefined> {
   const token = localStorage.getItem("jwt");
 
-  if(!client || !userId || !roomId || !token) {
+  if (!client || !userId || !roomId || !token) {
     console.error('joinGame, { client | userid | gameid | token } missing');
     return undefined;
   }
@@ -52,7 +53,7 @@ export async function joinGame(client: Client, userId: string, roomId: string, c
 
     console.log("Joined or created room:", room.roomId);
 
-    context.currentRoom = room;
+    context.currentRoom = "room";
     subscribeToListeners(room);
   } catch (error) {
     console.error("Failed to join or create room", error);
@@ -67,7 +68,7 @@ function subscribeToListeners(room: Room): void {
     renderChatMessage(message);
   });
 
-  room.onMessage('pong', () => {});
+  room.onMessage('pong', () => { });
 
   room?.onLeave((code: number) => {
     console.log("Left room with code:", code);

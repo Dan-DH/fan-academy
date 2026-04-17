@@ -19,11 +19,10 @@ export class HomeButton extends Phaser.GameObjects.Container {
 
     this.add([this.button, this.buttonText]).setScale(0.8);
 
-    this.button.on('pointerdown', async() => {
+    this.button.on('pointerdown', async () => {
       this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
       await context.lobbyRoom?.leave();
-      await context.currentRoom?.leave();
       context.currentRoom = undefined;
 
       context.scene.stop('GameScene');
