@@ -14,6 +14,8 @@ export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
 export default class LobbyScene extends Phaser.Scene {
   userId!: string;
+  portrait!: string;
+  username!: string;
   colyseusClient: Client;
   lobbyRoom: Room | undefined;
   gameListContainer: Phaser.GameObjects.Container | undefined;
@@ -22,7 +24,7 @@ export default class LobbyScene extends Phaser.Scene {
   centerPoints: Coordinates[];
 
   currentRoom: string | undefined; // Reuse and eventually rename to currentGame
-  gameScene: Phaser.Scene | undefined;
+  gameScene: Phaser.Scene | undefined; // TODO:
 
   // Used to highlight the active game in the game list
   activeGameImage: Phaser.GameObjects.Image | undefined;
@@ -38,8 +40,16 @@ export default class LobbyScene extends Phaser.Scene {
     this.centerPoints = calculateAllCenterPoints(); // This apply to all games, no need to redo every time
   }
 
-  init(data: { userId: string, }) {
+  init(data: {
+    userId: string,
+    portrait: string, // TODO: actually provide the portrait and username
+    username: string
+  }) {
     this.userId = data.userId;
+    this.portrait = data.portrait;
+    this.username = data.username;
+
+    console.log('DATA', data);
   }
 
   preload() {

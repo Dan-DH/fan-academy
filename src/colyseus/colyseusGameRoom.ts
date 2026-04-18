@@ -1,37 +1,7 @@
 import { Client, Room } from "colyseus.js";
-import { EFaction, EGameModes } from "../enums/gameEnum";
 import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 import LobbyScene from "../scenes/lobby.scene";
-
-// TODO: remove all this
-export async function createGame(context: LobbyScene, faction: EFaction, gameMode: EGameModes): Promise<void> {
-  const { colyseusClient, userId } = context;
-  const token = localStorage.getItem("jwt");
-
-  if (!colyseusClient || !userId || !faction || !token) {
-    console.error('createGame error: missing one of client / userId / faction / token');
-    return;
-  }
-
-  try {
-    console.log('Checking for open games | creating a new game...');
-
-    const room = await colyseusClient.create('game_room', {
-      userId,
-      faction,
-      token,
-      gameMode
-    });
-
-    context.currentRoom = "room";
-    subscribeToListeners(room);
-
-    console.log("Created and joined room:");
-  } catch (error) {
-    console.error("Failed to create or join room:", error);
-  }
-}
 
 export async function joinGame(client: Client, userId: string, roomId: string, context: LobbyScene): Promise<Room | undefined> {
   const token = localStorage.getItem("jwt");

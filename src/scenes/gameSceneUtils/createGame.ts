@@ -1,9 +1,11 @@
 import { EFaction, EGameModes, EUiSounds } from "../../enums/gameEnum";
 import LobbyScene from "../lobby.scene";
-import { createGame } from "../../colyseus/colyseusGameRoom";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
+import { sendNewGamRequestMessage } from "../../colyseus/colyseusLobbyRoom";
 
 export const createNewGame = async (context: LobbyScene, faction: EFaction, gameMode: EGameModes) => {
+  // TODO: I'm not sure if this if statement is actually used
+  // I think I undefine the room every time a user clicks on create game
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
     if (context.currentRoom) {
       context.game.events.emit('messageToGameScene', {
@@ -20,7 +22,15 @@ export const createNewGame = async (context: LobbyScene, faction: EFaction, game
 
   if (context.userId) {
     context.sound.play(EUiSounds.BUTTON_PLAY);
-    await createGame(context, faction, gameMode); // Send message here
+
+    sendNewGamRequestMessage(context.lobbyRoom!,
+      {
+        userId: context.userId,
+        username: context.username,
+        portrait: context.portrait,
+        faction,
+        gameMode
+      });
 
     if (context.currentRoom) {
       context.game.events.emit('messageToGameScene', {

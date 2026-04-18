@@ -7,6 +7,8 @@ import { CDN_PATH } from "./preloader.scene";
 
 export default class MainMenuScene extends Phaser.Scene {
   userId: string | undefined;
+  username: string | undefined;
+  portrait: string | undefined;
   gameList: string | undefined;
   userPreferences: IUserPreferences | undefined;
 
@@ -146,7 +148,11 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: () => {
         this.sound.play(EUiSounds.BUTTON_PLAY);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
-        this.scene.start('LobbyScene', { userId: this.userId });
+        this.scene.start('LobbyScene', {
+          userId: this.userId,
+          username: this.username,
+          portrait: this.portrait 
+        });
         this.currentSubScene = 'LobbyScene';
       }
     });
@@ -442,9 +448,13 @@ export default class MainMenuScene extends Phaser.Scene {
 
   updateUserPreferences(userData: {
     userId: string,
+    username: string,
+    portrait: string,
     preferences: IUserPreferences
   }): void {
     this.userId = userData.userId;
+    this.username = userData.username;
+    this.portrait = userData.portrait;
 
     this.registry.set('userPreferences', {
       chat: userData.preferences.chat,

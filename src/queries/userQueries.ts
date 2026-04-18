@@ -123,6 +123,8 @@ export async function passwordResetQuery(recoveryCode: string, newPassword: stri
  */
 export async function authCheck(): Promise<{
   userId: string,
+  portrait: string,
+  username: string,
   preferences: IUserPreferences
 } | undefined> {
   console.log('Checking Authentication Status...');

@@ -95,6 +95,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       context.sound.play(EUiSounds.BUTTON_GENERIC);
 
       this.setVisible(false);
+      // TODO:
       if (challengeType === EChallengePopup.SEND) {
         const result = await newGameChallenge(context.userId, faction, opponentId!, gameMode);
         if (!result) {
@@ -109,6 +110,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
         }
       }
 
+      // TODO:
       if (challengeType === EChallengePopup.ACCEPT && context instanceof LobbyScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
 
       if (challengeType === EChallengePopup.OPEN && context instanceof LobbyScene) {

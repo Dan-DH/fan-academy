@@ -4,6 +4,7 @@ import { IGameOver, IGameState } from "../interfaces/gameInterface";
 import LobbyScene from "../scenes/lobby.scene";
 import { showDisconnectWarning } from "../scenes/lobbySceneUtils/disconnectWarning";
 import { EColyseusMessages } from "../enums/colyseusMessageEnum";
+import { IColyseusOnCreate } from "../interfaces/colyseusInterfaces";
 
 export async function connectToGameLobby(client: Client, userId: string, context: LobbyScene): Promise<Room | undefined> {
   let lobby;
@@ -165,6 +166,11 @@ export async function connectToGameLobby(client: Client, userId: string, context
 /**
  * MESSAGES
  */
+
+export function sendNewGamRequestMessage(lobby: Room, data: IColyseusOnCreate): void {
+  lobby.send(EColyseusMessages.NEW_GAME_REQUEST, data);
+}; // this one works :)
+
 export function sendGetGameListMessage(lobby: Room): void {
   lobby.send(EColyseusMessages.GET_GAMELIST);
 }

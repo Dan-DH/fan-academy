@@ -85,11 +85,9 @@ export class GameListContainer extends Phaser.GameObjects.Container {
 
     newGameButton.on('pointerdown', async () => {
       if (this.context.currentRoom) {
-        // TODO:
-        // console.log('Leaving game: ', this.context.currentRoom.roomId);
-        // await this.context.currentRoom.leave();
-        // this.context.currentRoom = undefined;
-        // this.context.scene.stop('GameScene');
+        console.log('Leaving game: ', this.context.currentRoom);
+        this.context.currentRoom = undefined;
+        this.context.scene.stop('GameScene');
       }
 
       new ChallengePopup({
