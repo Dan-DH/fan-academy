@@ -176,10 +176,11 @@ export function sendGetGameListMessage(lobby: Room): void {
 }
 
 // NON UPDATED BELOW
-export function sendDeletedGameMessage(lobby: Room, gameId: string, userId: string): void {
-  lobby.send('gameDeletedMessage', {
+export function sendDeletedGameMessage(lobby: Room, gameId: string, userId: string, challengerId?: string): void {
+  lobby.send(EColyseusMessages.DELETE_GAME_REQUEST, {
     gameId,
-    userId
+    userId,
+    challengerId
   });
 }
 

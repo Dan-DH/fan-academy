@@ -1,3 +1,4 @@
+import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
 import { EGameListHeaders } from "../../enums/colyseusMessageEnum";
 import { EChallengePopup, EGameModes, EGameStatus, EUiSounds } from "../../enums/gameEnum";
 import IGameBE from "../../interfaces/gameInterfaceServer";
@@ -163,11 +164,11 @@ export class GameListContainer extends Phaser.GameObjects.Container {
       if (g.status === EGameStatus.SEARCHING || g.status === EGameStatus.CHALLENGE) {
         closeButton.setVisible(true).setInteractive({ useHandCursor: true });
         closeButton.on('pointerup', async () => {
-          // TODO:
+          // TODO: scrolling and re-creating list?
           // if (pointerMoved) return; // skip tap if user was swiping
-
-          // sendDeletedGameMessage(context.lobbyRoom!, g._id, context.userId);
-          // context.sound.play(EUiSounds.GAME_DELETE);
+          console.log('Clicked on delete game');
+          sendDeletedGameMessage(this.context.lobbyRoom!, g._id, this.context.userId);
+          this.context.sound.play(EUiSounds.GAME_DELETE);
           // createGameList(context);
         });
       }
