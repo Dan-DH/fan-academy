@@ -12,7 +12,7 @@ export async function accessGame(context: LobbyScene, game: IGameBE): Promise<vo
 
   console.log('Accessing game: ', game._id);
   const room = await joinGame(context.colyseusClient, context.userId, game._id, context);
-  const gameData = mapToPhaserGame(context, game);
+  const gameData = mapToPhaserGame(context, game); // TODO: map the hands as well
   context.currentRoom = game._id;
 
   context.scene.launch('GameScene', {

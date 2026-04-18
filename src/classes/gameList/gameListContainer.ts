@@ -119,7 +119,6 @@ export class GameListContainer extends Phaser.GameObjects.Container {
 
   createGameListItem(games: IGameBE[]): void {
     games.forEach((g, index) => {
-      console.log('this algo logs', g);
       const player = g.players.find(p => this.context.userId === p.userId);
       const opponent = g.players.find(p => this.context.userId !== p.userId);
       if (!player) return;
@@ -194,14 +193,13 @@ export class GameListContainer extends Phaser.GameObjects.Container {
           // TODO:
           // if (pointerMoved) return; // skip tap if user was swiping
 
-          this.context.sound.play(EUiSounds.GAME_DELETE);
+          this.context.sound.play(EUiSounds.BUTTON_GENERIC);
           this.highlightGameButton(g, gameListButtonImage);
 
           if (this.context.currentRoom) {
-            // console.log('Leaving game: ', this.context.currentRoom.roomId);
-            // await this.context.currentRoom.leave();
-            // this.context.currentRoom = undefined;
-            // this.context.scene.stop('GameScene');
+            console.log('Leaving game: ', this.context.currentRoom);
+            this.context.currentRoom = undefined;
+            this.context.scene.stop('GameScene');
           }
 
           new ChallengePopup({

@@ -22,7 +22,7 @@ export class RematchButton extends Phaser.GameObjects.Container {
         context,
         opponentId: context.opponentId!,
         challengeType: EChallengePopup.SEND,
-        username: context.gameController!.playerData.find( player => player._id === context.opponentId!)?.username
+        opponentUsername: context.gameController!.playerData.find( player => player._id === context.opponentId!)?.username
       });
       return;
     });

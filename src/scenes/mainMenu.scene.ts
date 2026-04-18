@@ -151,7 +151,7 @@ export default class MainMenuScene extends Phaser.Scene {
         this.scene.start('LobbyScene', {
           userId: this.userId,
           username: this.username,
-          portrait: this.portrait 
+          portrait: this.portrait
         });
         this.currentSubScene = 'LobbyScene';
       }
@@ -456,7 +456,10 @@ export default class MainMenuScene extends Phaser.Scene {
     this.username = userData.username;
     this.portrait = userData.portrait;
 
-    this.registry.set('userPreferences', {
+    this.registry.set('userData', {
+      userId: userData.userId,
+      username: userData.username,
+      portrait: userData.portrait,
       chat: userData.preferences.chat,
       sound: userData.preferences.sound
     });

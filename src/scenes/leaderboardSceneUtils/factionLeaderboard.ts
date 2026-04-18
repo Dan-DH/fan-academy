@@ -21,7 +21,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
     players: {
       _id: string,
       username: string,
-      picture: string,
+      portrait: string,
       stats: IUserStats,
     }[],
     totalPages: number,
@@ -84,7 +84,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
 
         new ChallengePopup({
           context,
-          username: player.username,
+          opponentUsername: player.username,
           challengeType: EChallengePopup.SEND,
           opponentId: player._id
         });

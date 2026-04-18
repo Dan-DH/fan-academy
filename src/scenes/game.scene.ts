@@ -96,7 +96,7 @@ export default class GameScene extends Phaser.Scene {
       loop: true
     });
 
-    const userPreferences = this.registry.get('userPreferences');
+    const userPreferences = this.registry.get('userData');
     if (userPreferences.chat) this.chatComponent = createChatComponent(this);
 
     this.input.mouse!.disableContextMenu();

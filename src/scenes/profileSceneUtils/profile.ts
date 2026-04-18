@@ -336,6 +336,9 @@ export class Profile extends Phaser.GameObjects.Container {
       this.context.userData = result.user;
 
       this.scene.registry.set('userPreferences', {
+        userId: result.user.userId,
+        username: result.user.username,
+        portrait: result.user.portrait,
         chat: result.user.preferences.chat,
         sound: result.user.preferences.sound
       });

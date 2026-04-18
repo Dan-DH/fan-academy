@@ -30,11 +30,12 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
   constructor(params: {
     context: LeaderboardScene | LobbyScene | GameScene,
     opponentId?: string,
+    opponentUsername?: string,
+    opponentPortrait?: string,
     challengeType: EChallengePopup,
-    username?: string,
     gameId?: string
   }) {
-    const { context, opponentId, challengeType, username, gameId } = params;
+    const { context, opponentId, challengeType, opponentUsername, opponentPortrait, gameId } = params;
     super(context, challengePopupCoordinates.x, challengePopupCoordinates.y);
 
     // Used to block the user from clicking on some other part of the game
@@ -63,7 +64,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     let popupString: string;
 
     if (challengeType === EChallengePopup.SEND) {
-      popupString = `Pick a faction to challenge ${truncateText(username!, 20)}`;
+      popupString = `Pick a faction to challenge ${truncateText(opponentUsername!, 20)}`;
     } else if (challengeType === EChallengePopup.ACCEPT) {
       popupString = 'Pick a faction to accept the challenge';
     } else {
@@ -97,7 +98,17 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       this.setVisible(false);
       // TODO:
       if (challengeType === EChallengePopup.SEND) {
-        const result = await newGameChallenge(context.userId, faction, opponentId!, gameMode);
+        const { userId, username,  portrait } = context.registry.get('userData'); // Might to reuse this for the other cases
+        const result = await newGameChallenge({
+          userId,
+          username,
+          portrait,
+          faction,
+          gameMode,
+          opponentUsername: opponentUsername!,
+          opponentId: opponentId!,
+          opponentPortrait: opponentPortrait!
+        });
         if (!result) {
           const openGameLimitText = () => {
             return context.add.text(200, 350, `A player has reached the max amount of open games`, {

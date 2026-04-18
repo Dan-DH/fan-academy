@@ -23,12 +23,22 @@ export async function getGameList(userId: string): Promise<IGame[] | []> {
   return games;
 }
 
-// Challenge a player to a game
-export async function newGameChallenge(userId: string, faction: EFaction, opponentId: string, gameMode: EGameModes): Promise<any> {
+// Challenge a player to a game // TODO: WE KEEP THIS ONE
+export async function newGameChallenge(data: {
+  userId: string,
+  username: string,
+  portrait: string,
+  faction: EFaction,
+  opponentUsername: string,
+  opponentPortrait: string,
+  opponentId: string,
+  gameMode: EGameModes
+} ): Promise<any> {
   const jwt = localStorage.getItem('jwt');
+  const { userId, username, portrait, faction, gameMode, opponentUsername, opponentPortrait, opponentId } = data;
 
-  const url = `${import.meta.env.VITE_BE_URL}games/newGame?userId=${encodeURIComponent(userId)}&faction=${encodeURIComponent(faction)}&opponentId=${encodeURIComponent(opponentId)}&gameMode=${encodeURIComponent(gameMode)}`;
-  const result = await fetch(url, {
+  const url = `${import.meta.env.VITE_BE_URL}games/newGame?userId=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&portrait=${encodeURIComponent(portrait)}&faction=${encodeURIComponent(faction)}&opponentUsername=${encodeURIComponent(opponentUsername)}&opponentPortrait=${encodeURIComponent(opponentPortrait)}&opponentId=${encodeURIComponent(opponentId)}&gameMode=${encodeURIComponent(gameMode)}`;
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,12 +46,12 @@ export async function newGameChallenge(userId: string, faction: EFaction, oppone
     }
   });
 
-  const data = await result.json();
+  const result = await response.json();
 
-  if (result.status !== 200) {
-    console.error('Error sending challenge...', data.message);
+  if (response.status !== 200) {
+    console.error('Error sending challenge...', result.message);
     return null;
   }
 
-  return data;
+  return result; // TODO: what do we do with the result here?
 }

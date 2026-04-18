@@ -18,7 +18,7 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
     players: {
       _id: string,
       username: string,
-      picture: string,
+      portrait: string,
       stats: IUserStats,
     }[],
     totalPages: number,
@@ -81,9 +81,10 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
 
         new ChallengePopup({
           context,
-          username: player.username,
-          challengeType: EChallengePopup.SEND,
-          opponentId: player._id
+          opponentUsername: player.username,
+          opponentId: player._id,
+          opponentPortrait: player.portrait,
+          challengeType: EChallengePopup.SEND
         });
       });
 

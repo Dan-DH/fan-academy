@@ -156,7 +156,7 @@ export async function getLeaderBoardQuery(boardType: ELeaderboardEnum, page = 1)
   players: {
     _id: string,
     username: string,
-    picture: string,
+    portrait: string,
     stats: IUserStats,
   }[],
   totalPages: number,
