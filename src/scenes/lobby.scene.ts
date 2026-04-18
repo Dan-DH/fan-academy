@@ -40,16 +40,11 @@ export default class LobbyScene extends Phaser.Scene {
     this.centerPoints = calculateAllCenterPoints(); // This apply to all games, no need to redo every time
   }
 
-  init(data: {
-    userId: string,
-    portrait: string, // TODO: actually provide the portrait and username
-    username: string
-  }) {
+  init() {
+    const data = this.registry.get('userData');
     this.userId = data.userId;
     this.portrait = data.portrait;
     this.username = data.username;
-
-    console.log('DATA', data);
   }
 
   preload() {

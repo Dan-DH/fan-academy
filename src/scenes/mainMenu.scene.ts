@@ -148,11 +148,7 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: () => {
         this.sound.play(EUiSounds.BUTTON_PLAY);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
-        this.scene.start('LobbyScene', {
-          userId: this.userId,
-          username: this.username,
-          portrait: this.portrait
-        });
+        this.scene.start('LobbyScene');
         this.currentSubScene = 'LobbyScene';
       }
     });

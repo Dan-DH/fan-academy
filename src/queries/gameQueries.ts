@@ -23,7 +23,7 @@ export async function getGameList(userId: string): Promise<IGame[] | []> {
   return games;
 }
 
-// Challenge a player to a game // TODO: WE KEEP THIS ONE
+// Challenge a player to a game // TODO: WE KEEP THIS ONE // FIXME: use body like in user queries
 export async function newGameChallenge(data: {
   userId: string,
   username: string,
