@@ -108,8 +108,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setScale(scale);
   }
 
-  // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack
-  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit = false): number {
+  // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
+  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit?: number): number {
     if (this.stats.engineerShield) {
       playSound(this.context, EGameSounds.ENGINEER_SHIELD_SHATTER);
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);

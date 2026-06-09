@@ -50,7 +50,7 @@ export class Gunner extends Dwarf {
     const splashedUnits = this.context.gameController?.board.getGunnerSplashTargets(this, target);
 
     splashedUnits?.forEach(unit =>  {
-      unit.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this, true);
+      unit.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this, 0.6667);
       if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
     });
 

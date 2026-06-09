@@ -68,7 +68,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.updateTileData();
   }
 
-  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, splashDamage = false): void {
+  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, splashDamage?: number): void {
     if (this.stats.engineerShield) {
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
       this.removeEngineerShield();
@@ -89,7 +89,7 @@ export class Crystal extends Phaser.GameObjects.Container {
       });
     }
 
-    if (splashDamage) assaultBoostDamage *= damage;
+    if (splashDamage) assaultBoostDamage *= splashDamage;
 
     const totalDamage = roundToFive(this.getLifeLost(damage, assaultBoostDamage, attackType));
     const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;

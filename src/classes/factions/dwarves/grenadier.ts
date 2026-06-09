@@ -65,7 +65,7 @@ export class Grenadier extends Dwarf {
       if (enemyCrystal.stats.boardPosition === target.stats.boardPosition) {
         enemyCrystal.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
       } else {
-        enemyCrystal.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this, true);
+        enemyCrystal.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this, 0.5);
       }
     });
 
