@@ -65,7 +65,7 @@ export class Pulverizer extends Item {
     if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
     const directHitDamage = 600;
 
-    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, true);
+    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
   }
 
   directHitOnCrystal(targetTile: Tile): void {
@@ -83,9 +83,9 @@ export class Pulverizer extends Item {
     enemyCrystalTiles.forEach(tile => {
       const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
       if (crystal?.stats.boardPosition === targetTile.boardPosition) {
-        crystal?.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, true);
+        crystal?.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
       } else {
-        crystal?.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, true);
+        crystal?.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, 0.33);
       }
     });
   }

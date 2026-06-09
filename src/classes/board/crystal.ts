@@ -68,7 +68,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.updateTileData();
   }
 
-  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, splashDamage?: number): void {
+  getsDamaged(damage: number, attackType: EAttackType, _unit: Hero | Item, splashDamage?: number): void {
     if (this.stats.engineerShield) {
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
       this.removeEngineerShield();
