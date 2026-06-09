@@ -7,6 +7,7 @@ export enum EColyseusMessages {
   GET_GAMELIST = 'getGameList',
   GET_GAME = 'getGame',
   DELETE_GAME_REQUEST = 'deleteGameRequest',
+  CHALLENGE_ACCEPTED = 'challengeAccepted',
 
   // SENT BY THE SERVER
   PONG = 'pong',

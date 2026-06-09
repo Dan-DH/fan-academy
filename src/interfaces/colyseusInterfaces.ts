@@ -1,6 +1,7 @@
 import { EFaction, EGameModes } from "../enums/gameEnum";
 
 export interface IColyseusOnCreate {
+  gameId: string,
   userId: string,
   username: string,
   portrait: string,

@@ -62,8 +62,6 @@ export class GameListContainer extends Phaser.GameObjects.Container {
 
     this.addCreateGameButton();
 
-    console.log('this logs');
-
     this.addListItems(this.listPlayerTurnArray, EGameListHeaders.PLAYER_TURN);
     this.addListItems(this.listChallengeReceivedArray, EGameListHeaders.CHALLENGES_RECEIVED);
     this.addListItems(this.listChallengeSentArray, EGameListHeaders.CHALLENGES_SENT);

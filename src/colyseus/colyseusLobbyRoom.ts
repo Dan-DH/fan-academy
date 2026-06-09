@@ -184,10 +184,6 @@ export function sendDeletedGameMessage(lobby: Room, gameId: string, userId: stri
   });
 }
 
-export function sendChallengeAcceptedMessage(lobby: Room, gameId: string, userId: string, faction: EFaction): void {
-  lobby.send('challengeAcceptedMessage', {
-    gameId,
-    userId,
-    faction
-  });
-}
+export function sendChallengeAcceptedMessage(lobby: Room, data: IColyseusOnCreate): void {
+  lobby.send(EColyseusMessages.CHALLENGE_ACCEPTED, data);
+};

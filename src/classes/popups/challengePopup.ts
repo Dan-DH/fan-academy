@@ -33,10 +33,12 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     opponentUsername?: string,
     opponentPortrait?: string,
     challengeType: EChallengePopup,
-    gameId?: string
+    gameId: string
   }) {
     const { context, opponentId, challengeType, opponentUsername, opponentPortrait, gameId } = params;
     super(context, challengePopupCoordinates.x, challengePopupCoordinates.y);
+
+    console.log(challengeType);
 
     // Used to block the user from clicking on some other part of the game
     this.blockingLayer = context.add.rectangle(0, 0, 2000, 2000, 0x000000, 0.001) // Almost invisible
@@ -96,19 +98,22 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       context.sound.play(EUiSounds.BUTTON_GENERIC);
 
       this.setVisible(false);
+      const { userId, username,  portrait } = context.registry.get('userData');
+      const colyseusOnCreatePayload = {
+        gameId,
+        userId,
+        username,
+        portrait,
+        faction,
+        gameMode,
+        opponentId: opponentId!,
+        opponentUsername: opponentUsername!,
+        opponentPortrait: opponentPortrait!
+      };
       // TODO:
       if (challengeType === EChallengePopup.SEND) {
-        const { userId, username,  portrait } = context.registry.get('userData'); // Might to reuse this for the other cases
-        const result = await newGameChallenge({
-          userId,
-          username,
-          portrait,
-          faction,
-          gameMode,
-          opponentUsername: opponentUsername!,
-          opponentId: opponentId!,
-          opponentPortrait: opponentPortrait!
-        });
+        const result = await newGameChallenge(colyseusOnCreatePayload); // this is a query. Because of challenges through leaderboard
+
         if (!result) {
           const openGameLimitText = () => {
             return context.add.text(200, 350, `A player has reached the max amount of open games`, {
@@ -122,7 +127,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       }
 
       // TODO:
-      if (challengeType === EChallengePopup.ACCEPT && context instanceof LobbyScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
+      if (challengeType === EChallengePopup.ACCEPT && context instanceof LobbyScene) sendChallengeAcceptedMessage(context.lobbyRoom!, colyseusOnCreatePayload);
 
       if (challengeType === EChallengePopup.OPEN && context instanceof LobbyScene) {
         createNewGame(context, faction, gameMode);
