@@ -89,13 +89,9 @@ export class Crystal extends Phaser.GameObjects.Container {
       });
     }
 
-    if (unit instanceof Hero && unit.stats.unitType === EHeroes.ANNIHILATOR && splashDamage) assaultBoostDamage *= 0.2;
+    if (splashDamage) assaultBoostDamage *= damage;
 
-    if (unit instanceof Hero && unit.stats.unitType === EHeroes.GRENADIER && splashDamage) assaultBoostDamage *= 0.5;
-
-    if (unit instanceof Hero && unit.stats.unitType === EHeroes.GUNNER && splashDamage) assaultBoostDamage *= 0.666;
-
-    const totalDamage = roundToFive(this.getLifeLost(damage + assaultBoostDamage, attackType));
+    const totalDamage = roundToFive(this.getLifeLost(damage, assaultBoostDamage, attackType));
     const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
     this.stats.currentHealth -= damageTaken;
 
@@ -222,7 +218,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.stats.magicalDamageResistance = total;
   }
 
-  getLifeLost(damage: number, attackType: EAttackType) {
+  getLifeLost(damage: number, assaultBoostDamage: number, attackType: EAttackType) {
     const resistance = {
       [EAttackType.MAGICAL]: this.getMagicalDamageResistance(),
       [EAttackType.PHYSICAL]: this.getPhysicalDamageResistance()
@@ -230,7 +226,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     const reduction = resistance[attackType];
 
-    const totalDamage = resistance ? damage - damage * reduction / 100 : damage;
+    const totalDamage = resistance ? damage - damage * reduction / 100 + assaultBoostDamage : damage + assaultBoostDamage;
     return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
   }
 
