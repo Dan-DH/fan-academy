@@ -186,7 +186,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura * 0.05 + 1;
 
-    return roundToFive(this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura;
+    return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
 
   getPhysicalDamageResistance(): number {
