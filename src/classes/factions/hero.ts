@@ -120,14 +120,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     getDamagedAnimation(this);
 
     // Calculate damage after applying resistances
-    let totalAttackDamage = this.getLifeLost(damage, attackType);
+    const totalAttackDamage = this.getLifeLost(damage, attackType);
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
 
     if (unit instanceof Pulverizer) {
       if (directHit && this.stats.factionEquipment) {
         this.stats.factionEquipment = false;
-        totalAttackDamage += this.reduceMaxHealth(this.stats.baseHealth * 0.1);
+        this.reduceMaxHealth(this.stats.baseHealth * 0.1);
         this.visuals.factionEquipmentImage.setVisible(false);
         this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
       }
@@ -242,9 +242,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       [EAttackType.PHYSICAL]: this.getPhysicalDamageResistance()
     };
 
-    const reduction = resistance[attackType];
-
-    const totalDamage = resistance ? damage - damage * reduction / 100 : damage;
+    const totalDamage = damage - damage * resistance[attackType] / 100;
     return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
   }
 
@@ -341,7 +339,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const roundedHealthLoss = roundToFive(amount);
     this.stats.maxHealth -= roundedHealthLoss;
-    this.stats.currentHealth -= roundedHealthLoss;
+    if (this.stats.currentHealth > this.stats.maxHealth) this.stats.currentHealth = this.stats.maxHealth;
 
     // Update hp bar
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
