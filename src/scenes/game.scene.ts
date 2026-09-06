@@ -50,6 +50,12 @@ export default class GameScene extends Phaser.Scene {
     currentRoom: Room,
     triggerReplay?: boolean
   }) {
+    this.activeUnit = undefined;
+    this.gameController = undefined;
+    this.visibleUnitCard = undefined;
+    this.chatComponent = undefined;
+    this.longPressStart = undefined;
+
     this.userId = data.userId;
     this.colyseusClient = data.colyseusClient;
     this.turnNumber = data.currentGame.turnNumber;
@@ -64,8 +70,6 @@ export default class GameScene extends Phaser.Scene {
     this.activePlayer = this.currentGame.activePlayer.toString();
     this.isPlayerOne = this.currentGame?.players[0].userData._id === this.userId;
     this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
-
-    this.activeUnit = undefined;
   }
 
   create() {
@@ -82,15 +86,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.triggerReplay) {
       new TurnReplay(this.gameController).replayTurn();
     }
-    this.game.events.on('messageToGameScene', (data: {
-      x: number,
-      y: number,
-      message: string
-    }) => {
-      const { x, y, message } = data;
-      const openGameLimitReached = gameListFadeOutText(this, x, y, message );
-      textAnimationFadeOut(openGameLimitReached, 3000);
-    });
+    this.game.events.on('messageToGameScene', this.handleMessageToGameScene);
   }
 
   onShutdown() {
@@ -109,8 +105,19 @@ export default class GameScene extends Phaser.Scene {
     this.registry.set('networkStatus', 'offline');
   };
 
+  handleMessageToGameScene = (data: {
+    x: number,
+    y: number,
+    message: string
+  }) =>  {
+    const { x, y, message } = data;
+    const openGameLimitReached = gameListFadeOutText(this, x, y, message );
+    textAnimationFadeOut(openGameLimitReached, 3000);
+  };
+
   removeListeners() {
     window.removeEventListener('offline', this.handleOffline);
     window.removeEventListener('online', this.handleOnline);
+    this.game.events.off('messageToGameScene', this.handleMessageToGameScene);
   }
 };
