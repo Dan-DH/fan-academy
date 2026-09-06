@@ -40,12 +40,9 @@ export default class GameScene extends Phaser.Scene {
 
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
 
-  // isInternetUp: boolean;
-
   constructor() {
     super({ key: 'GameScene' });
     this.centerPoints = calculateAllCenterPoints();
-    // this.isInternetUp = true;
   }
 
   init(data: {
