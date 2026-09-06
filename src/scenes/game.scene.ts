@@ -66,24 +66,13 @@ export default class GameScene extends Phaser.Scene {
     this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
 
     this.activeUnit = undefined;
-
-    window.addEventListener('offline', () => {
-      this.registry.set('networkStatus', 'offline');
-    });
-    window.addEventListener('online', () => {
-      this.registry.set('networkStatus', 'online');
-    });
-    this.registry.set('networkStatus', 'online');
   }
 
   create() {
-    this.time.addEvent({
-      delay: 300000, // 5 minutes
-      callback: () => {
-        this.currentRoom.send("ping");
-      },
-      loop: true
-    });
+    const networkStatus = navigator.onLine ? 'online' : 'offline';
+    this.registry.set('networkStatus', networkStatus);
+    window.addEventListener('offline', this.handleOffline);
+    window.addEventListener('online', this.handleOnline);
 
     const userPreferences = this.registry.get('userPreferences');
     if (userPreferences.chat) this.chatComponent = createChatComponent(this);
@@ -105,6 +94,23 @@ export default class GameScene extends Phaser.Scene {
   }
 
   onShutdown() {
-    // this.sound.stopAll();
+    this.removeListeners();
+  }
+
+  onDestroy() {
+    this.removeListeners();
+  }
+
+  handleOnline = () => {
+    this.registry.set('networkStatus', 'online');
+  };
+
+  handleOffline = () => {
+    this.registry.set('networkStatus', 'offline');
+  };
+
+  removeListeners() {
+    window.removeEventListener('offline', this.handleOffline);
+    window.removeEventListener('online', this.handleOnline);
   }
 };
