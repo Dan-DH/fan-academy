@@ -14,11 +14,11 @@ const challengePopupCoordinates = {
 
 export class ChallengePopup extends Phaser.GameObjects.Container {
   blockingLayer: Phaser.GameObjects.Rectangle;
-  backgroundImage: Phaser.GameObjects.Sprite;
-  councilButtonImage: Phaser.GameObjects.Sprite;
-  elvesButtonImage: Phaser.GameObjects.Sprite;
-  dwarvesButtonImage: Phaser.GameObjects.Sprite;
-  cancelButtonImage: Phaser.GameObjects.Sprite;
+  backgroundImage: Phaser.GameObjects.Image;
+  councilButtonImage: Phaser.GameObjects.Image;
+  elvesButtonImage: Phaser.GameObjects.Image;
+  dwarvesButtonImage: Phaser.GameObjects.Image;
+  cancelButtonImage: Phaser.GameObjects.Image;
 
   popupText: Phaser.GameObjects.Text;
   cancelButtonText: Phaser.GameObjects.Text;
@@ -41,14 +41,14 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
       .setOrigin(0.5)
       .setInteractive();
 
-    this.backgroundImage = context.add.sprite(0, 0, 'gameAtlas', 'popup_button').setDisplaySize(500, 500);
+    this.backgroundImage = context.add.image(0, 0, 'gameAtlas', 'popup_button').setDisplaySize(500, 500);
 
-    this.councilButtonImage = context.add.sprite(-150, -20, 'gameAtlas', 'council_emblem').setScale(1).setInteractive({ useHandCursor: true });
-    this.elvesButtonImage = context.add.sprite(0, -20, 'gameAtlas', 'elves_emblem').setScale(1).setInteractive({ useHandCursor: true });
-    this.dwarvesButtonImage = context.add.sprite(140, -15, 'gameAtlas', 'dwarves_emblem').setScale(1).setInteractive({ useHandCursor: true });
+    this.councilButtonImage = context.add.image(-150, -20, 'gameAtlas', 'council_emblem').setScale(1).setInteractive({ useHandCursor: true });
+    this.elvesButtonImage = context.add.image(0, -20, 'gameAtlas', 'elves_emblem').setScale(1).setInteractive({ useHandCursor: true });
+    this.dwarvesButtonImage = context.add.image(140, -15, 'gameAtlas', 'dwarves_emblem').setScale(1).setInteractive({ useHandCursor: true });
     this.casualButton = this.createGameModeRadioButton(context, -100, 70, 'Casual', true);
     this.rankedButton = this.createGameModeRadioButton(context, 70, 70, 'Ranked', false);
-    this.cancelButtonImage = context.add.sprite(0, 150, 'gameAtlas', 'popup_button').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
+    this.cancelButtonImage = context.add.image(0, 150, 'gameAtlas', 'popup_button').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
 
     if (challengeType === EChallengePopup.ACCEPT) {
       this.casualButton.setVisible(false);

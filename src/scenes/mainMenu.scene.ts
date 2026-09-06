@@ -32,7 +32,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // menuImg.y += 14;
 
     // main menu bottom strip
-    const menuBottomImage = this.add.sprite(60, 0, 'gameAtlas', 'main_menu_bottom').setScale(1.8);
+    const menuBottomImage = this.add.image(60, 0, 'gameAtlas', 'main_menu_bottom').setScale(1.8);
     const menuBottomText = this.add.text(0.5, 0.5, 'Welcome to the Hero Academy!', {
       font: '50px proLight',
       color: '#873600'

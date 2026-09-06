@@ -12,7 +12,7 @@ export default function createMainMenuButton(params: {
   callback?: any
 }) {
   const { thisParam, x, y, imageKey, text, font, tint, scale, callback } = params;
-  const buttonImage = thisParam.add.sprite(0, 0, 'gameAtlas', imageKey).setOrigin(0.5).setScale(scale ?? 1.3).setInteractive({ useHandCursor: true });
+  const buttonImage = thisParam.add.image(0, 0, 'gameAtlas', imageKey).setOrigin(0.5).setScale(scale ?? 1.3).setInteractive({ useHandCursor: true });
 
   const buttonText = thisParam.add.text(0.5, 0.5, text, { font }).setOrigin(0.5, 0.6);
 

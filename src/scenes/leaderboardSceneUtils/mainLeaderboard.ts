@@ -55,9 +55,9 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
     const usernameText = context.add.text(100, 0, 'Username', bigStyle);
     const totalWins = context.add.text(400, 0, `Wins`, bigStyle);
     const totalGames = context.add.text(520, 0, `Games`, bigStyle);
-    const councilWins = context.add.sprite(700, 25, 'gameAtlas', 'council_emblem').setScale(0.5);
-    const elvesWins = context.add.sprite(800, 25, 'gameAtlas', 'elves_emblem').setScale(0.5);
-    const dwarvesWins = context.add.sprite(900, 25, 'gameAtlas', 'dwarves_emblem').setScale(0.5);
+    const councilWins = context.add.image(700, 25, 'gameAtlas', 'council_emblem').setScale(0.5);
+    const elvesWins = context.add.image(800, 25, 'gameAtlas', 'elves_emblem').setScale(0.5);
+    const dwarvesWins = context.add.image(900, 25, 'gameAtlas', 'dwarves_emblem').setScale(0.5);
 
     this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins]);
 
@@ -74,7 +74,7 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
       const elvesWins = context.add.text(790, 0, `${player.stats.factions.elves.wins}`, smallStyle);
       const dwarvesWins = context.add.text(890, 0, `${player.stats.factions.dwarves.wins}`, smallStyle);
 
-      const challengeIcon = context.add.sprite(1030, 15, 'gameAtlas', 'challengeIcon').setScale(1.2).setInteractive({ useHandCursor: true });
+      const challengeIcon = context.add.image(1030, 15, 'gameAtlas', 'challengeIcon').setScale(1.2).setInteractive({ useHandCursor: true });
 
       challengeIcon.on('pointerdown', () => {
         playSound(this.scene, EUiSounds.BUTTON_GENERIC);
@@ -103,10 +103,10 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
 
     const paginationText = context.add.text(0, 0, `${page} / ${data.totalPages}`, bigStyle).setOrigin(0.5);
 
-    const firstPageButton = context.add.sprite(-180, 0, 'gameAtlas', 'arrow_button').setFlipX(true).setScale(0.7).setVisible(page > 1);
-    const backButton = context.add.sprite(-120, 0, 'gameAtlas', 'curved_arrow_button').setScale(0.7).setVisible(page > 1);
-    const forwardButton = context.add.sprite(120, 0, 'gameAtlas', 'curved_arrow_button').setFlipX(true).setScale(0.7).setVisible(page !== data.totalPages);
-    const lastPageButton = context.add.sprite(180, 0, 'gameAtlas', 'arrow_button').setScale(0.7).setVisible(page !== data.totalPages);
+    const firstPageButton = context.add.image(-180, 0, 'gameAtlas', 'arrow_button').setFlipX(true).setScale(0.7).setVisible(page > 1);
+    const backButton = context.add.image(-120, 0, 'gameAtlas', 'curved_arrow_button').setScale(0.7).setVisible(page > 1);
+    const forwardButton = context.add.image(120, 0, 'gameAtlas', 'curved_arrow_button').setFlipX(true).setScale(0.7).setVisible(page !== data.totalPages);
+    const lastPageButton = context.add.image(180, 0, 'gameAtlas', 'arrow_button').setScale(0.7).setVisible(page !== data.totalPages);
 
     let isQuerying = false;
 

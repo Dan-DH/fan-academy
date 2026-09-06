@@ -57,9 +57,4 @@ export default class PreloaderScene extends Phaser.Scene {
     // this.load.audio('buttonPressGenericSound', `${CDN_PATH}/audio/ui/buttonPressGeneric.mp3`);
     // this.load.audio('deleteGameSound', `${CDN_PATH}/audio/ui/deleteGame.mp3`);
   }
-
-  // profile pictures
-  // profilePicNames.forEach(name => {
-  //   this.load.image(name, `${CDN_PATH}/images/profilePics/${name}.webp`);
-  // }); // FIXME: use this when adding the sprites
 }

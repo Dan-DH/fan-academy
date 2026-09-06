@@ -3,7 +3,7 @@ import { profilePicNames } from "../../scenes/profileSceneUtils/profilePicNames"
 
 export class ProfilePicPopup extends Phaser.GameObjects.Container {
   visibleFlag: boolean;
-  constructor(context: ProfileScene, profilePicture: Phaser.GameObjects.Sprite) {
+  constructor(context: ProfileScene, profilePicture: Phaser.GameObjects.Image) {
     super(context, 900, 400);
 
     const modal = new Phaser.GameObjects.Container(context, 0, 0); // Centered relative to the popup
@@ -52,7 +52,7 @@ export class ProfilePicPopup extends Phaser.GameObjects.Container {
       const x = col * (avatarSize + padding);
       const y = row * (avatarSize + padding);
 
-      const img = context.add.sprite(x + 120, y - 160, 'gameAtlas', key)
+      const img = context.add.image(x + 120, y - 160, 'gameAtlas', key)
         .setInteractive({ useHandCursor: true })
         .setDisplaySize(avatarSize, avatarSize)
         .setData('key', key);
