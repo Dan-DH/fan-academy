@@ -21,7 +21,7 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
 
-    this.pedestalImage = context.add.sprite(0, 10, 'gameAtlas', 'crystal_pedestal').setScale(0.7, 1).setAngle(90);
+    this.pedestalImage = context.add.sprite(0, 10, 'gameAtlas', 'crystal_pedestal').setScale(0.7, 1);
     const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystal_damaged' : 'crystal_full';
     this.crystalImage = context.add.sprite(0, -30, 'gameAtlas', crystalTexture).setScale(isBigCrystal ? 1.2 : 1);
 

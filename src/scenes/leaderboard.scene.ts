@@ -24,7 +24,7 @@ export default class LeaderboardScene extends Phaser.Scene {
     const mainLeaderboardButton = this.add.sprite(1200, 740, 'gameAtlas', 'leader_button').setScale(0.7).setInteractive({ useHandCursor: true });
     const councilLeaderboardButton = this.add.sprite(1260, 740, 'gameAtlas', 'council_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
     const elvesLeaderboardButton = this.add.sprite(1320, 740, 'gameAtlas', 'elves_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
-    const dwarvesLeaderboardButton = this.add.sprite(1380, 740, 'gameAtlas', 'dwarves_emblem').setScale(0.5).setInteractive({ useHandCursor: true }).setAngle(90);
+    const dwarvesLeaderboardButton = this.add.sprite(1380, 740, 'gameAtlas', 'dwarves_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();

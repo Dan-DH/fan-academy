@@ -58,8 +58,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
 
     this.header = context.add.container(startingCoords.x, startingCoords.y);
 
-    const factionImage = context.add.sprite(950, 25, 'gameAtlas', factionEnumToEmblem(faction)).setScale(0.8).setAngle(faction == EFaction.DWARVES ? 90 : 0); // FIXME:
-
+    const factionImage = context.add.sprite(950, 25, 'gameAtlas', factionEnumToEmblem(faction)).setScale(0.8);
     const usernameText = context.add.text(100, 0, 'Username', bigStyle);
     const factionRating = context.add.text(420, 0, `Rating`, bigStyle);
     const totalWins = context.add.text(600, 0, `Wins`, bigStyle);

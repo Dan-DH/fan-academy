@@ -1,0 +1,6298 @@
+{
+	"textures": [
+		{
+			"image": "gameTexture",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1638,
+				"h": 1638
+			},
+			"scale": 0.8,
+			"frames": [
+				{
+					"filename": "main_menu_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 573.6,
+						"h": 100.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 573.6,
+						"h": 100.80000000000001
+					},
+					"frame": {
+						"x": 0,
+						"y": 0,
+						"w": 573.6,
+						"h": 100.80000000000001
+					}
+				},
+				{
+					"filename": "item_rack",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 487.20000000000005,
+						"h": 82.4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 487.20000000000005,
+						"h": 82.4
+					},
+					"frame": {
+						"x": 573.6,
+						"y": 0,
+						"w": 487.20000000000005,
+						"h": 82.4
+					}
+				},
+				{
+					"filename": "game_list_premade",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 397.6,
+						"h": 86.4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 397.6,
+						"h": 86.4
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 0,
+						"w": 397.6,
+						"h": 86.4
+					}
+				},
+				{
+					"filename": "gameOverVictoryEffect",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 167.20000000000002,
+						"h": 158.4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 167.20000000000002,
+						"h": 158.4
+					},
+					"frame": {
+						"x": 1458.4,
+						"y": 0,
+						"w": 167.20000000000002,
+						"h": 158.4
+					}
+				},
+				{
+					"filename": "new_game_btn",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 397.6,
+						"h": 79.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 397.6,
+						"h": 79.2
+					},
+					"frame": {
+						"x": 573.6,
+						"y": 82.4,
+						"w": 397.6,
+						"h": 79.2
+					}
+				},
+				{
+					"filename": "necromancer_7",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"frame": {
+						"x": 971.2,
+						"y": 82.4,
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					}
+				},
+				{
+					"filename": "game_list_button",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 392,
+						"h": 79.2
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 2.4000000000000004,
+						"w": 388.8,
+						"h": 76.80000000000001
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 86.4,
+						"w": 388.8,
+						"h": 76.80000000000001
+					}
+				},
+				{
+					"filename": "CrystalDebuff2_BgFlames01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 166.4,
+						"h": 169.60000000000002
+					},
+					"spriteSourceSize": {
+						"x": 7.2,
+						"y": 2.4000000000000004,
+						"w": 156.8,
+						"h": 167.20000000000002
+					},
+					"frame": {
+						"x": 1449.6000000000001,
+						"y": 158.4,
+						"w": 156.8,
+						"h": 167.20000000000002
+					}
+				},
+				{
+					"filename": "WraithConsume_Puff1-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 30.400000000000002,
+						"h": 28.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 29.6,
+						"h": 28.8
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 158.4,
+						"w": 29.6,
+						"h": 28.8
+					}
+				},
+				{
+					"filename": "action_pie",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 26.400000000000002
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 26.400000000000002
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 187.20000000000002,
+						"w": 28,
+						"h": 26.400000000000002
+					}
+				},
+				{
+					"filename": "NinjaSmoke_Puff02-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 25.6,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 25.6,
+						"h": 24
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 213.60000000000002,
+						"w": 25.6,
+						"h": 24
+					}
+				},
+				{
+					"filename": "WraithConsume_Puff2-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 24,
+						"h": 27.200000000000003
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 24,
+						"h": 26.400000000000002
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 237.60000000000002,
+						"w": 24,
+						"h": 26.400000000000002
+					}
+				},
+				{
+					"filename": "NinjaSmoke_Puff04-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 20.8,
+						"h": 20.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 20.8,
+						"h": 20
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 264,
+						"w": 20.8,
+						"h": 20
+					}
+				},
+				{
+					"filename": "TooltipIcon_MovementTile-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 19.200000000000003,
+						"h": 18.400000000000002
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 19.200000000000003,
+						"h": 18.400000000000002
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 284,
+						"w": 19.200000000000003,
+						"h": 18.400000000000002
+					}
+				},
+				{
+					"filename": "TooltipIcon_RangeTile-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 19.200000000000003,
+						"h": 18.400000000000002
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 19.200000000000003,
+						"h": 18.400000000000002
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 302.40000000000003,
+						"w": 19.200000000000003,
+						"h": 18.400000000000002
+					}
+				},
+				{
+					"filename": "WraithConsume_Puff3-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 16,
+						"h": 17.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16.8
+					},
+					"frame": {
+						"x": 1606.4,
+						"y": 320.8,
+						"w": 16,
+						"h": 16.8
+					}
+				},
+				{
+					"filename": "player_banner",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 280,
+						"h": 62.400000000000006
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 276,
+						"h": 60
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 163.20000000000002,
+						"w": 276,
+						"h": 60
+					}
+				},
+				{
+					"filename": "SoulHarvest_Explosion03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 145.6,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 13.600000000000001,
+						"y": 24,
+						"w": 110.4,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 1336.8000000000002,
+						"y": 163.20000000000002,
+						"w": 110.4,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "main_menu_button",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 270.40000000000003,
+						"h": 51.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 270.40000000000003,
+						"h": 51.2
+					},
+					"frame": {
+						"x": 0,
+						"y": 100.80000000000001,
+						"w": 270.40000000000003,
+						"h": 51.2
+					}
+				},
+				{
+					"filename": "HelpTooltip_BG-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 267.2,
+						"h": 282.40000000000003
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 267.2,
+						"h": 282.40000000000003
+					},
+					"frame": {
+						"x": 270.40000000000003,
+						"y": 100.80000000000001,
+						"w": 267.2,
+						"h": 282.40000000000003
+					}
+				},
+				{
+					"filename": "TooltipIcon_Health-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 39.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 39.2
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 100.80000000000001,
+						"w": 35.2,
+						"h": 39.2
+					}
+				},
+				{
+					"filename": "TooltipIcon_Movement-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 36.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 36.800000000000004
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 140,
+						"w": 35.2,
+						"h": 36.800000000000004
+					}
+				},
+				{
+					"filename": "gameOverDefeatText",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 247.20000000000002,
+						"h": 74.4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 247.20000000000002,
+						"h": 74.4
+					},
+					"frame": {
+						"x": 0,
+						"y": 152,
+						"w": 247.20000000000002,
+						"h": 74.4
+					}
+				},
+				{
+					"filename": "gameOverVictoryText",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 200,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 200,
+						"h": 72
+					},
+					"frame": {
+						"x": 0,
+						"y": 226.4,
+						"w": 200,
+						"h": 72
+					}
+				},
+				{
+					"filename": "impaler_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1.6,
+						"w": 70.4,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 200,
+						"y": 226.4,
+						"w": 70.4,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "impaler_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 3.2,
+						"w": 70.4,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 200,
+						"y": 311.20000000000005,
+						"w": 70.4,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "crystal_pedestal",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 70.4,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 70.4,
+						"h": 55.2
+					},
+					"frame": {
+						"x": 200,
+						"y": 394.40000000000003,
+						"w": 70.4,
+						"h": 55.2
+					}
+				},
+				{
+					"filename": "CrystalDebuff1_BgFlames01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 193.60000000000002,
+						"h": 193.60000000000002
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 193.60000000000002,
+						"h": 193.60000000000002
+					},
+					"frame": {
+						"x": 0,
+						"y": 298.40000000000003,
+						"w": 193.60000000000002,
+						"h": 193.60000000000002
+					}
+				},
+				{
+					"filename": "CrystalDebuff1_BgFlames02-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 193.60000000000002,
+						"h": 193.60000000000002
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 193.60000000000002,
+						"h": 193.60000000000002
+					},
+					"frame": {
+						"x": 572.8000000000001,
+						"y": 161.60000000000002,
+						"w": 193.60000000000002,
+						"h": 193.60000000000002
+					}
+				},
+				{
+					"filename": "TooltipIcon_MagicDmg-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 36
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 36
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 176.8,
+						"w": 35.2,
+						"h": 36
+					}
+				},
+				{
+					"filename": "TooltipIcon_PhysDef-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 35.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 35.2
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 212.8,
+						"w": 35.2,
+						"h": 35.2
+					}
+				},
+				{
+					"filename": "TooltipIcon_Range-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 35.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 35.2
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 248,
+						"w": 35.2,
+						"h": 35.2
+					}
+				},
+				{
+					"filename": "challengeIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 35.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 35.2
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 283.2,
+						"w": 35.2,
+						"h": 35.2
+					}
+				},
+				{
+					"filename": "replay",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 35.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 35.2
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 318.40000000000003,
+						"w": 35.2,
+						"h": 35.2
+					}
+				},
+				{
+					"filename": "TooltipIcon_MagicRes-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35.2,
+						"h": 34.4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35.2,
+						"h": 34.4
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 353.6,
+						"w": 35.2,
+						"h": 34.4
+					}
+				},
+				{
+					"filename": "play_button",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 193.60000000000002,
+						"h": 92.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 193.60000000000002,
+						"h": 92.80000000000001
+					},
+					"frame": {
+						"x": 766.4000000000001,
+						"y": 161.60000000000002,
+						"w": 193.60000000000002,
+						"h": 92.80000000000001
+					}
+				},
+				{
+					"filename": "knight_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 100.80000000000001,
+						"h": 96.80000000000001
+					},
+					"frame": {
+						"x": 960,
+						"y": 180,
+						"w": 100.80000000000001,
+						"h": 96.80000000000001
+					}
+				},
+				{
+					"filename": "CrystalDebuff2_BgFlames02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 166.4,
+						"h": 169.60000000000002
+					},
+					"spriteSourceSize": {
+						"x": 5.6000000000000005,
+						"y": 2.4000000000000004,
+						"w": 155.20000000000002,
+						"h": 167.20000000000002
+					},
+					"frame": {
+						"x": 766.4000000000001,
+						"y": 254.4,
+						"w": 155.20000000000002,
+						"h": 167.20000000000002
+					}
+				},
+				{
+					"filename": "NinjaSmoke_Puff01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 38.400000000000006,
+						"h": 35.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 38.400000000000006,
+						"h": 35.2
+					},
+					"frame": {
+						"x": 921.6,
+						"y": 254.4,
+						"w": 38.400000000000006,
+						"h": 35.2
+					}
+				},
+				{
+					"filename": "ResistPremiumTile_BottomSplash01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 152,
+						"h": 57.6
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 148,
+						"h": 55.2
+					},
+					"frame": {
+						"x": 572.8000000000001,
+						"y": 355.20000000000005,
+						"w": 148,
+						"h": 55.2
+					}
+				},
+				{
+					"filename": "archer_9",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 45.6,
+						"h": 40.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 45.6,
+						"h": 40.800000000000004
+					},
+					"frame": {
+						"x": 720.8000000000001,
+						"y": 355.20000000000005,
+						"w": 45.6,
+						"h": 40.800000000000004
+					}
+				},
+				{
+					"filename": "impaler_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 50.400000000000006,
+						"h": 48.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 1.6,
+						"w": 44.800000000000004,
+						"h": 45.6
+					},
+					"frame": {
+						"x": 720.8000000000001,
+						"y": 396,
+						"w": 44.800000000000004,
+						"h": 45.6
+					}
+				},
+				{
+					"filename": "SwordPremiumTile_BottomSplash01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 148,
+						"h": 55.2
+					},
+					"frame": {
+						"x": 270.40000000000003,
+						"y": 383.20000000000005,
+						"w": 148,
+						"h": 55.2
+					}
+				},
+				{
+					"filename": "door_open",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 169.60000000000002,
+						"h": 168
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 5.6000000000000005,
+						"w": 119.2,
+						"h": 162.4
+					},
+					"frame": {
+						"x": 418.40000000000003,
+						"y": 383.20000000000005,
+						"w": 119.2,
+						"h": 162.4
+					}
+				},
+				{
+					"filename": "CrystalPremiumTile_BottomSplash01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1.6,
+						"w": 148,
+						"h": 53.6
+					},
+					"frame": {
+						"x": 270.40000000000003,
+						"y": 441.6,
+						"w": 148,
+						"h": 53.6
+					}
+				},
+				{
+					"filename": "necromancer_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 76,
+						"h": 97.60000000000001
+					},
+					"frame": {
+						"x": 193.60000000000002,
+						"y": 449.6,
+						"w": 76,
+						"h": 97.60000000000001
+					}
+				},
+				{
+					"filename": "ShieldPremiumTile_BottomSplash01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 2.4000000000000004,
+						"w": 148,
+						"h": 52.800000000000004
+					},
+					"frame": {
+						"x": 269.6,
+						"y": 495.20000000000005,
+						"w": 148,
+						"h": 52.800000000000004
+					}
+				},
+				{
+					"filename": "SpeedPremiumTile_BottomSplash01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 2.4000000000000004,
+						"w": 148,
+						"h": 52.800000000000004
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 410.40000000000003,
+						"w": 148,
+						"h": 52.800000000000004
+					}
+				},
+				{
+					"filename": "Revive_Bottomsplash01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 148,
+						"h": 49.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 148,
+						"h": 49.6
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 463.20000000000005,
+						"w": 148,
+						"h": 49.6
+					}
+				},
+				{
+					"filename": "Revive_Backsplash01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144.8,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144.8,
+						"h": 128
+					},
+					"frame": {
+						"x": 0,
+						"y": 492,
+						"w": 144.8,
+						"h": 128
+					}
+				},
+				{
+					"filename": "rune_metal",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 36.800000000000004,
+						"y": 31.200000000000003,
+						"w": 48.800000000000004,
+						"h": 63.2
+					},
+					"frame": {
+						"x": 144.8,
+						"y": 492,
+						"w": 48.800000000000004,
+						"h": 63.2
+					}
+				},
+				{
+					"filename": "priestess_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 76,
+						"h": 96
+					},
+					"frame": {
+						"x": 193.60000000000002,
+						"y": 547.2,
+						"w": 76,
+						"h": 96
+					}
+				},
+				{
+					"filename": "dragon_scale",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 30.400000000000002,
+						"y": 45.6,
+						"w": 48.800000000000004,
+						"h": 51.2
+					},
+					"frame": {
+						"x": 144.8,
+						"y": 555.2,
+						"w": 48.800000000000004,
+						"h": 51.2
+					}
+				},
+				{
+					"filename": "phantom_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 48.800000000000004,
+						"h": 70.4
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 3.2,
+						"w": 47.2,
+						"h": 65.60000000000001
+					},
+					"frame": {
+						"x": 144.8,
+						"y": 606.4,
+						"w": 47.2,
+						"h": 65.60000000000001
+					}
+				},
+				{
+					"filename": "ResistPremiumTile_BottomSplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 152,
+						"h": 57.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 6.4,
+						"w": 143.20000000000002,
+						"h": 51.2
+					},
+					"frame": {
+						"x": 0,
+						"y": 620,
+						"w": 143.20000000000002,
+						"h": 51.2
+					}
+				},
+				{
+					"filename": "ShieldPremiumTile_BottomSplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 4,
+						"w": 141.6,
+						"h": 47.2
+					},
+					"frame": {
+						"x": 0,
+						"y": 671.2,
+						"w": 141.6,
+						"h": 47.2
+					}
+				},
+				{
+					"filename": "SpeedPremiumTile_BottomSplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 4,
+						"w": 141.6,
+						"h": 47.2
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 223.20000000000002,
+						"w": 141.6,
+						"h": 47.2
+					}
+				},
+				{
+					"filename": "Revive_Backsplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144.8,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 0.8,
+						"w": 133.6,
+						"h": 127.2
+					},
+					"frame": {
+						"x": 1202.4,
+						"y": 223.20000000000002,
+						"w": 133.6,
+						"h": 127.2
+					}
+				},
+				{
+					"filename": "popup_button",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 113.60000000000001,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113.60000000000001,
+						"h": 80
+					},
+					"frame": {
+						"x": 1336,
+						"y": 246.4,
+						"w": 113.60000000000001,
+						"h": 80
+					}
+				},
+				{
+					"filename": "RematchButton-Dn-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 113.60000000000001,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113.60000000000001,
+						"h": 40
+					},
+					"frame": {
+						"x": 1336,
+						"y": 326.40000000000003,
+						"w": 113.60000000000001,
+						"h": 40
+					}
+				},
+				{
+					"filename": "CrystalPremiumTile_BottomSplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 2.4000000000000004,
+						"w": 141.6,
+						"h": 46.400000000000006
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 270.40000000000003,
+						"w": 141.6,
+						"h": 46.400000000000006
+					}
+				},
+				{
+					"filename": "knight_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 9.600000000000001,
+						"w": 100.80000000000001,
+						"h": 88
+					},
+					"frame": {
+						"x": 960,
+						"y": 276.8,
+						"w": 100.80000000000001,
+						"h": 88
+					}
+				},
+				{
+					"filename": "NinjaSmoke_Puff03-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 38.400000000000006,
+						"h": 35.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 38.400000000000006,
+						"h": 35.2
+					},
+					"frame": {
+						"x": 921.6,
+						"y": 289.6,
+						"w": 38.400000000000006,
+						"h": 35.2
+					}
+				},
+				{
+					"filename": "action_arrow",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 40,
+						"h": 75.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 9.600000000000001,
+						"w": 36.800000000000004,
+						"h": 61.6
+					},
+					"frame": {
+						"x": 921.6,
+						"y": 324.8,
+						"w": 36.800000000000004,
+						"h": 61.6
+					}
+				},
+				{
+					"filename": "SoulHarvest_Shockwave01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 145.6,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 41.6,
+						"w": 136.8,
+						"h": 93.60000000000001
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 316.8,
+						"w": 136.8,
+						"h": 93.60000000000001
+					}
+				},
+				{
+					"filename": "WeakenFX02-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 102.4,
+						"h": 144
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 366.40000000000003,
+						"w": 102.4,
+						"h": 144
+					}
+				},
+				{
+					"filename": "gameOverDefeatEffect",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 135.20000000000002,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 135.20000000000002,
+						"h": 128
+					},
+					"frame": {
+						"x": 1197.6000000000001,
+						"y": 350.40000000000003,
+						"w": 135.20000000000002,
+						"h": 128
+					}
+				},
+				{
+					"filename": "SwordPremiumTile_BottomSplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 3.2,
+						"w": 135.20000000000002,
+						"h": 48
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 410.40000000000003,
+						"w": 135.20000000000002,
+						"h": 48
+					}
+				},
+				{
+					"filename": "Revive_Bottomsplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 49.6
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 5.6000000000000005,
+						"w": 135.20000000000002,
+						"h": 44
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 458.40000000000003,
+						"w": 135.20000000000002,
+						"h": 44
+					}
+				},
+				{
+					"filename": "Revive_Backsplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144.8,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 7.2,
+						"y": 11.200000000000001,
+						"w": 131.20000000000002,
+						"h": 116
+					},
+					"frame": {
+						"x": 1449.6000000000001,
+						"y": 325.6,
+						"w": 131.20000000000002,
+						"h": 116
+					}
+				},
+				{
+					"filename": "voidmonk_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 58.400000000000006,
+						"h": 52.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 2.4000000000000004,
+						"w": 57.6,
+						"h": 47.2
+					},
+					"frame": {
+						"x": 1580.8000000000002,
+						"y": 366.40000000000003,
+						"w": 57.6,
+						"h": 47.2
+					}
+				},
+				{
+					"filename": "HelpTooltip_Separator",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 117.60000000000001,
+						"h": 21.6
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 116.80000000000001,
+						"h": 20.8
+					},
+					"frame": {
+						"x": 1332.8000000000002,
+						"y": 366.40000000000003,
+						"w": 116.80000000000001,
+						"h": 20.8
+					}
+				},
+				{
+					"filename": "door_banner",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 54.400000000000006,
+						"h": 28
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 54.400000000000006,
+						"h": 28
+					},
+					"frame": {
+						"x": 1580.8000000000002,
+						"y": 337.6,
+						"w": 54.400000000000006,
+						"h": 28
+					}
+				},
+				{
+					"filename": "dragonScaleIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1580.8000000000002,
+						"y": 413.6,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "attack_reticle",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 114.4,
+						"h": 117.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 114.4,
+						"h": 117.60000000000001
+					},
+					"frame": {
+						"x": 1332.8000000000002,
+						"y": 387.20000000000005,
+						"w": 114.4,
+						"h": 117.60000000000001
+					}
+				},
+				{
+					"filename": "ResistPremiumTile_BottomSplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 152,
+						"h": 57.6
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 10.4,
+						"w": 131.20000000000002,
+						"h": 44.800000000000004
+					},
+					"frame": {
+						"x": 1447.2,
+						"y": 441.6,
+						"w": 131.20000000000002,
+						"h": 44.800000000000004
+					}
+				},
+				{
+					"filename": "unknown_faction",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 62.400000000000006,
+						"h": 62.400000000000006
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 2.4000000000000004,
+						"w": 60,
+						"h": 60
+					},
+					"frame": {
+						"x": 1578.4,
+						"y": 469.6,
+						"w": 60,
+						"h": 60
+					}
+				},
+				{
+					"filename": "ShieldPremiumTile_BottomSplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 8.8,
+						"y": 5.6000000000000005,
+						"w": 131.20000000000002,
+						"h": 44
+					},
+					"frame": {
+						"x": 1447.2,
+						"y": 486.40000000000003,
+						"w": 131.20000000000002,
+						"h": 44
+					}
+				},
+				{
+					"filename": "mana_vial",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 26.400000000000002,
+						"y": 12,
+						"w": 59.2,
+						"h": 88.80000000000001
+					},
+					"frame": {
+						"x": 1578.4,
+						"y": 529.6,
+						"w": 59.2,
+						"h": 88.80000000000001
+					}
+				},
+				{
+					"filename": "SpeedPremiumTile_BottomSplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 8.8,
+						"y": 5.6000000000000005,
+						"w": 131.20000000000002,
+						"h": 44
+					},
+					"frame": {
+						"x": 1196,
+						"y": 478.40000000000003,
+						"w": 131.20000000000002,
+						"h": 44
+					}
+				},
+				{
+					"filename": "Revive_Bottomsplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 49.6
+					},
+					"spriteSourceSize": {
+						"x": 8.8,
+						"y": 6.4,
+						"w": 131.20000000000002,
+						"h": 43.2
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 502.40000000000003,
+						"w": 131.20000000000002,
+						"h": 43.2
+					}
+				},
+				{
+					"filename": "heal_reticle",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 114.4,
+						"h": 117.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0.8,
+						"w": 114.4,
+						"h": 116.80000000000001
+					},
+					"frame": {
+						"x": 1327.2,
+						"y": 504.8,
+						"w": 114.4,
+						"h": 116.80000000000001
+					}
+				},
+				{
+					"filename": "CrystalPremiumTile_BottomSplash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 8.8,
+						"y": 5.6000000000000005,
+						"w": 131.20000000000002,
+						"h": 42.400000000000006
+					},
+					"frame": {
+						"x": 1192,
+						"y": 522.4,
+						"w": 131.20000000000002,
+						"h": 42.400000000000006
+					}
+				},
+				{
+					"filename": "SwordPremiumTile_BottomSplash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 148,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 13.600000000000001,
+						"w": 130.4,
+						"h": 40.800000000000004
+					},
+					"frame": {
+						"x": 1192,
+						"y": 564.8000000000001,
+						"w": 130.4,
+						"h": 40.800000000000004
+					}
+				},
+				{
+					"filename": "ally_reticle",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 126.4,
+						"h": 127.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 126.4,
+						"h": 127.2
+					},
+					"frame": {
+						"x": 1441.6000000000001,
+						"y": 530.4,
+						"w": 126.4,
+						"h": 127.2
+					}
+				},
+				{
+					"filename": "priestess_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 0,
+						"w": 69.60000000000001,
+						"h": 94.4
+					},
+					"frame": {
+						"x": 1568,
+						"y": 618.4000000000001,
+						"w": 69.60000000000001,
+						"h": 94.4
+					}
+				},
+				{
+					"filename": "DeploySmoke_Top-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 124,
+						"h": 115.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 123.2,
+						"h": 105.60000000000001
+					},
+					"frame": {
+						"x": 1441.6000000000001,
+						"y": 712.8000000000001,
+						"w": 123.2,
+						"h": 105.60000000000001
+					}
+				},
+				{
+					"filename": "ColorSwatch_Color-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 80,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 73.60000000000001,
+						"h": 73.60000000000001
+					},
+					"frame": {
+						"x": 1564.8000000000002,
+						"y": 712.8000000000001,
+						"w": 73.60000000000001,
+						"h": 73.60000000000001
+					}
+				},
+				{
+					"filename": "crystal_damaged",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 68.8
+					},
+					"spriteSourceSize": {
+						"x": 4.800000000000001,
+						"y": 0,
+						"w": 73.60000000000001,
+						"h": 68
+					},
+					"frame": {
+						"x": 1564.8000000000002,
+						"y": 786.4000000000001,
+						"w": 73.60000000000001,
+						"h": 68
+					}
+				},
+				{
+					"filename": "SoulHarvest_Explosion04-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 145.6,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 27.200000000000003,
+						"y": 0,
+						"w": 83.2,
+						"h": 40.800000000000004
+					},
+					"frame": {
+						"x": 141.6,
+						"y": 672,
+						"w": 83.2,
+						"h": 40.800000000000004
+					}
+				},
+				{
+					"filename": "Inferno_Fireball01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 98.4
+					},
+					"spriteSourceSize": {
+						"x": 19.200000000000003,
+						"y": 58.400000000000006,
+						"w": 72.8,
+						"h": 28
+					},
+					"frame": {
+						"x": 192,
+						"y": 643.2,
+						"w": 72.8,
+						"h": 28
+					}
+				},
+				{
+					"filename": "DeployZone01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 63.2
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 11.200000000000001,
+						"w": 55.2,
+						"h": 41.6
+					},
+					"frame": {
+						"x": 224.8,
+						"y": 671.2,
+						"w": 55.2,
+						"h": 41.6
+					}
+				},
+				{
+					"filename": "shining_helm",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46.400000000000006,
+						"h": 65.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46.400000000000006,
+						"h": 65.60000000000001
+					},
+					"frame": {
+						"x": 269.6,
+						"y": 605.6,
+						"w": 46.400000000000006,
+						"h": 65.60000000000001
+					}
+				},
+				{
+					"filename": "HelpTooltip_HP-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 44.800000000000004,
+						"h": 44.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 2.4000000000000004,
+						"w": 43.2,
+						"h": 41.6
+					},
+					"frame": {
+						"x": 280,
+						"y": 671.2,
+						"w": 43.2,
+						"h": 41.6
+					}
+				},
+				{
+					"filename": "cleric_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 55.2,
+						"h": 52
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 1.6,
+						"w": 53.6,
+						"h": 49.6
+					},
+					"frame": {
+						"x": 316,
+						"y": 621.6,
+						"w": 53.6,
+						"h": 49.6
+					}
+				},
+				{
+					"filename": "Inferno_Fireball06-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 98.4
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 13.600000000000001,
+						"w": 103.2,
+						"h": 73.60000000000001
+					},
+					"frame": {
+						"x": 316,
+						"y": 548,
+						"w": 103.2,
+						"h": 73.60000000000001
+					}
+				},
+				{
+					"filename": "PremiumTile_Speed-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 51.2,
+						"h": 51.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 3.2,
+						"w": 46.400000000000006,
+						"h": 43.2
+					},
+					"frame": {
+						"x": 269.6,
+						"y": 548,
+						"w": 46.400000000000006,
+						"h": 43.2
+					}
+				},
+				{
+					"filename": "PremiumTile_VictoryDamageMultiplier-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 65.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 6.4,
+						"w": 61.6,
+						"h": 54.400000000000006
+					},
+					"frame": {
+						"x": 369.6,
+						"y": 657.6,
+						"w": 61.6,
+						"h": 54.400000000000006
+					}
+				},
+				{
+					"filename": "vs_banner",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 80.80000000000001,
+						"h": 55.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 3.2,
+						"w": 77.60000000000001,
+						"h": 52
+					},
+					"frame": {
+						"x": 419.20000000000005,
+						"y": 605.6,
+						"w": 77.60000000000001,
+						"h": 52
+					}
+				},
+				{
+					"filename": "close_button",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 40,
+						"h": 36.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0.8,
+						"w": 40,
+						"h": 36
+					},
+					"frame": {
+						"x": 369.6,
+						"y": 621.6,
+						"w": 40,
+						"h": 36
+					}
+				},
+				{
+					"filename": "PremiumTile_Resist-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 63.2
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0.8,
+						"w": 64,
+						"h": 60
+					},
+					"frame": {
+						"x": 419.20000000000005,
+						"y": 545.6,
+						"w": 64,
+						"h": 60
+					}
+				},
+				{
+					"filename": "door_closed",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 169.60000000000002,
+						"h": 168
+					},
+					"spriteSourceSize": {
+						"x": 17.6,
+						"y": 51.2,
+						"w": 46.400000000000006,
+						"h": 98.4
+					},
+					"frame": {
+						"x": 323.20000000000005,
+						"y": 671.2,
+						"w": 46.400000000000006,
+						"h": 98.4
+					}
+				},
+				{
+					"filename": "arrow_button",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 24.8,
+						"y": 29.6,
+						"w": 59.2,
+						"h": 59.2
+					},
+					"frame": {
+						"x": 483.20000000000005,
+						"y": 545.6,
+						"w": 59.2,
+						"h": 59.2
+					}
+				},
+				{
+					"filename": "PremiumTile_Teleport-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 63.2
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 5.6000000000000005,
+						"w": 53.6,
+						"h": 52.800000000000004
+					},
+					"frame": {
+						"x": 431.20000000000005,
+						"y": 657.6,
+						"w": 53.6,
+						"h": 52.800000000000004
+					}
+				},
+				{
+					"filename": "necromancer_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 52.800000000000004,
+						"h": 53.6
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 52,
+						"h": 52.800000000000004
+					},
+					"frame": {
+						"x": 484.8,
+						"y": 657.6,
+						"w": 52,
+						"h": 52.800000000000004
+					}
+				},
+				{
+					"filename": "HelpTooltip_Sword-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 44.800000000000004,
+						"h": 53.6
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 44,
+						"h": 52.800000000000004
+					},
+					"frame": {
+						"x": 496.8,
+						"y": 604.8000000000001,
+						"w": 44,
+						"h": 52.800000000000004
+					}
+				},
+				{
+					"filename": "PremiumTile_Shield-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 63.2
+					},
+					"spriteSourceSize": {
+						"x": 7.2,
+						"y": 6.4,
+						"w": 51.2,
+						"h": 50.400000000000006
+					},
+					"frame": {
+						"x": 536.8000000000001,
+						"y": 657.6,
+						"w": 51.2,
+						"h": 50.400000000000006
+					}
+				},
+				{
+					"filename": "PremiumTile_Sword-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 64.8
+					},
+					"spriteSourceSize": {
+						"x": 7.2,
+						"y": 7.2,
+						"w": 51.2,
+						"h": 50.400000000000006
+					},
+					"frame": {
+						"x": 540.8000000000001,
+						"y": 605.6,
+						"w": 51.2,
+						"h": 50.400000000000006
+					}
+				},
+				{
+					"filename": "curved_arrow_button",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 24.8,
+						"y": 29.6,
+						"w": 59.2,
+						"h": 59.2
+					},
+					"frame": {
+						"x": 542.4,
+						"y": 545.6,
+						"w": 59.2,
+						"h": 59.2
+					}
+				},
+				{
+					"filename": "priestess_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 6.4,
+						"w": 94.4,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 601.6,
+						"y": 512.8000000000001,
+						"w": 94.4,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "HP_Gray-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 512.8000000000001,
+						"w": 62.400000000000006,
+						"h": 8.8
+					}
+				},
+				{
+					"filename": "hp_background",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 521.6,
+						"w": 62.400000000000006,
+						"h": 8.8
+					}
+				},
+				{
+					"filename": "hp_green",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"frame": {
+						"x": 537.6,
+						"y": 530.4,
+						"w": 62.400000000000006,
+						"h": 8.8
+					}
+				},
+				{
+					"filename": "crystal_full",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 68.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 78.4,
+						"h": 68
+					},
+					"frame": {
+						"x": 685.6,
+						"y": 441.6,
+						"w": 78.4,
+						"h": 68
+					}
+				},
+				{
+					"filename": "wizard_9",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 48
+					},
+					"frame": {
+						"x": 588,
+						"y": 657.6,
+						"w": 56,
+						"h": 48
+					}
+				},
+				{
+					"filename": "knight_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 47.2,
+						"h": 47.2
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 44.800000000000004,
+						"h": 45.6
+					},
+					"frame": {
+						"x": 592,
+						"y": 605.6,
+						"w": 44.800000000000004,
+						"h": 45.6
+					}
+				},
+				{
+					"filename": "wraith_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 51.2,
+						"h": 49.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0.8,
+						"w": 50.400000000000006,
+						"h": 44
+					},
+					"frame": {
+						"x": 636.8000000000001,
+						"y": 605.6,
+						"w": 50.400000000000006,
+						"h": 44
+					}
+				},
+				{
+					"filename": "HelpTooltip_Resist-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 44,
+						"h": 44
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 43.2,
+						"h": 43.2
+					},
+					"frame": {
+						"x": 644,
+						"y": 657.6,
+						"w": 43.2,
+						"h": 43.2
+					}
+				},
+				{
+					"filename": "hp_red",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62.400000000000006,
+						"h": 8.8
+					},
+					"frame": {
+						"x": 644,
+						"y": 700.8000000000001,
+						"w": 62.400000000000006,
+						"h": 8.8
+					}
+				},
+				{
+					"filename": "Inferno_Fireball04-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 98.4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 108.80000000000001,
+						"h": 98.4
+					},
+					"frame": {
+						"x": 687.2,
+						"y": 602.4,
+						"w": 108.80000000000001,
+						"h": 98.4
+					}
+				},
+				{
+					"filename": "super_charge",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 59.2,
+						"h": 57.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 59.2,
+						"h": 56.800000000000004
+					},
+					"frame": {
+						"x": 696,
+						"y": 545.6,
+						"w": 59.2,
+						"h": 56.800000000000004
+					}
+				},
+				{
+					"filename": "dwarvenBrewIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 588,
+						"y": 705.6,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "Crystal-Sm_Base-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 51.2,
+						"h": 38.400000000000006
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51.2,
+						"h": 38.400000000000006
+					},
+					"frame": {
+						"x": 536.8000000000001,
+						"y": 708,
+						"w": 51.2,
+						"h": 38.400000000000006
+					}
+				},
+				{
+					"filename": "healingPotionIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 755.2,
+						"y": 545.6,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "ninja_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 1.6,
+						"w": 104,
+						"h": 82.4
+					},
+					"frame": {
+						"x": 431.20000000000005,
+						"y": 710.4000000000001,
+						"w": 104,
+						"h": 82.4
+					}
+				},
+				{
+					"filename": "blocked_los",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 60.800000000000004,
+						"h": 60.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 60.800000000000004,
+						"h": 60.800000000000004
+					},
+					"frame": {
+						"x": 369.6,
+						"y": 761.6,
+						"w": 60.800000000000004,
+						"h": 60.800000000000004
+					}
+				},
+				{
+					"filename": "PhantomSpawn_Explosion01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 123.2,
+						"h": 99.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 122.4,
+						"h": 99.2
+					},
+					"frame": {
+						"x": 764,
+						"y": 441.6,
+						"w": 122.4,
+						"h": 99.2
+					}
+				},
+				{
+					"filename": "annihilator_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 421.6,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "annihilator_v5-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 493.6,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "WeakenFX03-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 141.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 102.4,
+						"h": 141.6
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 510.40000000000003,
+						"w": 102.4,
+						"h": 141.6
+					}
+				},
+				{
+					"filename": "necromancer_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0,
+						"w": 75.2,
+						"h": 97.60000000000001
+					},
+					"frame": {
+						"x": 811.2,
+						"y": 540.8000000000001,
+						"w": 75.2,
+						"h": 97.60000000000001
+					}
+				},
+				{
+					"filename": "archer_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 565.6,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "archer_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 637.6,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "knight_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 0.8,
+						"w": 90.4,
+						"h": 96.80000000000001
+					},
+					"frame": {
+						"x": 796,
+						"y": 638.4000000000001,
+						"w": 90.4,
+						"h": 96.80000000000001
+					}
+				},
+				{
+					"filename": "necromancer_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 11.200000000000001,
+						"w": 89.60000000000001,
+						"h": 86.4
+					},
+					"frame": {
+						"x": 706.4000000000001,
+						"y": 700.8000000000001,
+						"w": 89.60000000000001,
+						"h": 86.4
+					}
+				},
+				{
+					"filename": "archer_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 6.4,
+						"w": 62.400000000000006,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 644,
+						"y": 735.2,
+						"w": 62.400000000000006,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "turn_button",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 75.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 108.80000000000001,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 535.2,
+						"y": 787.2,
+						"w": 108.80000000000001,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "ninja_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 43.2,
+						"h": 41.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 43.2,
+						"h": 40.800000000000004
+					},
+					"frame": {
+						"x": 535.2,
+						"y": 746.4000000000001,
+						"w": 43.2,
+						"h": 40.800000000000004
+					}
+				},
+				{
+					"filename": "ninja_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 1.6,
+						"w": 104,
+						"h": 82.4
+					},
+					"frame": {
+						"x": 430.40000000000003,
+						"y": 792.8000000000001,
+						"w": 104,
+						"h": 82.4
+					}
+				},
+				{
+					"filename": "HelpTooltip_HPBar-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 91.2,
+						"h": 17.6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 91.2,
+						"h": 17.6
+					},
+					"frame": {
+						"x": 765.6,
+						"y": 421.6,
+						"w": 91.2,
+						"h": 17.6
+					}
+				},
+				{
+					"filename": "HelpTooltip_Shield-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 44,
+						"h": 44
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 43.2,
+						"h": 43.2
+					},
+					"frame": {
+						"x": 369.6,
+						"y": 712,
+						"w": 43.2,
+						"h": 43.2
+					}
+				},
+				{
+					"filename": "soul_harvest",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 110.4,
+						"h": 108.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 109.60000000000001,
+						"h": 108
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 545.6,
+						"w": 109.60000000000001,
+						"h": 108
+					}
+				},
+				{
+					"filename": "WeakenFX01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 132
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 102.4,
+						"h": 132
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 652,
+						"w": 102.4,
+						"h": 132
+					}
+				},
+				{
+					"filename": "archer_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 709.6,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "knight_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 9.600000000000001,
+						"w": 90.4,
+						"h": 88
+					},
+					"frame": {
+						"x": 796,
+						"y": 735.2,
+						"w": 90.4,
+						"h": 88
+					}
+				},
+				{
+					"filename": "wraith_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 0,
+						"w": 89.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 706.4000000000001,
+						"y": 787.2,
+						"w": 89.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "archer_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 6.4,
+						"w": 62.400000000000006,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 644,
+						"y": 854.4000000000001,
+						"w": 62.400000000000006,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "archer_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 781.6,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wraith_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 90.4,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 796,
+						"y": 823.2,
+						"w": 90.4,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "wraith_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 0,
+						"w": 89.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 706.4000000000001,
+						"y": 870.4000000000001,
+						"w": 89.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "Inferno_Fireball05-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 115.2,
+						"h": 98.4
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 3.2,
+						"w": 106.4,
+						"h": 95.2
+					},
+					"frame": {
+						"x": 534.4,
+						"y": 862.4000000000001,
+						"w": 106.4,
+						"h": 95.2
+					}
+				},
+				{
+					"filename": "PremiumTile_Heal-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 65.60000000000001,
+						"h": 64.8
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 64.8,
+						"h": 64
+					},
+					"frame": {
+						"x": 640.8000000000001,
+						"y": 929.6,
+						"w": 64.8,
+						"h": 64
+					}
+				},
+				{
+					"filename": "HelpTooltip_InsetHP-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 100,
+						"h": 24.8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 100,
+						"h": 24.8
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 657.6,
+						"w": 100,
+						"h": 24.8
+					}
+				},
+				{
+					"filename": "ninja_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 1.6,
+						"w": 104,
+						"h": 82.4
+					},
+					"frame": {
+						"x": 1170.4,
+						"y": 605.6,
+						"w": 104,
+						"h": 82.4
+					}
+				},
+				{
+					"filename": "ninja_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 1.6,
+						"w": 104,
+						"h": 82.4
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 682.4000000000001,
+						"w": 104,
+						"h": 82.4
+					}
+				},
+				{
+					"filename": "healing_potion",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 33.6,
+						"w": 42.400000000000006,
+						"h": 61.6
+					},
+					"frame": {
+						"x": 1274.4,
+						"y": 605.6,
+						"w": 42.400000000000006,
+						"h": 61.6
+					}
+				},
+				{
+					"filename": "ninja_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 3.2,
+						"w": 104,
+						"h": 80.80000000000001
+					},
+					"frame": {
+						"x": 1316.8000000000002,
+						"y": 621.6,
+						"w": 104,
+						"h": 80.80000000000001
+					}
+				},
+				{
+					"filename": "ninja_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 3.2,
+						"w": 104,
+						"h": 80.80000000000001
+					},
+					"frame": {
+						"x": 1164.8,
+						"y": 688,
+						"w": 104,
+						"h": 80.80000000000001
+					}
+				},
+				{
+					"filename": "ninja_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 3.2,
+						"w": 104,
+						"h": 80.80000000000001
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 764.8000000000001,
+						"w": 104,
+						"h": 80.80000000000001
+					}
+				},
+				{
+					"filename": "Scroll_Backspash01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1.6,
+						"w": 102.4,
+						"h": 126.4
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 784,
+						"w": 102.4,
+						"h": 126.4
+					}
+				},
+				{
+					"filename": "cleric_v0-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 854.4000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wraith_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 90.4,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 796,
+						"y": 906.4000000000001,
+						"w": 90.4,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "cleric_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 926.4000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "cleric_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 998.4000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0,
+						"w": 88.80000000000001,
+						"h": 97.60000000000001
+					},
+					"frame": {
+						"x": 705.6,
+						"y": 953.6,
+						"w": 88.80000000000001,
+						"h": 97.60000000000001
+					}
+				},
+				{
+					"filename": "knight_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 0.8,
+						"w": 92,
+						"h": 96.80000000000001
+					},
+					"frame": {
+						"x": 794.4000000000001,
+						"y": 989.6,
+						"w": 92,
+						"h": 96.80000000000001
+					}
+				},
+				{
+					"filename": "ninja_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 107.2,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 3.2,
+						"w": 104,
+						"h": 80.80000000000001
+					},
+					"frame": {
+						"x": 1268.8000000000002,
+						"y": 702.4000000000001,
+						"w": 104,
+						"h": 80.80000000000001
+					}
+				},
+				{
+					"filename": "impaler_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 1.6,
+						"w": 68,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 1372.8000000000002,
+						"y": 702.4000000000001,
+						"w": 68,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "item_chest",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108,
+						"h": 119.2
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 0,
+						"w": 102.4,
+						"h": 108.80000000000001
+					},
+					"frame": {
+						"x": 1268.8000000000002,
+						"y": 783.2,
+						"w": 102.4,
+						"h": 108.80000000000001
+					}
+				},
+				{
+					"filename": "priestess_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 6.4,
+						"w": 69.60000000000001,
+						"h": 88
+					},
+					"frame": {
+						"x": 1371.2,
+						"y": 787.2,
+						"w": 69.60000000000001,
+						"h": 88
+					}
+				},
+				{
+					"filename": "PhantomSpawn_Explosion02-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 99.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 102.4,
+						"h": 99.2
+					},
+					"frame": {
+						"x": 1164.8,
+						"y": 768.8000000000001,
+						"w": 102.4,
+						"h": 99.2
+					}
+				},
+				{
+					"filename": "Scroll_Backspash02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 100,
+						"h": 128
+					},
+					"frame": {
+						"x": 1060.8,
+						"y": 845.6,
+						"w": 100,
+						"h": 128
+					}
+				},
+				{
+					"filename": "Scroll_Backspash03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 99.2,
+						"h": 128
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 910.4000000000001,
+						"w": 99.2,
+						"h": 128
+					}
+				},
+				{
+					"filename": "inferno",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 10.4,
+						"y": 23.200000000000003,
+						"w": 99.2,
+						"h": 96.80000000000001
+					},
+					"frame": {
+						"x": 1160.8,
+						"y": 868,
+						"w": 99.2,
+						"h": 96.80000000000001
+					}
+				},
+				{
+					"filename": "knight_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 99.2,
+						"h": 96.80000000000001
+					},
+					"frame": {
+						"x": 1440.8000000000002,
+						"y": 818.4000000000001,
+						"w": 99.2,
+						"h": 96.80000000000001
+					}
+				},
+				{
+					"filename": "impaler_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 3.2,
+						"w": 68,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 1371.2,
+						"y": 875.2,
+						"w": 68,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "priestess_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 94.4,
+						"h": 96
+					},
+					"frame": {
+						"x": 1540,
+						"y": 854.4000000000001,
+						"w": 94.4,
+						"h": 96
+					}
+				},
+				{
+					"filename": "knight_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 9.600000000000001,
+						"w": 99.2,
+						"h": 88
+					},
+					"frame": {
+						"x": 1439.2,
+						"y": 915.2,
+						"w": 99.2,
+						"h": 88
+					}
+				},
+				{
+					"filename": "wraith_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 99.2,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 1538.4,
+						"y": 950.4000000000001,
+						"w": 99.2,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "wraith_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 99.2,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 1260,
+						"y": 892,
+						"w": 99.2,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "wraith_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 99.2,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 1160.8,
+						"y": 964.8000000000001,
+						"w": 99.2,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "soul_stone",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 16.8,
+						"y": 9.600000000000001,
+						"w": 79.2,
+						"h": 96
+					},
+					"frame": {
+						"x": 1359.2,
+						"y": 958.4000000000001,
+						"w": 79.2,
+						"h": 96
+					}
+				},
+				{
+					"filename": "wraith_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100.80000000000001,
+						"h": 85.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 99.2,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 1260,
+						"y": 1035.2,
+						"w": 99.2,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "priestess_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 58.400000000000006,
+						"h": 59.2
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 0,
+						"w": 54.400000000000006,
+						"h": 58.400000000000006
+					},
+					"frame": {
+						"x": 1260,
+						"y": 976.8000000000001,
+						"w": 54.400000000000006,
+						"h": 58.400000000000006
+					}
+				},
+				{
+					"filename": "wizard_7",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 1438.4,
+						"y": 1003.2,
+						"w": 92,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "action_circle",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 79.2,
+						"h": 79.2
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 78.4,
+						"h": 78.4
+					},
+					"frame": {
+						"x": 1359.2,
+						"y": 1054.4,
+						"w": 78.4,
+						"h": 78.4
+					}
+				},
+				{
+					"filename": "wizard_8",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 1057.6000000000001,
+						"y": 973.6,
+						"w": 92,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "knight_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 9.600000000000001,
+						"w": 92,
+						"h": 88
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 1038.4,
+						"w": 92,
+						"h": 88
+					}
+				},
+				{
+					"filename": "cleric_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 886.4000000000001,
+						"y": 1070.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wizard_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 16,
+						"w": 92,
+						"h": 73.60000000000001
+					},
+					"frame": {
+						"x": 1530.4,
+						"y": 1035.2,
+						"w": 92,
+						"h": 73.60000000000001
+					}
+				},
+				{
+					"filename": "wizard_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 16,
+						"w": 92,
+						"h": 73.60000000000001
+					},
+					"frame": {
+						"x": 1437.6000000000001,
+						"y": 1092.8,
+						"w": 92,
+						"h": 73.60000000000001
+					}
+				},
+				{
+					"filename": "Inferno_Shockwave01-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 91.2,
+						"h": 60.800000000000004
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 91.2,
+						"h": 60.800000000000004
+					},
+					"frame": {
+						"x": 1437.6000000000001,
+						"y": 1166.4,
+						"w": 91.2,
+						"h": 60.800000000000004
+					}
+				},
+				{
+					"filename": "voidmonk_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 0,
+						"w": 88.80000000000001,
+						"h": 94.4
+					},
+					"frame": {
+						"x": 1529.6000000000001,
+						"y": 1108.8,
+						"w": 88.80000000000001,
+						"h": 94.4
+					}
+				},
+				{
+					"filename": "voidmonk_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 5.6000000000000005,
+						"w": 88.80000000000001,
+						"h": 88.80000000000001
+					},
+					"frame": {
+						"x": 1528.8000000000002,
+						"y": 1203.2,
+						"w": 88.80000000000001,
+						"h": 88.80000000000001
+					}
+				},
+				{
+					"filename": "voidmonk_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 5.6000000000000005,
+						"w": 88.80000000000001,
+						"h": 88.80000000000001
+					},
+					"frame": {
+						"x": 1528.8000000000002,
+						"y": 1292,
+						"w": 88.80000000000001,
+						"h": 88.80000000000001
+					}
+				},
+				{
+					"filename": "elves_emblem",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 102.4
+					},
+					"spriteSourceSize": {
+						"x": 7.2,
+						"y": 10.4,
+						"w": 88.80000000000001,
+						"h": 85.60000000000001
+					},
+					"frame": {
+						"x": 1149.6000000000001,
+						"y": 1049.6000000000001,
+						"w": 88.80000000000001,
+						"h": 85.60000000000001
+					}
+				},
+				{
+					"filename": "priestess_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 0,
+						"w": 88,
+						"h": 96
+					},
+					"frame": {
+						"x": 1050.4,
+						"y": 1120,
+						"w": 88,
+						"h": 96
+					}
+				},
+				{
+					"filename": "infernoIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1050.4,
+						"y": 1063.2,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "priestess_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 9.600000000000001,
+						"y": 6.4,
+						"w": 88,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 958.4000000000001,
+						"y": 1126.4,
+						"w": 88,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "necromancer_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 11.200000000000001,
+						"w": 88,
+						"h": 86.4
+					},
+					"frame": {
+						"x": 1238.4,
+						"y": 1120,
+						"w": 88,
+						"h": 86.4
+					}
+				},
+				{
+					"filename": "voidmonk_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 87.2,
+						"h": 94.4
+					},
+					"frame": {
+						"x": 1138.4,
+						"y": 1135.2,
+						"w": 87.2,
+						"h": 94.4
+					}
+				},
+				{
+					"filename": "voidmonk_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 87.2,
+						"h": 94.4
+					},
+					"frame": {
+						"x": 1326.4,
+						"y": 1132.8,
+						"w": 87.2,
+						"h": 94.4
+					}
+				},
+				{
+					"filename": "voidmonk_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 87.2,
+						"h": 94.4
+					},
+					"frame": {
+						"x": 1225.6000000000001,
+						"y": 1206.4,
+						"w": 87.2,
+						"h": 94.4
+					}
+				},
+				{
+					"filename": "voidmonk_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 5.6000000000000005,
+						"w": 87.2,
+						"h": 88.80000000000001
+					},
+					"frame": {
+						"x": 1225.6000000000001,
+						"y": 1300.8000000000002,
+						"w": 87.2,
+						"h": 88.80000000000001
+					}
+				},
+				{
+					"filename": "voidmonk_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 90.4,
+						"h": 94.4
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 5.6000000000000005,
+						"w": 87.2,
+						"h": 88.80000000000001
+					},
+					"frame": {
+						"x": 1225.6000000000001,
+						"y": 1389.6000000000001,
+						"w": 87.2,
+						"h": 88.80000000000001
+					}
+				},
+				{
+					"filename": "wizard_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 85.60000000000001,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 0,
+						"y": 1478.4,
+						"w": 85.60000000000001,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "Inferno_Fireball03-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 98.4
+					},
+					"spriteSourceSize": {
+						"x": 18.400000000000002,
+						"y": 20.8,
+						"w": 74.4,
+						"h": 68
+					},
+					"frame": {
+						"x": 0,
+						"y": 1568,
+						"w": 74.4,
+						"h": 68
+					}
+				},
+				{
+					"filename": "Inferno_Fireball02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 98.4
+					},
+					"spriteSourceSize": {
+						"x": 22.400000000000002,
+						"y": 16,
+						"w": 67.2,
+						"h": 64
+					},
+					"frame": {
+						"x": 74.4,
+						"y": 1568,
+						"w": 67.2,
+						"h": 64
+					}
+				},
+				{
+					"filename": "wizard_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 85.60000000000001,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 85.60000000000001,
+						"y": 1478.4,
+						"w": 85.60000000000001,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "MoveDebuff_PurpleGlow-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 54.400000000000006,
+						"h": 62.400000000000006
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 54.400000000000006,
+						"h": 61.6
+					},
+					"frame": {
+						"x": 141.6,
+						"y": 1568,
+						"w": 54.400000000000006,
+						"h": 61.6
+					}
+				},
+				{
+					"filename": "priestess_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 97.60000000000001,
+						"h": 96.80000000000001
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 6.4,
+						"w": 76,
+						"h": 89.60000000000001
+					},
+					"frame": {
+						"x": 171.20000000000002,
+						"y": 1478.4,
+						"w": 76,
+						"h": 89.60000000000001
+					}
+				},
+				{
+					"filename": "necromancer_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 11.200000000000001,
+						"w": 76,
+						"h": 86.4
+					},
+					"frame": {
+						"x": 247.20000000000002,
+						"y": 712.8000000000001,
+						"w": 76,
+						"h": 86.4
+					}
+				},
+				{
+					"filename": "leader_button",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108.80000000000001,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 24.8,
+						"y": 29.6,
+						"w": 59.2,
+						"h": 59.2
+					},
+					"frame": {
+						"x": 196,
+						"y": 1568,
+						"w": 59.2,
+						"h": 59.2
+					}
+				},
+				{
+					"filename": "dwarves_emblem",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 102.4
+					},
+					"spriteSourceSize": {
+						"x": 8.8,
+						"y": 8,
+						"w": 84.80000000000001,
+						"h": 87.2
+					},
+					"frame": {
+						"x": 247.20000000000002,
+						"y": 1478.4,
+						"w": 84.80000000000001,
+						"h": 87.2
+					}
+				},
+				{
+					"filename": "cleric_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 255.20000000000002,
+						"y": 1565.6000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "crystalIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 327.20000000000005,
+						"y": 1565.6000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89.60000000000001,
+						"h": 97.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 1.6,
+						"y": 11.200000000000001,
+						"w": 74.4,
+						"h": 86.4
+					},
+					"frame": {
+						"x": 332,
+						"y": 1478.4,
+						"w": 74.4,
+						"h": 86.4
+					}
+				},
+				{
+					"filename": "wizard_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 16,
+						"w": 85.60000000000001,
+						"h": 73.60000000000001
+					},
+					"frame": {
+						"x": 399.20000000000005,
+						"y": 1564.8000000000002,
+						"w": 85.60000000000001,
+						"h": 73.60000000000001
+					}
+				},
+				{
+					"filename": "wizard_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 89.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 16,
+						"w": 85.60000000000001,
+						"h": 73.60000000000001
+					},
+					"frame": {
+						"x": 484.8,
+						"y": 1564.8000000000002,
+						"w": 85.60000000000001,
+						"h": 73.60000000000001
+					}
+				},
+				{
+					"filename": "impaler_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1.6,
+						"w": 77.60000000000001,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 406.40000000000003,
+						"y": 1478.4,
+						"w": 77.60000000000001,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "impaler_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 1.6,
+						"w": 75.2,
+						"h": 84.80000000000001
+					},
+					"frame": {
+						"x": 484,
+						"y": 1478.4,
+						"w": 75.2,
+						"h": 84.80000000000001
+					}
+				},
+				{
+					"filename": "archer_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 68,
+						"h": 80.80000000000001
+					},
+					"frame": {
+						"x": 570.4,
+						"y": 957.6,
+						"w": 68,
+						"h": 80.80000000000001
+					}
+				},
+				{
+					"filename": "archer_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 68,
+						"h": 80.80000000000001
+					},
+					"frame": {
+						"x": 570.4,
+						"y": 1038.4,
+						"w": 68,
+						"h": 80.80000000000001
+					}
+				},
+				{
+					"filename": "council_emblem",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 102.4,
+						"h": 102.4
+					},
+					"spriteSourceSize": {
+						"x": 11.200000000000001,
+						"y": 12.8,
+						"w": 77.60000000000001,
+						"h": 84
+					},
+					"frame": {
+						"x": 559.2,
+						"y": 1478.4,
+						"w": 77.60000000000001,
+						"h": 84
+					}
+				},
+				{
+					"filename": "SoulHarvest_Explosion01-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 145.6,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 30.400000000000002,
+						"y": 30.400000000000002,
+						"w": 77.60000000000001,
+						"h": 76
+					},
+					"frame": {
+						"x": 570.4,
+						"y": 1562.4,
+						"w": 77.60000000000001,
+						"h": 76
+					}
+				},
+				{
+					"filename": "cleric_7",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 636.8000000000001,
+						"y": 1478.4,
+						"w": 85.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "engineer_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 722.4000000000001,
+						"y": 1051.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "cleric_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 8,
+						"w": 85.60000000000001,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 648,
+						"y": 1561.6000000000001,
+						"w": 85.60000000000001,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "cleric_8",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 722.4000000000001,
+						"y": 1478.4,
+						"w": 85.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "cleric_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 77.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 808,
+						"y": 1123.2,
+						"w": 77.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "engineer_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 885.6,
+						"y": 1142.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "cleric_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 0,
+						"w": 77.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 808,
+						"y": 1206.4,
+						"w": 77.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "engineer_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 885.6,
+						"y": 1214.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "cleric_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 8,
+						"w": 85.60000000000001,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 733.6,
+						"y": 1561.6000000000001,
+						"w": 85.60000000000001,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "impaler_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 3.2,
+						"w": 77.60000000000001,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 808,
+						"y": 1478.4,
+						"w": 77.60000000000001,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "cleric_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 8,
+						"w": 77.60000000000001,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 819.2,
+						"y": 1561.6000000000001,
+						"w": 77.60000000000001,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "impaler_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78.4,
+						"h": 87.2
+					},
+					"spriteSourceSize": {
+						"x": 2.4000000000000004,
+						"y": 3.2,
+						"w": 75.2,
+						"h": 83.2
+					},
+					"frame": {
+						"x": 885.6,
+						"y": 1478.4,
+						"w": 75.2,
+						"h": 83.2
+					}
+				},
+				{
+					"filename": "cleric_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 85.60000000000001,
+						"h": 83.2
+					},
+					"spriteSourceSize": {
+						"x": 3.2,
+						"y": 8,
+						"w": 77.60000000000001,
+						"h": 75.2
+					},
+					"frame": {
+						"x": 896.8000000000001,
+						"y": 1561.6000000000001,
+						"w": 77.60000000000001,
+						"h": 75.2
+					}
+				},
+				{
+					"filename": "SoulHarvest_Explosion02-hd",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 145.6,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 24.8,
+						"y": 28,
+						"w": 84.80000000000001,
+						"h": 81.60000000000001
+					},
+					"frame": {
+						"x": 960.8000000000001,
+						"y": 1478.4,
+						"w": 84.80000000000001,
+						"h": 81.60000000000001
+					}
+				},
+				{
+					"filename": "archer_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 6.4,
+						"w": 62.400000000000006,
+						"h": 74.4
+					},
+					"frame": {
+						"x": 974.4000000000001,
+						"y": 1560,
+						"w": 62.400000000000006,
+						"h": 74.4
+					}
+				},
+				{
+					"filename": "archer_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 6.4,
+						"y": 6.4,
+						"w": 62.400000000000006,
+						"h": 74.4
+					},
+					"frame": {
+						"x": 1036.8,
+						"y": 1560,
+						"w": 62.400000000000006,
+						"h": 74.4
+					}
+				},
+				{
+					"filename": "archer_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 68,
+						"h": 80
+					},
+					"frame": {
+						"x": 1045.6000000000001,
+						"y": 1478.4,
+						"w": 68,
+						"h": 80
+					}
+				},
+				{
+					"filename": "archer_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 69.60000000000001,
+						"h": 81.60000000000001
+					},
+					"spriteSourceSize": {
+						"x": 0.8,
+						"y": 0.8,
+						"w": 68,
+						"h": 80
+					},
+					"frame": {
+						"x": 1099.2,
+						"y": 1558.4,
+						"w": 68,
+						"h": 80
+					}
+				},
+				{
+					"filename": "manaVialIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1229.6000000000001,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "pulverizerIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1285.6000000000001,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "runeMetalIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1341.6000000000001,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "shiningHelmIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1397.6000000000001,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "soulHarvestIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1453.6000000000001,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "soulStoneIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1509.6000000000001,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "engineer_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1167.2,
+						"y": 1565.6000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "grenadier_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1239.2,
+						"y": 1565.6000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "superChargeIcon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 56,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 56,
+						"h": 56
+					},
+					"frame": {
+						"x": 638.4000000000001,
+						"y": 993.6,
+						"w": 56,
+						"h": 56
+					}
+				},
+				{
+					"filename": "grenadier_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 638.4000000000001,
+						"y": 1051.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "grenadier_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1223.2,
+						"y": 1478.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "grenadier_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1295.2,
+						"y": 1478.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "gunner_v0-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1311.2,
+						"y": 1550.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "gunner_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1312.8000000000002,
+						"y": 1380.8000000000002,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "gunner_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1367.2,
+						"y": 1452.8000000000002,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "gunner_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1384.8000000000002,
+						"y": 1380.8000000000002,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "impaler_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1456.8000000000002,
+						"y": 1227.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "impaler_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1456.8000000000002,
+						"y": 1299.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "impaler_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1456.8000000000002,
+						"y": 1371.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "impaler_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 141.6,
+						"y": 712.8000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "knight_v0-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1528.8000000000002,
+						"y": 1380.8000000000002,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "knight_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1456.8000000000002,
+						"y": 1443.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "knight_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1528.8000000000002,
+						"y": 1452.8000000000002,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "knight_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1439.2,
+						"y": 1515.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "concede_button",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 54.400000000000006,
+						"h": 59.2
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 54.400000000000006,
+						"h": 59.2
+					},
+					"frame": {
+						"x": 1383.2,
+						"y": 1524.8000000000002,
+						"w": 54.400000000000006,
+						"h": 59.2
+					}
+				},
+				{
+					"filename": "knight_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1511.2,
+						"y": 1524.8000000000002,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_v0-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 0,
+						"y": 718.4000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1312.8000000000002,
+						"y": 1227.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1384.8000000000002,
+						"y": 1227.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1384.8000000000002,
+						"y": 1299.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "necromancer_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1312.8000000000002,
+						"y": 1299.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "ninja_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 72,
+						"y": 784.8000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "ninja_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 0,
+						"y": 790.4000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "paladin_v0-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 144,
+						"y": 784.8000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "paladin_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 216,
+						"y": 799.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "paladin_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 288,
+						"y": 799.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "paladin_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 72,
+						"y": 856.8000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "phantom_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 0,
+						"y": 862.4000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "phantom_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 144,
+						"y": 856.8000000000001,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "phantom_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 957.6,
+						"y": 1216,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "priestess_v0-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 885.6,
+						"y": 1286.4,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "priestess_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1029.6000000000001,
+						"y": 1216,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "priestess_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 1029.6000000000001,
+						"y": 1288,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "priestess_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 957.6,
+						"y": 1288,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "priestess_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 0,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "unknownAvatar-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 72,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "voidmonk_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 144,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "voidmonk_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 216,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "voidmonk_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 288,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "voidmonk_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 360,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wizard_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 432,
+						"y": 875.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wizard_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 432,
+						"y": 947.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wizard_v3-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 432,
+						"y": 1019.2,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wizard_v4-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 432,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wraith_v1-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 504,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				},
+				{
+					"filename": "wraith_v2-hd",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 72
+					},
+					"frame": {
+						"x": 576,
+						"y": 1360,
+						"w": 72,
+						"h": 72
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://free-tex-packer.org",
+		"version": "0.6.7"
+	}
+}

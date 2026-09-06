@@ -23,7 +23,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   loadAtlases() {
-    this.load.atlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.webp`, `${CDN_PATH}/atlas/gameTexture.json`);
+    // this.load.atlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.webp`, `${CDN_PATH}/atlas/gameTexture.json`); // FIXME: uncomment and update assets
+    this.load.atlas('gameAtlas', `/gameTexture.webp`, `/gameTexture.json`);
   }
 
   loadMainMenuAssets() {

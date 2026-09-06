@@ -46,7 +46,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
 
     this.councilButtonImage = context.add.sprite(-150, -20, 'gameAtlas', 'council_emblem').setScale(1).setInteractive({ useHandCursor: true });
     this.elvesButtonImage = context.add.sprite(0, -20, 'gameAtlas', 'elves_emblem').setScale(1).setInteractive({ useHandCursor: true });
-    this.dwarvesButtonImage = context.add.sprite(140, -15, 'gameAtlas', 'dwarves_emblem').setScale(1).setAngle(90).setInteractive({ useHandCursor: true });
+    this.dwarvesButtonImage = context.add.sprite(140, -15, 'gameAtlas', 'dwarves_emblem').setScale(1).setInteractive({ useHandCursor: true });
     this.casualButton = this.createGameModeRadioButton(context, -100, 70, 'Casual', true);
     this.rankedButton = this.createGameModeRadioButton(context, 70, 70, 'Ranked', false);
     this.cancelButtonImage = context.add.sprite(0, 150, 'gameAtlas', 'popup_button').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });

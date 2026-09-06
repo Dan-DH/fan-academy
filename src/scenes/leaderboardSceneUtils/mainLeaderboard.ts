@@ -57,7 +57,7 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
     const totalGames = context.add.text(520, 0, `Games`, bigStyle);
     const councilWins = context.add.sprite(700, 25, 'gameAtlas', 'council_emblem').setScale(0.5);
     const elvesWins = context.add.sprite(800, 25, 'gameAtlas', 'elves_emblem').setScale(0.5);
-    const dwarvesWins = context.add.sprite(900, 25, 'gameAtlas', 'dwarves_emblem').setScale(0.5).setAngle(90);
+    const dwarvesWins = context.add.sprite(900, 25, 'gameAtlas', 'dwarves_emblem').setScale(0.5);
 
     this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins]);
 
