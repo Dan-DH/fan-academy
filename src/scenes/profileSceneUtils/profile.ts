@@ -27,7 +27,7 @@ export class Profile extends Phaser.GameObjects.Container {
 
   deletePopup: Phaser.GameObjects.Container;
 
-  profilePicture: Phaser.GameObjects.Image;
+  profilePicture: Phaser.GameObjects.Sprite;
 
   previousPicture: string | undefined;
 
@@ -63,7 +63,7 @@ export class Profile extends Phaser.GameObjects.Container {
 
     // Display profile picture
     this.previousPicture = this.context.userData!.picture;
-    this.profilePicture = this.context.add.image(580, 550, this.context.userData!.picture).setDisplaySize(256 * 0.5, 256 * 0.5).setInteractive({ useHandCursor: true });
+    this.profilePicture = this.context.add.sprite(580, 550, 'gameAtlas', this.context.userData!.picture).setDisplaySize(256 * 0.5, 256 * 0.5).setInteractive({ useHandCursor: true });
     this.profilePicture.on('pointerdown', () => {
       this.profilePicturePopup.setVisible(true);
       this.toggleFormVisibility(false);
@@ -191,7 +191,7 @@ export class Profile extends Phaser.GameObjects.Container {
      */
 
     // Save changes button
-    this.saveButtonImage = this.context.add.image(895, 700, 'popupButton').setTint(0x3399ff).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
+    this.saveButtonImage = this.context.add.sprite(895, 690, 'gameAtlas', 'popup_button').setTint(0x3399ff).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
     this.saveButtonText = this.context.add.text(830, 655, 'SAVE CHANGES', {
       fontFamily: "proHeavy",
       fontSize: 40,
@@ -214,7 +214,7 @@ export class Profile extends Phaser.GameObjects.Container {
     this.deletePopup = new DeleteWarningPopup(context, this);
 
     // Delete account button
-    this.deleteAccountButtonImage = this.context.add.image(1265, 700, 'popupButton').setTint(0x990000).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
+    this.deleteAccountButtonImage = this.context.add.image(1265, 690, 'gameAtlas', 'popup_button').setTint(0x990000).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
     this.deleteAccountButtonText = this.context.add.text(1200, 655, 'DELETE ACCOUNT', {
       fontFamily: "proHeavy",
       fontSize: 40,
