@@ -11,7 +11,7 @@ export class TurnButton {
     // Sending a turn
     this.buttonImage.on('pointerdown', async () => {
       if (context.currentGame && context.activePlayer === context.userId) {
-        context.sound.play(EUiSounds.BUTTON_PLAY);
+        // context.sound.play(EUiSounds.BUTTON_PLAY);
 
         console.log('Clicked on send turn');
 

@@ -2,6 +2,7 @@ import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
 import { EChallengePopup, EGameModes, EGameStatus, EUiSounds } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
+import { factionEnumToEmblem } from "../../utils/gameUtils";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
 import UIScene from "../ui.scene";
@@ -68,13 +69,13 @@ export async function createGameList(context: UIScene) {
 
       lastListItemY += (index === 0 ? textListHeight : gameListButtonHeight) + gameListButtonSpacing;
 
-      const gameListButtonImage = context.add.image(0, lastListItemY, "gameListButton").setOrigin(0).setTint(0xBBBBBB);
+      const gameListButtonImage = context.add.sprite(-7, lastListItemY, 'gameAtlas', 'game_list_premade').setOrigin(0).setScale(1.80).setTint(0xBBBBBB);
       const playerFactionIcon = player.faction ? {
         faction: player.faction,
-        scale: 0.4
+        scale: 1
       } : {
-        faction: 'unknownFaction',
-        scale: 1.2
+        faction: 'unknown_faction',
+        scale: 1.3
       };
 
       const lastPlayedText = context.add.text(20, lastListItemY + 100, timeAgo(game.lastPlayedAt), {
@@ -83,8 +84,8 @@ export async function createGameList(context: UIScene) {
         color: '#ffffff'
       }).setOrigin(0);
 
-      const playerFactionImage =  context.add.image(90, lastListItemY + gameListButtonHeight / 2, playerFactionIcon.faction).setScale(playerFactionIcon.scale);
-      const rankedIcon = context.add.image(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, "runeMetal").setScale(1).setVisible(false);
+      const playerFactionImage =  context.add.sprite(90, lastListItemY + gameListButtonHeight / 2 - 5, 'gameAtlas', factionEnumToEmblem(playerFactionIcon.faction)).setScale(playerFactionIcon.scale);
+      const rankedIcon = context.add.sprite(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, 'gameAtlas', 'rune_metal').setScale(1).setVisible(false);
       if (game.gameMode === EGameModes.RANKED) rankedIcon.setVisible(true);
 
       let opponentFactionImage;
@@ -99,24 +100,26 @@ export async function createGameList(context: UIScene) {
       };
 
       if (opponent) {
-        opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, opponent.faction).setScale(0.4);
-        opponentProfilePicture = context.add.image(632, lastListItemY + gameListButtonHeight / 2, opponent.userData.picture).setFlipX(true).setDisplaySize(256 * 0.4, 256 * 0.4);
+        const opponentFaction = factionEnumToEmblem(opponent.faction);
+        opponentFactionImage = context.add.sprite(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', opponentFaction).setScale(opponentFaction === 'unknown_faction' ? 1.3 : 1);
+        opponentProfilePicture = context.add.sprite(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', opponent.userData.picture).setFlipX(true).setScale(1.5); //.setDisplaySize(256 * 0.4, 256 * 0.4);
+        console.log('picture', opponent.userData.picture);
         opponentNameText = setOpponentNameText(opponent.userData.username);
       } else {
-        opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'unknownFaction');
-        opponentProfilePicture = context.add.image(632, lastListItemY + gameListButtonHeight / 2, 'unknownOpponent').setFlipX(true).setScale(0.4);
+        opponentFactionImage = context.add.sprite(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', 'unknown_faction').setScale(1.3);
+        opponentProfilePicture = context.add.sprite(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', 'unknownAvatar-hd').setFlipX(true).setScale(1.5);
         opponentNameText = setOpponentNameText('Searching...');
       }
 
       // Add a 'close' button to games looking for players
-      const closeButton = context.add.image(gameListButtonWidth - 30, lastListItemY, 'closeButton').setOrigin(0).setVisible(false);
+      const closeButton = context.add.sprite(gameListButtonWidth - 30, lastListItemY, 'gameAtlas', 'close_button').setOrigin(0).setVisible(false);
       if (game.status === EGameStatus.SEARCHING || game.status === EGameStatus.CHALLENGE) {
         closeButton.setVisible(true).setInteractive({ useHandCursor: true });
         closeButton.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           sendDeletedGameMessage(context.lobbyRoom!, game._id, context.userId);
-          context.sound.play(EUiSounds.GAME_DELETE);
+          // context.sound.play(EUiSounds.GAME_DELETE);
           createGameList(context);
         });
       }
@@ -137,7 +140,7 @@ export async function createGameList(context: UIScene) {
           if (pointerMoved) return; // skip tap if user was swiping
 
           highlightGameButton();
-          context.sound.play(EUiSounds.BUTTON_GENERIC);
+          // context.sound.play(EUiSounds.BUTTON_GENERIC);
           await accessGame(context, game);
         });
       }
@@ -148,7 +151,7 @@ export async function createGameList(context: UIScene) {
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
-          context.sound.play(EUiSounds.GAME_DELETE);
+          // context.sound.play(EUiSounds.GAME_DELETE);
           highlightGameButton();
 
           if (context.currentRoom) {
@@ -176,7 +179,7 @@ export async function createGameList(context: UIScene) {
     fontSize: 120,
     fontFamily: "proHeavy"
   });
-  const newGameButton = context.add.image(0, lastListItemY, 'newGameButton').setOrigin(0).setInteractive({ useHandCursor: true });
+  const newGameButton = context.add.sprite(-15, lastListItemY, 'gameAtlas', 'new_game_btn').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
     if (context.currentRoom) {

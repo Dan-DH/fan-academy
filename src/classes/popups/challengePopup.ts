@@ -1,11 +1,10 @@
 import { sendChallengeAcceptedMessage } from "../../colyseus/colyseusLobbyRoom";
-import { EChallengePopup, EFaction, EGameModes, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction, EGameModes } from "../../enums/gameEnums";
 import { newGameChallenge } from "../../queries/gameQueries";
 import GameScene from "../../scenes/game.scene";
 import { createNewGame } from "../../scenes/gameSceneUtils/createGame";
 import LeaderboardScene from "../../scenes/leaderboard.scene";
 import UIScene from "../../scenes/ui.scene";
-import { playSound } from "../../utils/gameSounds";
 import { truncateText, textAnimationFadeOut } from "../../utils/textAnimations";
 
 const challengePopupCoordinates = {
@@ -117,17 +116,17 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     };
 
     this.councilButtonImage.on('pointerdown', async () => {
-      playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      // playSound(this.scene, EUiSounds.BUTTON_PLAY);
       await buttonCallback(EFaction.COUNCIL);
     });
 
     this.elvesButtonImage.on('pointerdown', async () => {
-      playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      // playSound(this.scene, EUiSounds.BUTTON_PLAY);
       await buttonCallback(EFaction.DARK_ELVES);
     });
 
     this.dwarvesButtonImage.on('pointerdown', async () => {
-      playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      // playSound(this.scene, EUiSounds.BUTTON_PLAY);
       await buttonCallback(EFaction.DWARVES);
     });
 

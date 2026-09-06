@@ -88,12 +88,12 @@ export function generateFourDigitId(): number {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
-export function factionEnumToEmblem(faction: EFaction): string {
-  const factionMap = {
-    [EFaction.COUNCIL]: 'council_emblem',
-    [EFaction.DARK_ELVES]: 'elves_emblem',
-    [EFaction.DWARVES]: 'dwarves_emblem'
+export function factionEnumToEmblem(faction: string): string {
+  const factionMap: Record<string, string> = {
+    council: 'council_emblem',
+    elves: 'elves_emblem',
+    dwarves: 'dwarves_emblem'
   };
 
-  return factionMap[faction];
+  return factionMap[faction] ?? 'unknown_faction';
 }

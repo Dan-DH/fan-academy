@@ -19,7 +19,7 @@ export const createNewGame = async (context: UIScene, faction: EFaction, gameMod
   }
   // Create the faction's deck and starting hand
   if (context.userId) {
-    context.sound.play(EUiSounds.BUTTON_PLAY);
+    // context.sound.play(EUiSounds.BUTTON_PLAY);
     const activeRoom = context.currentRoom ? context.currentRoom : undefined;
     await createGame(context, faction, gameMode);
     await context.currentRoom?.leave();
