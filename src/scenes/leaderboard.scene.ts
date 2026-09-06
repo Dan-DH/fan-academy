@@ -1,5 +1,4 @@
 import { MainLeaderboard } from "./leaderboardSceneUtils/mainLeaderboard";
-import { loadLeaderboardUI } from "./leaderboardSceneUtils/leaderboardUI";
 import { EFaction, EUiSounds } from "../enums/gameEnums";
 import { getLeaderboardData } from "./leaderboardSceneUtils/getLeaderboardData";
 import { FactionLeaderboard } from "./leaderboardSceneUtils/factionLeaderboard";
@@ -17,20 +16,15 @@ export default class LeaderboardScene extends Phaser.Scene {
     this.userId = data.userId;
   }
 
-  preload() {
-    // Preload UI
-    loadLeaderboardUI(this);
-  }
-
   async create() {
     this.add.image(396, 14, 'gameBackground').setOrigin(0, 0).setScale(1.07, 1.2);
 
     const leaderboardData = await getLeaderboardData();
 
-    const mainLeaderboardButton = this.add.image(1200, 740, "mainLeaderboard").setScale(0.7).setInteractive({ useHandCursor: true });
-    const councilLeaderboardButton = this.add.image(1260, 740, EFaction.COUNCIL).setScale(0.2).setInteractive({ useHandCursor: true });
-    const elvesLeaderboardButton = this.add.image(1320, 740, EFaction.DARK_ELVES).setScale(0.2).setInteractive({ useHandCursor: true });
-    const dwarvesLeaderboardButton = this.add.image(1380, 740, EFaction.DWARVES).setScale(0.2).setInteractive({ useHandCursor: true });
+    const mainLeaderboardButton = this.add.sprite(1200, 740, 'gameAtlas', 'leader_button').setScale(0.7).setInteractive({ useHandCursor: true });
+    const councilLeaderboardButton = this.add.sprite(1260, 740, 'gameAtlas', 'council_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const elvesLeaderboardButton = this.add.sprite(1320, 740, 'gameAtlas', 'elves_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const dwarvesLeaderboardButton = this.add.sprite(1380, 740, 'gameAtlas', 'dwarves_emblem').setScale(0.5).setInteractive({ useHandCursor: true }).setAngle(90);
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();

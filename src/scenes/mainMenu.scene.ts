@@ -1,4 +1,3 @@
-import { EUiSounds } from "../enums/gameEnums";
 import { IUserPreferences } from "../interfaces/userInterface";
 import { authCheck, loginQuery, passwordRecoveryEmailQuery, passwordResetQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";

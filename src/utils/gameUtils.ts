@@ -2,7 +2,7 @@ import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EActionType, EActionClass, EClass, EWinConditions } from "../enums/gameEnums";
+import { EActionType, EActionClass, EClass, EWinConditions, EFaction } from "../enums/gameEnums";
 import { IHero, IItem, ICrystal } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 
@@ -86,4 +86,14 @@ export function checkUnitGameOver(hero: Hero): void {
 
 export function generateFourDigitId(): number {
   return Math.floor(1000 + Math.random() * 9000);
+}
+
+export function factionEnumToEmblem(faction: EFaction): string {
+  const factionMap = {
+    [EFaction.COUNCIL]: 'council_emblem',
+    [EFaction.DARK_ELVES]: 'elves_emblem',
+    [EFaction.DWARVES]: 'dwarves_emblem'
+  };
+
+  return factionMap[faction];
 }
