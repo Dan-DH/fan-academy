@@ -1,8 +1,8 @@
 import { EHeroes, EItems } from "../../enums/gameEnums";
-import GameScene from "../game.scene";
-import { CDN_PATH } from "../preloader.scene";
+import PreloaderScene, { CDN_PATH } from "../preloader.scene";
 
-export function loadGameAssets(context: GameScene) {
+// FIXME: remove if unused
+export function loadGameAssets(context: PreloaderScene) {
   // --- IMAGES --
 
   // Load tiles

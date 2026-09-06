@@ -3,7 +3,6 @@ import { IUserPreferences } from "../interfaces/userInterface";
 import { authCheck, loginQuery, passwordRecoveryEmailQuery, passwordResetQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";
 import createMainMenuButton from "./mainMenuUtils/buttons";
-import { CDN_PATH } from "./preloader.scene";
 
 export default class MainMenuScene extends Phaser.Scene {
   userId: string | undefined;
@@ -17,30 +16,6 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   init() {}
-
-  preload() {
-    // login form
-    this.load.html('loginForm', 'html/loginForm.html');
-    this.load.html('signUpForm', 'html/signUpForm.html');
-    this.load.html('passwordRecoveryForm', 'html/passwordRecoveryForm.html');
-    this.load.html('passwordResetForm', 'html/passwordResetForm.html');
-
-    // menu images
-    this.load.image('uiBackground', `${CDN_PATH}/ui/game_screen.webp`);
-    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`); // 'main_menu_image.webp' for the original one
-    this.load.image('mainMenuBottom', `${CDN_PATH}/ui/main_menu_bottom.webp`);
-    this.load.image('playButton', `${CDN_PATH}/ui/play_button.webp`);
-    this.load.image('mainMenuButton', `${CDN_PATH}/ui/main_menu_button.webp`);
-
-    // fonts
-    this.load.font('proHeavy', '/fonts/BlambotFXProHeavyLowerCapsBB.woff', 'truetype');
-    this.load.font('proLight', '/fonts/BlambotFXProLightBB.woff', 'truetype');
-
-    // sounds
-    this.load.audio('buttonFailedSound', `${CDN_PATH}/audio/ui/buttonFailed.mp3`);
-    this.load.audio('battleButtonSound', `${CDN_PATH}/audio/ui/battleButton.mp3`);
-    this.load.audio('buttonPressGenericSound', `${CDN_PATH}/audio/ui/buttonPressGeneric.mp3`);
-  }
 
   async create() {
     // Auth check
@@ -58,16 +33,17 @@ export default class MainMenuScene extends Phaser.Scene {
     // menuImg.y += 14;
 
     // main menu bottom strip
-    const menuBottomImage = this.add.image(0, 0, 'mainMenuBottom').setOrigin(0);
+    const menuBottomImage = this.add.sprite(60, 0, 'gameAtlas', 'main_menu_bottom').setScale(1.8);
     const menuBottomText = this.add.text(0.5, 0.5, 'Welcome to the Hero Academy!', {
       font: '50px proLight',
       color: '#873600'
-    }).setOrigin(-0.4, -1.3);
+    }).setOrigin(0.5, 0.4);
     // menuBottomContainer
     this.add.container(bg.width - menuBottomImage.width - 14, bg.height - menuBottomImage.height - 14, [menuBottomImage, menuBottomText]);
 
     // main menu buttons
-    const menuButtonHeight = this.textures.get('mainMenuButton').getSourceImage().height;
+    const menuButtonHeight = this.textures.get('main_menu_button').getSourceImage().height;
+    console.log('menuButtonHeight', menuButtonHeight);
     const menuButtonX =  200;
     const menuButtonPadding = 20;
 
@@ -75,12 +51,12 @@ export default class MainMenuScene extends Phaser.Scene {
     createMainMenuButton({
       thisParam: this,
       x: menuButtonX,
-      y: menuButtonHeight * 4 + menuButtonPadding,
-      imageKey: 'mainMenuButton',
+      y: menuButtonHeight * 8 + menuButtonPadding,
+      imageKey: 'main_menu_button',
       text: 'Profile',
       font: '70px proHeavy',
       callback: () => {
-        this.sound.play(EUiSounds.BUTTON_GENERIC);
+        // this.sound.play(EUiSounds.BUTTON_GENERIC);
         backgroundGameScreen.setVisible(true);
         menuImg.setVisible(false);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
@@ -93,12 +69,12 @@ export default class MainMenuScene extends Phaser.Scene {
     createMainMenuButton({
       thisParam: this,
       x: menuButtonX,
-      y: menuButtonHeight * 6 - menuButtonPadding,
-      imageKey: 'mainMenuButton',
+      y: menuButtonHeight * 12 - menuButtonPadding,
+      imageKey: 'main_menu_button',
       text: 'Leaderboard',
       font: '70px proHeavy',
       callback: () => {
-        this.sound.play(EUiSounds.BUTTON_GENERIC);
+        // this.sound.play(EUiSounds.BUTTON_GENERIC);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.launch('LeaderboardScene', { userId: this.userId });
         this.currentSubScene = 'LeaderboardScene';
@@ -109,12 +85,12 @@ export default class MainMenuScene extends Phaser.Scene {
     createMainMenuButton({
       thisParam: this,
       x: menuButtonX,
-      y: menuButtonHeight * 7 + 5,
-      imageKey: 'mainMenuButton',
+      y: menuButtonHeight * 14 + 5,
+      imageKey: 'main_menu_button',
       text: 'Guide',
       font: '70px proHeavy',
       callback: () => {
-        this.sound.play(EUiSounds.BUTTON_GENERIC);
+        // this.sound.play(EUiSounds.BUTTON_GENERIC);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.launch('AboutScene');
         this.currentSubScene = 'AboutScene';
@@ -125,12 +101,12 @@ export default class MainMenuScene extends Phaser.Scene {
     createMainMenuButton({
       thisParam: this,
       x: menuButtonX,
-      y: menuButtonHeight * 8.5,
-      imageKey: 'mainMenuButton',
+      y: menuButtonHeight * 17,
+      imageKey: 'main_menu_button',
       text: 'Discord',
       font: '70px proHeavy',
       callback: () => {
-        this.sound.play(EUiSounds.BUTTON_GENERIC);
+        // this.sound.play(EUiSounds.BUTTON_GENERIC);
         window.open('https://discord.gg/pkfwDvKyxX');
       }
     });
@@ -140,11 +116,12 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: 200,
       y: 140,
-      imageKey: 'playButton',
+      imageKey: 'play_button',
       text: 'Play!',
       font: '130px proHeavy',
+      scale: 1.8,
       callback: () => {
-        this.sound.play(EUiSounds.BUTTON_PLAY);
+        // this.sound.play(EUiSounds.BUTTON_PLAY);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.start('UIScene', { userId: this.userId });
         this.currentSubScene = 'UIScene';
@@ -155,13 +132,13 @@ export default class MainMenuScene extends Phaser.Scene {
     createMainMenuButton({
       thisParam: this,
       x: menuButtonX,
-      y: menuButtonHeight * 14 + 40,
-      imageKey: 'mainMenuButton',
+      y: menuButtonHeight * 28 + 40,
+      imageKey: 'main_menu_button',
       text: 'Logout',
       font: '70px proHeavy',
       tint: '0x990000',
       callback: async () => {
-        this.sound.play(EUiSounds.BUTTON_GENERIC);
+        // this.sound.play(EUiSounds.BUTTON_GENERIC);
         localStorage.removeItem('jwt');
         this.userId = undefined;
         document.title = 'Fan Academy';
@@ -175,7 +152,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   onShutdown() {
-    this.sound.stopAll();
+    // this.sound.stopAll();
   }
 
   /*
@@ -282,13 +259,13 @@ export default class MainMenuScene extends Phaser.Scene {
           cleanLoginFormFields();
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
-          this.sound.play(EUiSounds.BUTTON_GENERIC);
+          // this.sound.play(EUiSounds.BUTTON_GENERIC);
         }else {
-          this.sound.play(EUiSounds.BUTTON_FAILED);
+          // this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(loginError, result.error); // Show server error to user
         }
       } else {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(loginError, 'Incorrect username or password.'); // Show server error to user
       }
     });
@@ -298,18 +275,18 @@ export default class MainMenuScene extends Phaser.Scene {
       hideFormError(signUpError);
 
       if (signUpPasswordInput.value !== signUpPasswordConfirmInput.value) {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Passwords do not match');
         return;
       };
       if (!isValidPassword(signUpPasswordInput.value)) {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Password must be at least 8 characters long and contain a letter and a number');
         return;
       };
 
       if(signUpUsernameInput.value.length > 20) {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(signUpError, 'Username must be 20 characters or shorter');
         return;
       }
@@ -321,10 +298,10 @@ export default class MainMenuScene extends Phaser.Scene {
           cleanSignUpFormFields();
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
-          this.sound.play(EUiSounds.BUTTON_GENERIC);
+          // this.sound.play(EUiSounds.BUTTON_GENERIC);
           console.log('UserId after sign up:', this.userId);
         } else {
-          this.sound.play(EUiSounds.BUTTON_FAILED);
+          // this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(signUpError, result.error); // Show server error to user
         }
       }
@@ -343,17 +320,17 @@ export default class MainMenuScene extends Phaser.Scene {
       hideFormError(passwordResetError);
 
       if (passwordResetRecoveryCodeInput.value.length !== 6) {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(passwordResetError, 'Invalid recovery code');
         return;
       };
       if (passwordResetPasswordInput.value !== passwordResetPasswordConfirmInput.value) {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(passwordResetError, 'Passwords do not match');
         return;
       };
       if (!isValidPassword(passwordResetPasswordInput.value)) {
-        this.sound.play(EUiSounds.BUTTON_FAILED);
+        // this.sound.play(EUiSounds.BUTTON_FAILED);
         showFormError(passwordResetError, 'Password must be at least 8 characters long and contain a letter and a number');
         return;
       };
@@ -451,6 +428,6 @@ export default class MainMenuScene extends Phaser.Scene {
       sound: userData.preferences.sound
     });
 
-    this.sound.mute = !userData.preferences.sound;
+    // this.sound.mute = !userData.preferences.sound;
   }
 }

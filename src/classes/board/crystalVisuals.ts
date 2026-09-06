@@ -3,7 +3,7 @@ import GameScene from "../../scenes/game.scene";
 import { addCirclingTween, continuousAnimation, engineerShieldAnimation } from "../../utils/unitAnimations";
 
 export class CrystalVisuals extends Phaser.GameObjects.Container {
-  pedestalImage: Phaser.GameObjects.Image;
+  pedestalImage: Phaser.GameObjects.Sprite;
   crystalImage: Phaser.GameObjects.Image;
   singleCrystalDebuff: Phaser.GameObjects.Image;
   doubleCrystalDebuff: Phaser.GameObjects.Image;
@@ -21,9 +21,9 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
 
-    this.pedestalImage = context.add.image(0, 10, 'pedestal').setScale(0.8);
-    const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystalDamaged' : 'crystalFull';
-    this.crystalImage = context.add.image(0, -30, crystalTexture).setScale(isBigCrystal ? 1 : 0.8);
+    this.pedestalImage = context.add.sprite(0, 10, 'gameAtlas', 'crystal_pedestal').setScale(0.7, 1).setAngle(90);
+    const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystal_damaged' : 'crystal_full';
+    this.crystalImage = context.add.sprite(0, -30, 'gameAtlas', crystalTexture).setScale(isBigCrystal ? 1.2 : 1);
 
     this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
 

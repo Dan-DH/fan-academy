@@ -60,6 +60,6 @@ export default class LeaderboardScene extends Phaser.Scene {
   }
 
   onShutdown() {
-    this.sound.stopAll();
+    // this.sound.stopAll();
   }
 }

@@ -5,8 +5,6 @@ import { Item } from "../classes/factions/item";
 import { Coordinates, IGame, IPlayerData, IPlayerState } from "../interfaces/gameInterface";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 import { createChatComponent } from "./gameSceneUtils/chatComponent";
-import { loadGameBoardUI } from "./gameSceneUtils/gameBoardUI";
-import { loadGameAssets } from "./mainMenuUtils/gameAssets";
 import { Tile } from "../classes/board/tile";
 import { Crystal } from "../classes/board/crystal";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
@@ -78,12 +76,6 @@ export default class GameScene extends Phaser.Scene {
     this.registry.set('networkStatus', 'online');
   }
 
-  preload() {
-    this.load.html('chatComponent', 'html/chat.html');
-    loadGameAssets(this);
-    loadGameBoardUI(this);
-  }
-
   create() {
     this.time.addEvent({
       delay: 300000, // 5 minutes
@@ -113,6 +105,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   onShutdown() {
-    this.sound.stopAll();
+    // this.sound.stopAll();
   }
 };
