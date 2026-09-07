@@ -1,4 +1,3 @@
-import { EUiSounds } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
 
 const turnPopupCoordinates = {
@@ -55,13 +54,13 @@ export class TurnWarningPopup extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     this.okButtonImage.on('pointerdown', () => {
-      this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.setVisible(false);
       context.gameController!.turnButton.handleSendingTurn();
     });
 
     this.cancelButtonImage.on('pointerdown', () => {
-      this.scene.sound.play(EUiSounds.BUTTON_FAILED);
+      // this.scene.sound.play(EUiSounds.BUTTON_FAILED);
       this.setVisible(false);
     });
 

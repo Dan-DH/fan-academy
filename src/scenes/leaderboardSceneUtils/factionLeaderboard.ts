@@ -80,7 +80,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
       const challengeIcon = context.add.image(1030, 15, 'gameAtlas', 'challengeIcon').setScale(1.2).setInteractive({ useHandCursor: true });
 
       challengeIcon.on('pointerdown', () => {
-        playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+        // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
 
         new ChallengePopup({
           context,
@@ -106,10 +106,10 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
 
     const paginationText = context.add.text(0, 0, `${page} / ${data.totalPages}`, bigStyle).setOrigin(0.5);
 
-    const firstPageButton = context.add.image(-180, 0, 'gameAtlas', 'arrow_button').setFlipX(true).setScale(0.7).setVisible(page > 1);
-    const backButton = context.add.image(-120, 0, 'gameAtlas', 'curved_arrow_button').setScale(0.7).setVisible(page > 1);
-    const forwardButton = context.add.image(120, 0, 'gameAtlas', 'curved_arrow_button').setFlipX(true).setScale(0.7).setVisible(page !== data.totalPages);
-    const lastPageButton = context.add.image(180, 0, 'gameAtlas', 'arrow_button').setScale(0.7).setVisible(page !== data.totalPages);
+    const firstPageButton = context.add.image(-180, 0, 'gameAtlas', 'arrowButton').setFlipX(true).setScale(0.7).setVisible(page > 1);
+    const backButton = context.add.image(-120, 0, 'gameAtlas', 'curvedArrowButton').setScale(0.7).setVisible(page > 1);
+    const forwardButton = context.add.image(120, 0, 'gameAtlas', 'curvedArrowButton').setFlipX(true).setScale(0.7).setVisible(page !== data.totalPages);
+    const lastPageButton = context.add.image(180, 0, 'gameAtlas', 'arrowButton').setScale(0.7).setVisible(page !== data.totalPages);
 
     let isQuerying = false;
 

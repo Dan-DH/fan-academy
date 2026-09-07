@@ -1,11 +1,10 @@
-import { EGameSounds, EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { useAnimation } from "../../../utils/unitAnimations";
 
 export class DragonScale extends Item {
@@ -25,7 +24,7 @@ export class HealingPotion extends Item {
   }
 
   use(target: Hero): void {
-    playSound(this.scene, EGameSounds.POTION_USE);
+    // playSound(this.scene, EGameSounds.POTION_USE);
 
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'healingPotion').setDepth(100);
     useAnimation(potionImage);
@@ -47,7 +46,7 @@ export class Inferno extends Item {
   use(targetTile: Tile): void {
     const infernoImage = this.scene.add.image(targetTile.x, targetTile.y, 'infernoShockWave').setDepth(100);
     useAnimation(infernoImage, 3);
-    playSound(this.scene, EGameSounds.INFERNO_USE);
+    // playSound(this.scene, EGameSounds.INFERNO_USE);
 
     // Damages enemy units and crystals, and removes enemy KO'd units
     const damage = 350;

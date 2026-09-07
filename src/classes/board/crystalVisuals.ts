@@ -21,21 +21,21 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
 
-    this.pedestalImage = context.add.image(0, 10, 'gameAtlas', 'crystal_pedestal').setScale(0.7, 1);
-    const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystal_damaged' : 'crystal_full';
+    this.pedestalImage = context.add.image(0, 10, 'gameAtlas', 'crystalPedestal').setScale(0.7, 1);
+    const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystalDamaged' : 'crystal_full';
     this.crystalImage = context.add.image(0, -30, 'gameAtlas', crystalTexture).setScale(isBigCrystal ? 1.2 : 1);
 
-    this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
+    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
 
     const crystalColor = data.belongsTo === 1 ?  0x3399ff : 0x990000;
     this.crystalImage.setTint(crystalColor);
 
     // Debuff images and animation
-    this.singleCrystalDebuff = context.add.image(0, -30, 'crystalDebuff_1').setVisible(false);
-    this.doubleCrystalDebuff = context.add.image(0, -30, 'crystalDebuff_3').setVisible(false);
+    this.singleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_1').setVisible(false);
+    this.doubleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_3').setVisible(false);
 
     const isShielded = data.engineerShield ? true : false;
-    this.engineerShieldImage = context.add.image(0, -20, 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
+    this.engineerShieldImage = context.add.image(0, -20, 'gameAtlas', 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
     engineerShieldAnimation(this.engineerShieldImage);
 
     this.debuffEventSingle = continuousAnimation(this.singleCrystalDebuff, ['crystalDebuff_1', 'crystalDebuff_2']);
@@ -44,14 +44,14 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     if (data.debuffLevel === 1) this.singleCrystalDebuff.setVisible(true);
     if (data.debuffLevel === 2) this.doubleCrystalDebuff.setVisible(true);
 
-    this.annihilatorDebuffImage = context.add.image(25, -30, 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
+    this.annihilatorDebuffImage = context.add.image(25, -30, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
     this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
     if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
     // Attack  and healing reticle animations
-    this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
+    this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
     addCirclingTween(this.attackReticle);
-    this.healReticle = context.add.image(0, -10, 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
+    this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
     addCirclingTween(this.healReticle);
 
     this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.annihilatorDebuffImage, this.doubleCrystalDebuff, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS]);

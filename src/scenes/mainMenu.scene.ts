@@ -32,7 +32,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // menuImg.y += 14;
 
     // main menu bottom strip
-    const menuBottomImage = this.add.image(60, 0, 'gameAtlas', 'main_menu_bottom').setScale(1.8);
+    const menuBottomImage = this.add.image(60, 0, 'gameAtlas', 'mainMenuBottom').setScale(1.8);
     const menuBottomText = this.add.text(0.5, 0.5, 'Welcome to the Hero Academy!', {
       font: '50px proLight',
       color: '#873600'
@@ -41,7 +41,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this.add.container(bg.width - menuBottomImage.width - 14, bg.height - menuBottomImage.height - 14, [menuBottomImage, menuBottomText]);
 
     // main menu buttons
-    const menuButtonHeight = this.textures.get('main_menu_button').getSourceImage().height;
+    const menuButtonHeight = this.textures.get('mianMenuButton').getSourceImage().height;
     console.log('menuButtonHeight', menuButtonHeight);
     const menuButtonX =  200;
     const menuButtonPadding = 20;
@@ -51,7 +51,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 8 + menuButtonPadding,
-      imageKey: 'main_menu_button',
+      imageKey: 'mianMenuButton',
       text: 'Profile',
       font: '70px proHeavy',
       callback: () => {
@@ -69,7 +69,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 12 - menuButtonPadding,
-      imageKey: 'main_menu_button',
+      imageKey: 'mianMenuButton',
       text: 'Leaderboard',
       font: '70px proHeavy',
       callback: () => {
@@ -85,7 +85,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 14 + 5,
-      imageKey: 'main_menu_button',
+      imageKey: 'mianMenuButton',
       text: 'Guide',
       font: '70px proHeavy',
       callback: () => {
@@ -101,7 +101,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 17,
-      imageKey: 'main_menu_button',
+      imageKey: 'mianMenuButton',
       text: 'Discord',
       font: '70px proHeavy',
       callback: () => {
@@ -115,7 +115,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: 200,
       y: 140,
-      imageKey: 'play_button',
+      imageKey: 'playButton',
       text: 'Play!',
       font: '130px proHeavy',
       scale: 1.8,
@@ -132,7 +132,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 28 + 40,
-      imageKey: 'main_menu_button',
+      imageKey: 'mianMenuButton',
       text: 'Logout',
       font: '70px proHeavy',
       tint: '0x990000',

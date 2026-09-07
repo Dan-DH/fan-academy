@@ -2,10 +2,9 @@ import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameSounds, ETiles } from "../enums/gameEnums";
+import { ETiles } from "../enums/gameEnums";
 import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { playSound } from "./gameSounds";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
 
 export function getAOETiles(aoeAttack: Hero | Item,  targetTile: Tile): {
@@ -58,22 +57,22 @@ export function specialTileCheck(hero: Hero, targetTile: ETiles, currentTile?: E
   if (targetTile === ETiles.CRYSTAL_DAMAGE) {
     hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
     hero.visuals.crystalDebuffTileAnim.setVisible(true);
-    playSound(hero.scene, EGameSounds.CRYSTAL_TILE);
+    // playSound(hero.scene, EGameSounds.CRYSTAL_TILE);
   }
   if (targetTile === ETiles.POWER) {
     hero.stats.attackTile = true;
     hero.visuals.powerTileAnim.setVisible(true);
-    playSound(hero.scene, EGameSounds.SWORD_TILE);
+    // playSound(hero.scene, EGameSounds.SWORD_TILE);
   }
   if (targetTile === ETiles.MAGICAL_RESISTANCE) {
     hero.stats.magicalResistanceTile = true;
     hero.visuals.magicalResistanceTileAnim.setVisible(true);
-    playSound(hero.scene, EGameSounds.HELM_TILE);
+    // playSound(hero.scene, EGameSounds.HELM_TILE);
   }
   if (targetTile === ETiles.PHYSICAL_RESISTANCE) {
     hero.stats.physicalResistanceTile = true;
     hero.visuals.physicalResistanceTileAnim.setVisible(true);
-    playSound(hero.scene, EGameSounds.SHIELD_TILE);
+    // playSound(hero.scene, EGameSounds.SHIELD_TILE);
   }
   if (targetTile === ETiles.SPEED) {
     hero.stats.speedTile = true;

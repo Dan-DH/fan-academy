@@ -1,9 +1,8 @@
-import { EActionType, EGameSounds } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
-import { playSound } from "../../../utils/gameSounds";
 import { useAnimation } from "../../../utils/unitAnimations";
 
 export abstract class Dwarf extends Hero {
@@ -12,7 +11,7 @@ export abstract class Dwarf extends Hero {
   }
 
   equipFactionEquipment(handPosition: number): void {
-    playSound(this.scene, EGameSounds.DRAGON_SCALE_USE);
+    // playSound(this.scene, EGameSounds.DRAGON_SCALE_USE);
 
     const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
@@ -28,7 +27,7 @@ export abstract class Dwarf extends Hero {
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
-    this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE);
+    // this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE);
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }

@@ -1,8 +1,7 @@
-import { ETiles, EAttackType, EGameSounds, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
+import { ETiles, EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
 import { ICrystal, IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
-import { playSound } from "../../utils/gameSounds";
 import { CrystalCard } from "../cards/crystalCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "../factions/healthBar";
@@ -78,9 +77,9 @@ export class Crystal extends Phaser.GameObjects.Container {
     let assaultBoostDamage = 0;
 
     if (this.stats.debuffLevel === 0) {
-      playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE);
+      // playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE);
     } else {
-      playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
+      // playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
 
       const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getAliveUnitsOnAssaultTiles(this.stats.belongsTo);
 
@@ -122,7 +121,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   removeFromGame(): void {
-    playSound(this.scene, EGameSounds.CRYSTAL_DESTROY);
+    // playSound(this.scene, EGameSounds.CRYSTAL_DESTROY);
 
     const tile = this.getTile();
     tile.crystal = undefined;

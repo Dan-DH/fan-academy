@@ -1,9 +1,8 @@
 import { sendTurnMessage } from "../colyseus/colyseusGameRoom";
-import { EActionClass, EActionType, EGameSounds, EGameStatus, EHeroes, EItems, ETiles, EUiSounds } from "../enums/gameEnums";
+import { EActionClass, EActionType, EGameStatus, EHeroes, EItems, ETiles } from "../enums/gameEnums";
 import { IGame, IGameOver, IGameState, IPlayerState, IUserData } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { replayButton } from "../scenes/gameSceneUtils/replayButton";
-import { playSound } from "../utils/gameSounds";
 import { getNewPositionAfterForce, canBeMovedIntoSpawn, forcedMoveAnimation } from "../utils/unitAnimations";
 import { visibleUnitCardCheck } from "../utils/unitCards";
 import { deselectUnit, getPlayersKey } from "../utils/playerUtils";
@@ -129,7 +128,7 @@ export class GameController {
   addConcedeButton(context: GameScene): Phaser.GameObjects.Image {
     const button = context.add.image(1350, 70, 'concedeButton').setScale(0.9).setInteractive({ useHandCursor: true });
     button.on('pointerdown', ()=> {
-      playSound(this.context, EUiSounds.BUTTON_GENERIC);
+      // playSound(this.context, EUiSounds.BUTTON_GENERIC);
       this.concedePopup.setVisible(true);
     });
     return button;
@@ -139,7 +138,7 @@ export class GameController {
     deselectUnit(this.context);
     this.context.longPressStart = undefined;
     this.context.visibleUnitCard = undefined;
-    playSound(this.context, EGameSounds.RESET_TURN);
+    // playSound(this.context, EGameSounds.RESET_TURN);
 
     this.context.scene.restart();
   };
@@ -149,7 +148,7 @@ export class GameController {
   }
 
   drawUnits() {
-    playSound(this.context, EGameSounds.DRAW);
+    // playSound(this.context, EGameSounds.DRAW);
 
     const drawAmount = 6 - this.hand.getHandSize();
     if (this.deck.getDeckSize() === 0 || drawAmount === 0) return;
@@ -199,7 +198,7 @@ export class GameController {
     });
 
     if (unitsToRemove.length) {
-      playSound(this.context, EGameSounds.VANISH);
+      // playSound(this.context, EGameSounds.VANISH);
       const animation = (hero: Hero): Promise<void> => {
         return new Promise((resolve) => {
           this.context.tweens.add({
@@ -251,9 +250,9 @@ export class GameController {
 
   async gameOverEffects() {
     if (this.gameOver?.winner === this.context.activePlayer) {
-      playSound(this.context, EUiSounds.WIN_SFX);
+      // playSound(this.context, EUiSounds.WIN_SFX);
     } else {
-      playSound(this.context, EUiSounds.LOSE_SFX);
+      // playSound(this.context, EUiSounds.LOSE_SFX);
     }
   }
 

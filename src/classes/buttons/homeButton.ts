@@ -1,4 +1,3 @@
-import { EUiSounds } from "../../enums/gameEnums";
 import UIScene from "../../scenes/ui.scene";
 
 export class HomeButton extends Phaser.GameObjects.Container {
@@ -9,7 +8,7 @@ export class HomeButton extends Phaser.GameObjects.Container {
     const y = 50;
     super(context, x, y);
 
-    this.button = context.add.image(10, -25, 'gameAtlas', 'play_button').setDisplaySize(100, 50).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    this.button = context.add.image(10, -25, 'gameAtlas', 'playButton').setDisplaySize(100, 50).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
     this.buttonText = context.add.text(10, -25, "Home", {
       fontFamily: "proLight",
@@ -20,7 +19,7 @@ export class HomeButton extends Phaser.GameObjects.Container {
     this.add([this.button, this.buttonText]).setScale(0.8);
 
     this.button.on('pointerdown', async() => {
-      this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
       await context.lobbyRoom?.leave();
       await context.currentRoom?.leave();

@@ -2,9 +2,8 @@ import { Types } from "phaser";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameStatus, ETiles, EGameSounds } from "../enums/gameEnums";
+import { EGameStatus, ETiles } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
-import { playSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";
 import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
@@ -38,7 +37,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     // If unit is on the board and the tile clicked on is in range, move the unit
     if (activeUnit.stats.boardPosition < 45 && tile.isHighlighted && activeUnit instanceof Hero) {
       activeUnit.move(activeUnit.getTile(), tile);
-      playSound(context, EGameSounds.HERO_MOVE);
+      // playSound(context, EGameSounds.HERO_MOVE);
     }
 
     // If unit is in hand and clicked tile is highlighted, spawn. Otherwise, use item

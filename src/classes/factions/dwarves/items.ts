@@ -1,11 +1,10 @@
-import { EGameSounds, EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { pulverizerAnimation, useAnimation } from "../../../utils/unitAnimations";
 import { roundToFive } from "../../../utils/gameUtils";
 
@@ -28,7 +27,7 @@ export class DwarvenBrew extends Item {
   use(target: Hero): void {
     if (target.stats.isKO) return;
 
-    playSound(this.scene, EGameSounds.DWARVEN_BREW_USE);
+    // playSound(this.scene, EGameSounds.DWARVEN_BREW_USE);
 
     const dwarvenBrewImage = this.scene.add.image(target.x, target.y - 10, 'dwarvenBrew').setDepth(100);
     useAnimation(dwarvenBrewImage);
@@ -51,7 +50,7 @@ export class Pulverizer extends Item {
   use(targetTile: Tile): void {
     const pulverizerImage = this.scene.add.image(targetTile.x, targetTile.y, 'pulverizer').setDepth(100);
     pulverizerAnimation(pulverizerImage, targetTile.y);
-    playSound(this.scene, EGameSounds.PULVERIZER_USE);
+    // playSound(this.scene, EGameSounds.PULVERIZER_USE);
 
     if (targetTile.hero) this.directHitOnHero(targetTile);
     if (targetTile.crystal) this.directHitOnCrystal(targetTile);

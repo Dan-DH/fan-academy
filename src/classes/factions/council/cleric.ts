@@ -1,4 +1,4 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
@@ -6,7 +6,6 @@ import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Cleric extends Council {
@@ -27,11 +26,11 @@ export class Cleric extends Council {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
+      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
       target.removeFromGame();
     } else {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK_BIG);
-      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
+      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK_BIG);
+      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       this.removeAttackModifiers();
     }
@@ -44,8 +43,8 @@ export class Cleric extends Council {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
 
-    if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
+    // if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
 
     if (target.stats.isKO) {
       const healingAmount = this.getTotalHealing(2);

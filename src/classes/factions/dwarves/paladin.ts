@@ -1,8 +1,7 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
@@ -17,7 +16,7 @@ export class Paladin extends Dwarf {
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
     turnIfBehind(this.context, this, target);
-    playSound(this.scene, EGameSounds.PALADIN_ATTACK);
+    // playSound(this.scene, EGameSounds.PALADIN_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
@@ -39,8 +38,8 @@ export class Paladin extends Dwarf {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
 
-    if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
+    // if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
 
     let actualHealingDone: number;
     if (target.stats.isKO) {

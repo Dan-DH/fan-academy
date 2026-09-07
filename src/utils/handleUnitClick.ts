@@ -1,11 +1,10 @@
 import { Types } from "phaser";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameSounds, EGameStatus, EHeroes, EItems, ERange, ETiles } from "../enums/gameEnums";
+import { EGameStatus, EHeroes, EItems, ERange, ETiles } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
 import { deselectUnit, selectUnit } from "./playerUtils";
 import { adjustUnitCardPositionAndMakeVisible, isEnemySpawn } from "./boardUtils";
-import { playSound, selectItemSound } from "./gameSounds";
 import { visibleUnitCardCheck } from "./unitCards";
 import { belongsToPlayer } from "./gameUtils";
 import { HealingPotion } from "../classes/factions/council/items";
@@ -63,10 +62,10 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
     if (unit instanceof Hero && unit.stats.isKO) return;
 
     if (unit.stats.boardPosition >= 45) {
-      if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
-      if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
+      // if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
+      // if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
     } else {
-      playSound(context, EGameSounds.HERO_BOARD_SELECT);
+      // playSound(context, EGameSounds.HERO_BOARD_SELECT);
     }
 
     selectUnit(context, unit);
@@ -227,10 +226,10 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       deselectUnit(context);
 
       if (unit.stats.boardPosition >= 45) {
-        if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
-        if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
+        // if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
+        // if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
       } else {
-        playSound(context, EGameSounds.HERO_BOARD_SELECT);
+        // playSound(context, EGameSounds.HERO_BOARD_SELECT);
       }
 
       selectUnit(context, unit);

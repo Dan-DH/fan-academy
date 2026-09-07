@@ -1,10 +1,9 @@
-import { EActionType, EAttackType, EClass, EFaction, EGameSounds, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { useAnimation } from "../../../utils/unitAnimations";
-import { playSound } from "../../../utils/gameSounds";
 import { roundToFive } from "../../../utils/gameUtils";
 
 export abstract class DarkElf extends Hero {
@@ -24,7 +23,7 @@ export abstract class DarkElf extends Hero {
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
-    playSound(this.scene, EGameSounds.ITEM_USE);
+    // playSound(this.scene, EGameSounds.ITEM_USE);
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }

@@ -43,7 +43,7 @@ export class CrystalCard extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     // Health
-    this.hpBackgroundImage = context.add.image(-60, -60, 'hpBackground').setOrigin(0.5);
+    this.hpBackgroundImage = context.add.image(-60, -60, 'gameAtlas', 'hpBackgroundCard').setOrigin(0.5);
     this.hpBarImage = context.add.image(-118, -72, 'hpBar').setOrigin(0);
     this.setHealthBar(data.currentHealth, data.maxHealth);
     this.currentHpText = this.context.add.text(100, -60, `${data.currentHealth}/${data.maxHealth}`, {

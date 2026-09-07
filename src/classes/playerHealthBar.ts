@@ -32,8 +32,8 @@ export class PlayerHealthBar extends Phaser.GameObjects.Container {
       }
     };
 
-    this.background = context.add.image(coordMap[player].x, coordMap[player].y, 'HpBackground').setScale(3).setOrigin(0);
-    this.healthBar = context.add.image(coordMap[player].x, coordMap[player].y, 'HpAlly').setScale(3).setOrigin(0);
+    this.background = context.add.image(coordMap[player].x, coordMap[player].y, 'gameAtlas',  'hp_background').setScale(3).setOrigin(0);
+    this.healthBar = context.add.image(coordMap[player].x, coordMap[player].y, 'gameAtlas', 'hp_green').setScale(3).setOrigin(0);
 
     this.fullWidth = this.healthBar.displayWidth;
 

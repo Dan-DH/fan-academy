@@ -4,9 +4,8 @@ import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { Dwarf } from "./dwarves";
 import { Hero } from "../hero";
-import { EActionType, EGameSounds, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EHeroes } from "../../../enums/gameEnums";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Annihilator extends Dwarf {
@@ -29,10 +28,10 @@ export class Annihilator extends Dwarf {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
+      // playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
-      playSound(this.scene, EGameSounds.ANNIHILATOR_ATTACK);
+      // playSound(this.scene, EGameSounds.ANNIHILATOR_ATTACK);
 
       const isTargetShielded = target.stats.engineerShield;
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);

@@ -90,10 +90,10 @@ export function generateFourDigitId(): number {
 
 export function factionEnumToEmblem(faction: string): string {
   const factionMap: Record<string, string> = {
-    council: 'council_emblem',
-    elves: 'elves_emblem',
-    dwarves: 'dwarves_emblem'
+    council: 'councilEmblem',
+    elves: 'elvesEmblem',
+    dwarves: 'dwarvesEmblem'
   };
 
-  return factionMap[faction] ?? 'unknown_faction';
+  return factionMap[faction] ?? 'unknownFaction';
 }

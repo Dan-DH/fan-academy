@@ -1,7 +1,6 @@
-import { EClass, EUiSounds } from "../../enums/gameEnums";
+import { EClass } from "../../enums/gameEnums";
 import { IHero, IItem } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { playSound } from "../../utils/gameSounds";
 
 const turnPopupCoordinates = {
   x: 800,
@@ -22,7 +21,7 @@ export class DeckPopup extends Phaser.GameObjects.Container {
     this.blockingLayer = context.add.rectangle(0, 0, 2000, 2000, 0x000000, 0.001).setOrigin(0.5).setInteractive();
 
     this.blockingLayer.on('pointerdown', () => {
-      playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
 
       this.setVisible(false);
     });
@@ -88,12 +87,12 @@ export class DeckPopup extends Phaser.GameObjects.Container {
 
       let imageKey: string;
       if (card.class === EClass.HERO) {
-        imageKey = `${(card as IHero).unitType}CardPic`;
+        imageKey = `${(card as IHero).unitType}_v1-hd`;
       } else {
-        imageKey = `${(card as IItem).itemType}CardPic`;
+        imageKey = `${(card as IItem).itemType}_v1-hd`;
       }
 
-      const cardImage = this.context.add.image(x, y, imageKey)
+      const cardImage = this.context.add.image(x, y, 'gameAtlas', imageKey)
         .setDisplaySize(90, 90)
         .setOrigin(0.5);
 

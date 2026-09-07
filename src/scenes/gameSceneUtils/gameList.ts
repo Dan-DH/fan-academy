@@ -69,12 +69,12 @@ export async function createGameList(context: UIScene) {
 
       lastListItemY += (index === 0 ? textListHeight : gameListButtonHeight) + gameListButtonSpacing;
 
-      const gameListButtonImage = context.add.image(-7, lastListItemY, 'gameAtlas', 'game_list_premade').setOrigin(0).setScale(1.80).setTint(0xBBBBBB);
+      const gameListButtonImage = context.add.image(-7, lastListItemY, 'gameAtlas', 'gameListPremade').setOrigin(0).setScale(1.80).setTint(0xBBBBBB);
       const playerFactionIcon = player.faction ? {
         faction: player.faction,
         scale: 1
       } : {
-        faction: 'unknown_faction',
+        faction: 'unknownFaction',
         scale: 1.3
       };
 
@@ -85,7 +85,7 @@ export async function createGameList(context: UIScene) {
       }).setOrigin(0);
 
       const playerFactionImage =  context.add.image(90, lastListItemY + gameListButtonHeight / 2 - 5, 'gameAtlas', factionEnumToEmblem(playerFactionIcon.faction)).setScale(playerFactionIcon.scale);
-      const rankedIcon = context.add.image(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, 'gameAtlas', 'rune_metal').setScale(1).setVisible(false);
+      const rankedIcon = context.add.image(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, 'gameAtlas', 'runeMetal').setScale(1).setVisible(false);
       if (game.gameMode === EGameModes.RANKED) rankedIcon.setVisible(true);
 
       let opponentFactionImage;
@@ -106,13 +106,13 @@ export async function createGameList(context: UIScene) {
         console.log('picture', opponent.userData.picture);
         opponentNameText = setOpponentNameText(opponent.userData.username);
       } else {
-        opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', 'unknown_faction').setScale(1.3);
+        opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', 'unknownFaction').setScale(1.3);
         opponentProfilePicture = context.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', 'unknownAvatar-hd').setFlipX(true).setScale(1.5);
         opponentNameText = setOpponentNameText('Searching...');
       }
 
       // Add a 'close' button to games looking for players
-      const closeButton = context.add.image(gameListButtonWidth - 30, lastListItemY, 'gameAtlas', 'close_button').setOrigin(0).setVisible(false);
+      const closeButton = context.add.image(gameListButtonWidth - 30, lastListItemY, 'gameAtlas', 'closeButton').setOrigin(0).setVisible(false);
       if (game.status === EGameStatus.SEARCHING || game.status === EGameStatus.CHALLENGE) {
         closeButton.setVisible(true).setInteractive({ useHandCursor: true });
         closeButton.on('pointerup', async () => {
@@ -179,7 +179,7 @@ export async function createGameList(context: UIScene) {
     fontSize: 120,
     fontFamily: "proHeavy"
   });
-  const newGameButton = context.add.image(-15, lastListItemY, 'gameAtlas', 'new_game_btn').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
+  const newGameButton = context.add.image(-15, lastListItemY, 'gameAtlas', 'newGameButton').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
     if (context.currentRoom) {

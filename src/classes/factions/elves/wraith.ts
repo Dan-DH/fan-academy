@@ -1,11 +1,10 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Wraith extends DarkElf {
@@ -18,7 +17,7 @@ export class Wraith extends DarkElf {
     turnIfBehind(this.context, this, target);
 
     if (target instanceof Hero && target.stats.isKO) {
-      playSound(this.scene, EGameSounds.WRAITH_CONSUME);
+      // playSound(this.scene, EGameSounds.WRAITH_CONSUME);
       target.removeFromGame(true);
 
       if (this.stats.unitsConsumed! < 3) {
@@ -29,8 +28,8 @@ export class Wraith extends DarkElf {
         this.unitCard.updateCardData(this);
       }
     } else {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK_BIG);
-      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK);
+      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK_BIG);
+      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK);
 
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 

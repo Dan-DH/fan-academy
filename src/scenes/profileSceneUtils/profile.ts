@@ -1,7 +1,5 @@
-import { EUiSounds } from "../../enums/gameEnums";
 import { deleteAccount, updateProfile } from "../../queries/userQueries";
 import ProfileScene from "../profile.scene";
-import { playSound } from "../../utils/gameSounds";
 import { isValidPassword } from "../../utils/playerUtils";
 import { DeleteWarningPopup } from "../../classes/popups/deletePopup";
 import { ProfilePicPopup } from "../../classes/popups/profilePicPopup";
@@ -191,7 +189,7 @@ export class Profile extends Phaser.GameObjects.Container {
      */
 
     // Save changes button
-    this.saveButtonImage = this.context.add.image(895, 690, 'gameAtlas', 'popup_button').setTint(0x3399ff).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
+    this.saveButtonImage = this.context.add.image(895, 690, 'gameAtlas', 'popupButton').setTint(0x3399ff).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
     this.saveButtonText = this.context.add.text(830, 655, 'SAVE CHANGES', {
       fontFamily: "proHeavy",
       fontSize: 40,
@@ -204,7 +202,7 @@ export class Profile extends Phaser.GameObjects.Container {
     });
 
     this.saveButtonImage.on('pointerdown', async () => {
-      playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
       await this.handleSubmit();
     });
 
@@ -214,7 +212,7 @@ export class Profile extends Phaser.GameObjects.Container {
     this.deletePopup = new DeleteWarningPopup(context, this);
 
     // Delete account button
-    this.deleteAccountButtonImage = this.context.add.image(1265, 690, 'gameAtlas', 'popup_button').setTint(0x990000).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
+    this.deleteAccountButtonImage = this.context.add.image(1265, 690, 'gameAtlas', 'popupButton').setTint(0x990000).setDisplaySize(230, 100).setInteractive({ useHandCursor: true });
     this.deleteAccountButtonText = this.context.add.text(1200, 655, 'DELETE ACCOUNT', {
       fontFamily: "proHeavy",
       fontSize: 40,
@@ -227,7 +225,7 @@ export class Profile extends Phaser.GameObjects.Container {
     });
 
     this.deleteAccountButtonImage.on('pointerdown', () => {
-      playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
       this.toggleFormVisibility(false);
       this.deletePopup.setVisible(true);
     });

@@ -1,8 +1,7 @@
 import { MainLeaderboard } from "./leaderboardSceneUtils/mainLeaderboard";
-import { EFaction, EUiSounds } from "../enums/gameEnums";
+import { EFaction } from "../enums/gameEnums";
 import { getLeaderboardData } from "./leaderboardSceneUtils/getLeaderboardData";
 import { FactionLeaderboard } from "./leaderboardSceneUtils/factionLeaderboard";
-import { playSound } from "../utils/gameSounds";
 
 export default class LeaderboardScene extends Phaser.Scene {
   userId!: string;
@@ -21,32 +20,32 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     const leaderboardData = await getLeaderboardData();
 
-    const mainLeaderboardButton = this.add.image(1200, 740, 'gameAtlas', 'leader_button').setScale(0.7).setInteractive({ useHandCursor: true });
-    const councilLeaderboardButton = this.add.image(1260, 740, 'gameAtlas', 'council_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
-    const elvesLeaderboardButton = this.add.image(1320, 740, 'gameAtlas', 'elves_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
-    const dwarvesLeaderboardButton = this.add.image(1380, 740, 'gameAtlas', 'dwarves_emblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const mainLeaderboardButton = this.add.image(1200, 740, 'gameAtlas', 'leaderButton').setScale(0.7).setInteractive({ useHandCursor: true });
+    const councilLeaderboardButton = this.add.image(1260, 740, 'gameAtlas', 'councilEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const elvesLeaderboardButton = this.add.image(1320, 740, 'gameAtlas', 'elvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const dwarvesLeaderboardButton = this.add.image(1380, 740, 'gameAtlas', 'dwarvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      playSound(this, EUiSounds.BUTTON_GENERIC);
+      // playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new MainLeaderboard(this, leaderboardData.mainBoard);
     });
 
     councilLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      playSound(this, EUiSounds.BUTTON_GENERIC);
+      // playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.COUNCIL, leaderboardData.councilBoard);
     });
 
     elvesLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      playSound(this, EUiSounds.BUTTON_GENERIC);
+      // playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DARK_ELVES, leaderboardData.elvesBoard);
     });
 
     dwarvesLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      playSound(this, EUiSounds.BUTTON_GENERIC);
+      // playSound(this, EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DWARVES, leaderboardData.dwarvesBoard);
     });
 

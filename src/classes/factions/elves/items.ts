@@ -1,11 +1,11 @@
-import { EGameSounds, EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
+// import { playSound } from "../../../utils/gameSounds";
 import { roundToFive } from "../../../utils/gameUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
 
@@ -28,7 +28,7 @@ export class ManaVial extends Item {
   use(target: Hero): void {
     if (target.stats.isKO) return;
 
-    playSound(this.scene, EGameSounds.POTION_USE);
+    // playSound(this.scene, EGameSounds.POTION_USE);
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'manaVial').setDepth(100);
     useAnimation(potionImage);
 
@@ -55,7 +55,7 @@ export class SoulHarvest extends Item {
     const harvestIamge = this.scene.add.image(targetTile.x, targetTile.y - 20, 'soulHarvestShockWave').setDepth(100);
     useAnimation(harvestIamge);
 
-    playSound(this.scene, EGameSounds.USE_HARVEST);
+    // playSound(this.scene, EGameSounds.USE_HARVEST);
 
     const gameController = this.context.gameController;
 

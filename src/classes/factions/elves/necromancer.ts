@@ -1,4 +1,4 @@
-import { EGameSounds, EActionType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
@@ -6,7 +6,6 @@ import { Tile } from "../../board/tile";
 import { createElvesPhantomData, DarkElf } from "./elves";
 import { Phantom } from "./phantom";
 import { Crystal } from "../../board/crystal";
-import { playSound } from "../../../utils/gameSounds";
 import { generateFourDigitId } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
@@ -22,7 +21,7 @@ export class Necromancer extends DarkElf {
     if (target instanceof Hero && target.stats.isKO) {
       const tile = target.getTile();
 
-      playSound(this.scene, EGameSounds.PHANTOM_SPAWN);
+      // playSound(this.scene, EGameSounds.PHANTOM_SPAWN);
 
       const phantom = new Phantom(this.context, createElvesPhantomData({
         unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
@@ -41,8 +40,8 @@ export class Necromancer extends DarkElf {
 
       return;
     } else {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.NECROMANCER_ATTACK_BIG);
-      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.NECROMANCER_ATTACK);
+      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.NECROMANCER_ATTACK_BIG);
+      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.NECROMANCER_ATTACK);
 
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       if (damageDone) this.lifeSteal(damageDone);

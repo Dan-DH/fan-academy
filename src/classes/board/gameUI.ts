@@ -14,7 +14,7 @@ export class GameUI {
     gameMap.y += 14;
 
     // Item rack
-    this.itemRack = context.add.image(0, 0, 'itemRack').setOrigin(0.5).setPosition(900, 736).setScale(0.9);
+    this.itemRack = context.add.image(0, 0, 'gameAtlas', 'item_rack').setOrigin(0.5).setPosition(900, 736).setScale(0.9);
 
     // Player banners
     this.banner = new Banner(context, board, playerData);

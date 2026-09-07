@@ -1,10 +1,9 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
@@ -17,7 +16,7 @@ export class Engineer extends Dwarf {
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
     turnIfBehind(this.context, this, target);
-    playSound(this.scene, EGameSounds.ENGINEER_ATTACK);
+    // playSound(this.scene, EGameSounds.ENGINEER_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
@@ -39,7 +38,7 @@ export class Engineer extends Dwarf {
   shieldAlly(target: Hero | Crystal): void {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
-    playSound(this.scene, EGameSounds.ENGINEER_SHIELD_CAST);
+    // playSound(this.scene, EGameSounds.ENGINEER_SHIELD_CAST);
 
     if (this.stats.shieldingAlly) {
       if (this.stats.shieldingAlly === target.stats.unitId) return;

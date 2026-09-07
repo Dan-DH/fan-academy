@@ -1,6 +1,5 @@
-import { EGameSounds, EActionType } from "../../enums/gameEnums";
+import { EActionType } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
-import { playSound } from "../../utils/gameSounds";
 import { isInHand } from "../../utils/gameUtils";
 import { getCurrentPlayer } from "../../utils/playerUtils";
 
@@ -33,7 +32,7 @@ export class Door extends Phaser.GameObjects.Container {
 
     this.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (pointer.button === 0 && context.activeUnit && isInHand(context.activeUnit.stats.boardPosition)) {
-        playSound(this.scene, EGameSounds.SHUFFLE);
+        // playSound(this.scene, EGameSounds.SHUFFLE);
 
         const activePosition = context.activeUnit.stats.boardPosition;
         context.activeUnit.shuffleInDeck();

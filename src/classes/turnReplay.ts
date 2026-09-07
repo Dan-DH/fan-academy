@@ -1,8 +1,7 @@
-import { EClass, EActionType, EGameSounds } from "../enums/gameEnums";
+import { EClass, EActionType } from "../enums/gameEnums";
 import { IHero, IItem, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
-import { playSound } from "../utils/gameSounds";
 import { textAnimationSizeIncrease } from "../utils/textAnimations";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
@@ -138,7 +137,7 @@ export class TurnReplay {
       fontSize: 50,
       color: '#fffb00'
     }).setDepth(999);
-    playSound(this.context, EGameSounds.SHUFFLE);
+    // playSound(this.context, EGameSounds.SHUFFLE);
 
     await textAnimationSizeIncrease(shuffleText, 1.3);
   }

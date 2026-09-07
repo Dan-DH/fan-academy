@@ -1,4 +1,4 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
@@ -6,7 +6,6 @@ import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn, specialTileCheck } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Ninja extends Council {
@@ -22,8 +21,8 @@ export class Ninja extends Council {
     const distance = getDistanceToTarget(this, target);
 
     const ninjaAttackSound = () => {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.NINJA_ATTACK_BIG);
-      if (!this.stats.superCharge) playSound(this.scene, EGameSounds.NINJA_ATTACK);
+      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.NINJA_ATTACK_BIG);
+      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.NINJA_ATTACK);
     };
 
     if (distance === 1) {
@@ -33,7 +32,7 @@ export class Ninja extends Council {
         target.stats.isKO &&
         isEnemySpawn(this.context, target.getTile())
       ) {
-        playSound(this.scene, EGameSounds.NINJA_ATTACK);
+        // playSound(this.scene, EGameSounds.NINJA_ATTACK);
         target.removeFromGame();
       } else {
         ninjaAttackSound();
@@ -51,7 +50,7 @@ export class Ninja extends Council {
   }
 
   teleport(target: Hero): void {
-    playSound(this.scene, EGameSounds.NINJA_SMOKE);
+    // playSound(this.scene, EGameSounds.NINJA_SMOKE);
     const targetDestination = this.getTile();
     const unitDestination = target.getTile();
 

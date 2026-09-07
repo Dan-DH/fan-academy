@@ -2,10 +2,9 @@ import { GameObjects } from "phaser";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
-import { EHeroes, EGameSounds, ETiles } from "../enums/gameEnums";
+import { EHeroes, ETiles } from "../enums/gameEnums";
 import { ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { playSound } from "./gameSounds";
 
 export function flashActingUnit(hero: Hero): void {
   hero.visuals.characterImage.setTint(0x3399ff);
@@ -62,8 +61,6 @@ export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: nu
 }
 
 async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
-  playSound(hero.context, EGameSounds.MOVE_FLY);
-
   const unitImage = hero.visuals.characterImage;
   const moveDuration = 200 * tilesMoved;
   const isMovingRight = targetTile.x >= hero.x;
@@ -97,7 +94,6 @@ async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number)
 }
 
 async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
-  playSound(hero.context, EGameSounds.MOVE_WALK);
   const hopSpeed = 100;
   const moveDuration = hopSpeed * 2 * tilesMoved;
   const unitImage = hero.visuals.characterImage;

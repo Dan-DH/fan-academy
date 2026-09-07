@@ -1,4 +1,4 @@
-import { EGameSounds, EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
@@ -6,7 +6,6 @@ import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Knight extends Council {
@@ -26,11 +25,11 @@ export class Knight extends Council {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      playSound(this.scene, EGameSounds.KNIGHT_ATTACK);
+      // playSound(this.scene, EGameSounds.KNIGHT_ATTACK);
       target.removeFromGame();
     } else {
-      if (this.stats.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
-      if (!this.stats.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
+      // if (!this.stats.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
 
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 

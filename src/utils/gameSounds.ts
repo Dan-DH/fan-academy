@@ -4,7 +4,7 @@ export function playSound(_scene: Phaser.Scene, _sound?: EGameSounds | EUiSounds
   // scene.sound.play(sound);
 }
 
-export function selectItemSound(scene: Phaser.Scene, item: EItems): void {
+export function selectItemSound(_scene: Phaser.Scene, item: EItems): void {
   const itemMap = {
     [EItems.RUNE_METAL]: EGameSounds.RUNE_METAL_SELECT,
     [EItems.SUPERCHARGE]: EGameSounds.SCROLL_SELECT,
@@ -25,10 +25,10 @@ export function selectItemSound(scene: Phaser.Scene, item: EItems): void {
   const soundToPlay = itemMap[item];
   if (!soundToPlay) return;
 
-  playSound(scene, soundToPlay);
+  // playSound(scene, soundToPlay);
 }
 
-export function selectDeathSound(scene: Phaser.Scene, hero: EHeroes): void {
+export function selectDeathSound(_scene: Phaser.Scene, hero: EHeroes): void {
   const heroMap = {
     [EHeroes.ARCHER]: EGameSounds.ARCHER_DEATH,
     [EHeroes.KNIGHT]: EGameSounds.KNIGHT_DEATH,
@@ -53,5 +53,5 @@ export function selectDeathSound(scene: Phaser.Scene, hero: EHeroes): void {
   const soundToPlay = heroMap[hero];
   if (!soundToPlay) return;
 
-  playSound(scene, soundToPlay);
+  // playSound(scene, soundToPlay);
 }

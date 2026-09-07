@@ -1,8 +1,7 @@
-import { EGameSounds, EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
+import { EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
@@ -33,19 +32,19 @@ export class Gunner extends Dwarf {
   singleTargetAttack(target: Hero | Crystal): void {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())) {
-      playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
+      // playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
-      playSound(this.scene, EGameSounds.GUNNER_ATTACK);
+      // playSound(this.scene, EGameSounds.GUNNER_ATTACK);
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       this.removeAttackModifiers();
     }
   }
 
   multiTargetAttack(target: Hero | Crystal): void {
-    playSound(this.scene, EGameSounds.GUNNER_ATTACK);
-    this.context.time.delayedCall(100, () => playSound(this.scene, EGameSounds.GUNNER_ATTACK));
-    this.context.time.delayedCall(200, () => playSound(this.scene, EGameSounds.GUNNER_ATTACK));
+    // playSound(this.scene, EGameSounds.GUNNER_ATTACK);
+    // this.context.time.delayedCall(100, () => playSound(this.scene, EGameSounds.GUNNER_ATTACK));
+    // this.context.time.delayedCall(200, () => playSound(this.scene, EGameSounds.GUNNER_ATTACK));
 
     const splashedUnits = this.context.gameController?.board.getGunnerSplashTargets(this, target);
 

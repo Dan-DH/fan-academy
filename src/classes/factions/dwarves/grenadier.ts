@@ -1,8 +1,7 @@
-import { EActionType, EAttackType, EGameSounds, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
 import { getAOETiles, getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
@@ -31,7 +30,7 @@ export class Grenadier extends Dwarf {
   }
 
   meleeAttack(target: Hero | Crystal): void {
-    playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
+    // playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())
     ) {
@@ -44,7 +43,7 @@ export class Grenadier extends Dwarf {
 
   rangedAttack(target: Hero | Crystal): void {
     const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, target.getTile());
-    playSound(this.scene, EGameSounds.GRENADIER_ATTACK);
+    // playSound(this.scene, EGameSounds.GRENADIER_ATTACK);
 
     enemyHeroTiles?.forEach(tile => {
       const enemyHero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
