@@ -64,29 +64,29 @@ export class SpecialTileCard extends Phaser.GameObjects.Container {
     }
 
     // Background, unit image, name and type, and separator
-    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground');
-    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', unitImageKey).setOrigin(0.5).setScale(1.2);
-    this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
+    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground').setScale(1.5);
+    this.unitPictureImage = context.add.image(-120, -140, 'gameAtlas', unitImageKey).setOrigin(0.5).setScale(1.35);
+    this.cardSeparatorImage = context.add.image(50, -90, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
-    this.cardNameText = this.context.add.text(55, -170, typeLabel, {
+    this.cardNameText = this.context.add.text(60, -160, typeLabel, {
       fontFamily: "proLight",
       fontSize: 50,
       color: '#ffffff'
     }).setOrigin(0.5);
 
-    this.cardTypeText = this.context.add.text(55, -130, ECardType.SPECIAL_TILE, {
+    this.cardTypeText = this.context.add.text(55, -120, ECardType.SPECIAL_TILE, {
       fontFamily: "proLight",
       fontSize: 30,
       color: '#ffffff'
     }).setOrigin(0.5);
 
     // Flavour text
-    this.cardFlavorText = this.context.add.text(0, -55, description, {
+    this.cardFlavorText = this.context.add.text(0, -40, description, {
       fontFamily: "proLight",
       fontSize: 30,
       color: '#ffffff',
       wordWrap: {
-        width: this.cardBackgroundImage.width - 50,
+        width: this.cardBackgroundImage.width + 90,
         useAdvancedWrap: true
       }
     }).setOrigin(0.5);

@@ -41,8 +41,8 @@ export class HeroCard extends Phaser.GameObjects.Container {
     this.unitType = data.unitType;
 
     // Background, unit image, name and type, and separator
-    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground');
-    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', `${data.unitType}_v1-hd`).setOrigin(0.5).setScale(0.4);
+    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground').setScale(1.7);
+    this.unitPictureImage = context.add.image(-130, -150, 'gameAtlas', `${data.unitType}_v1-hd`).setOrigin(0.5).setScale(1.5);
     this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     const { cardText, cardType } = getCardText(data.unitType);
@@ -59,10 +59,10 @@ export class HeroCard extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     // Health
-    this.hpBackgroundImage = context.add.image(-60, -60, 'gameAtlas', 'hpBackgroundCard').setOrigin(0.5);
-    this.hpBarImage = context.add.image(-118, -72, 'gameAtlas', 'hpBar').setOrigin(0);
+    this.hpBackgroundImage = context.add.image(-60, -60, 'gameAtlas', 'hpBackgroundCard').setOrigin(0.5).setScale(1.2);
+    this.hpBarImage = context.add.image(-118, -71, 'gameAtlas', 'hpBar').setOrigin(0);
     this.setHealthBar(data.currentHealth, data.maxHealth);
-    this.currentHpText = this.context.add.text(80, -60, `${data.currentHealth}/${data.maxHealth}`, {
+    this.currentHpText = this.context.add.text(100, -60, `${data.currentHealth}/${data.maxHealth}`, {
       fontFamily: "proLight",
       fontSize: 35,
       color: data.maxHealth > data.baseHealth ? '#00FF00' : '#ffffff'
@@ -71,7 +71,7 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
     // Attack power
     const attackType: string = data.attackType === EAttackType.MAGICAL ? 'magicalDamage' : 'physicalDamage';
-    this.attackTypeImage = context.add.image(-150, -15, 'gameAtlas', attackType).setOrigin(0.5);
+    this.attackTypeImage = context.add.image(-150, -15, 'gameAtlas', attackType).setOrigin(0.5).setScale(1.3);
 
     this.powerText = this.context.add.text(-40, -15, `${data.currentPower} ${data.attackType}`, {
       fontFamily: "proLight",
@@ -80,14 +80,14 @@ export class HeroCard extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     // Resistances
-    this.magicalResistanceImage = context.add.image(40, 30, 'gameAtlas', 'magicalResistance').setOrigin(0.5);
+    this.magicalResistanceImage = context.add.image(40, 30, 'gameAtlas', 'magicalResistance').setOrigin(0.5).setScale(1.3);
     this.magicalResistanceText = this.context.add.text(100, 30, `${data.magicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
       color: this.getTextColor(data.magicalDamageResistance, data.baseMagicalDamageResistance)
     }).setOrigin(0.5);
 
-    this.physicalResistanceImage = context.add.image(-150, 30, 'gameAtlas', 'physicalResistance').setOrigin(0.5);
+    this.physicalResistanceImage = context.add.image(-150, 30, 'gameAtlas', 'physicalResistance').setOrigin(0.5).setScale(1.3);
     this.physicalResistanceText = this.context.add.text(-85, 30, `${data.physicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
@@ -95,9 +95,9 @@ export class HeroCard extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     // Range
-    this.movementRangeImage = context.add.image(-10, 120, 'gameAtlas', 'movementRange').setOrigin(0.5);
+    this.movementRangeImage = context.add.image(-10, 120, 'gameAtlas', 'movementRange').setOrigin(0.5).setScale(1.3);
 
-    this.attackRangeImage = context.add.image(-10, 80, 'gameAtlas', 'attackRange').setOrigin(0.5);
+    this.attackRangeImage = context.add.image(-10, 80, 'gameAtlas', 'attackRange').setOrigin(0.5).setScale(1.2);
     this.rangeText = this.context.add.text(-85, 90, 'Range:', {
       fontFamily: "proLight",
       fontSize: 30,
@@ -110,7 +110,7 @@ export class HeroCard extends Phaser.GameObjects.Container {
       let xOffset = 0;
 
       for (let i = 1; i <= range; i++) {
-        const image = context.add.image(x + xOffset, y, 'gameAtlas', type).setOrigin(0.5);
+        const image = context.add.image(x + xOffset, y, 'gameAtlas', type).setOrigin(0.5).setScale(1.2);
         images.push(image);
 
         xOffset += 25;
@@ -123,12 +123,12 @@ export class HeroCard extends Phaser.GameObjects.Container {
     this.attackSquareImages = createRangeIcons(data.attackRange, 20, 80, 'attackSquare');
 
     // Flavour text
-    this.cardFlavorText = this.context.add.text(0, 180, cardText, {
+    this.cardFlavorText = this.context.add.text(0, 190, cardText, {
       fontFamily: "proLight",
       fontSize: 25,
       color: '#ffffff',
       wordWrap: {
-        width: this.cardBackgroundImage.width - 50,
+        width: this.cardBackgroundImage.width + 90,
         useAdvancedWrap: true
       }
     }).setOrigin(0.5);
@@ -201,8 +201,9 @@ export class HeroCard extends Phaser.GameObjects.Container {
   }
 
   setHealthBar(currentHealth: number, maxHealth: number) {
-    const fullWidth = this.hpBackgroundImage.width - 10;
+    const fullWidth = this.hpBackgroundImage.width + 16;
     const ratio = currentHealth / maxHealth;
     this.hpBarImage.displayWidth = fullWidth * ratio;
+    this.hpBarImage.displayHeight = 22;
   }
 }

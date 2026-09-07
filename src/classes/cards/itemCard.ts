@@ -20,8 +20,8 @@ export class ItemCard extends Phaser.GameObjects.Container {
     this.context = context;
 
     // Background, unit image, name and type, and separator
-    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground');
-    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', `${data.itemType}Icon`).setOrigin(0.5).setScale(0.4);
+    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground').setScale(1.5);
+    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', `${data.itemType}Icon`).setOrigin(0.5).setScale(1.35);
     this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     const { cardText, cardType, cardName } = getCardText(data.itemType);
@@ -44,7 +44,7 @@ export class ItemCard extends Phaser.GameObjects.Container {
       fontSize: 28,
       color: '#ffffff',
       wordWrap: {
-        width: this.cardBackgroundImage.width - 50,
+        width: this.cardBackgroundImage.width + 90,
         useAdvancedWrap: true
       }
     }).setOrigin(0);
