@@ -500,7 +500,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // playSound(this.context, EGameSounds.HERO_SPAWN);
 
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    if (this.stats.unitType === EHeroes.PALADIN) {
+      this.visuals.paladinAuraImage.setVisible(true);
+      this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    }
 
     gameController.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
   }
