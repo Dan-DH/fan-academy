@@ -50,27 +50,27 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     /**
      * EQUIPMENT AND BUFFS
      */
-    this.runeMetalImage = context.add.image(33, 25, 'gameAtlas', 'runeMetal').setOrigin(0.5).setScale(0.4).setName('runeMetal');
+    this.runeMetalImage = context.add.image(33, 25, 'gameAtlas', 'runeMetal').setOrigin(0.5).setScale(0.5).setName('runeMetal');
     if (!data.runeMetal) this.runeMetalImage.setVisible(false);
 
-    this.shiningHelmImage = context.add.image(-28, 25, 'gameAtlas', 'shiningHelm').setOrigin(0.5).setScale(0.4).setName('shiningHelm');
+    this.shiningHelmImage = context.add.image(-28, 25, 'gameAtlas', 'shiningHelm').setOrigin(0.5).setScale(0.5).setName('shiningHelm');
     if (!data.shiningHelm) this.shiningHelmImage.setVisible(false);
 
     if (data.faction === EFaction.COUNCIL || data.faction === EFaction.DWARVES) {
-      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'dragonScale').setOrigin(0.5).setScale(0.4).setName('dragonScale');
+      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'dragonScale').setOrigin(0.5).setScale(0.5).setName('dragonScale');
     } else {
-      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'soulStone').setOrigin(0.5).setScale(0.4).setName('soulStone');
+      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'soulStone').setOrigin(0.5).setScale(0.5).setName('soulStone');
     }
     if (!data.factionEquipment) this.factionEquipmentImage.setVisible(false);
 
-    this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
+    this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.5).setName('dwarvenBrew');
     if (!data.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
 
     this.annihilatorDebuffImage = context.add.image(25, -30, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
     this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
     if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
-    this.engineerShieldImage = context.add.image(0, 0, 'gameAtlas', 'engineerShield').setOrigin(0.5);
+    this.engineerShieldImage = context.add.image(0, 0, 'gameAtlas', 'engineerShield').setOrigin(0.5).setScale(1.2);
     engineerShieldAnimation(this.engineerShieldImage);
     if (!data.engineerShield) this.engineerShieldImage.setVisible(false);
 
