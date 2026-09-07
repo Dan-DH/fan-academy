@@ -24,9 +24,9 @@ export class DeleteWarningPopup extends Phaser.GameObjects.Container {
       .setOrigin(0.5)
       .setInteractive();
 
-    this.backgroundImage = context.add.image(0, 0, 'popupBackground').setDisplaySize(500, 300);
-    this.okButtonImage = context.add.image(-90, 60, 'popupButton').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
-    this.cancelButtonImage = context.add.image(90, 60, 'popupButton').setTint(0x007BFF).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
+    this.backgroundImage = context.add.image(0, 0, 'gameAtlas', 'cardBackground').setDisplaySize(500, 300);
+    this.okButtonImage = context.add.image(-90, 60, 'gameAtlas', 'popupButton').setTint(0x990000).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
+    this.cancelButtonImage = context.add.image(90, 60, 'gameAtlas', 'popupButton').setTint(0x007BFF).setDisplaySize(110, 60).setInteractive({ useHandCursor: true });
 
     // Warning text
     this.popupText = context.add.text(0, -50, "Delete account?\nData can't be recovered", {

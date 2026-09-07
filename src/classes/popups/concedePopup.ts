@@ -25,7 +25,7 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
       .setOrigin(0.5)
       .setInteractive();
 
-    this.backgroundImage = context.add.image(0, 0, 'popupBackground').setDisplaySize(500, 300);
+    this.backgroundImage = context.add.image(0, 0, 'cardBackground').setDisplaySize(500, 300);
     this.okButtonImage = context.add.image(-90, 60, 'popupButton').setTint(0x990000).setDisplaySize(120, 60).setInteractive({ useHandCursor: true });
     this.cancelButtonImage = context.add.image(90, 60, 'popupButton').setTint(0x007BFF).setDisplaySize(120, 60).setInteractive({ useHandCursor: true });
 

@@ -41,7 +41,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this.add.container(bg.width - menuBottomImage.width - 14, bg.height - menuBottomImage.height - 14, [menuBottomImage, menuBottomText]);
 
     // main menu buttons
-    const menuButtonHeight = this.textures.get('mianMenuButton').getSourceImage().height;
+    const menuButtonHeight = this.textures.get('mainMenuButton').getSourceImage().height;
     console.log('menuButtonHeight', menuButtonHeight);
     const menuButtonX =  200;
     const menuButtonPadding = 20;
@@ -51,7 +51,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 8 + menuButtonPadding,
-      imageKey: 'mianMenuButton',
+      imageKey: 'mainMenuButton',
       text: 'Profile',
       font: '70px proHeavy',
       callback: () => {
@@ -69,7 +69,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 12 - menuButtonPadding,
-      imageKey: 'mianMenuButton',
+      imageKey: 'mainMenuButton',
       text: 'Leaderboard',
       font: '70px proHeavy',
       callback: () => {
@@ -85,7 +85,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 14 + 5,
-      imageKey: 'mianMenuButton',
+      imageKey: 'mainMenuButton',
       text: 'Guide',
       font: '70px proHeavy',
       callback: () => {
@@ -101,7 +101,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 17,
-      imageKey: 'mianMenuButton',
+      imageKey: 'mainMenuButton',
       text: 'Discord',
       font: '70px proHeavy',
       callback: () => {
@@ -132,7 +132,7 @@ export default class MainMenuScene extends Phaser.Scene {
       thisParam: this,
       x: menuButtonX,
       y: menuButtonHeight * 28 + 40,
-      imageKey: 'mianMenuButton',
+      imageKey: 'mainMenuButton',
       text: 'Logout',
       font: '70px proHeavy',
       tint: '0x990000',

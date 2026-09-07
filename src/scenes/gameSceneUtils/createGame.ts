@@ -1,4 +1,4 @@
-import { EFaction, EGameModes, EUiSounds } from "../../enums/gameEnums";
+import { EFaction, EGameModes } from "../../enums/gameEnums";
 import UIScene from "../ui.scene";
 import { createGame } from "../../colyseus/colyseusGameRoom";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
