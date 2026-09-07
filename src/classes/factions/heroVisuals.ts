@@ -44,7 +44,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     const inHand = isInHand(data.boardPosition);
     const { charImageX, charImageY } = positionHeroImage(data.unitType, data.belongsTo === 1, inHand, data.isKO);
     this.characterImage = context.add.image(charImageX, charImageY, 'gameAtlas', this.updateCharacterImage(data)).setOrigin(0.5).setName('body').setDepth(data.row + 10);
-    if (inHand) this.characterImage.setScale(1); // FIXME: check where it sets the scale on the board
+    if (inHand) this.characterImage.setScale(1.1);
     if (data.belongsTo === 2 && data.boardPosition < 45) this.characterImage.setFlipX(true);
 
     /**
