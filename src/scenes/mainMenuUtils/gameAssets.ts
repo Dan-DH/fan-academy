@@ -145,18 +145,6 @@ export function loadGameAssets(context: PreloaderScene) {
   context.load.image('HpAlly', `${CDN_PATH}/images/gameItems/hp_green.webp`);
   context.load.image('HpEnemy', `${CDN_PATH}/images/gameItems/hp_red.webp`);
 
-  // Floating text fonts
-  context.load.atlas(
-    'greenFont',
-    `${CDN_PATH}/fonts/green_font.png`,
-    `${CDN_PATH}/fonts/green_font.json`
-  );
-  context.load.atlas(
-    'redFont',
-    `${CDN_PATH}/fonts/red_font.png`,
-    `${CDN_PATH}/fonts/red_font.json`
-  );
-
   // Unit card images -the unit picture is loaded above, alognside the profile pictures
   context.load.image('cardBackground', `${CDN_PATH}/images/gameItems/card/HelpTooltip_BG-hd.webp`);
   context.load.image('cardSeparator', `${CDN_PATH}/images/gameItems/card/HelpTooltip_Separator.webp`);
