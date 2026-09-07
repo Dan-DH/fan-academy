@@ -29,7 +29,7 @@ export class DwarvenBrew extends Item {
 
     // playSound(this.scene, EGameSounds.DWARVEN_BREW_USE);
 
-    const dwarvenBrewImage = this.scene.add.image(target.x, target.y - 10, 'dwarvenBrew').setDepth(100);
+    const dwarvenBrewImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'dwarvenBrew').setDepth(100);
     useAnimation(dwarvenBrewImage);
 
     target.stats.dwarvenBrew = true;
@@ -48,7 +48,7 @@ export class Pulverizer extends Item {
   };
 
   use(targetTile: Tile): void {
-    const pulverizerImage = this.scene.add.image(targetTile.x, targetTile.y, 'pulverizer').setDepth(100);
+    const pulverizerImage = this.scene.add.image(targetTile.x, targetTile.y, 'gameAtlas', 'pulverizer').setDepth(100);
     pulverizerAnimation(pulverizerImage, targetTile.y);
     // playSound(this.scene, EGameSounds.PULVERIZER_USE);
 

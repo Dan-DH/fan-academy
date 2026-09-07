@@ -13,12 +13,12 @@ export abstract class Dwarf extends Hero {
   equipFactionEquipment(handPosition: number): void {
     // playSound(this.scene, EGameSounds.DRAGON_SCALE_USE);
 
-    const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'dragonScale').setOrigin(0.5).setDepth(100);
+    const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
 
     this.stats.factionEquipment = true;
     this.visuals.factionEquipmentImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.stats.physicalDamageResistance += 20;
 

@@ -1,4 +1,4 @@
-import { EUiSounds, EActionType } from "../../enums/gameEnums";
+import { EActionType } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
 
 export class TurnButton {
@@ -6,7 +6,7 @@ export class TurnButton {
   buttonImage: Phaser.GameObjects.Image;
   constructor(context: GameScene) {
     this.context = context;
-    this.buttonImage =  context.add.image(1300, 725, 'turnButton').setOrigin(0.5).setScale(1.1).setInteractive({ useHandCursor: true });
+    this.buttonImage =  context.add.image(1300, 725, 'gameAtlas', 'turnButton').setOrigin(0.5).setScale(1.3).setInteractive({ useHandCursor: true });
 
     // Sending a turn
     this.buttonImage.on('pointerdown', async () => {

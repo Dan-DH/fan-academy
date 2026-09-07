@@ -19,7 +19,7 @@ export abstract class Item extends Phaser.GameObjects.Container {
     this.stats.class = EClass.ITEM;
 
     this.unitCard = new ItemCard(context, data).setVisible(false);
-    this.itemImage = context.add.image(0, 0, this.stats.itemType).setOrigin(0.5).setName('itemImage');
+    this.itemImage = context.add.image(0, 0, 'gameAtlas', this.stats.itemType).setOrigin(0.5).setName('itemImage');
 
     if (this.stats.itemType ===  EItems.SUPERCHARGE) {
       this.itemImage.displayWidth = 55;

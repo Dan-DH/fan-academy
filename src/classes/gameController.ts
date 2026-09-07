@@ -126,7 +126,7 @@ export class GameController {
   }
 
   addConcedeButton(context: GameScene): Phaser.GameObjects.Image {
-    const button = context.add.image(1350, 70, 'concedeButton').setScale(0.9).setInteractive({ useHandCursor: true });
+    const button = context.add.image(1350, 70, 'gameAtlas', 'concedeButton').setScale(0.9).setInteractive({ useHandCursor: true });
     button.on('pointerdown', ()=> {
       // playSound(this.context, EUiSounds.BUTTON_GENERIC);
       this.concedePopup.setVisible(true);

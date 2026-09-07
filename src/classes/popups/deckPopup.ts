@@ -89,7 +89,7 @@ export class DeckPopup extends Phaser.GameObjects.Container {
       if (card.class === EClass.HERO) {
         imageKey = `${(card as IHero).unitType}_v1-hd`;
       } else {
-        imageKey = `${(card as IItem).itemType}_v1-hd`;
+        imageKey = `${(card as IItem).itemType}Icon`;
       }
 
       const cardImage = this.context.add.image(x, y, 'gameAtlas', imageKey)

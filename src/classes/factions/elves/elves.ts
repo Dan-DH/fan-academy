@@ -12,12 +12,12 @@ export abstract class DarkElf extends Hero {
   }
 
   equipFactionEquipment(handPosition: number): void {
-    const soulStone = this.scene.add.image(this.x, this.y - 10, 'soulStone').setOrigin(0.5).setDepth(100);
+    const soulStone = this.scene.add.image(this.x, this.y - 10, 'gameAtlas', 'soulStone').setOrigin(0.5).setDepth(100);
     useAnimation(soulStone);
 
     this.stats.factionEquipment = true;
     this.visuals.factionEquipmentImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);

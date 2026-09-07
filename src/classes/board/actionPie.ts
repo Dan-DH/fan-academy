@@ -20,13 +20,13 @@ export class ActionPie extends Phaser.GameObjects.Container {
 
     this.context = context;
 
-    this.actionCircle = context.add.image(0, 0, 'actionCircle').setOrigin(0.5).setName('actionCircle');
-    this.actionPie1 = context.add.image(12, -19, 'actionPie').setOrigin(0.5).setRotation(-0.3).setName('actionPie1');
-    this.actionPie2 = context.add.image(24, 6, 'actionPie').setOrigin(0.5).setRotation(0.9).setName('actionPie2');
-    this.actionPie3 = context.add.image(4, 25, 'actionPie').setOrigin(0.5).setRotation(2.2).setName('actionPie3');
-    this.actionPie4 = context.add.image(-18, 13, 'actionPie').setOrigin(0.5).setRotation(3.4).setName('actionPie4');
-    this.actionPie5 = context.add.image(-15, -15, 'actionPie').setOrigin(0.5).setRotation(4.7).setName('actionPie5');
-    this.actionArrow = context.add.image(-35, 0, 'actionArrow').setOrigin(0.5).setRotation(-0.1).setName('actionArrow').setVisible(false);
+    this.actionCircle = context.add.image(0, 0, 'gameAtlas', 'actionCircle').setOrigin(0.5).setName('actionCircle').setScale(1.23);
+    this.actionPie1 = context.add.image(12, -19, 'gameAtlas', 'actionPie').setOrigin(0.5).setRotation(-0.3).setName('actionPie1').setScale(1.28);
+    this.actionPie2 = context.add.image(24, 6, 'gameAtlas', 'actionPie').setOrigin(0.5).setRotation(0.9).setName('actionPie2').setScale(1.28);
+    this.actionPie3 = context.add.image(4, 25, 'gameAtlas', 'actionPie').setOrigin(0.5).setRotation(2.2).setName('actionPie3').setScale(1.28);
+    this.actionPie4 = context.add.image(-18, 13, 'gameAtlas', 'actionPie').setOrigin(0.5).setRotation(3.4).setName('actionPie4').setScale(1.28);
+    this.actionPie5 = context.add.image(-15, -15, 'gameAtlas', 'actionPie').setOrigin(0.5).setRotation(4.7).setName('actionPie5').setScale(1.28);
+    this.actionArrow = context.add.image(-35, 0, 'gameAtlas', 'actionArrow').setOrigin(0.5).setRotation(-0.1).setName('actionArrow').setVisible(false).setScale(1.2);
 
     if (context.turnNumber === 1 && context.activePlayer === context.userId) {
       this.actionPie1.setVisible(false);

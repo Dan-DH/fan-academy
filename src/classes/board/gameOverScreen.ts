@@ -27,12 +27,12 @@ export class GameOverScreen extends GameObjects.Container {
       gameOverImageKey = 'gameOverDefeatText';
     }
 
-    this.gameOverEffect = this.context.add.image(880, 400, gameOverEffectKey)
+    this.gameOverEffect = this.context.add.image(880, 400, 'gameAtlas',  gameOverEffectKey)
       .setOrigin(0.5)
       .setName('gameOverEffect')
       .setScale(1.5);
 
-    this.gameOverImage = this.context.add.image(900, 400, gameOverImageKey)
+    this.gameOverImage = this.context.add.image(900, 400, 'gameAtlas', gameOverImageKey)
       .setOrigin(0.5)
       .setName('gameOverImage');
 

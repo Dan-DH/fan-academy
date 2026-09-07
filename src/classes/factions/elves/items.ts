@@ -29,7 +29,7 @@ export class ManaVial extends Item {
     if (target.stats.isKO) return;
 
     // playSound(this.scene, EGameSounds.POTION_USE);
-    const potionImage = this.scene.add.image(target.x, target.y - 10, 'manaVial').setDepth(100);
+    const potionImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'manaVial').setDepth(100);
     useAnimation(potionImage);
 
     if (target.stats.manaVial) {
@@ -52,7 +52,7 @@ export class SoulHarvest extends Item {
   }
 
   use(targetTile: Tile): void {
-    const harvestIamge = this.scene.add.image(targetTile.x, targetTile.y - 20, 'soulHarvestShockWave').setDepth(100);
+    const harvestIamge = this.scene.add.image(targetTile.x, targetTile.y - 20, 'gameAtlas', 'soulHarvestShockWave').setDepth(100);
     useAnimation(harvestIamge);
 
     // playSound(this.scene, EGameSounds.USE_HARVEST);

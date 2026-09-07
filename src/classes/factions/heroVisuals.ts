@@ -43,62 +43,62 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     const inHand = isInHand(data.boardPosition);
     const { charImageX, charImageY } = positionHeroImage(data.unitType, data.belongsTo === 1, inHand, data.isKO);
-    this.characterImage = context.add.image(charImageX, charImageY, this.updateCharacterImage(data)).setOrigin(0.5).setName('body').setDepth(data.row + 10);
-    if (inHand) this.characterImage.setScale(0.8);
+    this.characterImage = context.add.image(charImageX, charImageY, 'gameAtlas', this.updateCharacterImage(data)).setOrigin(0.5).setName('body').setDepth(data.row + 10);
+    if (inHand) this.characterImage.setScale(1); // FIXME: check where it sets the scale on the board
     if (data.belongsTo === 2 && data.boardPosition < 45) this.characterImage.setFlipX(true);
 
     /**
      * EQUIPMENT AND BUFFS
      */
-    this.runeMetalImage = context.add.image(33, 25, 'runeMetal').setOrigin(0.5).setScale(0.4).setName('runeMetal');
+    this.runeMetalImage = context.add.image(33, 25, 'gameAtlas', 'runeMetal').setOrigin(0.5).setScale(0.4).setName('runeMetal');
     if (!data.runeMetal) this.runeMetalImage.setVisible(false);
 
-    this.shiningHelmImage = context.add.image(-28, 25, 'shiningHelm').setOrigin(0.5).setScale(0.4).setName('shiningHelm');
+    this.shiningHelmImage = context.add.image(-28, 25, 'gameAtlas', 'shiningHelm').setOrigin(0.5).setScale(0.4).setName('shiningHelm');
     if (!data.shiningHelm) this.shiningHelmImage.setVisible(false);
 
     if (data.faction === EFaction.COUNCIL || data.faction === EFaction.DWARVES) {
-      this.factionEquipmentImage = context.add.image(5, 25, 'dragonScale').setOrigin(0.5).setScale(0.4).setName('dragonScale');
+      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'dragonScale').setOrigin(0.5).setScale(0.4).setName('dragonScale');
     } else {
-      this.factionEquipmentImage = context.add.image(5, 25, 'soulStone').setOrigin(0.5).setScale(0.4).setName('soulStone');
+      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'soulStone').setOrigin(0.5).setScale(0.4).setName('soulStone');
     }
     if (!data.factionEquipment) this.factionEquipmentImage.setVisible(false);
 
-    this.dwarvenBrewImage = context.add.image(-25, -35, 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
+    this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.4).setName('dwarvenBrew');
     if (!data.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
 
-    this.annihilatorDebuffImage = context.add.image(25, -30, 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
+    this.annihilatorDebuffImage = context.add.image(25, -30, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
     this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
     if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
-    this.engineerShieldImage = context.add.image(0, 0, 'enginnerShield').setOrigin(0.5);
+    this.engineerShieldImage = context.add.image(0, 0, 'gameAtlas', 'engineerShield').setOrigin(0.5);
     engineerShieldAnimation(this.engineerShieldImage);
     if (!data.engineerShield) this.engineerShieldImage.setVisible(false);
 
-    this.paladinAuraImage = context.add.image(0, 30, 'paladinAura').setOrigin(0.5);
+    this.paladinAuraImage = context.add.image(0, 30, 'gameAtlas', 'paladinAura').setOrigin(0.5);
     paladinAuraAnimation(this.paladinAuraImage);
     if (data.boardPosition >= 45 || data.unitType !== EHeroes.PALADIN || data.isKO) this.paladinAuraImage.setVisible(false);
 
     /**
      * RETICLES
      */
-    this.smokeAnim = context.add.image(0, 0, 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
+    this.smokeAnim = context.add.image(0, 0, 'gameAtlas', 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
 
-    this.attackReticle = context.add.image(0, -10, 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
+    this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
     addCirclingTween(this.attackReticle);
-    this.healReticle = context.add.image(0, -10, 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
+    this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
     addCirclingTween(this.healReticle);
-    this.allyReticle = context.add.image(0, -10, 'allyReticle').setOrigin(0.5).setScale(0.6).setName('allyReticle').setVisible(false);
+    this.allyReticle = context.add.image(0, -10, 'gameAtlas', 'allyReticle').setOrigin(0.5).setScale(0.6).setName('allyReticle').setVisible(false);
     addCirclingTween(this.allyReticle);
-    this.priestessDebuffImage = context.add.image(0, -10, 'priestessDebuff').setOrigin(0.5).setScale(2.5).setName('priestessDebuff');
+    this.priestessDebuffImage = context.add.image(0, -10, 'gameAtlas', 'priestessDebuff').setOrigin(0.5).setScale(2.5).setName('priestessDebuff');
     addCirclingTween(this.priestessDebuffImage);
     if (!data.priestessDebuff) this.priestessDebuffImage.setVisible(false);
-    this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
-    this.blockedLOS = context.add.image(0, -10, 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
+    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
+    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
 
     /**
      * TILE EFFECT ANIMATIONS
      */
-    this.crystalDebuffTileAnim = context.add.image(0, 30, 'crystalDamageAnim_1').setOrigin(0.5).setScale(0.6);
+    this.crystalDebuffTileAnim = context.add.image(0, 30, 'gameAtlas', 'crystalDamageAnim_1').setOrigin(0.5).setScale(0.6);
     if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) {
       this.crystalDebuffTileAnim.setVisible(true);
     } else {
@@ -106,7 +106,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     }
     this.crystalDebuffEvent = continuousAnimation(this.crystalDebuffTileAnim, ['crystalDamageAnim_1', 'crystalDamageAnim_2', 'crystalDamageAnim_3']);
 
-    this.powerTileAnim = context.add.image(0, 27, 'powerTileAnim_1').setOrigin(0.5).setScale(0.6);
+    this.powerTileAnim = context.add.image(0, 27, 'gameAtlas', 'powerTileAnim_1').setOrigin(0.5).setScale(0.6);
     if (tile?.tileType === ETiles.POWER && !data.isKO) {
       this.powerTileAnim.setVisible(true);
     } else {
@@ -115,7 +115,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.powerTileEvent = continuousAnimation(this.powerTileAnim, ['powerTileAnim_1', 'powerTileAnim_2', 'powerTileAnim_3']);
 
-    this.magicalResistanceTileAnim = context.add.image(0, 30, 'magicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
+    this.magicalResistanceTileAnim = context.add.image(0, 30, 'gameAtlas', 'magicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
     if ((tile?.tileType === ETiles.MAGICAL_RESISTANCE || tile?.tileType === ETiles.SPEED) && !data.isKO) {
       this.magicalResistanceTileAnim.setVisible(true);
     } else {
@@ -124,7 +124,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.magicalResistanceTileEvent = continuousAnimation(this.magicalResistanceTileAnim, ['magicalResistanceAnim_1', 'magicalResistanceAnim_2', 'magicalResistanceAnim_3']);
 
-    this.physicalResistanceTileAnim = context.add.image(0, 30, 'physicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
+    this.physicalResistanceTileAnim = context.add.image(0, 30, 'gameAtlas', 'physicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
     if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) {
       this.physicalResistanceTileAnim.setVisible(true);
     } else {
@@ -133,7 +133,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.physicalResistanceTileEvent = continuousAnimation(this.physicalResistanceTileAnim, ['physicalResistanceAnim_1', 'physicalResistanceAnim_2', 'physicalResistanceAnim_3']);
 
-    this.superChargeAnim = context.add.image(0, -18, 'superChargeAnim_1').setOrigin(0.5).setScale(0.8);
+    this.superChargeAnim = context.add.image(0, -18, 'gameAtlas', 'superChargeAnim_1').setOrigin(0.5).setScale(0.8);
     if (data.superCharge) {
       this.superChargeAnim.setVisible(true);
     } else {
@@ -142,7 +142,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.superChargeEvent = continuousAnimation(this.superChargeAnim, ['superChargeAnim_1', 'superChargeAnim_2', 'superChargeAnim_3']);
 
-    this.reviveAnim = context.add.image(0, -10, 'reviveAnim_1').setOrigin(0.5).setScale(0.7).setVisible(false);
+    this.reviveAnim = context.add.image(0, -10, 'gameAtlas', 'reviveAnim_1').setOrigin(0.5).setScale(0.7).setVisible(false);
 
     this.add([
       this.paladinAuraImage,

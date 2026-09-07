@@ -341,7 +341,7 @@ export class Profile extends Phaser.GameObjects.Container {
       this.scene.sound.mute = !result.user.preferences.sound;
     } else {
       this.loadUserData();
-      this.profilePicture.setTexture(this.previousPicture!);
+      this.profilePicture.setTexture('gameAtlas', this.previousPicture!);
       this.showForm(this.profileUpdateError, 'profileError', result.error); // Show server error to user
     }
   }

@@ -9,7 +9,7 @@ import { Phantom } from "../factions/elves/phantom";
 import { Item } from "../factions/item";
 import { Crystal } from "./crystal";
 import { Tile } from "./tile";
-import { Engineer } from "../factions/dwarves/enginner";
+import { Engineer } from "../factions/dwarves/engineer";
 import { Dwarf } from "../factions/dwarves/dwarves";
 import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";

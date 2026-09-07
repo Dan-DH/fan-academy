@@ -46,7 +46,7 @@ export class Tile extends Phaser.GameObjects.Container {
     // If tileType is not basic or a crystal, add the visual representation
     const typesToIgnore = [ETiles.BASIC, ETiles.CRYSTAL, ETiles.CRYSTAL_SMALL, ETiles.CRYSTAL_BIG];
     if (!typesToIgnore.includes(this.tileType)) {
-      this.icon = context.add.image(0, 0, this.tileType);
+      this.icon = context.add.image(0, 0, 'gameAtlas', this.tileType);
       if (this.col > 4) this.icon.setFlipX(true);
       this.add(this.icon);
     }

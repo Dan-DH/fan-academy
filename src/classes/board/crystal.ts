@@ -95,7 +95,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.stats.currentHealth -= damageTaken;
 
     if (this.stats.currentHealth <= this.stats.maxHealth / 2) {
-      this.visuals.crystalImage.setTexture('crystalDamaged');
+      this.visuals.crystalImage.setTexture('gameAtlas', 'crystalDamaged');
     }
 
     // Remove 1-hit buffs and debuffs

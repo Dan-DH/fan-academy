@@ -56,17 +56,17 @@ export class SpecialTileCard extends Phaser.GameObjects.Container {
         typeLabel = 'Speed Boost';
         description = 'Grants 2 extra movement to the unit on this tile.';
         break;
-      default:
-        unitImageKey = 'specialTile';
-        typeLabel = 'Special Tile';
-        description = 'A unique tile with special properties.';
-        break;
+      // default:
+      //   unitImageKey = 'specialTile';
+      //   typeLabel = 'Special Tile';
+      //   description = 'A unique tile with special properties.';
+      //   break;
     }
 
     // Background, unit image, name and type, and separator
-    this.cardBackgroundImage = context.add.image(10, 10, 'cardBackground');
-    this.unitPictureImage = context.add.image(-130, -140, unitImageKey).setOrigin(0.5).setScale(1.2);
-    this.cardSeparatorImage = context.add.image(50, -100, 'cardSeparator').setOrigin(0.5).setScale(1.3);
+    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground');
+    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', unitImageKey).setOrigin(0.5).setScale(1.2);
+    this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     this.cardNameText = this.context.add.text(55, -170, typeLabel, {
       fontFamily: "proLight",

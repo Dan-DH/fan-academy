@@ -24,16 +24,16 @@ export class PlayerHealthBar extends Phaser.GameObjects.Container {
     const coordMap = {
       1: {
         x: 640,
-        y: 65
+        y: 67
       },
       2: {
         x: 930,
-        y: 65
+        y: 67
       }
     };
 
-    this.background = context.add.image(coordMap[player].x, coordMap[player].y, 'gameAtlas',  'hp_background').setScale(3).setOrigin(0);
-    this.healthBar = context.add.image(coordMap[player].x, coordMap[player].y, 'gameAtlas', 'hp_green').setScale(3).setOrigin(0);
+    this.background = context.add.image(coordMap[player].x - 2, coordMap[player].y, 'gameAtlas',  'hpBackground').setScale(3.75).setOrigin(0);
+    this.healthBar = context.add.image(coordMap[player].x - 2, coordMap[player].y, 'gameAtlas', 'hpAlly').setScale(3.75).setOrigin(0);
 
     this.fullWidth = this.healthBar.displayWidth;
 

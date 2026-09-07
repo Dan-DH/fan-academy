@@ -14,7 +14,7 @@ export class Phantom extends Hero {
     super(context, data, tile);
 
     if (spawned && tile) {
-      this.spawnAnim = context.add.image(0, -15, 'phantomSpawnAnim_1').setOrigin(0.5).setScale(0.9);
+      this.spawnAnim = context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(0.9);
 
       specialTileCheck(this, tile.tileType);
       this.add([this.spawnAnim]);

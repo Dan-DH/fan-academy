@@ -20,9 +20,9 @@ export class ItemCard extends Phaser.GameObjects.Container {
     this.context = context;
 
     // Background, unit image, name and type, and separator
-    this.cardBackgroundImage = context.add.image(10, 10, 'cardBackground');
-    this.unitPictureImage = context.add.image(-130, -140, `${data.itemType}CardPic`).setOrigin(0.5).setScale(0.4);
-    this.cardSeparatorImage = context.add.image(50, -100, 'cardSeparator').setOrigin(0.5).setScale(1.3);
+    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground');
+    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', `${data.itemType}Icon`).setOrigin(0.5).setScale(0.4);
+    this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     const { cardText, cardType, cardName } = getCardText(data.itemType);
 

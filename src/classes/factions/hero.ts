@@ -98,12 +98,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   onActivate(): void {
-    const scale = this.stats.boardPosition >= 45 ? 1 : 1.2;
+    const scale = this.stats.boardPosition >= 45 ? 1.2 : 1.4;
     this.visuals.characterImage.setScale(scale);
   }
 
   onDeactivate() {
-    const scale = this.stats.boardPosition >= 45 ? 0.8 : 1;
+    const scale = this.stats.boardPosition >= 45 ? 1.1 : 1.2;
     this.visuals.characterImage.setScale(scale);
   }
 
@@ -128,7 +128,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
         this.stats.factionEquipment = false;
         this.reduceMaxHealth(this.stats.baseHealth * 0.1);
         this.visuals.factionEquipmentImage.setVisible(false);
-        this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+        this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
       }
 
       if (!directHit) {
@@ -295,7 +295,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.stats.isKO = false;
     this.stats.lastBreath = false;
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
 
     this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
@@ -367,7 +367,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -479,7 +479,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     gameController.board.units.push(this);
 
     // Modify image
-    this.visuals.characterImage.setScale(1);
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -524,7 +523,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   equipShiningHelm(handPosition: number): void {
-    const helmImage = this.scene.add.image(this.x, this.y, 'shiningHelm').setDepth(100);
+    const helmImage = this.scene.add.image(this.x, this.y, 'gameAtlas', 'shiningHelm').setDepth(100);
     useAnimation(helmImage);
 
     this.stats.shiningHelm = true;
@@ -532,7 +531,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.visuals.shiningHelmImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
     this.updateTileData();
@@ -541,14 +540,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   equipRunemetal(handPosition: number): void {
-    const helmImage = this.scene.add.image(this.x, this.y, 'runeMetal').setDepth(100);
+    const helmImage = this.scene.add.image(this.x, this.y, 'gameAtlas', 'runeMetal').setDepth(100);
     useAnimation(helmImage);
 
     this.stats.runeMetal = true;
     this.visuals.runeMetalImage.setVisible(true);
 
     this.visuals.runeMetalImage.setVisible(true);
-    this.visuals.characterImage.setTexture(this.visuals.updateCharacterImage(this.stats));
+    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
     this.updateTileData();

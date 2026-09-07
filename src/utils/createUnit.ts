@@ -6,7 +6,7 @@ import { Knight } from "../classes/factions/council/knight";
 import { Ninja } from "../classes/factions/council/ninja";
 import { Wizard } from "../classes/factions/council/wizard";
 import { Annihilator } from "../classes/factions/dwarves/annihilator";
-import { Engineer } from "../classes/factions/dwarves/enginner";
+import { Engineer } from "../classes/factions/dwarves/engineer";
 import { Grenadier } from "../classes/factions/dwarves/grenadier";
 import { Gunner } from "../classes/factions/dwarves/gunner";
 import { DwarvenBrew, Pulverizer } from "../classes/factions/dwarves/items";

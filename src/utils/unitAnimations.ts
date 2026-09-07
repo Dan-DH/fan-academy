@@ -250,7 +250,7 @@ export function continuousAnimation(image: Phaser.GameObjects.Image, textures: s
     delay, // milliseconds between frames
     loop: true,
     callback: () => {
-      image.setTexture(textures[frame]);
+      image.setTexture('gameAtlas', textures[frame]);
       frame = (frame + 1) % textures.length;
     }
   });
@@ -264,7 +264,7 @@ export function singleAnimation(image: Phaser.GameObjects.Image, textures: strin
     delay, // milliseconds between frames
     repeat: textures.length - 1,
     callback: () => {
-      image.setTexture(textures[frame]);
+      image.setTexture('gameAtlas', textures[frame]);
       frame++;
 
       if (frame === textures.length) {

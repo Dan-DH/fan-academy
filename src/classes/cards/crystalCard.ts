@@ -26,9 +26,9 @@ export class CrystalCard extends Phaser.GameObjects.Container {
     this.context = context;
 
     // Background, unit image, name and type, and separator
-    this.cardBackgroundImage = context.add.image(10, 10, 'cardBackground');
-    this.unitPictureImage = context.add.image(-130, -140, 'crystalCardPic').setOrigin(0.5).setScale(0.4);
-    this.cardSeparatorImage = context.add.image(50, -100, 'cardSeparator').setOrigin(0.5).setScale(1.3);
+    this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground');
+    this.unitPictureImage = context.add.image(-130, -140, 'gameAtlas', 'crystalIcon').setOrigin(0.5).setScale(0.4);
+    this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     this.cardNameText = this.context.add.text(55, -170, 'Crystal', {
       fontFamily: "proLight",
@@ -44,24 +44,24 @@ export class CrystalCard extends Phaser.GameObjects.Container {
 
     // Health
     this.hpBackgroundImage = context.add.image(-60, -60, 'gameAtlas', 'hpBackgroundCard').setOrigin(0.5);
-    this.hpBarImage = context.add.image(-118, -72, 'hpBar').setOrigin(0);
+    this.hpBarImage = context.add.image(-118, -72, 'gameAtlas', 'hpBar').setOrigin(0);
     this.setHealthBar(data.currentHealth, data.maxHealth);
     this.currentHpText = this.context.add.text(100, -60, `${data.currentHealth}/${data.maxHealth}`, {
       fontFamily: "proLight",
       fontSize: 35,
       color: '#ffffff'
     }).setOrigin(0.5);
-    this.hpIconImage = context.add.image(-150, -60, 'hpIcon').setOrigin(0.5);
+    this.hpIconImage = context.add.image(-150, -60, 'gameAtlas', 'hpIcon').setOrigin(0.5);
 
     // Resistances
-    this.magicalResistanceImage = context.add.image(40, -10, 'magicalResistance').setOrigin(0.5);
+    this.magicalResistanceImage = context.add.image(40, -10, 'gameAtlas', 'magicalResistance').setOrigin(0.5);
     this.magicalResistanceText = this.context.add.text(100, -10, `${data.magicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
       color: this.getTextColor(data.magicalDamageResistance, data.baseMagicalDamageResistance)
     }).setOrigin(0.5);
 
-    this.physicalResistanceImage = context.add.image(-150, -10, 'physicalResistance').setOrigin(0.5);
+    this.physicalResistanceImage = context.add.image(-150, -10, 'gameAtlas', 'physicalResistance').setOrigin(0.5);
     this.physicalResistanceText = this.context.add.text(-85, -10, `${data.physicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,

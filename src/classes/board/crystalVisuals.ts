@@ -21,8 +21,8 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
 
-    this.pedestalImage = context.add.image(0, 10, 'gameAtlas', 'crystalPedestal').setScale(0.7, 1);
-    const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystalDamaged' : 'crystal_full';
+    this.pedestalImage = context.add.image(0, 10, 'gameAtlas', 'crystalPedestal');
+    const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystalDamaged' : 'crystalFull';
     this.crystalImage = context.add.image(0, -30, 'gameAtlas', crystalTexture).setScale(isBigCrystal ? 1.2 : 1);
 
     this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
@@ -35,7 +35,7 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     this.doubleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_3').setVisible(false);
 
     const isShielded = data.engineerShield ? true : false;
-    this.engineerShieldImage = context.add.image(0, -20, 'gameAtlas', 'enginnerShield').setOrigin(0.5).setVisible(isShielded);
+    this.engineerShieldImage = context.add.image(0, -20, 'gameAtlas', 'engineerShield').setOrigin(0.5).setVisible(isShielded);
     engineerShieldAnimation(this.engineerShieldImage);
 
     this.debuffEventSingle = continuousAnimation(this.singleCrystalDebuff, ['crystalDebuff_1', 'crystalDebuff_2']);

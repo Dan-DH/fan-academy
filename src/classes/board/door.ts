@@ -14,11 +14,11 @@ export class Door extends Phaser.GameObjects.Container {
     super(context, 450, 715);
     this.context = context;
 
-    this.doorClosed = context.add.image(50, -15, 'doorClosed').setScale(0.9);
+    this.doorClosed = context.add.image(50, -15, 'gameAtlas', 'doorClosed').setScale(1.1);
 
-    this.doorOpen = context.add.image(55, -15, 'doorOpen').setVisible(false);
+    this.doorOpen = context.add.image(55, -15, 'gameAtlas', 'doorOpen').setScale(1.1).setVisible(false);
 
-    this.doorBanner = context.add.image(0, 45, 'doorBanner');
+    this.doorBanner = context.add.image(0, 45, 'gameAtlas', 'doorBanner').setScale(1.2);
     const deckSize: number = getCurrentPlayer(context).factionData.unitsInDeck.length ?? 99;
     this.bannerText = this.context.add.text(0, 45 + 2, deckSize!.toString(), {
       fontFamily: "proLight",
