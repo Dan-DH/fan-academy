@@ -44,7 +44,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     const inHand = isInHand(data.boardPosition);
     const { charImageX, charImageY } = positionHeroImage(data.unitType, data.belongsTo === 1, inHand, data.isKO);
     this.characterImage = context.add.image(charImageX, charImageY, 'gameAtlas', this.updateCharacterImage(data)).setOrigin(0.5).setName('body').setDepth(data.row + 10);
-    if (inHand) this.characterImage.setScale(1.1);
+    this.characterImage.setScale(inHand ? 1.1 : 1.2);
     if (data.belongsTo === 2 && data.boardPosition < 45) this.characterImage.setFlipX(true);
 
     /**
@@ -98,7 +98,10 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     /**
      * TILE EFFECT ANIMATIONS
      */
-    this.crystalDebuffTileAnim = context.add.image(0, 30, 'gameAtlas', 'crystalDamageAnim_1').setOrigin(0.5).setScale(0.6);
+    const tileAnimationScale = 0.8;
+    const tileAnimationX = 0;
+    const tileAnimationY = 25;
+    this.crystalDebuffTileAnim = context.add.image(tileAnimationX, 30, 'gameAtlas', 'crystalDamageAnim_1').setScale(tileAnimationScale);
     if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) {
       this.crystalDebuffTileAnim.setVisible(true);
     } else {
@@ -106,7 +109,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     }
     this.crystalDebuffEvent = continuousAnimation(this.crystalDebuffTileAnim, ['crystalDamageAnim_1', 'crystalDamageAnim_2', 'crystalDamageAnim_3']);
 
-    this.powerTileAnim = context.add.image(0, 27, 'gameAtlas', 'powerTileAnim_1').setOrigin(0.5).setScale(0.6);
+    this.powerTileAnim = context.add.image(tileAnimationX, tileAnimationY, 'gameAtlas', 'powerTileAnim_1').setScale(tileAnimationScale);
     if (tile?.tileType === ETiles.POWER && !data.isKO) {
       this.powerTileAnim.setVisible(true);
     } else {
@@ -115,7 +118,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.powerTileEvent = continuousAnimation(this.powerTileAnim, ['powerTileAnim_1', 'powerTileAnim_2', 'powerTileAnim_3']);
 
-    this.magicalResistanceTileAnim = context.add.image(0, 30, 'gameAtlas', 'magicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
+    this.magicalResistanceTileAnim = context.add.image(tileAnimationX, 28, 'gameAtlas', 'magicalResistanceAnim_1').setScale(tileAnimationScale);
     if ((tile?.tileType === ETiles.MAGICAL_RESISTANCE || tile?.tileType === ETiles.SPEED) && !data.isKO) {
       this.magicalResistanceTileAnim.setVisible(true);
     } else {
@@ -124,7 +127,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.magicalResistanceTileEvent = continuousAnimation(this.magicalResistanceTileAnim, ['magicalResistanceAnim_1', 'magicalResistanceAnim_2', 'magicalResistanceAnim_3']);
 
-    this.physicalResistanceTileAnim = context.add.image(0, 30, 'gameAtlas', 'physicalResistanceAnim_1').setOrigin(0.5).setScale(0.6);
+    this.physicalResistanceTileAnim = context.add.image(tileAnimationX, tileAnimationY, 'gameAtlas', 'physicalResistanceAnim_1').setScale(tileAnimationScale);
     if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) {
       this.physicalResistanceTileAnim.setVisible(true);
     } else {
@@ -133,7 +136,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.physicalResistanceTileEvent = continuousAnimation(this.physicalResistanceTileAnim, ['physicalResistanceAnim_1', 'physicalResistanceAnim_2', 'physicalResistanceAnim_3']);
 
-    this.superChargeAnim = context.add.image(0, -18, 'gameAtlas', 'superChargeAnim_1').setOrigin(0.5).setScale(0.8);
+    this.superChargeAnim = context.add.image(tileAnimationX, -25, 'gameAtlas', 'superChargeAnim_1').setScale(1.1);
     if (data.superCharge) {
       this.superChargeAnim.setVisible(true);
     } else {
@@ -142,7 +145,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.superChargeEvent = continuousAnimation(this.superChargeAnim, ['superChargeAnim_1', 'superChargeAnim_2', 'superChargeAnim_3']);
 
-    this.reviveAnim = context.add.image(0, -10, 'gameAtlas', 'reviveAnim_1').setOrigin(0.5).setScale(0.7).setVisible(false);
+    this.reviveAnim = context.add.image(tileAnimationX, -10, 'gameAtlas', 'reviveAnim_1').setScale(0.7).setVisible(false);
 
     this.add([
       this.paladinAuraImage,

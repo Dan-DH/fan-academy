@@ -31,8 +31,8 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     this.crystalImage.setTint(crystalColor);
 
     // Debuff images and animation
-    this.singleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_1').setVisible(false);
-    this.doubleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_3').setVisible(false);
+    this.singleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_1').setVisible(false).setScale(1.1);
+    this.doubleCrystalDebuff = context.add.image(0, -40, 'gameAtlas', 'crystalDebuff_3').setVisible(false);
 
     const isShielded = data.engineerShield ? true : false;
     this.engineerShieldImage = context.add.image(0, -20, 'gameAtlas', 'engineerShield').setOrigin(0.5).setVisible(isShielded);
