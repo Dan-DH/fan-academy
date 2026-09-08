@@ -16,6 +16,8 @@ export class HealthBar extends Phaser.GameObjects.Container {
     this.context = context;
 
     this.background = context.add.image(0, 0, 'gameAtlas', 'hpBackground').setOrigin(0);
+    this.background.displayWidth = this.fullWidth;
+
     const barType =  belongsToPlayer(context, unit) ? 'hpAlly' : 'hpEnemy';
     this.healthBar = context.add.image(0, 0, 'gameAtlas', barType).setOrigin(0);
 
