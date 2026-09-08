@@ -83,13 +83,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
      */
     this.smokeAnim = context.add.image(0, 0, 'gameAtlas', 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
 
-    this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
+    this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);
     addCirclingTween(this.attackReticle);
-    this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
+    this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(1).setName('healReticle').setVisible(false);
     addCirclingTween(this.healReticle);
-    this.allyReticle = context.add.image(0, -10, 'gameAtlas', 'allyReticle').setOrigin(0.5).setScale(0.6).setName('allyReticle').setVisible(false);
+    this.allyReticle = context.add.image(0, -10, 'gameAtlas', 'allyReticle').setOrigin(0.5).setScale(0.8).setName('allyReticle').setVisible(false);
     addCirclingTween(this.allyReticle);
-    this.priestessDebuffImage = context.add.image(0, -10, 'gameAtlas', 'priestessDebuff').setOrigin(0.5).setScale(2.5).setName('priestessDebuff');
+    this.priestessDebuffImage = context.add.image(0, -10, 'gameAtlas', 'priestessDebuff').setOrigin(0.5).setScale(3).setName('priestessDebuff');
     addCirclingTween(this.priestessDebuffImage);
     if (!data.priestessDebuff) this.priestessDebuffImage.setVisible(false);
     this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);

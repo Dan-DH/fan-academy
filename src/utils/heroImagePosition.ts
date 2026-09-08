@@ -280,12 +280,12 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     // Dwarves
     [EHeroes.PALADIN]: {
       1: {
-        charImageX: x,
-        charImageY: y - 3
+        charImageX: x + 3,
+        charImageY: y
       },
       2: {
         charImageX: x,
-        charImageY: y - 3
+        charImageY: y
       },
       KO: {
         1: {
