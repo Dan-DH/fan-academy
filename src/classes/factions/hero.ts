@@ -300,7 +300,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
 
     this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
-    specialTileCheck(this, this.getTile().tileType);
+    specialTileCheck(this, this.getTile());
     if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.x = charImageX;
@@ -409,10 +409,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     });
 
     // Remove events
-    this.visuals.crystalDebuffEvent.remove(false);
-    this.visuals.powerTileEvent.remove(false);
-    this.visuals.magicalResistanceTileEvent.remove(false);
-    this.visuals.physicalResistanceTileEvent.remove(false);
     this.visuals.superChargeEvent.remove(false);
     this.visuals.annihilatorDebuffEvent.remove(false);
 
@@ -456,7 +452,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
-    specialTileCheck(this, targetTile.tileType, startTile.tileType);
+    specialTileCheck(this, targetTile, startTile);
     this.updatePosition(targetTile);
 
     startTile.removeHero();
@@ -491,7 +487,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.y = 0;
     this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     // A Wraith can spawn on a special tile. Phantom spawning is handled within its class
-    specialTileCheck(this, tile.tileType);
+    specialTileCheck(this, tile);
     // Position hero on the board
     this.updatePosition(tile);
     // Update tile data

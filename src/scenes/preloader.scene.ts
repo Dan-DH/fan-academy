@@ -1,3 +1,4 @@
+import { ETiles } from "../enums/gameEnums";
 
 export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@b4e30e9';
 
@@ -18,6 +19,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.createSpriteAnimations();
+
     // Move to main scene after loading
     this.scene.start('MainMenuScene');
   }
@@ -67,5 +70,43 @@ export default class PreloaderScene extends Phaser.Scene {
     // this.load.audio('battleButtonSound', `${CDN_PATH}/audio/ui/battleButton.mp3`);
     // this.load.audio('buttonPressGenericSound', `${CDN_PATH}/audio/ui/buttonPressGeneric.mp3`);
     // this.load.audio('deleteGameSound', `${CDN_PATH}/audio/ui/deleteGame.mp3`);
+  }
+
+  createSpriteAnimations(): void {
+    const specialTilesFrames = [
+      {
+        type: ETiles.POWER,
+        frames: 'powerTileAnim'
+      },
+      {
+        type: ETiles.CRYSTAL_DAMAGE,
+        frames: 'crystalDamageAnim'
+      },
+      {
+        type: ETiles.MAGICAL_RESISTANCE,
+        frames: 'magicalResistanceAnim'
+      },
+      {
+        type: ETiles.PHYSICAL_RESISTANCE,
+        frames: 'physicalResistanceAnim'
+      },
+      {
+        type: ETiles.SPEED,
+        frames: 'magicalResistanceAnim'
+      }
+    ];
+
+    specialTilesFrames.forEach(tile => {
+      this.anims.create({
+        key: tile.type,
+        frames: this.anims.generateFrameNames('gameAtlas', {
+          prefix: tile.frames + '_',
+          start: 1,
+          end: 3
+        }),
+        frameRate: 10,
+        repeat: -1
+      });
+    });
   }
 }

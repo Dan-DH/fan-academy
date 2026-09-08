@@ -348,7 +348,7 @@ export class GameController {
     if (targetNewTile.crystal || targetNewTile.hero) return;
     if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
 
-    if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
+    if (!target.stats.isKO) specialTileCheck(target, targetNewTile, targetTile);
 
     await forcedMoveAnimation(this.context, target, targetNewTile, angle);
 
@@ -373,7 +373,7 @@ export class GameController {
     if (targetNewTile.crystal || targetNewTile.hero) return;
     if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
 
-    if (!target.stats.isKO) specialTileCheck(target, targetNewTile.tileType, targetTile.tileType);
+    if (!target.stats.isKO) specialTileCheck(target, targetNewTile, targetTile);
 
     await forcedMoveAnimation(this.context, target, targetNewTile);
 

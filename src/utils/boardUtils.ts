@@ -30,77 +30,46 @@ export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
   return tile.tileType === ETiles.SPAWN && (context.isPlayerOne ? tile.col > 5 : tile.col < 5);
 }
 
-export function specialTileCheck(hero: Hero, targetTile: ETiles, currentTile?: ETiles): void {
+export function specialTileCheck(hero: Hero, targetTile: Tile, currentTile?: Tile): void {
   // If hero is leaving a special tile
-  if (currentTile === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
-    hero.visuals.crystalDebuffTileAnim.setVisible(false);
-  }
-  if (currentTile === ETiles.POWER) {
-    hero.stats.attackTile = false;
-    hero.visuals.powerTileAnim.setVisible(false);
-  }
-  if (currentTile === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalResistanceTile = false;
-    hero.visuals.magicalResistanceTileAnim.setVisible(false);
-  }
-  if (currentTile === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalResistanceTile = false;
-    hero.visuals.physicalResistanceTileAnim.setVisible(false);
-  }
-  if (currentTile === ETiles.SPEED) {
-    hero.stats.speedTile = false;
-    hero.visuals.magicalResistanceTileAnim.setVisible(false);
-  }
+  if (currentTile) removeSpecialTile(hero, currentTile);
 
   // If hero is entering a special tile
-  if (targetTile === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
-    hero.visuals.crystalDebuffTileAnim.setVisible(true);
-    // playSound(hero.scene, EGameSounds.CRYSTAL_TILE);
-  }
-  if (targetTile === ETiles.POWER) {
-    hero.stats.attackTile = true;
-    hero.visuals.powerTileAnim.setVisible(true);
-    // playSound(hero.scene, EGameSounds.SWORD_TILE);
-  }
-  if (targetTile === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalResistanceTile = true;
-    hero.visuals.magicalResistanceTileAnim.setVisible(true);
-    // playSound(hero.scene, EGameSounds.HELM_TILE);
-  }
-  if (targetTile === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalResistanceTile = true;
-    hero.visuals.physicalResistanceTileAnim.setVisible(true);
-    // playSound(hero.scene, EGameSounds.SHIELD_TILE);
-  }
-  if (targetTile === ETiles.SPEED) {
-    hero.stats.speedTile = true;
-    hero.visuals.magicalResistanceTileAnim.setVisible(true); // Reusing the animation since it's basically the same color
-  }
+  if (targetTile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
+  if (targetTile.tileType === ETiles.POWER) hero.stats.attackTile = true;
+  if (targetTile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = true;
+  if (targetTile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = true;
+  if (targetTile.tileType === ETiles.SPEED) hero.stats.speedTile = true;
+
+  if (![ETiles.BASIC, !ETiles.SPAWN].includes(targetTile.tileType)) hero.visuals.playSpecialTileAnimation(targetTile.tileType);
 
   hero.unitCard.updateCardData(hero);
 }
 
-export function removeSpecialTileOnKo(hero: Hero): void {
-  const currentTile = hero.getTile();
+export function removeSpecialTile(hero: Hero, tile: Tile): void {
+  switch(tile?.tileType) {
+    case ETiles.CRYSTAL_DAMAGE:
+      hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
+      break;
+    case ETiles.POWER:
+      hero.stats.attackTile = false;
+      break;
+    case ETiles.MAGICAL_RESISTANCE:
+      hero.stats.magicalResistanceTile = false;
+      break;
+    case ETiles.PHYSICAL_RESISTANCE:
+      hero.stats.physicalResistanceTile = false;
+      break;
+    case ETiles.SPEED:
+      hero.stats.speedTile = false;
+      break;
+  }
 
-  if (currentTile.tileType === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
-    hero.visuals.crystalDebuffTileAnim.setVisible(false);
-  }
-  if (currentTile.tileType === ETiles.POWER) {
-    hero.stats.attackTile = false;
-    hero.visuals.powerTileAnim.setVisible(false);
-  }
-  if (currentTile.tileType === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalResistanceTile = false;
-    hero.visuals.magicalResistanceTileAnim.setVisible(false);
-  }
-  if (currentTile.tileType === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalResistanceTile = false;
-    hero.visuals.physicalResistanceTileAnim.setVisible(false);
-  }
+  hero.visuals.stopSpecialTileAnimation();
+}
+
+export function removeSpecialTileOnKo(hero: Hero): void {
+  removeSpecialTile(hero, hero.getTile());
 
   hero.unitCard.updateCardData(hero);
 }
