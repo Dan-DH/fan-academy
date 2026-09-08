@@ -3,7 +3,7 @@ import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";
 import { positionHeroImage } from "../../utils/heroImagePosition";
-import { addCirclingTween, continuousAnimation, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
+import { addPriestessDebuffTween, continuousAnimation, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
 import { Tile } from "../board/tile";
 
 export class HeroVisuals extends Phaser.GameObjects.Container {
@@ -81,19 +81,14 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     /**
      * RETICLES
      */
-    this.smokeAnim = context.add.image(0, 0, 'gameAtlas', 'smokeAnim_1').setOrigin(0.5).setScale(2.5).setVisible(false).setTint(0x393D47);
+    this.smokeAnim = context.add.image(0, 0, 'gameAtlas', 'smokeAnim_1').setOrigin(0.5).setScale(3.5).setVisible(false).setTint(0x393D47);
 
     this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);
-    addCirclingTween(this.attackReticle);
     this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(1).setName('healReticle').setVisible(false);
-    addCirclingTween(this.healReticle);
     this.allyReticle = context.add.image(0, -10, 'gameAtlas', 'allyReticle').setOrigin(0.5).setScale(0.8).setName('allyReticle').setVisible(false);
-    addCirclingTween(this.allyReticle);
-    this.priestessDebuffImage = context.add.image(0, -10, 'gameAtlas', 'priestessDebuff').setOrigin(0.5).setScale(3).setName('priestessDebuff');
-    addCirclingTween(this.priestessDebuffImage);
-    if (!data.priestessDebuff) this.priestessDebuffImage.setVisible(false);
-    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
-    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
+    this.priestessDebuffImage = context.add.image(0, -10, 'gameAtlas', 'priestessDebuff').setOrigin(0.5).setScale(3).setName('priestessDebuff').setVisible(false);
+    if (data.priestessDebuff) addPriestessDebuffTween(this.priestessDebuffImage);
+    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setScale(1.2).setVisible(false);
 
     /**
      * TILE EFFECT ANIMATIONS

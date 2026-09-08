@@ -6,7 +6,7 @@ import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
-import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
+import { addPriestessDebuffTween, attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Priestess extends DarkElf {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -38,7 +38,7 @@ export class Priestess extends DarkElf {
       // Apply a 50% debuff to the target's next attack or heal
       if (target instanceof Hero && !isTargetShielded) {
         target.stats.priestessDebuff = true;
-        target.visuals.priestessDebuffImage.setVisible(true);
+        addPriestessDebuffTween(target.visuals.priestessDebuffImage);
         target.updateTileData();
         target.unitCard.updateCardData(target);
       }

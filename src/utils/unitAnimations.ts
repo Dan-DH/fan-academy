@@ -204,8 +204,40 @@ export function useAnimation(image: GameObjects.Image, scale = 2): void {
   });
 }
 
-export function addCirclingTween(reticle: Phaser.GameObjects.Image): void {
-  reticle.scene.tweens.add({
+export function addPriestessDebuffTween(debuffImage: Phaser.GameObjects.Image): void {
+  const priestessDebuffTween = addCirclingTween(debuffImage);
+  debuffImage.setData('priestessDebuffTween', priestessDebuffTween);
+  debuffImage.setVisible(true);
+};
+
+export function removePriestessDebuffTween(debuffImage: Phaser.GameObjects.Image): void {
+  const priestessDebuffTween = debuffImage.getData('priestessDebuffTween');
+  if (priestessDebuffTween) {
+    priestessDebuffTween.stop();
+    priestessDebuffTween.remove();
+    debuffImage.setData('priestessDebuffTween', null);
+    debuffImage.setVisible(false);
+  }
+};
+
+export function addReticleTween(reticle: Phaser.GameObjects.Image): void {
+  const reticleTween = addCirclingTween(reticle);
+  reticle.setData('reticleTween', reticleTween);
+  reticle.setVisible(true);
+}
+
+export function removeReticleTween(reticle: Phaser.GameObjects.Image): void {
+  const reticleTween = reticle.getData('reticleTween');
+  if (reticleTween) {
+    reticleTween.stop();
+    reticleTween.remove();
+    reticle.setData('reticleTween', null);
+    reticle.setVisible(false);
+  }
+}
+
+export function addCirclingTween(reticle: Phaser.GameObjects.Image): Phaser.Tweens.Tween {
+  return reticle.scene.tweens.add({
     targets: reticle,
     angle: 360,
     duration: 7000,

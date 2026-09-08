@@ -15,6 +15,7 @@ import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
 import { HealingPotion } from "../factions/council/items";
 import { DwarvenBrew } from "../factions/dwarves/items";
+import { addReticleTween, removeReticleTween } from "../../utils/unitAnimations";
 
 export class Board {
   tileSize: number = 90;
@@ -147,7 +148,7 @@ export class Board {
       }
     });
 
-    enemiesToHighlight.forEach(enemy => enemy.visuals.attackReticle.setVisible(true));
+    enemiesToHighlight.forEach(enemy => addReticleTween(enemy.visuals.attackReticle));
     enemiesBlocked.forEach(enemy => enemy.visuals.blockedLOS.setVisible(true));
   }
 
@@ -171,12 +172,12 @@ export class Board {
       const currentHealth = target.stats.currentHealth;
 
       if (target instanceof Hero && hero.stats.canHeal && target.stats.belongsTo === hero.stats.belongsTo && currentHealth! < maxHealth!) {
-        target.visuals.healReticle.setVisible(true);
+        addReticleTween(target.visuals.healReticle);
       }
       // Will need to update this logic for any future buffs by other units
       if (hero.stats.canBuff && target.stats.belongsTo === hero.stats.belongsTo && !target.stats.engineerShield) {
-        if (target instanceof Crystal) target.visuals.healReticle.setVisible(true);
-        if (target instanceof Hero && !target.stats.isKO) target.visuals.healReticle.setVisible(true);
+        if (target instanceof Crystal) addReticleTween(target.visuals.healReticle);
+        if (target instanceof Hero && !target.stats.isKO) addReticleTween(target.visuals.healReticle);
       }
     });
   }
@@ -205,7 +206,7 @@ export class Board {
     if (friendlyUnitsOnBoard.length <= 1) return;
 
     friendlyUnitsOnBoard.forEach(unit => {
-      unit.visuals.allyReticle.setVisible(true);
+      addReticleTween(unit.visuals.allyReticle);
     });
   }
 
@@ -241,16 +242,15 @@ export class Board {
 
   removeReticles(): void {
     this.units.forEach(unit => {
-      unit.visuals.attackReticle.setVisible(false);
+      removeReticleTween(unit.visuals.attackReticle);
+      removeReticleTween(unit.visuals.healReticle);
+      removeReticleTween(unit.visuals.allyReticle);
       unit.visuals.blockedLOS.setVisible(false);
-
-      unit.visuals.healReticle.setVisible(false);
-      unit.visuals.allyReticle.setVisible(false);
     });
 
     this.crystals.forEach(crystal => {
-      crystal.visuals.attackReticle.setVisible(false);
-      crystal.visuals.healReticle.setVisible(false);
+      removeReticleTween(crystal.visuals.attackReticle);
+      removeReticleTween(crystal.visuals.healReticle);
       crystal.visuals.blockedLOS.setVisible(false);
     });
   }

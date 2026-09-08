@@ -10,7 +10,7 @@ import { HeroCard } from "../cards/heroCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
-import { getDamagedAnimation, moveAnimation, singleAnimation, useAnimation } from "../../utils/unitAnimations";
+import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, singleAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
 import { removeFromBoard, removeSpecialTileOnKo, specialTileCheck } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
@@ -572,7 +572,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   removeAttackModifiers() {
     this.stats.priestessDebuff = false;
-    this.visuals.priestessDebuffImage.setVisible(false);
+    removePriestessDebuffTween(this.visuals.priestessDebuffImage);
     this.stats.superCharge = false;
     this.visuals.superChargeAnim.setVisible(false);
 

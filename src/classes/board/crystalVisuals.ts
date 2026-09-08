@@ -1,6 +1,6 @@
 import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { addCirclingTween, continuousAnimation, engineerShieldAnimation } from "../../utils/unitAnimations";
+import { continuousAnimation, engineerShieldAnimation } from "../../utils/unitAnimations";
 
 export class CrystalVisuals extends Phaser.GameObjects.Container {
   pedestalImage: Phaser.GameObjects.Image;
@@ -25,7 +25,7 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     const crystalTexture = data.currentHealth <= data.maxHealth / 2 ? 'crystalDamaged' : 'crystalFull';
     this.crystalImage = context.add.image(0, -30, 'gameAtlas', crystalTexture).setScale(isBigCrystal ? 1.2 : 1);
 
-    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setVisible(false);
+    this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setScale(1.2).setVisible(false);
 
     const crystalColor = data.belongsTo === 1 ?  0x3399ff : 0x990000;
     this.crystalImage.setTint(crystalColor);
@@ -49,10 +49,8 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
 
     // Attack  and healing reticle animations
-    this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(0.8).setName('attackReticle').setVisible(false);
-    addCirclingTween(this.attackReticle);
-    this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(0.8).setName('healReticle').setVisible(false);
-    addCirclingTween(this.healReticle);
+    this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);
+    this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(1).setName('healReticle').setVisible(false);
 
     this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.annihilatorDebuffImage, this.doubleCrystalDebuff, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS]);
   }
