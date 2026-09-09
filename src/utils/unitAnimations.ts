@@ -25,15 +25,18 @@ export function attackAnimation(hero: Hero): void {
 export function getDamagedAnimation(hero: Hero): void {
   hero.visuals.characterImage.setTint(0xff0000);
   hero.scene.time.delayedCall(500, () => hero.visuals.characterImage.clearTint());
+
+  const positionX = hero.visuals.characterImage.x;
   hero.visuals.characterImage.scene.tweens.add({
     targets: hero.visuals.characterImage,
     x: {
-      from: -5,
-      to: 5
+      from: positionX - 5,
+      to: positionX + 5
     },
     duration: 50,
     repeat: 3,
-    yoyo: true
+    yoyo: true,
+    onComplete: () => hero.visuals.characterImage.setX(positionX)
   });
 }
 
