@@ -250,16 +250,6 @@ export function addCirclingTween(reticle: Phaser.GameObjects.Image): Phaser.Twee
   });
 };
 
-export function addBlockedLOSTween(image: Phaser.GameObjects.Image): void {
-  image.scene.tweens.add({
-    targets: image,
-    scale: 1.2,
-    duration: 1000,
-    yoyo: true,
-    repeat: -1,
-    ease: 'Sine.easeInOut'
-  });
-}
 export function sizeReduceTween(image: Phaser.GameObjects.Image, duration: number, originalScale?: number): void {
   image.setVisible(true);
   image.scene.tweens.add({
