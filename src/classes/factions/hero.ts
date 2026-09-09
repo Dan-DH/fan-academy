@@ -153,7 +153,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Remove 1-hit buffs and debuffs
     if (attackType === EAttackType.PHYSICAL) {
       this.stats.annihilatorDebuff = false;
-      this.visuals.annihilatorDebuffImage.setVisible(false);
+      this.visuals.stopAnnihilatorDebuffAnimation();
     }
     this.stats.dwarvenBrew = false;
     this.visuals.dwarvenBrewImage.setVisible(false);
@@ -408,10 +408,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       this.scene.tweens.killTweensOf(child);
     });
 
-    // Remove events
-    this.visuals.superChargeEvent.remove(false);
-    this.visuals.annihilatorDebuffEvent.remove(false);
-
     if (this.visuals.spawnEvent) this.visuals.spawnEvent?.remove(false);
 
     if (board) removeFromBoard(this);
@@ -562,7 +558,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
-    this.visuals.superChargeAnim.setVisible(true);
+    this.visuals.playSuperChargeAnimation();
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
@@ -571,7 +567,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.priestessDebuff = false;
     removePriestessDebuffTween(this.visuals.priestessDebuffImage);
     this.stats.superCharge = false;
-    this.visuals.superChargeAnim.setVisible(false);
+    this.visuals.stopSuperChargeAnimation();
 
     this.unitCard.updateCardData(this);
 

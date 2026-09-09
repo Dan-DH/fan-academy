@@ -38,7 +38,7 @@ export class Annihilator extends Dwarf {
 
       if (!isTargetShielded && target.active) {
         target.stats.annihilatorDebuff = true;
-        target.visuals.annihilatorDebuffImage.setVisible(true);
+        target.visuals.playAnnihilatorDebuffAnimation();
         target.updateTileData();
         if (target instanceof Hero) target.unitCard.updateCardData(target);
         if (target instanceof Crystal) target.unitCard.updateCardData(target);

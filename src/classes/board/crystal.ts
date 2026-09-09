@@ -101,7 +101,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     // Remove 1-hit buffs and debuffs
     if (attackType === EAttackType.PHYSICAL) {
       this.stats.annihilatorDebuff = false;
-      this.visuals.annihilatorDebuffImage.setVisible(false);
+      this.visuals.annihilatorDebuffAnimationSprite.setVisible(false);
     }
 
     // Update hp bar
@@ -157,11 +157,6 @@ export class Crystal extends Phaser.GameObjects.Container {
       this.scene.tweens.killTweensOf(child);
     });
 
-    // Remove events
-    this.visuals.debuffEventSingle.remove(false);
-    this.visuals.debuffEventDouble.remove(false);
-    this.visuals.annihilatorDebuffEvent.remove(false);
-
     // Destroy container and children
     this.destroy(true);
   }
@@ -171,18 +166,15 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     switch (newLevel) {
       case 0:
-        this.visuals.singleCrystalDebuff.setVisible(false);
-        this.visuals.doubleCrystalDebuff.setVisible(false);
+        this.visuals.stopCrystalDebuffAnimation();
         break;
 
       case 1:
-        this.visuals.singleCrystalDebuff.setVisible(true);
-        this.visuals.doubleCrystalDebuff.setVisible(false);
+        this.visuals.playSingleCrystalDebuffAnimation();
         break;
 
       case 2:
-        this.visuals.singleCrystalDebuff.setVisible(false);
-        this.visuals.doubleCrystalDebuff.setVisible(true);
+        this.visuals.playDoubleCrystalDebuffAnimation();
         break;
 
       default:

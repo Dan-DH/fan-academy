@@ -72,7 +72,68 @@ export default class PreloaderScene extends Phaser.Scene {
     // this.load.audio('deleteGameSound', `${CDN_PATH}/audio/ui/deleteGame.mp3`);
   }
 
+  // animations
   createSpriteAnimations(): void {
+    this.createSpecialTileAnimations();
+    this.createAnnihilatorDebuffAnimation();
+    this.createSingleCrystalDebuffAnimation();
+    this.createDoubleCrystalDebuffAnimation();
+    this.createSuperChargeAnimation();
+  }
+
+  createAnnihilatorDebuffAnimation(): void {
+    this.anims.create({
+      key: 'annihilatorDebuffAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'annihilatorDebuff_',
+        start: 1,
+        end: 2
+      }),
+      duration: 1500,
+      repeat: -1
+    });
+  };
+
+  createSuperChargeAnimation(): void {
+    this.anims.create({
+      key: 'superChargeAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'superChargeAnim_',
+        start: 1,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
+  };
+
+  createSingleCrystalDebuffAnimation(): void {
+    this.anims.create({
+      key: 'singleCrystalDebuffAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'crystalDebuff_',
+        start: 1,
+        end: 2
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
+  };
+
+  createDoubleCrystalDebuffAnimation(): void {
+    this.anims.create({
+      key: 'doubleCrystalDebuffAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'crystalDebuff_',
+        start: 3,
+        end: 4
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
+  };
+
+  createSpecialTileAnimations(): void {
     const specialTilesFrames = [
       {
         type: ETiles.POWER,

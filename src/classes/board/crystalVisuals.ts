@@ -1,21 +1,16 @@
 import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
-import { continuousAnimation, engineerShieldAnimation } from "../../utils/unitAnimations";
+import { engineerShieldAnimation } from "../../utils/unitAnimations";
 
 export class CrystalVisuals extends Phaser.GameObjects.Container {
   pedestalImage: Phaser.GameObjects.Image;
   crystalImage: Phaser.GameObjects.Image;
-  singleCrystalDebuff: Phaser.GameObjects.Image;
-  doubleCrystalDebuff: Phaser.GameObjects.Image;
   attackReticle: Phaser.GameObjects.Image;
   healReticle: Phaser.GameObjects.Image;
   blockedLOS: Phaser.GameObjects.Image;
   engineerShieldImage: Phaser.GameObjects.Image;
-  annihilatorDebuffImage: Phaser.GameObjects.Image;
-  annihilatorDebuffEvent: Phaser.Time.TimerEvent;
-
-  debuffEventSingle: Phaser.Time.TimerEvent;
-  debuffEventDouble: Phaser.Time.TimerEvent;
+  annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
+  crystalDebuffAnimationSprite: Phaser.GameObjects.Sprite;
 
   constructor(context: GameScene, data: ICrystal) {
     super(context, 0, 0);
@@ -31,27 +26,53 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     this.crystalImage.setTint(crystalColor);
 
     // Debuff images and animation
-    this.singleCrystalDebuff = context.add.image(0, -30, 'gameAtlas', 'crystalDebuff_1').setVisible(false).setScale(1.1);
-    this.doubleCrystalDebuff = context.add.image(0, -40, 'gameAtlas', 'crystalDebuff_3').setVisible(false);
+    this.crystalDebuffAnimationSprite = context.add.sprite(0, -30, 'gameAtlas', '').setVisible(false).setScale(1.1);
+    if (data.debuffLevel === 1) this.playSingleCrystalDebuffAnimation();
+    if (data.debuffLevel === 2) this.playDoubleCrystalDebuffAnimation();
 
     const isShielded = data.engineerShield ? true : false;
     this.engineerShieldImage = context.add.image(0, -20, 'gameAtlas', 'engineerShield').setOrigin(0.5).setVisible(isShielded);
     engineerShieldAnimation(this.engineerShieldImage);
 
-    this.debuffEventSingle = continuousAnimation(this.singleCrystalDebuff, ['crystalDebuff_1', 'crystalDebuff_2']);
-    this.debuffEventDouble = continuousAnimation(this.doubleCrystalDebuff, ['crystalDebuff_3', 'crystalDebuff_4']);
-
-    if (data.debuffLevel === 1) this.singleCrystalDebuff.setVisible(true);
-    if (data.debuffLevel === 2) this.doubleCrystalDebuff.setVisible(true);
-
-    this.annihilatorDebuffImage = context.add.image(25, -30, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
-    this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
-    if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
+    this.annihilatorDebuffAnimationSprite = context.add.sprite(25, -35, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.8).setName('annihilatorDebuff_1');
+    if (!data.annihilatorDebuff) this.annihilatorDebuffAnimationSprite.setVisible(false);
 
     // Attack  and healing reticle animations
     this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);
     this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(1).setName('healReticle').setVisible(false);
 
-    this.add([this.pedestalImage, this.crystalImage, this.singleCrystalDebuff, this.annihilatorDebuffImage, this.doubleCrystalDebuff, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS]);
+    this.add([this.pedestalImage, this.crystalImage, this.crystalDebuffAnimationSprite, this.annihilatorDebuffAnimationSprite, this.attackReticle, this.healReticle, this.engineerShieldImage, this.blockedLOS]);
+  }
+
+  playAnnihilatorDebuffAnimation() {
+    this.annihilatorDebuffAnimationSprite.play({
+      key: 'annihilatorDebuffAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
+  }
+
+  stopAnnihilatorDebuffAnimation() {
+    this.annihilatorDebuffAnimationSprite.anims.complete();
+  }
+
+  playSingleCrystalDebuffAnimation() {
+    this.crystalDebuffAnimationSprite.play({
+      key: 'singleCrystalDebuffAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
+  }
+
+  playDoubleCrystalDebuffAnimation() {
+    this.crystalDebuffAnimationSprite.play({
+      key: 'doubleCrystalDebuffAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
+  }
+
+  stopCrystalDebuffAnimation() {
+    this.crystalDebuffAnimationSprite.anims.complete();
   }
 }

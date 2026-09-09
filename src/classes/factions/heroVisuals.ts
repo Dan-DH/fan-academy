@@ -3,7 +3,7 @@ import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";
 import { positionHeroImage } from "../../utils/heroImagePosition";
-import { addPriestessDebuffTween, continuousAnimation, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
+import { addPriestessDebuffTween, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
 import { Tile } from "../board/tile";
 
 export class HeroVisuals extends Phaser.GameObjects.Container {
@@ -17,18 +17,15 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   blockedLOS: Phaser.GameObjects.Image;
   priestessDebuffImage: Phaser.GameObjects.Image;
 
-  specialTileAnimation: Phaser.GameObjects.Sprite;
-  superChargeAnim: Phaser.GameObjects.Image;
+  specialTileAnimationSprite: Phaser.GameObjects.Sprite;
+  superChargeAnimationSprite: Phaser.GameObjects.Sprite;
+  annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
   reviveAnim: Phaser.GameObjects.Image;
   smokeAnim?: Phaser.GameObjects.Image;
   dwarvenBrewImage: Phaser.GameObjects.Image;
   engineerShieldImage: Phaser.GameObjects.Image;
-  annihilatorDebuffImage: Phaser.GameObjects.Image;
   paladinAuraImage: Phaser.GameObjects.Image;
 
-  // TODO: turn into sprite animations
-  annihilatorDebuffEvent: Phaser.Time.TimerEvent;
-  superChargeEvent: Phaser.Time.TimerEvent;
   reviveEvent?: Phaser.Time.TimerEvent;
   smokeEvent?: Phaser.Time.TimerEvent;
   spawnEvent?: Phaser.Time.TimerEvent;
@@ -61,9 +58,9 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.5).setName('dwarvenBrew');
     if (!data.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
 
-    this.annihilatorDebuffImage = context.add.image(25, -30, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.7).setName('annihilatorDebuff_1');
-    this.annihilatorDebuffEvent = continuousAnimation(this.annihilatorDebuffImage, ['annihilatorDebuff_1', 'annihilatorDebuff_2'], 1000);
-    if (!data.annihilatorDebuff) this.annihilatorDebuffImage.setVisible(false);
+    this.annihilatorDebuffAnimationSprite = context.add.sprite(25, -35, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.8).setName('annihilatorDebuff_1');
+
+    if (data.annihilatorDebuff) { this.playAnnihilatorDebuffAnimation(); } else {this.annihilatorDebuffAnimationSprite.setVisible(false);};
 
     this.engineerShieldImage = context.add.image(0, 0, 'gameAtlas', 'engineerShield').setOrigin(0.5).setScale(1.2);
     engineerShieldAnimation(this.engineerShieldImage);
@@ -88,7 +85,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     /**
      * TILE EFFECT ANIMATIONS
      */
-    this.specialTileAnimation = context.add.sprite(0, 25, '').setScale(0.8).setVisible(false);
+    this.specialTileAnimationSprite = context.add.sprite(0, 30, '').setScale(0.8).setVisible(false);
 
     if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
     if (tile?.tileType === ETiles.POWER && !data.isKO) this.playSpecialTileAnimation(ETiles.POWER);
@@ -96,24 +93,24 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (tile?.tileType === ETiles.SPEED && !data.isKO) this.playSpecialTileAnimation(ETiles.SPEED);
     if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
 
-    this.superChargeAnim = context.add.image(0, -25, 'gameAtlas', 'superChargeAnim_1').setScale(1.1);
+    this.superChargeAnimationSprite = context.add.sprite(0, -25, 'gameAtlas', '').setScale(1.1).setVisible(false);
     if (data.superCharge) {
-      this.superChargeAnim.setVisible(true);
-    } else {
-      this.superChargeAnim.setVisible(false);
+      this.superChargeAnimationSprite.play({
+        key: 'superChargeAnim',
+        showOnStart: true,
+        hideOnComplete: true
+      });
     }
-
-    this.superChargeEvent = continuousAnimation(this.superChargeAnim, ['superChargeAnim_1', 'superChargeAnim_2', 'superChargeAnim_3']);
 
     this.reviveAnim = context.add.image(0, -10, 'gameAtlas', 'reviveAnim_1').setScale(0.7).setVisible(false);
 
     this.add([
       this.paladinAuraImage,
       this.priestessDebuffImage,
-      this.superChargeAnim,
+      this.superChargeAnimationSprite,
       this.reviveAnim,
       this.characterImage,
-      this.specialTileAnimation,
+      this.specialTileAnimationSprite,
       this.runeMetalImage,
       this.factionEquipmentImage,
       this.shiningHelmImage,
@@ -121,7 +118,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       this.healReticle,
       this.allyReticle,
       this.engineerShieldImage,
-      this.annihilatorDebuffImage,
+      this.annihilatorDebuffAnimationSprite,
       this.dwarvenBrewImage,
       ...this.smokeAnim ? [this.smokeAnim] : [],
       this.blockedLOS
@@ -145,7 +142,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   }
 
   playSpecialTileAnimation(tileType: ETiles) {
-    this.specialTileAnimation?.play({
+    // for some reason the attack tile anim shows up higher than the others. Atlas issue?
+    if (tileType === ETiles.POWER) {
+      this.specialTileAnimationSprite.setY(25);
+    } else {
+      this.specialTileAnimationSprite.setY(30);
+    }
+    this.specialTileAnimationSprite?.play({
       key: tileType,
       showOnStart: true,
       hideOnComplete: true
@@ -153,6 +156,30 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   }
 
   stopSpecialTileAnimation() {
-    this.specialTileAnimation?.anims.complete();
+    this.specialTileAnimationSprite?.anims.complete();
+  }
+
+  playSuperChargeAnimation() {
+    this.superChargeAnimationSprite.play({
+      key: 'superChargeAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
+  }
+
+  stopSuperChargeAnimation() {
+    this.superChargeAnimationSprite.anims.complete();
+  }
+
+  playAnnihilatorDebuffAnimation() {
+    this.annihilatorDebuffAnimationSprite.play({
+      key: 'annihilatorDebuffAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
+  }
+
+  stopAnnihilatorDebuffAnimation() {
+    this.annihilatorDebuffAnimationSprite.anims.complete();
   }
 }
