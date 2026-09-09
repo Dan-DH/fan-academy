@@ -275,40 +275,6 @@ export function singleTween(image: Phaser.GameObjects.Image, duration: number): 
   });
 }
 
-export function continuousAnimation(image: Phaser.GameObjects.Image, textures: string[], delay = 100): Phaser.Time.TimerEvent {
-  let frame = 0;
-
-  return image.scene.time.addEvent({
-    delay, // milliseconds between frames
-    loop: true,
-    callback: () => {
-      image.setTexture('gameAtlas', textures[frame]);
-      frame = (frame + 1) % textures.length;
-    }
-  });
-};
-
-export function singleAnimation(image: Phaser.GameObjects.Image, textures: string[], delay: number): Phaser.Time.TimerEvent {
-  let frame = 0;
-
-  image.setVisible(true);
-  const event = image.scene.time.addEvent({
-    delay, // milliseconds between frames
-    repeat: textures.length - 1,
-    callback: () => {
-      image.setTexture('gameAtlas', textures[frame]);
-      frame++;
-
-      if (frame === textures.length) {
-        image.setVisible(false);
-        event.remove();
-      }
-    }
-  });
-
-  return event;
-};
-
 export function paladinAuraAnimation(image: Phaser.GameObjects.Image): void {
   image.scene.tweens.add({
     targets: image,

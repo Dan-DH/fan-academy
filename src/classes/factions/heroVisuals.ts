@@ -11,6 +11,9 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   runeMetalImage: Phaser.GameObjects.Image;
   shiningHelmImage: Phaser.GameObjects.Image;
   factionEquipmentImage: Phaser.GameObjects.Image;
+  dwarvenBrewImage: Phaser.GameObjects.Image;
+  engineerShieldImage: Phaser.GameObjects.Image;
+  paladinAuraImage: Phaser.GameObjects.Image;
   attackReticle: Phaser.GameObjects.Image;
   healReticle: Phaser.GameObjects.Image;
   allyReticle: Phaser.GameObjects.Image;
@@ -20,13 +23,9 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   specialTileAnimationSprite: Phaser.GameObjects.Sprite;
   superChargeAnimationSprite: Phaser.GameObjects.Sprite;
   annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
-  reviveAnim: Phaser.GameObjects.Image;
+  reviveAnimationSprite: Phaser.GameObjects.Sprite;
   smokeAnim?: Phaser.GameObjects.Image;
-  dwarvenBrewImage: Phaser.GameObjects.Image;
-  engineerShieldImage: Phaser.GameObjects.Image;
-  paladinAuraImage: Phaser.GameObjects.Image;
 
-  reviveEvent?: Phaser.Time.TimerEvent;
   smokeEvent?: Phaser.Time.TimerEvent;
   spawnEvent?: Phaser.Time.TimerEvent;
 
@@ -102,13 +101,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       });
     }
 
-    this.reviveAnim = context.add.image(0, -10, 'gameAtlas', 'reviveAnim_1').setScale(0.7).setVisible(false);
+    this.reviveAnimationSprite = context.add.sprite(0, -20, 'gameAtlas', '').setScale(1.2).setVisible(false);
 
     this.add([
       this.paladinAuraImage,
       this.priestessDebuffImage,
       this.superChargeAnimationSprite,
-      this.reviveAnim,
+      this.reviveAnimationSprite,
       this.characterImage,
       this.specialTileAnimationSprite,
       this.runeMetalImage,
@@ -181,5 +180,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
   stopAnnihilatorDebuffAnimation() {
     this.annihilatorDebuffAnimationSprite.anims.complete();
+  }
+
+  playReviveAnimation() {
+    this.reviveAnimationSprite.play({
+      key: 'reviveAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
   }
 }

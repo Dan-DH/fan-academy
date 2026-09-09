@@ -10,7 +10,7 @@ import { HeroCard } from "../cards/heroCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
-import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, singleAnimation, useAnimation } from "../../utils/unitAnimations";
+import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
 import { enterSpecialTileCheck, exitSpecialTileCheck, removeFromBoard, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
@@ -292,7 +292,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   private getsRevived(): void {
-    this.visuals.reviveEvent = singleAnimation(this.visuals.reviveAnim, ['reviveAnim_1', 'reviveAnim_2', 'reviveAnim_3'], 150);
+    this.visuals.playReviveAnimation();
 
     this.stats.isKO = false;
     this.stats.lastBreath = false;

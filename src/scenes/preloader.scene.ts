@@ -74,11 +74,25 @@ export default class PreloaderScene extends Phaser.Scene {
 
   // animations
   createSpriteAnimations(): void {
+    this.createReviveAnimation();
     this.createSpecialTileAnimations();
     this.createAnnihilatorDebuffAnimation();
     this.createSingleCrystalDebuffAnimation();
     this.createDoubleCrystalDebuffAnimation();
     this.createSuperChargeAnimation();
+  }
+
+  createReviveAnimation(): void {
+    this.anims.create({
+      key: 'reviveAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'reviveAnim_',
+        start: 1,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
   }
 
   createAnnihilatorDebuffAnimation(): void {
