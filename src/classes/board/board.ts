@@ -200,7 +200,7 @@ export class Board {
 
     const friendlyUnitsOnBoard: Hero[] = [];
     this.units.forEach(unit => {
-      if (hero.stats.belongsTo === unit.stats.belongsTo && !unit.stats.isKO) friendlyUnitsOnBoard.push(unit);
+      if (hero.stats.belongsTo === unit.stats.belongsTo && !unit.stats.isKO && unit.stats.unitId !== hero.stats.unitId) friendlyUnitsOnBoard.push(unit);
     });
 
     if (friendlyUnitsOnBoard.length <= 1) return;
