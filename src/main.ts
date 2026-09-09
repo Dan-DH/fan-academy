@@ -23,4 +23,4 @@ const config = {
 };
 
 // Create a new game
-export const game = new Phaser.Game(config);
+export const fanAcademy = new Phaser.Game(config);

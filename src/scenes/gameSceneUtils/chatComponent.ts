@@ -1,7 +1,9 @@
 import { GameObjects } from "phaser";
-import { sendChatMessage } from "../../colyseus/colyseusGameRoom";
 import { IChatMessage } from "../../interfaces/gameInterface";
 import GameScene from "../game.scene";
+import { sendChatMessage } from "../../colyseus/colyseusLobbyRoom";
+import { fanAcademy } from "../../main";
+import UIScene from "../ui.scene";
 
 export const chatPlayers = {
   player1: '',
@@ -81,7 +83,14 @@ export function createChatComponent(context: GameScene): GameObjects.DOMElement 
 
   chatInput.addEventListener('keydown', (keyPressed) => {
     if (keyPressed.key === 'Enter' && chatInput.value.trim()) {
-      sendChatMessage(context.currentRoom, chatInput.value.trim());
+      const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
+      if (!uiScene) console.error('Chat component - No UI Scene found when sending a message');
+      const messageObject = {
+        gameRoomId: context.currentRoom.roomId,
+        userIds: [context.player1!.playerId, context.player2!.playerId],
+        message: chatInput.value.trim()
+      };
+      sendChatMessage(uiScene.lobbyRoom!, messageObject);
       chatInput.value = '';
     }
   });

@@ -1,7 +1,6 @@
 import { Client, Room } from "colyseus.js";
 import { EFaction, EGameModes } from "../enums/gameEnums";
 import { IGameOver, IGameState } from "../interfaces/gameInterface";
-import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 import UIScene from "../scenes/ui.scene";
 
 export async function createGame(context: UIScene, faction: EFaction, gameMode: EGameModes): Promise<void> {
@@ -24,7 +23,6 @@ export async function createGame(context: UIScene, faction: EFaction, gameMode: 
     });
 
     context.currentRoom = room;
-    subscribeToListeners(room);
 
     console.log("Created and joined room:");
   } catch (error) {
@@ -51,27 +49,12 @@ export async function joinGame(client: Client, userId: string, roomId: string, c
     });
 
     console.log("Joined or created room:", room.roomId);
-
-    context.currentRoom = room;
-    subscribeToListeners(room);
   } catch (error) {
     console.error("Failed to join or create room", error);
     return undefined;
   }
 
   return room;
-}
-
-function subscribeToListeners(room: Room): void {
-  room.onMessage('chatMessageReceived', (message) => {
-    renderChatMessage(message);
-  });
-
-  room.onMessage('pong', () => {});
-
-  room?.onLeave((code: number) => {
-    console.log("Left room with code:", code);
-  });
 }
 
 export function sendTurnMessage(currentRoom: Room, currentTurn: IGameState[], newActivePlayer: string, turnNumber: number, gameOver?: IGameOver): void {
@@ -87,16 +70,6 @@ export function sendTurnMessage(currentRoom: Room, currentTurn: IGameState[], ne
     newActivePlayer,
     gameOver,
     turnNumber,
-    token
-  });
-}
-
-export function sendChatMessage(currentRoom: Room, message: string): void {
-  const token = localStorage.getItem("jwt");
-
-  currentRoom.send("chatMessage", {
-    _id: currentRoom.roomId,
-    message,
     token
   });
 }

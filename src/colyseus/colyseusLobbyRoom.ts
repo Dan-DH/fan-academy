@@ -1,9 +1,10 @@
 import { Client, Room } from "colyseus.js";
 import { EFaction, EGameStatus } from "../enums/gameEnums";
-import { IGameOver, IGameState } from "../interfaces/gameInterface";
+import { IChatMessage, IGameOver, IGameState } from "../interfaces/gameInterface";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import UIScene from "../scenes/ui.scene";
 import { showDisconnectWarning } from "../scenes/uiSceneUtils/disconnectWarning";
+import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 
 export async function connectToGameLobby(client: Client, userId: string, context: UIScene): Promise<Room | undefined> {
   let lobby;
@@ -146,6 +147,16 @@ export async function connectToGameLobby(client: Client, userId: string, context
       console.log('Games removed from list');
     });
 
+    lobby.onMessage('chatMessageReceived', async (chatMessage: {
+      roomId: string,
+      message: IChatMessage
+    }) => {
+      const gameToUpdate = context.gameList?.find(g => g._id === chatMessage.roomId);
+      if (gameToUpdate) gameToUpdate.chatLogs.messages.push(chatMessage.message);
+
+      if (context.currentRoom?.roomId === chatMessage.roomId) renderChatMessage(chatMessage.message);
+    });
+
     lobby.onMessage('pong', () => {});
 
     lobby.onLeave((code: number) => {
@@ -176,5 +187,18 @@ export function sendChallengeAcceptedMessage(lobby: Room, gameId: string, userId
     userId,
     faction,
     token
+  });
+}
+
+export function sendChatMessage(lobby: Room, messageObject: {
+  gameRoomId: string,
+  userIds: string[],
+  message: string
+}): void {
+  const token = localStorage.getItem("jwt");
+
+  lobby.send("chatMessageSent", {
+    token,
+    ...messageObject
   });
 }
