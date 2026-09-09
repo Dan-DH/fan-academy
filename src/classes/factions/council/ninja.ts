@@ -6,7 +6,7 @@ import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn, moveSpecialTileCheck } from "../../../utils/boardUtils";
-import { attackAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Ninja extends Council {
   constructor(context: GameScene, data: IHero, tile?: Tile) {
@@ -55,8 +55,8 @@ export class Ninja extends Council {
     const unitDestination = target.getTile();
 
     // Smoke bomb animation
-    singleTween(this.visuals.smokeAnim!, 500);
-    singleTween(target.visuals.smokeAnim!, 500);
+    sizeReduceTween(this.visuals.smokeAnimationImage!, 500, this.visuals.smokeAnimationImage.scale);
+    sizeReduceTween(target.visuals.smokeAnimationImage!, 500, this.visuals.smokeAnimationImage.scale);
 
     moveSpecialTileCheck(target, targetDestination, unitDestination);
     target.updatePosition(targetDestination);

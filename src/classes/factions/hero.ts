@@ -408,8 +408,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       this.scene.tweens.killTweensOf(child);
     });
 
-    if (this.visuals.spawnEvent) this.visuals.spawnEvent?.remove(false);
-
     if (board) removeFromBoard(this);
 
     // Destroy container and children

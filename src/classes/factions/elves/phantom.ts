@@ -5,7 +5,7 @@ import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { enterSpecialTileCheck, isEnemySpawn } from "../../../utils/boardUtils";
-import { attackAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
@@ -14,11 +14,11 @@ export class Phantom extends Hero {
     super(context, data, tile);
 
     if (spawned && tile) {
-      this.spawnAnim = context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(0.9);
+      this.spawnAnim = context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(1.3);
 
       enterSpecialTileCheck(this, tile);
       this.add([this.spawnAnim]);
-      singleTween(this.spawnAnim, 200);
+      sizeReduceTween(this.spawnAnim, 500, this.spawnAnim.scale);
     }
   }
 

@@ -12,6 +12,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   shiningHelmImage: Phaser.GameObjects.Image;
   factionEquipmentImage: Phaser.GameObjects.Image;
   dwarvenBrewImage: Phaser.GameObjects.Image;
+
   engineerShieldImage: Phaser.GameObjects.Image;
   paladinAuraImage: Phaser.GameObjects.Image;
   attackReticle: Phaser.GameObjects.Image;
@@ -19,15 +20,11 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   allyReticle: Phaser.GameObjects.Image;
   blockedLOS: Phaser.GameObjects.Image;
   priestessDebuffImage: Phaser.GameObjects.Image;
-
   specialTileAnimationSprite: Phaser.GameObjects.Sprite;
   superChargeAnimationSprite: Phaser.GameObjects.Sprite;
   annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
   reviveAnimationSprite: Phaser.GameObjects.Sprite;
-  smokeAnim?: Phaser.GameObjects.Image;
-
-  smokeEvent?: Phaser.Time.TimerEvent;
-  spawnEvent?: Phaser.Time.TimerEvent;
+  smokeAnimationImage: Phaser.GameObjects.Image;
 
   constructor(context: GameScene, data: IHero, tile?: Tile) {
     super(context, 0, 0);
@@ -72,7 +69,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     /**
      * RETICLES
      */
-    this.smokeAnim = context.add.image(0, 0, 'gameAtlas', 'smokeAnim_1').setOrigin(0.5).setScale(3.5).setVisible(false).setTint(0x393D47);
+    this.smokeAnimationImage = context.add.image(0, 0, 'gameAtlas', 'smokeAnim_1').setOrigin(0.5).setScale(4).setVisible(false).setTint(0x393D47);
 
     this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);
     this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(1).setName('healReticle').setVisible(false);
@@ -119,7 +116,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       this.engineerShieldImage,
       this.annihilatorDebuffAnimationSprite,
       this.dwarvenBrewImage,
-      ...this.smokeAnim ? [this.smokeAnim] : [],
+      ...this.smokeAnimationImage ? [this.smokeAnimationImage] : [],
       this.blockedLOS
     ]);
   }

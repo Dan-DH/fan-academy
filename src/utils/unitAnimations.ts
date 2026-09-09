@@ -260,8 +260,7 @@ export function addBlockedLOSTween(image: Phaser.GameObjects.Image): void {
     ease: 'Sine.easeInOut'
   });
 }
-
-export function singleTween(image: Phaser.GameObjects.Image, duration: number): void {
+export function sizeReduceTween(image: Phaser.GameObjects.Image, duration: number, originalScale?: number): void {
   image.setVisible(true);
   image.scene.tweens.add({
     targets: image,
@@ -270,7 +269,7 @@ export function singleTween(image: Phaser.GameObjects.Image, duration: number): 
     duration,
     ease: 'Cubic.easeIn',
     onComplete: () => {
-      image.setVisible(false);
+      image.setVisible(false).setScale(originalScale);
     }
   });
 }
