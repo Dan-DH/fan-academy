@@ -12,7 +12,7 @@ import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
 import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, singleAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
-import { removeFromBoard, removeSpecialTileOnKo, specialTileCheck } from "../../utils/boardUtils";
+import { enterSpecialTileCheck, exitSpecialTileCheck, removeFromBoard, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
@@ -300,7 +300,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
 
     this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
-    specialTileCheck(this, this.getTile());
+    enterSpecialTileCheck(this, this.getTile());
     if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.x = charImageX;
@@ -354,7 +354,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   getsKnockedDown(): void {
     // if (this.stats.unitType !== EHeroes.PHANTOM) selectDeathSound(this.scene, this.stats.unitType);
-    removeSpecialTileOnKo(this);
+    removeSpecialTile(this, this.getTile());
 
     if (this.stats.shieldingAlly) {
       this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);
@@ -439,6 +439,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const startTile = gameController.board.getTileFromBoardPosition(this.stats.boardPosition);
     if (!startTile) return;
+    exitSpecialTileCheck(this, startTile);
 
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
     await moveAnimation(this, targetTile, tilesMoved);
@@ -452,7 +453,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
-    specialTileCheck(this, targetTile, startTile);
+    enterSpecialTileCheck(this, targetTile);
     this.updatePosition(targetTile);
 
     startTile.removeHero();
@@ -487,7 +488,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.y = 0;
     this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     // A Wraith can spawn on a special tile. Phantom spawning is handled within its class
-    specialTileCheck(this, tile);
+    enterSpecialTileCheck(this, tile);
     // Position hero on the board
     this.updatePosition(tile);
     // Update tile data

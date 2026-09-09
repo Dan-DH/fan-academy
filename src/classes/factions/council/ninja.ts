@@ -5,7 +5,7 @@ import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn, specialTileCheck } from "../../../utils/boardUtils";
+import { getDistanceToTarget, isEnemySpawn, moveSpecialTileCheck } from "../../../utils/boardUtils";
 import { attackAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Ninja extends Council {
@@ -58,11 +58,11 @@ export class Ninja extends Council {
     singleTween(this.visuals.smokeAnim!, 500);
     singleTween(target.visuals.smokeAnim!, 500);
 
-    specialTileCheck(target, targetDestination.tileType, unitDestination.tileType);
+    moveSpecialTileCheck(target, targetDestination, unitDestination);
     target.updatePosition(targetDestination);
     targetDestination.hero = target.exportData();
 
-    specialTileCheck(this, unitDestination.tileType, targetDestination.tileType);
+    moveSpecialTileCheck(this, unitDestination, targetDestination);
     this.updatePosition(unitDestination);
     unitDestination.hero = this.exportData();
 

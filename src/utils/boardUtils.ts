@@ -30,47 +30,39 @@ export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
   return tile.tileType === ETiles.SPAWN && (context.isPlayerOne ? tile.col > 5 : tile.col < 5);
 }
 
-export function specialTileCheck(hero: Hero, targetTile: Tile, currentTile?: Tile): void {
-  // If hero is leaving a special tile
-  if (currentTile) removeSpecialTile(hero, currentTile);
+export function exitSpecialTileCheck(hero: Hero, tile: Tile): void {
+  removeSpecialTile(hero, tile);
+}
 
-  // If hero is entering a special tile
-  if (targetTile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
-  if (targetTile.tileType === ETiles.POWER) hero.stats.attackTile = true;
-  if (targetTile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = true;
-  if (targetTile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = true;
-  if (targetTile.tileType === ETiles.SPEED) hero.stats.speedTile = true;
+export function enterSpecialTileCheck(hero: Hero, tile: Tile): void {
+  specialTileCheck(hero, tile);
+}
 
-  if (![ETiles.BASIC, !ETiles.SPAWN].includes(targetTile.tileType)) hero.visuals.playSpecialTileAnimation(targetTile.tileType);
+export function moveSpecialTileCheck(hero: Hero, endTile: Tile, startTile: Tile): void {
+  exitSpecialTileCheck(hero, startTile);
+  enterSpecialTileCheck(hero, endTile);
+}
+
+export function specialTileCheck(hero: Hero, tile: Tile): void {
+  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
+  if (tile.tileType === ETiles.POWER) hero.stats.attackTile = true;
+  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = true;
+  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = true;
+  if (tile.tileType === ETiles.SPEED) hero.stats.speedTile = true;
+
+  if (![ETiles.BASIC, !ETiles.SPAWN].includes(tile.tileType)) hero.visuals.playSpecialTileAnimation(tile.tileType);
 
   hero.unitCard.updateCardData(hero);
 }
 
 export function removeSpecialTile(hero: Hero, tile: Tile): void {
-  switch(tile?.tileType) {
-    case ETiles.CRYSTAL_DAMAGE:
-      hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
-      break;
-    case ETiles.POWER:
-      hero.stats.attackTile = false;
-      break;
-    case ETiles.MAGICAL_RESISTANCE:
-      hero.stats.magicalResistanceTile = false;
-      break;
-    case ETiles.PHYSICAL_RESISTANCE:
-      hero.stats.physicalResistanceTile = false;
-      break;
-    case ETiles.SPEED:
-      hero.stats.speedTile = false;
-      break;
-  }
+  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
+  if (tile.tileType === ETiles.POWER) hero.stats.attackTile = false;
+  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = false;
+  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = false;
+  if (tile.tileType === ETiles.SPEED) hero.stats.speedTile = false;
 
   hero.visuals.stopSpecialTileAnimation();
-}
-
-export function removeSpecialTileOnKo(hero: Hero): void {
-  removeSpecialTile(hero, hero.getTile());
-
   hero.unitCard.updateCardData(hero);
 }
 

@@ -4,7 +4,7 @@ import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn, specialTileCheck } from "../../../utils/boardUtils";
+import { enterSpecialTileCheck, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, singleTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Phantom extends Hero {
@@ -16,7 +16,7 @@ export class Phantom extends Hero {
     if (spawned && tile) {
       this.spawnAnim = context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(0.9);
 
-      specialTileCheck(this, tile.tileType);
+      enterSpecialTileCheck(this, tile);
       this.add([this.spawnAnim]);
       singleTween(this.spawnAnim, 200);
     }
