@@ -1,7 +1,6 @@
-import { EChallengePopup, EFaction, EUiSounds } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction } from "../../enums/gameEnums";
 import { IUserFactions, IUserStats } from "../../interfaces/userInterface";
 import LeaderboardScene from "../leaderboard.scene";
-import { playSound } from "../../utils/gameSounds";
 import { truncateText } from "../../utils/textAnimations";
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
