@@ -1,10 +1,10 @@
-import { Client, Room } from "colyseus.js";
 import { connectToGameLobby } from "../colyseus/colyseusLobbyRoom";
 import { IGame } from "../interfaces/gameInterface";
 import { getGameList } from "../queries/gameQueries";
 import { createGameList } from "./gameSceneUtils/gameList";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
+import { Client, Room } from "@colyseus/sdk";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 

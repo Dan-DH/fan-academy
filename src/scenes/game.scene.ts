@@ -1,4 +1,3 @@
-import { Client, Room } from "colyseus.js";
 import { GameController } from "../classes/gameController";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
@@ -9,6 +8,7 @@ import { Tile } from "../classes/board/tile";
 import { Crystal } from "../classes/board/crystal";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
 import { TurnReplay } from "../classes/turnReplay";
+import { Client, Room } from "@colyseus/sdk";
 
 export default class GameScene extends Phaser.Scene {
   userId!: string;

@@ -1,10 +1,10 @@
-import { Client, Room } from "colyseus.js";
 import { EFaction, EGameStatus } from "../enums/gameEnums";
 import { IChatMessage, IGameOver, IGameState } from "../interfaces/gameInterface";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import UIScene from "../scenes/ui.scene";
 import { showDisconnectWarning } from "../scenes/uiSceneUtils/disconnectWarning";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
+import { Client, Room } from "@colyseus/sdk";
 
 export async function connectToGameLobby(client: Client, userId: string, context: UIScene): Promise<Room | undefined> {
   let lobby;
@@ -17,6 +17,7 @@ export async function connectToGameLobby(client: Client, userId: string, context
 
   try {
     console.log('Connecting to game lobby...');
+
     lobby = await client.joinOrCreate('lobby', {
       userId,
       token

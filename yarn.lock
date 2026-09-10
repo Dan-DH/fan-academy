@@ -2,17 +2,56 @@
 # yarn lockfile v1
 
 
-"@colyseus/msgpackr@^1.10.5":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@colyseus/msgpackr/-/msgpackr-1.11.2.tgz#4480e9c786fae1a2e69279e4975b3fffa1fd37a3"
-  integrity sha512-MuwPFhizFKC3zmGfy0fpo+kcnZdNdnQHFVjw81v4WXHCelDeCX8yNRVtuEm8kGlHqq7qiASLC0pu0RPqYOhxXg==
+"@better-auth/utils@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@better-auth/utils/-/utils-0.3.1.tgz#ffa4de03b9aef33df536fd19f36a24fa9c9942c0"
+  integrity sha512-+CGp4UmZSUrHHnpHhLPYu6cV+wSUSvVbZbNykxhUDocpVNTo9uFFxw/NqJlh1iC4wQ9HKKWGCKuZ5wUgS0v6Kg==
+
+"@better-fetch/fetch@^1.1.21":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@better-fetch/fetch/-/fetch-1.3.1.tgz#04a0d289de818a0b436bfda48e70b2b19227cc19"
+  integrity sha512-ABkD1WhyfPZprKRQI3bhATjeiFuNWC9PXhfGWqL+sg/gKrM977oFrYkdb4msM3hgUGonr7KlOsOFT5TU2rht9g==
+
+"@colyseus/better-call@^1.3.1":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@colyseus/better-call/-/better-call-1.3.3.tgz#2ffcbff6562754a90042ae07cc3ccb29a7862d50"
+  integrity sha512-ISJtvMx6fV0ABPQt/ljzPc4O2+mFvyVKeHKX02qBSWKR0VXOXzniAC64POea4pp8DxZTbgHoSPpXjdnNpUkeLw==
+  dependencies:
+    "@better-auth/utils" "^0.3.1"
+    "@better-fetch/fetch" "^1.1.21"
+    rou3 "^0.7.12"
+    set-cookie-parser "^3.0.1"
+
+"@colyseus/msgpackr@^1.11.2":
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/@colyseus/msgpackr/-/msgpackr-1.11.3.tgz#9bdb995f2602ba1df0fefbdf5f7b0861566f1755"
+  integrity sha512-P86w/FrZWUaV7StxI7WuNg3wFlUrROSiBOrF378wyOgxS5+etcxUQMPe0OJZDEx+QUdu7QOPzsqE0Ziqwpjnug==
   optionalDependencies:
     msgpackr-extract "^3.0.2"
 
-"@colyseus/schema@^3.0.0":
-  version "3.0.33"
-  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-3.0.33.tgz#ed11bff4cd368f18daa6ff267b82aa8a2717a616"
-  integrity sha512-tM2SLdMCBE2Um8W5mc9UEu5lyTA5ceSh+/VY14qLlvtBaoDZo6lugkXY068ChQ3S97oNPrAMnOGY+l5rgIbjvQ==
+"@colyseus/schema@^4.0.7":
+  version "4.0.31"
+  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-4.0.31.tgz#91b3bfbf8026ad2d6ddfc47738a0d112acfd94d9"
+  integrity sha512-9m1ut1foBwRuTq1VFSinfcbnxKJarGih/V5PiXvqyZ/HBVl4ocq0kOK2nUjV7hfuPRx2SWU51l2cDXP41lom5w==
+
+"@colyseus/sdk@^0.17.0":
+  version "0.17.43"
+  resolved "https://registry.yarnpkg.com/@colyseus/sdk/-/sdk-0.17.43.tgz#40c317dd2b26acb0eb42588c1e33840b7a1f3838"
+  integrity sha512-aXefQuh7esEZbtd11TzKMqoLmUjKIfWVDr7ytPR7atV2QgnVyOHof3WIX7B8MDfr9ShyFFVEy2BseCGIfzzvBA==
+  dependencies:
+    "@colyseus/better-call" "^1.3.1"
+    "@colyseus/msgpackr" "^1.11.2"
+    "@colyseus/schema" "^4.0.7"
+    "@colyseus/shared-types" "^0.17.6"
+    tslib "^2.1.0"
+    ws "^8.13.0"
+
+"@colyseus/shared-types@^0.17.6":
+  version "0.17.6"
+  resolved "https://registry.yarnpkg.com/@colyseus/shared-types/-/shared-types-0.17.6.tgz#e131912c09e1fcc83943080efaeb335c140516ae"
+  integrity sha512-GeBB9uNrjG+BWa4/LAVyAHj65ll0WKLNjWDieKiphhmbfGXgQOcmvWVxKQc8KKu+n7f5Hmrwr6IEk9Dm2Y0Qgw==
+  dependencies:
+    "@standard-schema/spec" "^1.0.0"
 
 "@esbuild/aix-ppc64@0.24.2":
   version "0.24.2"
@@ -374,6 +413,11 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.34.2.tgz#87e27b5da4ae743567df2988e5975bb876bdaa32"
   integrity sha512-rUrqINax0TvrPBXrFKg0YbQx18NpPN3NNrgmaao9xRNbTwek7lOXObhx8tQy8gelmQ/gLaGy1WptpU2eKJZImg==
 
+"@standard-schema/spec@^1.0.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@standard-schema/spec/-/spec-1.1.0.tgz#a79b55dbaf8604812f52d140b2c9ab41bc150bb8"
+  integrity sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==
+
 "@stylistic/eslint-plugin-ts@^2.13.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@stylistic/eslint-plugin-ts/-/eslint-plugin-ts-2.13.0.tgz#5683a49bce2eb328dc42c7e30da430310b751b5e"
@@ -578,17 +622,6 @@ color-name@~1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
-
-colyseus.js@^0.16.15:
-  version "0.16.15"
-  resolved "https://registry.yarnpkg.com/colyseus.js/-/colyseus.js-0.16.15.tgz#e52163f8abe26d45e197714628c71380506ad980"
-  integrity sha512-yCQr2ipNzH7pO65u53xnqvudOcraJoH3B2bkPTkBkic8JTu4QUv/kazj3/nWLiYA0aKPP3Xo6ZYIgX2JvkAGlA==
-  dependencies:
-    "@colyseus/msgpackr" "^1.10.5"
-    "@colyseus/schema" "^3.0.0"
-    httpie "^2.0.0-next.13"
-    tslib "^2.1.0"
-    ws "^8.13.0"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -874,11 +907,6 @@ has-flag@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
-
-httpie@^2.0.0-next.13:
-  version "2.0.0-next.13"
-  resolved "https://registry.yarnpkg.com/httpie/-/httpie-2.0.0-next.13.tgz#1e245be61d6ca2573a2c1d690cfa5ec3bac63a0c"
-  integrity sha512-KbKOnq8wt0hVEfteYCSnEsPgzaWxcVc4qZ4OaDU9mVOYLRo3XChjWs3MiuRgFu5y+4JDo7sDKdKzkAn1ljQYFA==
 
 ignore@^5.2.0, ignore@^5.3.1:
   version "5.3.2"
@@ -1200,6 +1228,11 @@ rollup@^4.23.0:
     "@rollup/rollup-win32-x64-msvc" "4.34.2"
     fsevents "~2.3.2"
 
+rou3@^0.7.12:
+  version "0.7.12"
+  resolved "https://registry.yarnpkg.com/rou3/-/rou3-0.7.12.tgz#cac17425c04abddba854a42385cabfe0b971a179"
+  integrity sha512-iFE4hLDuloSWcD7mjdCDhx2bKcIsYbtOTpfH5MHHLSKMOUyjqQXTeZVa289uuwEGEKFoE/BAPbhaU4B774nceg==
+
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"
@@ -1211,6 +1244,11 @@ semver@^7.6.0:
   version "7.7.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.1.tgz#abd5098d82b18c6c81f6074ff2647fd3e7220c9f"
   integrity sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==
+
+set-cookie-parser@^3.0.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-3.1.2.tgz#f4e490298759d756a68eabcbcd0fc9261ad0fee0"
+  integrity sha512-5/r/lTwbJ3zQ+qwdUFZYeRNqda7P5HD8zQKqlSjdGt1/S0cjLAphHusj4Y58ahDtWn/g32xrIS58/ikOvwl0Lw==
 
 shebang-command@^2.0.0:
   version "2.0.0"

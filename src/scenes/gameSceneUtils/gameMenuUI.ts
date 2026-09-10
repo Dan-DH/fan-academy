@@ -11,7 +11,7 @@ export async function accessGame(context: UIScene, game: IGame): Promise<void> {
   }
 
   console.log('Accessing game: ', game._id);
-  const room = await joinGame(context.colyseusClient, context.userId, game._id, context);
+  const room = await joinGame(context.colyseusClient, context.userId, game._id);
 
   if (!room) return;
 

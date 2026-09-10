@@ -19,7 +19,7 @@
     "vite": "^6.0.5"
   },
   "dependencies": {
-    "colyseus.js": "^0.16.15",
+    "@colyseus/sdk": "^0.17.0",
     "phaser": "^3.90.0"
   }
 }
