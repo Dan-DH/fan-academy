@@ -103,7 +103,6 @@ export async function createGameList(context: UIScene) {
         const opponentFaction = factionEnumToEmblem(opponent.faction);
         opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', opponentFaction).setScale(opponentFaction === 'unknown_faction' ? 1.3 : 1);
         opponentProfilePicture = context.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', opponent.userData.picture).setFlipX(true).setScale(1.5); //.setDisplaySize(256 * 0.4, 256 * 0.4);
-        console.log('picture', opponent.userData.picture);
         opponentNameText = setOpponentNameText(opponent.userData.username);
       } else {
         opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', 'unknownFaction').setScale(1.3);

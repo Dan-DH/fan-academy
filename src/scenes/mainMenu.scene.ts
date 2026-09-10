@@ -42,7 +42,6 @@ export default class MainMenuScene extends Phaser.Scene {
 
     // main menu buttons
     const menuButtonHeight = this.textures.get('mainMenuButton').getSourceImage().height;
-    console.log('menuButtonHeight', menuButtonHeight);
     const menuButtonX =  200;
     const menuButtonPadding = 20;
 
