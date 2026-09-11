@@ -216,7 +216,7 @@ export function sendTurnMessage(message: {
   gameOver?: IGameOver
 }): void {
   lobbyRoomLobby!.send("turnSent", {
-    _id: message.gameId,
+    gameId: message.gameId,
     currentTurn: message.currentTurn,
     newActivePlayer: message.newActivePlayer,
     gameOver: message.gameOver,
