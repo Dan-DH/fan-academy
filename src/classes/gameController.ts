@@ -1,4 +1,3 @@
-import { sendTurnMessage } from "../colyseus/colyseusGameRoom";
 import { EActionClass, EActionType, EGameStatus, EHeroes, EItems, ETiles } from "../enums/gameEnums";
 import { IGame, IGameOver, IGameState, IPlayerState, IUserData } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
@@ -23,6 +22,7 @@ import { TurnWarningPopup } from "./popups/turnPopup";
 import { getActionClass } from "../utils/gameUtils";
 import { moveSpecialTileCheck } from "../utils/boardUtils";
 import { Crystal } from "./board/crystal";
+import { sendTurnMessage } from "../colyseus/colyseusLobbyRoom";
 
 export class GameController {
   context: GameScene;
@@ -106,7 +106,6 @@ export class GameController {
         userId: context.userId,
         colyseusClient: context.colyseusClient,
         currentGame: context.currentGame,
-        currentRoom: context.currentRoom,
         triggerReplay: false
       });
     });
@@ -243,7 +242,13 @@ export class GameController {
     this.context.activePlayer = this.context.opponentId;
     this.context.turnNumber!++;
 
-    sendTurnMessage(this.context.currentRoom, this.currentTurn, this.context.opponentId, this.context.turnNumber!, this.gameOver);
+    sendTurnMessage({
+      gameId: this.context.currentGame._id,
+      currentTurn: this.currentTurn,
+      newActivePlayer: this.context.opponentId,
+      turnNumber: this.context.turnNumber!,
+      gameOver: this.gameOver
+    });
 
     if (this.gameOver) this.gameOverEffects();
   }

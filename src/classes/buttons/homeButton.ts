@@ -22,8 +22,7 @@ export class HomeButton extends Phaser.GameObjects.Container {
       // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
       await context.lobbyRoom?.leave();
-      await context.currentRoom?.leave();
-      context.currentRoom = undefined;
+      context.activeGame = undefined;
 
       context.scene.stop('GameScene');
       context.scene.start('MainMenuScene');

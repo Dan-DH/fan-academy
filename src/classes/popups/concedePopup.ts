@@ -1,4 +1,4 @@
-import { sendTurnMessage } from "../../colyseus/colyseusGameRoom";
+import { sendTurnMessage } from "../../colyseus/colyseusLobbyRoom";
 import { EWinConditions, EActionType, EActionClass } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
 
@@ -84,7 +84,13 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
       context.activePlayer = context.opponentId;
       context.turnNumber!++;
 
-      sendTurnMessage(context.currentRoom, gameController.currentTurn, context.opponentId, context.turnNumber!, gameOver);
+      sendTurnMessage({
+        gameId: context.currentGame._id,
+        currentTurn: gameController.currentTurn,
+        newActivePlayer: context.opponentId,
+        turnNumber: context.turnNumber!,
+        gameOver: gameOver
+      });
     });
 
     this.cancelButtonImage.on('pointerdown', () => {

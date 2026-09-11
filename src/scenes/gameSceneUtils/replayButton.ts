@@ -10,7 +10,6 @@ export function replayButton(context: GameScene): Phaser.GameObjects.Image {
       userId: context.userId,
       colyseusClient: context.colyseusClient,
       currentGame: context.currentGame,
-      currentRoom: context.currentRoom,
       triggerReplay: true
     });
   });

@@ -1,10 +1,12 @@
-import { EFaction, EGameStatus } from "../enums/gameEnums";
+import { EFaction, EGameModes, EGameStatus } from "../enums/gameEnums";
 import { IChatMessage, IGameOver, IGameState } from "../interfaces/gameInterface";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import UIScene from "../scenes/ui.scene";
 import { showDisconnectWarning } from "../scenes/uiSceneUtils/disconnectWarning";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 import { Client, Room } from "@colyseus/sdk";
+
+let lobbyRoomLobby: Room | undefined =  undefined; // FIXME: testing
 
 export async function connectToGameLobby(client: Client, userId: string, context: UIScene): Promise<Room | undefined> {
   let lobby;
@@ -22,6 +24,10 @@ export async function connectToGameLobby(client: Client, userId: string, context
       userId,
       token
     });
+
+    if (!lobby) throw new Error('connectToGameLobby() No lobby found');
+
+    lobbyRoomLobby = lobby;
 
     lobby.onMessage('newGameListUpdate', async (message) => {
       if (!context.gameList) console.error('newGameListUpdate - No context.gameList found');
@@ -59,12 +65,12 @@ export async function connectToGameLobby(client: Client, userId: string, context
 
       await createGameList(context);
 
-      if (message.gameId === context.currentRoom?.roomId) {
+      if (message.gameId === context.activeGame) {
         context.scene.get('GameScene').scene.restart({
           userId: context.userId,
           colyseusClient: context.colyseusClient,
           currentGame: game,
-          currentRoom: context.currentRoom,
+          currentRoom: context.activeGame,
           triggerReplay: message.newActivePlayer !== context.userId ? false : true
         });
       }
@@ -103,12 +109,12 @@ export async function connectToGameLobby(client: Client, userId: string, context
 
       await createGameList(context);
 
-      if (message.gameId === context.currentRoom?.roomId) {
+      if (message.gameId === context.activeGame) {
         context.scene.get('GameScene').scene.restart({
           userId: context.userId,
           colyseusClient: context.colyseusClient,
           currentGame: game,
-          currentRoom: context.currentRoom
+          currentRoom: context.activeGame
         });
       }
     });
@@ -138,7 +144,7 @@ export async function connectToGameLobby(client: Client, userId: string, context
         const isInArrayIndex = context.gameList!.findIndex(game => game._id === gameId);
         if (isInArrayIndex !== -1) {
           const game = context.gameList?.splice(isInArrayIndex, 1);
-          if (game?.length && context.currentRoom?.roomId === game[0]._id) context.scene.get('GameScene').scene.stop();
+          if (game?.length && context.activeGame === game[0]._id) context.scene.get('GameScene').scene.stop();
         }
       });
 
@@ -155,7 +161,7 @@ export async function connectToGameLobby(client: Client, userId: string, context
       const gameToUpdate = context.gameList?.find(g => g._id === chatMessage.roomId);
       if (gameToUpdate) gameToUpdate.chatLogs.messages.push(chatMessage.message);
 
-      if (context.currentRoom?.roomId === chatMessage.roomId) renderChatMessage(chatMessage.message);
+      if (context.activeGame === chatMessage.roomId) renderChatMessage(chatMessage.message);
     });
 
     lobby.onMessage('pong', () => {});
@@ -168,38 +174,52 @@ export async function connectToGameLobby(client: Client, userId: string, context
     console.error('Error joining lobby ->', error);
   }
 
-  if (!lobby) throw new Error('connectToGameLobby() No lobby found');
   return lobby;
 };
 
 export function sendDeletedGameMessage(lobby: Room, gameId: string, userId: string): void {
-  const token = localStorage.getItem("jwt");
   lobby.send('gameDeletedMessage', {
     gameId,
-    userId,
-    token
+    userId
   });
 }
 
 export function sendChallengeAcceptedMessage(lobby: Room, gameId: string, userId: string, faction: EFaction): void {
-  const token = localStorage.getItem("jwt");
   lobby.send('challengeAcceptedMessage', {
     gameId,
     userId,
-    faction,
-    token
+    faction
   });
 }
 
 export function sendChatMessage(lobby: Room, messageObject: {
-  gameRoomId: string,
+  gameId: string,
   userIds: string[],
   message: string
 }): void {
-  const token = localStorage.getItem("jwt");
+  lobby.send('chatMessageSent', { ...messageObject });
+}
 
-  lobby.send("chatMessageSent", {
-    token,
-    ...messageObject
+export function sendCreateGameMessage(messageObject: {
+  userId: string,
+  faction: EFaction,
+  gameMode: EGameModes
+}) {
+  lobbyRoomLobby!.send('createGame', messageObject);
+};
+
+export function sendTurnMessage(message: {
+  gameId: string,
+  currentTurn: IGameState[],
+  newActivePlayer: string,
+  turnNumber: number,
+  gameOver?: IGameOver
+}): void {
+  lobbyRoomLobby!.send("turnSent", {
+    _id: message.gameId,
+    currentTurn: message.currentTurn,
+    newActivePlayer: message.newActivePlayer,
+    gameOver: message.gameOver,
+    turnNumber: message.turnNumber
   });
 }

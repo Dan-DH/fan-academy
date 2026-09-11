@@ -128,13 +128,12 @@ export async function createGameList(context: UIScene) {
         gameListButtonImage.clearTint();
         if (context.activeGameImage) context.activeGameImage.setTint(0xBBBBBB);
         context.activeGameImage = gameListButtonImage;
-        context.activeGameImageId = game._id;
       };
 
       // Make the game accessible -only for games already playing
       if (game.status === EGameStatus.PLAYING || game.status === EGameStatus.FINISHED) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (context.activeGameImageId === game._id) highlightGameButton();
+        if (context.activeGame === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
@@ -146,17 +145,16 @@ export async function createGameList(context: UIScene) {
 
       if (game.status === EGameStatus.CHALLENGE && listChallengeReceivedArray.find(gameReceived => gameReceived._id === game._id )) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (context.activeGameImageId === game._id) highlightGameButton();
+        if (context.activeGame === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           // context.sound.play(EUiSounds.GAME_DELETE);
           highlightGameButton();
 
-          if (context.currentRoom) {
-            console.log('Leaving game: ', context.currentRoom.roomId);
-            await context.currentRoom.leave();
-            context.currentRoom = undefined;
+          if (context.activeGame) {
+            console.log('Leaving game: ', context.activeGame);
+            context.activeGame = undefined;
             context.scene.stop('GameScene');
           }
 
@@ -181,10 +179,9 @@ export async function createGameList(context: UIScene) {
   const newGameButton = context.add.image(-15, lastListItemY, 'gameAtlas', 'newGameButton').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
-    if (context.currentRoom) {
-      console.log('Leaving game: ', context.currentRoom.roomId);
-      await context.currentRoom.leave();
-      context.currentRoom = undefined;
+    if (context.activeGame) {
+      console.log('Leaving game: ', context.activeGame);
+      context.activeGame = undefined;
       context.scene.stop('GameScene');
     }
 

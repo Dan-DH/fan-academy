@@ -15,7 +15,6 @@ export default class GameScene extends Phaser.Scene {
   colyseusClient!: Client;
   centerPoints: Coordinates[];
 
-  currentRoom!: Room;
   currentGame!: IGame;
   currentTurnAction: number | undefined;
   turnNumber: number | undefined;
@@ -60,7 +59,6 @@ export default class GameScene extends Phaser.Scene {
     this.colyseusClient = data.colyseusClient;
     this.turnNumber = data.currentGame.turnNumber;
     this.currentGame = data.currentGame;
-    this.currentRoom = data.currentRoom;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
 

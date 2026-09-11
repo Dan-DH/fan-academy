@@ -55,7 +55,6 @@ export class TurnReplay {
       userId: this.context.userId,
       colyseusClient: this.context.colyseusClient,
       currentGame: this.context.currentGame,
-      currentRoom: this.context.currentRoom,
       triggerReplay: false
     } );
   }

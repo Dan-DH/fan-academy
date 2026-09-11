@@ -15,12 +15,11 @@ export default class UIScene extends Phaser.Scene {
   gameListContainer: Phaser.GameObjects.Container | undefined;
   gameList: IGame[] | undefined;
 
-  currentRoom: Room | undefined;
   gameScene: Phaser.Scene | undefined;
 
   // Used to highlight the active game in the game list
   activeGameImage: Phaser.GameObjects.Image | undefined;
-  activeGameImageId: string | undefined;
+  activeGame: string | undefined;
 
   // There is limit of 50 active games per player. Games currently playing, searching for players and open challenges all count towards the limit
   activeGamesAmountLimit = 50;

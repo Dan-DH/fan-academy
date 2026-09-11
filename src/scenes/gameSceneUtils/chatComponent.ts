@@ -86,7 +86,7 @@ export function createChatComponent(context: GameScene): GameObjects.DOMElement 
       const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
       if (!uiScene) console.error('Chat component - No UI Scene found when sending a message');
       const messageObject = {
-        gameRoomId: context.currentRoom.roomId,
+        gameId: context.currentGame._id,
         userIds: [context.player1!.playerId, context.player2!.playerId],
         message: chatInput.value.trim()
       };
