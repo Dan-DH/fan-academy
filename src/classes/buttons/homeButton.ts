@@ -19,8 +19,7 @@ export class HomeButton extends Phaser.GameObjects.Container {
     this.add([this.button, this.buttonText]).setScale(0.8);
 
     this.button.on('pointerdown', async() => {
-      context.lobbyRoom?.removeAllListeners();
-      await context.lobbyRoom?.leave(true);
+      context.lobbyRoom?.leave(); // TODO: testing removing the await for
       context.activeGame = undefined;
 
       context.scene.stop('GameScene');
