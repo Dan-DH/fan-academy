@@ -27,7 +27,8 @@ export async function connectToGameLobby(client: Client, userId: string, context
 
     if (!lobby) throw new Error('connectToGameLobby() No lobby found');
 
-    lobbyRoomLobby = lobby;
+    lobby.reconnection.enabled = false; // TODO: might need a better way of handling this
+    lobbyRoomLobby = lobby; // FIXME:
 
     lobby.onMessage('newGameListUpdate', async (message) => {
       if (!context.gameList) console.error('newGameListUpdate - No context.gameList found');
