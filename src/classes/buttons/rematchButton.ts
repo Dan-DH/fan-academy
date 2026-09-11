@@ -9,7 +9,7 @@ export class RematchButton extends Phaser.GameObjects.Container {
   constructor(context: GameScene) {
     super(context, 1300, 725);
     this.context = context;
-    this.buttonImage = context.add.image(0, 0, 'gameAtlas', 'cardBackground').setOrigin(0.5).setScale(1.1).setInteractive({ useHandCursor: true });
+    this.buttonImage = context.add.image(0, 0, 'gameAtlas', 'popupButton').setOrigin(0.5).setScale(1.2).setInteractive({ useHandCursor: true });
 
     this.buttonText = context.add.text(0, -5, "Again!", {
       fontFamily: "proHeavy",
