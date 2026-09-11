@@ -35,14 +35,6 @@ export default class UIScene extends Phaser.Scene {
   }
 
   async create() {
-    this.time.addEvent({
-      delay: 300000, // 5 minutes
-      callback: () => {
-        this.lobbyRoom!.send("ping");
-      },
-      loop: true
-    });
-
     createWarningComponent(this);
 
     this.add.image(0, 0, 'loadingScreen').setOrigin(0).setScale(2.8);
