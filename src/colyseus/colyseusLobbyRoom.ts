@@ -164,8 +164,6 @@ export async function connectToGameLobby(client: Client, userId: string, context
       if (context.activeGame === chatMessage.roomId) renderChatMessage(chatMessage.message);
     });
 
-    lobby.onMessage('pong', () => {});
-
     lobby.onLeave((code: number) => {
       console.log("Left room with code:", code);
       showDisconnectWarning();
