@@ -30,11 +30,12 @@ export class GameOverScreen extends GameObjects.Container {
     this.gameOverEffect = this.context.add.image(880, 400, 'gameAtlas',  gameOverEffectKey)
       .setOrigin(0.5)
       .setName('gameOverEffect')
-      .setScale(1.5);
+      .setScale(5);
 
     this.gameOverImage = this.context.add.image(900, 400, 'gameAtlas', gameOverImageKey)
       .setOrigin(0.5)
-      .setName('gameOverImage');
+      .setScale(2.5)
+      .setName('gameOverImage'); // TODO: increase quality of gameOverImage
 
     this.context.tweens.add({
       targets: this.gameOverEffect,
