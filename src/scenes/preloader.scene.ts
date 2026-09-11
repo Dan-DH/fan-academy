@@ -1,6 +1,6 @@
 import { ETiles } from "../enums/gameEnums";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@b4e30e9';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@cc4a03e';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -26,8 +26,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   loadAtlases() {
-    // this.load.atlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.webp`, `${CDN_PATH}/atlas/gameTexture.json`); // FIXME: uncomment and update assets
-    this.load.atlas('gameAtlas', `/gameTexture.webp`, `/gameTexture.json`);
+    this.load.atlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.webp`, `${CDN_PATH}/atlas/gameTexture.json`);
+    // this.load.atlas('gameAtlas', `/gameTexture.webp`, `/gameTexture.json`);
     // Floating text fonts
     this.load.atlas(
       'greenFont',
