@@ -87,7 +87,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (tile?.tileType === ETiles.POWER && !data.isKO) this.playSpecialTileAnimation(ETiles.POWER);
     if (tile?.tileType === ETiles.MAGICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.MAGICAL_RESISTANCE);
     if (tile?.tileType === ETiles.SPEED && !data.isKO) this.playSpecialTileAnimation(ETiles.SPEED);
-    if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
+    if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.PHYSICAL_RESISTANCE);
 
     this.superChargeAnimationSprite = context.add.sprite(0, -25, 'gameAtlas', '').setScale(1.1).setVisible(false);
     if (data.superCharge) {
