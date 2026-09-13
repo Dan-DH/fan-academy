@@ -1,4 +1,4 @@
-import { sendTurnMessage } from "../../colyseus/colyseusLobbyRoom";
+import { colyseusService } from "../../colyseus/colyseusService";
 import { EWinConditions, EActionType, EActionClass } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
 
@@ -84,7 +84,7 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
       context.activePlayer = context.opponentId;
       context.turnNumber!++;
 
-      sendTurnMessage({
+      colyseusService.sendTurnMessage({
         gameId: context.currentGame._id,
         currentTurn: gameController.currentTurn,
         newActivePlayer: context.opponentId,

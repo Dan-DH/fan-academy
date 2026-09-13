@@ -1,7 +1,7 @@
 import { EFaction, EGameModes } from "../../enums/gameEnums";
 import UIScene from "../ui.scene";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
-import { sendCreateGameMessage } from "../../colyseus/colyseusLobbyRoom";
+import { colyseusService } from "../../colyseus/colyseusService";
 
 export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
@@ -19,7 +19,7 @@ export const createNewGame = async (context: UIScene, faction: EFaction, gameMod
   }
   // Create the faction's deck and starting hand
   if (context.userId) {
-    sendCreateGameMessage({
+    colyseusService.sendCreateGameMessage({
       userId: context.userId,
       faction,
       gameMode

@@ -1,4 +1,4 @@
-import { sendChallengeAcceptedMessage } from "../../colyseus/colyseusLobbyRoom";
+import { colyseusService } from "../../colyseus/colyseusService";
 import { EChallengePopup, EFaction, EGameModes } from "../../enums/gameEnums";
 import { newGameChallenge } from "../../queries/gameQueries";
 import GameScene from "../../scenes/game.scene";
@@ -108,7 +108,7 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
         }
       }
 
-      if (challengeType === EChallengePopup.ACCEPT && context instanceof UIScene) sendChallengeAcceptedMessage(context.lobbyRoom!, gameId!, context.userId, faction);
+      if (challengeType === EChallengePopup.ACCEPT && context instanceof UIScene) colyseusService.sendChallengeAcceptedMessage(gameId!, context.userId, faction);
 
       if (challengeType === EChallengePopup.OPEN && context instanceof UIScene) {
         createNewGame(context, faction, gameMode);

@@ -1,26 +1,26 @@
+import { colyseusService } from "../colyseus/colyseusService";
 import { IUserPreferences } from "../interfaces/userInterface";
+import { getGameList } from "../queries/gameQueries";
 import { authCheck, loginQuery, passwordRecoveryEmailQuery, passwordResetQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";
 import createMainMenuButton from "./mainMenuUtils/buttons";
 
 export default class MainMenuScene extends Phaser.Scene {
   userId: string | undefined;
-  gameList: string | undefined;
-  userPreferences: IUserPreferences | undefined;
-
   currentSubScene: string | undefined;
 
   constructor() {
     super({ key: 'MainMenuScene' });
   }
 
-  init() {}
+  init() {
+    this.userId = undefined;
+    this.currentSubScene = undefined; //TODO: do the same for all scenes to keep them tidy
+  }
 
   async create() {
     // Auth check
-    const authCheckResult = await authCheck();
-
-    if (authCheckResult) this.updateUserPreferences(authCheckResult);
+    this.isPlayerLoggedIn();
 
     // Background image
     const bg = this.add.image(0, 0, 'uiBackground').setOrigin(0);
@@ -121,7 +121,7 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: () => {
         // this.sound.play(EUiSounds.BUTTON_PLAY);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
-        this.scene.start('UIScene', { userId: this.userId });
+        this.scene.start('UIScene');
         this.currentSubScene = 'UIScene';
       }
     });
@@ -138,15 +138,14 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: async () => {
         // this.sound.play(EUiSounds.BUTTON_GENERIC);
         localStorage.removeItem('jwt');
+        this.registry.remove('userId');
+        this.registry.remove('userPreferences');
         this.userId = undefined;
         document.title = 'Fan Academy';
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.restart();
       }
     });
-
-    // Login and sign up forms. Only show if user is not authenticated
-    this.createSignUpAndLoginForms(this.userId);
   }
 
   onShutdown() {
@@ -192,6 +191,7 @@ export default class MainMenuScene extends Phaser.Scene {
     messageBoxContainer.add([bg, title, body, signature]);
     return messageBoxContainer;
   }
+
   createSignUpAndLoginForms(userId: string | undefined):  {
     loginForm: Phaser.GameObjects.DOMElement,
     signUpForm: Phaser.GameObjects.DOMElement
@@ -415,17 +415,40 @@ export default class MainMenuScene extends Phaser.Scene {
     };
   }
 
+  async isPlayerLoggedIn() {
+    if (this.userId) {
+      console.log('User already authenticated, skipping gameList fetch');
+      return;
+    } // TODO: this will do for the moment
+
+    const authCheckResult = await authCheck();
+    if (authCheckResult) this.updateUserPreferences(authCheckResult);
+
+    // Login and sign up forms. Only show if user is not authenticated
+    this.createSignUpAndLoginForms(this.userId);
+
+    const token = localStorage.getItem("jwt");
+
+    if (!this.userId || !token) return;
+
+    const lobby = await colyseusService.connect(this.userId, token);
+    if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
+    // TODO: get games via lobby message;
+    const gameList =  await getGameList(this.userId); // TODO: add 'fetching games' message and make it go away when the list is fetched. otherwise users can click on play before the data is ready
+
+    this.registry.set('gameList', gameList ?? []);
+  }
+
   updateUserPreferences(userData: {
     userId: string,
     preferences: IUserPreferences
   }): void {
+    this.registry.set('userId', userData.userId);
     this.userId = userData.userId;
 
     this.registry.set('userPreferences', {
       chat: userData.preferences.chat,
       sound: userData.preferences.sound
     });
-
-    // this.sound.mute = !userData.preferences.sound;
   }
 }

@@ -1,9 +1,9 @@
 import { GameObjects } from "phaser";
 import { IChatMessage } from "../../interfaces/gameInterface";
 import GameScene from "../game.scene";
-import { sendChatMessage } from "../../colyseus/colyseusLobbyRoom";
 import { fanAcademy } from "../../main";
 import UIScene from "../ui.scene";
+import { colyseusService } from "../../colyseus/colyseusService";
 
 export const chatPlayers = {
   player1: '',
@@ -90,7 +90,7 @@ export function createChatComponent(context: GameScene): GameObjects.DOMElement 
         userIds: [context.player1!.playerId, context.player2!.playerId],
         message: chatInput.value.trim()
       };
-      sendChatMessage(uiScene.lobbyRoom!, messageObject);
+      colyseusService.sendChatMessage(messageObject);
       chatInput.value = '';
     }
   });

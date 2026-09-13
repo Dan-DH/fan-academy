@@ -22,7 +22,7 @@ import { TurnWarningPopup } from "./popups/turnPopup";
 import { getActionClass } from "../utils/gameUtils";
 import { moveSpecialTileCheck } from "../utils/boardUtils";
 import { Crystal } from "./board/crystal";
-import { sendTurnMessage } from "../colyseus/colyseusLobbyRoom";
+import { colyseusService } from "../colyseus/colyseusService";
 
 export class GameController {
   context: GameScene;
@@ -242,7 +242,7 @@ export class GameController {
     this.context.activePlayer = this.context.opponentId;
     this.context.turnNumber!++;
 
-    sendTurnMessage({
+    colyseusService.sendTurnMessage({
       gameId: this.context.currentGame._id,
       currentTurn: this.currentTurn,
       newActivePlayer: this.context.opponentId,

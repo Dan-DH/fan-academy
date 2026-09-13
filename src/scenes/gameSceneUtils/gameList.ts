@@ -1,22 +1,23 @@
 import { ChallengePopup } from "../../classes/popups/challengePopup";
-import { sendDeletedGameMessage } from "../../colyseus/colyseusLobbyRoom";
+import { colyseusService } from "../../colyseus/colyseusService";
 import { EChallengePopup, EGameModes, EGameStatus } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
+import { fanAcademy } from "../../main";
 import { factionEnumToEmblem } from "../../utils/gameUtils";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
 import UIScene from "../ui.scene";
-import { accessGame } from "./gameMenuUI";
 
-export async function createGameList(context: UIScene) {
-  if (!context.gameList) {
+export function createGameList() {
+  const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
+  const gameList = uiScene.registry.get('gameList');
+  if (!uiScene || !gameList) {
     console.error('createGameList() no gameList in context');
     return;
   }
 
-  if (context.gameListContainer) context.gameListContainer.destroy(true); // Need to remove the old container before adding a new one
+  if (uiScene.gameListContainer) uiScene.gameListContainer.destroy(true);
 
-  // Split game list and split it into arrays, depending on status
   const listPlayerTurnArray: IGame[] = [];
   const listOpponentTurnArray: IGame[] = [];
   const listSearchingArray: IGame[] = [];
@@ -24,19 +25,19 @@ export async function createGameList(context: UIScene) {
   const listChallengeReceivedArray: IGame[] = [];
   const listFinishedArray: IGame[] = [];
 
-  context.gameList.forEach((game: IGame )=> {
+  gameList.forEach((game: IGame )=> {
     if (game.status === EGameStatus.SEARCHING) listSearchingArray.push(game);
-    if (game.status === EGameStatus.PLAYING && game.activePlayer === context.userId) listPlayerTurnArray.push(game);
-    if (game.status === EGameStatus.PLAYING && game.activePlayer !== context.userId) listOpponentTurnArray.push(game);
+    if (game.status === EGameStatus.PLAYING && game.activePlayer === uiScene.userId) listPlayerTurnArray.push(game);
+    if (game.status === EGameStatus.PLAYING && game.activePlayer !== uiScene.userId) listOpponentTurnArray.push(game);
     if (game.status === EGameStatus.CHALLENGE) {
-      if (game.players[0].userData._id === context.userId) listChallengeSentArray.push(game);
-      if (game.players[1].userData._id === context.userId) listChallengeReceivedArray.push(game);
+      if (game.players[0].userData._id === uiScene.userId) listChallengeSentArray.push(game);
+      if (game.players[1].userData._id === uiScene.userId) listChallengeReceivedArray.push(game);
     }
     if (game.status === EGameStatus.FINISHED) listFinishedArray.push(game);
   });
 
   // Update game limit
-  context.activeGamesAmount = listPlayerTurnArray.length + listOpponentTurnArray.length + listSearchingArray.length + listChallengeReceivedArray.length + listChallengeSentArray.length;
+  uiScene.activeGamesAmount = listPlayerTurnArray.length + listOpponentTurnArray.length + listSearchingArray.length + listChallengeReceivedArray.length + listChallengeSentArray.length;
 
   // Update the browser tab title if the player has games pending action
   if (listPlayerTurnArray.length || listChallengeReceivedArray.length) {
@@ -57,19 +58,19 @@ export async function createGameList(context: UIScene) {
   // Creating a container for the game list and adding it to the context (scene)
   const initialContainerX = 19;
   const initialContainerY = 65;
-  const gameListContainer = context.add.container(initialContainerX, initialContainerY); // Setting a variable to save me having to write 'context' every time
-  context.gameListContainer = gameListContainer;
+  const gameListContainer = uiScene.add.container(initialContainerX, initialContainerY); // Setting a variable to save me having to write 'context' every time
+  uiScene.gameListContainer = gameListContainer;
 
   // Function for adding elements to the container
   const createGameListItem = (gameListArray: IGame[]) => {
     gameListArray.forEach((game, index) => {
-      const player = game.players.find((p: IPlayerData) => context.userId === p.userData._id);
-      const opponent = game.players.find((p: IPlayerData) => context.userId !== p.userData._id);
+      const player = game.players.find((p: IPlayerData) => uiScene.userId === p.userData._id);
+      const opponent = game.players.find((p: IPlayerData) => uiScene.userId !== p.userData._id);
       if (!player) return;
 
       lastListItemY += (index === 0 ? textListHeight : gameListButtonHeight) + gameListButtonSpacing;
 
-      const gameListButtonImage = context.add.image(-7, lastListItemY, 'gameAtlas', 'gameListPremade').setOrigin(0).setScale(1.80).setTint(0xBBBBBB);
+      const gameListButtonImage = uiScene.add.image(-7, lastListItemY, 'gameAtlas', 'gameListPremade').setOrigin(0).setScale(1.80).setTint(0xBBBBBB);
       const playerFactionIcon = player.faction ? {
         faction: player.faction,
         scale: 1
@@ -78,14 +79,14 @@ export async function createGameList(context: UIScene) {
         scale: 1.3
       };
 
-      const lastPlayedText = context.add.text(20, lastListItemY + 100, timeAgo(game.lastPlayedAt), {
+      const lastPlayedText = uiScene.add.text(20, lastListItemY + 100, timeAgo(game.lastPlayedAt), {
         fontFamily: "proLight",
         fontSize: 38,
         color: '#ffffff'
       }).setOrigin(0);
 
-      const playerFactionImage =  context.add.image(90, lastListItemY + gameListButtonHeight / 2 - 5, 'gameAtlas', factionEnumToEmblem(playerFactionIcon.faction)).setScale(playerFactionIcon.scale);
-      const rankedIcon = context.add.image(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, 'gameAtlas', 'runeMetal').setScale(1).setVisible(false);
+      const playerFactionImage =  uiScene.add.image(90, lastListItemY + gameListButtonHeight / 2 - 5, 'gameAtlas', factionEnumToEmblem(playerFactionIcon.faction)).setScale(playerFactionIcon.scale);
+      const rankedIcon = uiScene.add.image(gameListButtonWidth - 20, lastListItemY + gameListButtonHeight - 25, 'gameAtlas', 'runeMetal').setScale(1).setVisible(false);
       if (game.gameMode === EGameModes.RANKED) rankedIcon.setVisible(true);
 
       let opponentFactionImage;
@@ -93,7 +94,7 @@ export async function createGameList(context: UIScene) {
       let opponentNameText;
 
       const setOpponentNameText = (name: string) => {
-        return context.add.text(200, lastListItemY + gameListButtonHeight / 2 - 33, truncateText(name, 13), {
+        return uiScene.add.text(200, lastListItemY + gameListButtonHeight / 2 - 33, truncateText(name, 13), {
           fontSize: 50,
           fontFamily: "proLight"
         });
@@ -101,65 +102,72 @@ export async function createGameList(context: UIScene) {
 
       if (opponent) {
         const opponentFaction = factionEnumToEmblem(opponent.faction);
-        opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', opponentFaction).setScale(opponentFaction === 'unknown_faction' ? 1.3 : 1);
-        opponentProfilePicture = context.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', opponent.userData.picture).setFlipX(true).setScale(1.5); //.setDisplaySize(256 * 0.4, 256 * 0.4);
+        opponentFactionImage = uiScene.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', opponentFaction).setScale(opponentFaction === 'unknown_faction' ? 1.3 : 1);
+        opponentProfilePicture = uiScene.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', opponent.userData.picture).setFlipX(true).setScale(1.5); //.setDisplaySize(256 * 0.4, 256 * 0.4);
         opponentNameText = setOpponentNameText(opponent.userData.username);
       } else {
-        opponentFactionImage = context.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', 'unknownFaction').setScale(1.3);
-        opponentProfilePicture = context.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', 'unknownAvatar-hd').setFlipX(true).setScale(1.5);
+        opponentFactionImage = uiScene.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', 'unknownFaction').setScale(1.3);
+        opponentProfilePicture = uiScene.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', 'unknownAvatar-hd').setFlipX(true).setScale(1.5);
         opponentNameText = setOpponentNameText('Searching...');
       }
 
       // Add a 'close' button to games looking for players
-      const closeButton = context.add.image(gameListButtonWidth - 30, lastListItemY, 'gameAtlas', 'closeButton').setOrigin(0).setVisible(false);
+      const closeButton = uiScene.add.image(gameListButtonWidth - 30, lastListItemY, 'gameAtlas', 'closeButton').setOrigin(0).setVisible(false);
       if (game.status === EGameStatus.SEARCHING || game.status === EGameStatus.CHALLENGE) {
         closeButton.setVisible(true).setInteractive({ useHandCursor: true });
         closeButton.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
-          sendDeletedGameMessage(context.lobbyRoom!, game._id, context.userId);
-          // context.sound.play(EUiSounds.GAME_DELETE);
-          createGameList(context);
+          colyseusService.sendDeletedGameMessage(game._id, uiScene.userId);
+          // uiScene.sound.play(EUiSounds.GAME_DELETE);
         });
       }
 
       // Highlight the current open game on the game list
       const highlightGameButton = () => {
         gameListButtonImage.clearTint();
-        if (context.activeGameImage) context.activeGameImage.setTint(0xBBBBBB);
-        context.activeGameImage = gameListButtonImage;
+        if (uiScene.activeGameImage) uiScene.activeGameImage.setTint(0xBBBBBB);
+        uiScene.activeGameImage = gameListButtonImage;
       };
 
       // Make the game accessible -only for games already playing
       if (game.status === EGameStatus.PLAYING || game.status === EGameStatus.FINISHED) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (context.activeGame === game._id) highlightGameButton();
+        if (uiScene.activeGame === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           highlightGameButton();
-          // context.sound.play(EUiSounds.BUTTON_GENERIC);
-          await accessGame(context, game);
+          // uiScene.sound.play(EUiSounds.BUTTON_GENERIC);
+          if (uiScene.activeGame) {
+            uiScene.activeGame = undefined;
+            uiScene.scene.stop('GameScene');
+          }
+
+          uiScene.activeGame = game._id;
+          uiScene.scene.launch('GameScene', {
+            userId: uiScene.userId,
+            currentGame: game
+          });
         });
       }
 
       if (game.status === EGameStatus.CHALLENGE && listChallengeReceivedArray.find(gameReceived => gameReceived._id === game._id )) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (context.activeGame === game._id) highlightGameButton();
+        if (uiScene.activeGame === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
-          // context.sound.play(EUiSounds.GAME_DELETE);
+          // uiScene.sound.play(EUiSounds.GAME_DELETE);
           highlightGameButton();
 
-          if (context.activeGame) {
-            console.log('Leaving game: ', context.activeGame);
-            context.activeGame = undefined;
-            context.scene.stop('GameScene');
-          }
+          if (uiScene.activeGame) {
+            uiScene.activeGame = undefined;
+            uiScene.scene.stop('GameScene');
+          } // TODO: check if we actually need to leave the game for this. Same with new game
 
           new ChallengePopup({
-            context,
+            context: uiScene,
             opponentId: opponent!.userData._id,
             challengeType: EChallengePopup.ACCEPT,
             gameId: game._id
@@ -172,21 +180,20 @@ export async function createGameList(context: UIScene) {
   };
 
   // New game button is always at the top of the games' list
-  const newGameText = context.add.text(100, lastListItemY + 15, 'Create a game', {
+  const newGameText = uiScene.add.text(100, lastListItemY + 15, 'Create a game', {
     fontSize: 120,
     fontFamily: "proHeavy"
   });
-  const newGameButton = context.add.image(-15, lastListItemY, 'gameAtlas', 'newGameButton').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
+  const newGameButton = uiScene.add.image(-15, lastListItemY, 'gameAtlas', 'newGameButton').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
-    if (context.activeGame) {
-      console.log('Leaving game: ', context.activeGame);
-      context.activeGame = undefined;
-      context.scene.stop('GameScene');
+    if (uiScene.activeGame) {
+      uiScene.activeGame = undefined;
+      uiScene.scene.stop('GameScene');
     }
 
     new ChallengePopup({
-      context,
+      context: uiScene,
       challengeType: EChallengePopup.OPEN
     });
   });
@@ -197,7 +204,7 @@ export async function createGameList(context: UIScene) {
 
   // Check the arrays one by one, adding the elements in order
   const setHeaderText = (header: string) => {
-    return context.add.text(30, lastListItemY, header, {
+    return uiScene.add.text(30, lastListItemY, header, {
       fontSize: 50,
       fontFamily: "proLight"
     });
@@ -223,10 +230,10 @@ export async function createGameList(context: UIScene) {
   gameListContainer.setScale(0.51);
 
   // Set the mask to make the list scrollable
-  const maskGraphics = context.make.graphics();
+  const maskGraphics = uiScene.make.graphics();
   maskGraphics.fillStyle(0xffffff);
   maskGraphics.fillRect(19, 65, visibleWidth, visibleHeight - 15);
-  const mask = new Phaser.Display.Masks.GeometryMask(context, maskGraphics);
+  const mask = new Phaser.Display.Masks.GeometryMask(uiScene, maskGraphics);
 
   gameListContainer.setMask(mask);
   const withinScrollArea = (pointer: Phaser.Input.Pointer) => {
@@ -244,7 +251,7 @@ export async function createGameList(context: UIScene) {
   const minOffset = Math.min(visibleHeight - lastListItemY * 0.51 - 10, 0);
 
   // Scroll handler
-  context.input.on("wheel", (pointer: Phaser.Input.Pointer, _gameObjects: any, _deltaX: number, deltaY: number, _deltaZ: number ) => {
+  uiScene.input.on("wheel", (pointer: Phaser.Input.Pointer, _gameObjects: any, _deltaX: number, deltaY: number, _deltaZ: number ) => {
     if (withinScrollArea(pointer) && lastListItemY > visibleHeight) {
       contentOffset -= deltaY;
 
@@ -262,7 +269,7 @@ export async function createGameList(context: UIScene) {
   let dragStartOffset = 0;
   let pointerMoved = false;
 
-  context.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+  uiScene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
     if (withinScrollArea(pointer) && lastListItemY > visibleHeight) {
       isDragging = true;
       dragStartY = pointer.y;
@@ -276,7 +283,7 @@ export async function createGameList(context: UIScene) {
     }
   });
 
-  context.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+  uiScene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
     if (!isDragging) return;
 
     const deltaY = pointer.y - dragStartY;
@@ -287,7 +294,7 @@ export async function createGameList(context: UIScene) {
     gameListContainer.y = 65 + contentOffset;
   });
 
-  context.input.on("pointerup", () => {
+  uiScene.input.on("pointerup", () => {
     isDragging = false;
     dragStartY = 0;
     dragStartOffset = 0;
