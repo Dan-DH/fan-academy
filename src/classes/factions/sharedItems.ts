@@ -10,7 +10,7 @@ export class ShiningHelm extends Item {
 
   use(target: Hero): void {
     target.equipShiningHelm(this.stats.boardPosition);
-    // playSound(this.scene, EGameSounds.ITEM_USE);
+    // this.scene.sound.play(EGameSounds.ITEM_USE);
     this.removeFromGame();
   }
 }
@@ -22,7 +22,7 @@ export class RuneMetal extends Item {
 
   use(target: Hero): void {
     target.equipRunemetal(this.stats.boardPosition);
-    // playSound(this.scene, EGameSounds.RUNE_METAL_USE);
+    // this.scene.sound.play(EGameSounds.RUNE_METAL_USE);
 
     this.removeFromGame();
   }
@@ -35,7 +35,7 @@ export class SuperCharge extends Item {
 
   use(target: Hero): void {
     target.equipSuperCharge(this.stats.boardPosition);
-    // playSound(this.scene, EGameSounds.SCROLL_USE);
+    // this.scene.sound.play(EGameSounds.SCROLL_USE);
 
     this.removeFromGame();
   }

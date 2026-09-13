@@ -26,11 +26,11 @@ export class Cleric extends Council {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
       target.removeFromGame();
     } else {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK_BIG);
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.CLERIC_ATTACK);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK_BIG);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       this.removeAttackModifiers();
     }
@@ -43,8 +43,8 @@ export class Cleric extends Council {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
 
-    // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    // if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL);
+    // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL_EXTRA);
 
     if (target.stats.isKO) {
       const healingAmount = this.getTotalHealing(2);

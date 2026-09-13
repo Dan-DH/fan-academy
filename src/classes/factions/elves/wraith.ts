@@ -17,7 +17,7 @@ export class Wraith extends DarkElf {
     turnIfBehind(this.context, this, target);
 
     if (target instanceof Hero && target.stats.isKO) {
-      // playSound(this.scene, EGameSounds.WRAITH_CONSUME);
+      // this.scene.sound.play(EGameSounds.WRAITH_CONSUME);
       target.removeFromGame(true);
 
       if (this.stats.unitsConsumed! < 3) {
@@ -28,8 +28,8 @@ export class Wraith extends DarkElf {
         this.unitCard.updateCardData(this);
       }
     } else {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK_BIG);
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.WRAITH_ATTACK);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.WRAITH_ATTACK_BIG);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WRAITH_ATTACK);
 
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 

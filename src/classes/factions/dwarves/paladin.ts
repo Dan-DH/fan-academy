@@ -16,7 +16,7 @@ export class Paladin extends Dwarf {
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
     turnIfBehind(this.context, this, target);
-    // playSound(this.scene, EGameSounds.PALADIN_ATTACK);
+    // this.scene.sound.play(EGameSounds.PALADIN_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
@@ -38,8 +38,8 @@ export class Paladin extends Dwarf {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
 
-    // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    // if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL);
+    // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL_EXTRA);
 
     let actualHealingDone: number;
     if (target.stats.isKO) {

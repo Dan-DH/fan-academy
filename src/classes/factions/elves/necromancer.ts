@@ -21,7 +21,7 @@ export class Necromancer extends DarkElf {
     if (target instanceof Hero && target.stats.isKO) {
       const tile = target.getTile();
 
-      // playSound(this.scene, EGameSounds.PHANTOM_SPAWN);
+      // this.scene.sound.play(EGameSounds.PHANTOM_SPAWN);
 
       const phantom = new Phantom(this.context, createElvesPhantomData({
         unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
@@ -40,8 +40,8 @@ export class Necromancer extends DarkElf {
 
       return;
     } else {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.NECROMANCER_ATTACK_BIG);
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.NECROMANCER_ATTACK);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK_BIG);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK);
 
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       if (damageDone) this.lifeSteal(damageDone);

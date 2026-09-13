@@ -127,7 +127,7 @@ export class GameController {
   addConcedeButton(context: GameScene): Phaser.GameObjects.Image {
     const button = context.add.image(1350, 70, 'gameAtlas', 'concedeButton').setScale(0.9).setInteractive({ useHandCursor: true });
     button.on('pointerdown', ()=> {
-      // playSound(this.context, EUiSounds.BUTTON_GENERIC);
+      // this.context.sound.play(EUiSounds.BUTTON_GENERIC);
       this.concedePopup.setVisible(true);
     });
     return button;
@@ -137,7 +137,7 @@ export class GameController {
     deselectUnit(this.context);
     this.context.longPressStart = undefined;
     this.context.visibleUnitCard = undefined;
-    // playSound(this.context, EGameSounds.RESET_TURN);
+    // this.context.sound.play(EGameSounds.RESET_TURN);
 
     this.context.scene.restart();
   };
@@ -147,7 +147,7 @@ export class GameController {
   }
 
   drawUnits() {
-    // playSound(this.context, EGameSounds.DRAW);
+    // this.context.sound.play(EGameSounds.DRAW);
 
     const drawAmount = 6 - this.hand.getHandSize();
     if (this.deck.getDeckSize() === 0 || drawAmount === 0) return;
@@ -197,7 +197,7 @@ export class GameController {
     });
 
     if (unitsToRemove.length) {
-      // playSound(this.context, EGameSounds.VANISH);
+      // this.context.sound.play(EGameSounds.VANISH);
       const animation = (hero: Hero): Promise<void> => {
         return new Promise((resolve) => {
           this.context.tweens.add({
@@ -255,9 +255,9 @@ export class GameController {
 
   async gameOverEffects() {
     if (this.gameOver?.winner === this.context.activePlayer) {
-      // playSound(this.context, EUiSounds.WIN_SFX);
+      // this.context.sound.play(EUiSounds.WIN_SFX);
     } else {
-      // playSound(this.context, EUiSounds.LOSE_SFX);
+      // this.context.sound.play(EUiSounds.LOSE_SFX);
     }
   }
 

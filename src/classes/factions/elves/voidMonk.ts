@@ -6,7 +6,6 @@ import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
-import { playSound } from "../../../utils/gameSounds";
 import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
@@ -21,8 +20,8 @@ export class VoidMonk extends DarkElf {
 
     const splashedEnemies: (Hero | Crystal)[] = [];
 
-    if (this.stats.superCharge) playSound(this.scene, EGameSounds.VOIDMONK_ATTACK_BIG);
-    if (!this.stats.superCharge) playSound(this.scene, EGameSounds.VOIDMONK_ATTACK);
+    // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.VOIDMONK_ATTACK_BIG);
+    // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.VOIDMONK_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (

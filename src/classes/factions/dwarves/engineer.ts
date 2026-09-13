@@ -16,7 +16,7 @@ export class Engineer extends Dwarf {
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
     turnIfBehind(this.context, this, target);
-    // playSound(this.scene, EGameSounds.ENGINEER_ATTACK);
+    // this.scene.sound.play(EGameSounds.ENGINEER_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (
@@ -38,7 +38,7 @@ export class Engineer extends Dwarf {
   shieldAlly(target: Hero | Crystal): void {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
-    // playSound(this.scene, EGameSounds.ENGINEER_SHIELD_CAST);
+    // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_CAST);
 
     if (this.stats.shieldingAlly) {
       if (this.stats.shieldingAlly === target.stats.unitId) return;

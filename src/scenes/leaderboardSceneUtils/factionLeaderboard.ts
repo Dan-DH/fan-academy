@@ -79,7 +79,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
       const challengeIcon = context.add.image(1030, 15, 'gameAtlas', 'challengeIcon').setScale(1.2).setInteractive({ useHandCursor: true });
 
       challengeIcon.on('pointerdown', () => {
-        // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+        // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
         new ChallengePopup({
           context,

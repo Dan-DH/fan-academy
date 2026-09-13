@@ -26,10 +26,10 @@ export class Priestess extends DarkElf {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      // playSound(this.scene, EGameSounds.PRIESTESS_ATTACK);
+      // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
       target.removeFromGame();
     } else {
-      // playSound(this.scene, EGameSounds.PRIESTESS_ATTACK);
+      // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
 
       const isTargetShielded = target.stats.engineerShield;
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
@@ -54,8 +54,8 @@ export class Priestess extends DarkElf {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
 
-    // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL);
-    // if (this.stats.superCharge) playSound(this.scene, EGameSounds.HEAL_EXTRA);
+    // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL);
+    // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL_EXTRA);
 
     if (target.stats.isKO) {
       const healingAmount = this.getTotalHealing(0.5);

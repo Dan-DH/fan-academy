@@ -25,11 +25,11 @@ export class Knight extends Council {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      // playSound(this.scene, EGameSounds.KNIGHT_ATTACK);
+      // this.scene.sound.play(EGameSounds.KNIGHT_ATTACK);
       target.removeFromGame();
     } else {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.KNIGHT_ATTACK_BIG);
-      // if (!this.stats.superCharge)playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.KNIGHT_ATTACK_BIG);
+      // if (!this.stats.superCharge)this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 

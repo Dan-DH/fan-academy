@@ -31,11 +31,11 @@ export class Wizard extends Council {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      // playSound(this.scene, EGameSounds.WIZARD_ATTACK);
+      // this.scene.sound.play(EGameSounds.WIZARD_ATTACK);
       target.removeFromGame();
     } else {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.WIZARD_ATTACK_BIG);
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.WIZARD_ATTACK);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK_BIG);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK);
 
       // Get directions for finding out the next targets
       const attackDirection = gameController.board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);

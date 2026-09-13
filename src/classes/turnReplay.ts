@@ -136,7 +136,7 @@ export class TurnReplay {
       fontSize: 50,
       color: '#fffb00'
     }).setDepth(999);
-    // playSound(this.context, EGameSounds.SHUFFLE);
+    // this.context.sound.play(EGameSounds.SHUFFLE);
 
     await textAnimationSizeIncrease(shuffleText, 1.3);
   }

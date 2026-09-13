@@ -32,19 +32,19 @@ export class Gunner extends Dwarf {
   singleTargetAttack(target: Hero | Crystal): void {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())) {
-      // playSound(this.scene, EGameSounds.GRENADIER_ATTACK_MELEE);
+      // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
-      // playSound(this.scene, EGameSounds.GUNNER_ATTACK);
+      // this.scene.sound.play(EGameSounds.GUNNER_ATTACK);
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       this.removeAttackModifiers();
     }
   }
 
   multiTargetAttack(target: Hero | Crystal): void {
-    // playSound(this.scene, EGameSounds.GUNNER_ATTACK);
-    // this.context.time.delayedCall(100, () => playSound(this.scene, EGameSounds.GUNNER_ATTACK));
-    // this.context.time.delayedCall(200, () => playSound(this.scene, EGameSounds.GUNNER_ATTACK));
+    // this.scene.sound.play(EGameSounds.GUNNER_ATTACK);
+    // this.context.time.delayedCall(100, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
+    // this.context.time.delayedCall(200, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
 
     const splashedUnits = this.context.gameController?.board.getGunnerSplashTargets(this, target);
 

@@ -116,17 +116,17 @@ export class ChallengePopup extends Phaser.GameObjects.Container {
     };
 
     this.councilButtonImage.on('pointerdown', async () => {
-      // playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      // this.scene.sound.play(EUiSounds.BUTTON_PLAY);
       await buttonCallback(EFaction.COUNCIL);
     });
 
     this.elvesButtonImage.on('pointerdown', async () => {
-      // playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      // this.scene.sound.play(EUiSounds.BUTTON_PLAY);
       await buttonCallback(EFaction.DARK_ELVES);
     });
 
     this.dwarvesButtonImage.on('pointerdown', async () => {
-      // playSound(this.scene, EUiSounds.BUTTON_PLAY);
+      // this.scene.sound.play(EUiSounds.BUTTON_PLAY);
       await buttonCallback(EFaction.DWARVES);
     });
 

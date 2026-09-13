@@ -24,7 +24,7 @@ export class HealingPotion extends Item {
   }
 
   use(target: Hero): void {
-    // playSound(this.scene, EGameSounds.POTION_USE);
+    // this.scene.sound.play(EGameSounds.POTION_USE);
 
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'healingPotion').setDepth(100);
     useAnimation(potionImage);
@@ -46,7 +46,7 @@ export class Inferno extends Item {
   use(targetTile: Tile): void {
     const infernoImage = this.scene.add.image(targetTile.x, targetTile.y, 'gameAtlas', 'infernoShockWave').setDepth(100);
     useAnimation(infernoImage, 3.5);
-    // playSound(this.scene, EGameSounds.INFERNO_USE);
+    // this.scene.sound.play(EGameSounds.INFERNO_USE);
 
     // Damages enemy units and crystals, and removes enemy KO'd units
     const damage = 350;
