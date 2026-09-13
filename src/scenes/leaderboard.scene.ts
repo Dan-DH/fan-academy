@@ -27,25 +27,25 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      // playSound(this, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new MainLeaderboard(this, leaderboardData.mainBoard);
     });
 
     councilLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      // playSound(this, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.COUNCIL, leaderboardData.councilBoard);
     });
 
     elvesLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      // playSound(this, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DARK_ELVES, leaderboardData.elvesBoard);
     });
 
     dwarvesLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
-      // playSound(this, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DWARVES, leaderboardData.dwarvesBoard);
     });
 

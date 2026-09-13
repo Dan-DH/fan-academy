@@ -27,7 +27,7 @@ export class Phantom extends Hero {
 
     turnIfBehind(this.context, this, target);
 
-    // playSound(this.scene, EGameSounds.WRAITH_ATTACK);
+    // this.scene.sound.play(EGameSounds.WRAITH_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (

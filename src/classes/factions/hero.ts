@@ -111,7 +111,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
   getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit?: number): number {
     if (this.stats.engineerShield) {
-      // playSound(this.context, EGameSounds.ENGINEER_SHIELD_SHATTER);
+      // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
       this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
       this.removeEngineerShield();
       return 0;
@@ -442,7 +442,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (targetTile.hero && targetTile.hero.isKO) {
       const hero = gameController.board.units.find(unit => unit.stats.unitId === targetTile.hero?.unitId);
       if (!hero) console.error('move() Found heroData on targetTile, but no Hero to remove', targetTile);
-      // playSound(this.context, EGameSounds.HERO_STOMP);
+      // this.scene.sound.play(EGameSounds.HERO_STOMP);
       hero?.removeFromGame(true);
     }
 
@@ -463,7 +463,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (tile.hero && (tile.hero.isKO || tile.hero.unitType === EHeroes.PHANTOM)) {
       const hero = gameController.board.units.find(unit => unit.stats.unitId === tile.hero?.unitId);
       if (!hero) console.error('spawn() Found heroData on tile, but no Hero to remove', tile);
-      // playSound(this.context, EGameSounds.HERO_STOMP);
+      // this.scene.sound.play(EGameSounds.HERO_STOMP);
       hero?.removeFromGame(true);
     }
 
@@ -490,7 +490,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.healthBar.setVisible(true);
 
-    // playSound(this.context, EGameSounds.HERO_SPAWN);
+    // this.scene.sound.play(EGameSounds.HERO_SPAWN);
 
     if (this.stats.unitType === EHeroes.PALADIN) {
       this.visuals.paladinAuraImage.setVisible(true);

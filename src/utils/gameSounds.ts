@@ -1,8 +1,4 @@
-import { EGameSounds, EUiSounds, EItems, EHeroes } from "../enums/gameEnums";
-
-export function playSound(_scene: Phaser.Scene, _sound?: EGameSounds | EUiSounds): void {
-  // scene.sound.play(sound);
-}
+import { EGameSounds, EItems, EHeroes } from "../enums/gameEnums";
 
 export function selectItemSound(_scene: Phaser.Scene, item: EItems): void {
   const itemMap = {
@@ -25,7 +21,7 @@ export function selectItemSound(_scene: Phaser.Scene, item: EItems): void {
   const soundToPlay = itemMap[item];
   if (!soundToPlay) return;
 
-  // playSound(scene, soundToPlay);
+  // scene.sound.play(soundToPlay);
 }
 
 export function selectDeathSound(_scene: Phaser.Scene, hero: EHeroes): void {
@@ -53,5 +49,5 @@ export function selectDeathSound(_scene: Phaser.Scene, hero: EHeroes): void {
   const soundToPlay = heroMap[hero];
   if (!soundToPlay) return;
 
-  // playSound(scene, soundToPlay);
+  // scene.sound.play(soundToPlay);
 }

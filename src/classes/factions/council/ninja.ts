@@ -21,8 +21,8 @@ export class Ninja extends Council {
     const distance = getDistanceToTarget(this, target);
 
     const ninjaAttackSound = () => {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.NINJA_ATTACK_BIG);
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.NINJA_ATTACK);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.NINJA_ATTACK_BIG);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.NINJA_ATTACK);
     };
 
     if (distance === 1) {
@@ -32,7 +32,7 @@ export class Ninja extends Council {
         target.stats.isKO &&
         isEnemySpawn(this.context, target.getTile())
       ) {
-        // playSound(this.scene, EGameSounds.NINJA_ATTACK);
+        // this.scene.sound.play(EGameSounds.NINJA_ATTACK);
         target.removeFromGame();
       } else {
         ninjaAttackSound();
@@ -50,7 +50,7 @@ export class Ninja extends Council {
   }
 
   teleport(target: Hero): void {
-    // playSound(this.scene, EGameSounds.NINJA_SMOKE);
+    // this.scene.sound.play(EGameSounds.NINJA_SMOKE);
     const targetDestination = this.getTile();
     const unitDestination = target.getTile();
 

@@ -26,14 +26,14 @@ export class Impaler extends DarkElf {
       target.stats.isKO &&
       isEnemySpawn(this.context, target.getTile())
     ) {
-      // playSound(this.scene, EGameSounds.IMPALER_ATTACK_MELEE);
+      // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
       if (this.stats.superCharge) {
-        // playSound(this.scene, EGameSounds.IMPALER_ATTACK_BIG);
+        // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_BIG);
       } else {
-        // if (distance === 1) playSound(this.scene, EGameSounds.IMPALER_ATTACK_MELEE);
-        // if (distance !== 1) playSound(this.scene, EGameSounds.IMPALER_ATTACK);
+        // if (distance === 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
+        // if (distance !== 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK);
       }
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 

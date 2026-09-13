@@ -56,7 +56,7 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     this.okButtonImage.on('pointerdown', async () => {
-      // playSound(this.scene, EUiSounds.RESIGN);
+      // this.scene.sound.play(EUiSounds.RESIGN);
 
       this.setVisible(false);
       const gameController = context.gameController!;
@@ -94,7 +94,7 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
     });
 
     this.cancelButtonImage.on('pointerdown', () => {
-      // playSound(this.scene, EUiSounds.BUTTON_FAILED);
+      // this.scene.sound.play(EUiSounds.BUTTON_FAILED);
 
       this.setVisible(false);
     });

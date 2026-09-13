@@ -62,10 +62,10 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
     if (unit instanceof Hero && unit.stats.isKO) return;
 
     if (unit.stats.boardPosition >= 45) {
-      // if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
+      // if (unit instanceof Hero) this.scene.sound.play(EGameSounds.HERO_HAND_SELECT);
       // if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
     } else {
-      // playSound(context, EGameSounds.HERO_BOARD_SELECT);
+      // this.scene.sound.play(EGameSounds.HERO_BOARD_SELECT);
     }
 
     selectUnit(context, unit);
@@ -226,10 +226,10 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       deselectUnit(context);
 
       if (unit.stats.boardPosition >= 45) {
-        // if (unit instanceof Hero) playSound(context, EGameSounds.HERO_HAND_SELECT);
+        // if (unit instanceof Hero) this.scene.sound.play(EGameSounds.HERO_HAND_SELECT);
         // if (unit instanceof Item) selectItemSound(context, unit.stats.itemType);
       } else {
-        // playSound(context, EGameSounds.HERO_BOARD_SELECT);
+        // this.scene.sound.play(EGameSounds.HERO_BOARD_SELECT);
       }
 
       selectUnit(context, unit);

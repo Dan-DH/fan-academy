@@ -55,7 +55,7 @@ export class DeleteWarningPopup extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     this.okButtonImage.on('pointerdown', async () => {
-      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.setVisible(false);
       await profile.handleDelete();
     });

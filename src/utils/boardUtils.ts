@@ -44,11 +44,26 @@ export function moveSpecialTileCheck(hero: Hero, endTile: Tile, startTile: Tile)
 }
 
 export function specialTileCheck(hero: Hero, tile: Tile): void {
-  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
-  if (tile.tileType === ETiles.POWER) hero.stats.attackTile = true;
-  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = true;
-  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = true;
-  if (tile.tileType === ETiles.SPEED) hero.stats.speedTile = true;
+  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
+    hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
+    // this.scene.sound.play(EGameSounds.CRYSTAL_TILE);
+  };
+  if (tile.tileType === ETiles.POWER) {
+    hero.stats.attackTile = true;
+    // this.scene.sound.play(EGameSounds.SWORD_TILE);
+  };
+  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) {
+    hero.stats.magicalResistanceTile = true;
+    // this.scene.sound.play(EGameSounds.HELM_TILE);
+  };
+  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) {
+    hero.stats.physicalResistanceTile = true;
+    // this.scene.sound.play(EGameSounds.SHIELD_TILE);
+  };
+  if (tile.tileType === ETiles.SPEED) {
+    hero.stats.speedTile = true;
+    // TODO: missing sound bite
+  };
 
   if (![ETiles.BASIC, !ETiles.SPAWN].includes(tile.tileType)) hero.visuals.playSpecialTileAnimation(tile.tileType);
 

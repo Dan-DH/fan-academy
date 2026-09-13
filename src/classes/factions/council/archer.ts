@@ -25,18 +25,18 @@ export class Archer extends Council {
         target.stats.isKO &&
         isEnemySpawn(this.context, target.getTile())
       ) {
-        // playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+        // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
         target.removeFromGame();
       } else {
-        // playSound(this.scene, EGameSounds.ARCHER_ATTACK_MELEE);
+        // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
         target.getsDamaged(this.getTotalPower(0.5), this.stats.attackType, this);
         this.removeAttackModifiers();
       }
     } else {
-      // if (this.stats.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK_BIG);
-      // if (!this.stats.superCharge) playSound(this.scene, EGameSounds.ARCHER_ATTACK);
+      // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.ARCHER_ATTACK_BIG);
+      // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.ARCHER_ATTACK);
 
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       this.removeAttackModifiers();

@@ -21,7 +21,7 @@ export class DeckPopup extends Phaser.GameObjects.Container {
     this.blockingLayer = context.add.rectangle(0, 0, 2000, 2000, 0x000000, 0.001).setOrigin(0.5).setInteractive();
 
     this.blockingLayer.on('pointerdown', () => {
-      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
       this.setVisible(false);
     });

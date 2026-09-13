@@ -202,7 +202,7 @@ export class Profile extends Phaser.GameObjects.Container {
     });
 
     this.saveButtonImage.on('pointerdown', async () => {
-      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       await this.handleSubmit();
     });
 
@@ -225,7 +225,7 @@ export class Profile extends Phaser.GameObjects.Container {
     });
 
     this.deleteAccountButtonImage.on('pointerdown', () => {
-      // playSound(this.scene, EUiSounds.BUTTON_GENERIC);
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.toggleFormVisibility(false);
       this.deletePopup.setVisible(true);
     });

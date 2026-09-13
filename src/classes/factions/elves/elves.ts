@@ -23,7 +23,7 @@ export abstract class DarkElf extends Hero {
     this.unitCard.updateCardData(this);
     this.updateTileData();
 
-    // playSound(this.scene, EGameSounds.ITEM_USE);
+    // this.scene.sound.play(EGameSounds.ITEM_USE);
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }

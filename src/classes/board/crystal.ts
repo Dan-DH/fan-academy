@@ -77,9 +77,9 @@ export class Crystal extends Phaser.GameObjects.Container {
     let assaultBoostDamage = 0;
 
     if (this.stats.debuffLevel === 0) {
-      // playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE);
+      // this.scene.sound.play(EGameSounds.CRYSTAL_DAMAGE);
     } else {
-      // playSound(this.scene, EGameSounds.CRYSTAL_DAMAGE_BUFF);
+      // this.scene.sound.play(EGameSounds.CRYSTAL_DAMAGE_BUFF);
 
       const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getAliveUnitsOnAssaultTiles(this.stats.belongsTo);
 
@@ -121,7 +121,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   removeFromGame(): void {
-    // playSound(this.scene, EGameSounds.CRYSTAL_DESTROY);
+    // this.scene.sound.play(EGameSounds.CRYSTAL_DESTROY);
 
     const tile = this.getTile();
     tile.crystal = undefined;

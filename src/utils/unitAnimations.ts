@@ -64,6 +64,8 @@ export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: nu
 }
 
 async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
+  // this.scene.sound.play(EGameSounds.MOVE_FLY);
+
   const unitImage = hero.visuals.characterImage;
   const moveDuration = 200 * tilesMoved;
   const isMovingRight = targetTile.x >= hero.x;
@@ -97,6 +99,8 @@ async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number)
 }
 
 async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
+  // this.scene.sound.play(EGameSounds.MOVE_WALK);
+
   const hopSpeed = 100;
   const moveDuration = hopSpeed * 2 * tilesMoved;
   const unitImage = hero.visuals.characterImage;

@@ -32,7 +32,7 @@ export class Door extends Phaser.GameObjects.Container {
 
     this.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (pointer.button === 0 && context.activeUnit && isInHand(context.activeUnit.stats.boardPosition)) {
-        // playSound(this.scene, EGameSounds.SHUFFLE);
+        // this.sscene.sound.play(EGameSounds.SHUFFLE);
 
         const activePosition = context.activeUnit.stats.boardPosition;
         context.activeUnit.shuffleInDeck();
