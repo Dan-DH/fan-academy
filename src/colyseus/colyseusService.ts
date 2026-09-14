@@ -27,6 +27,7 @@ class ColyseusService {
 
     this.setOnMessages(lobby);
     this.lobby = lobby;
+    return this.lobby;
   }
 
   async setOnMessages(lobby: Room): Promise<void> {

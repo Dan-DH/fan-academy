@@ -140,6 +140,7 @@ export default class MainMenuScene extends Phaser.Scene {
         localStorage.removeItem('jwt');
         this.registry.remove('userId');
         this.registry.remove('userPreferences');
+        this.registry.remove('gameList');
         this.userId = undefined;
         document.title = 'Fan Academy';
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
@@ -252,8 +253,9 @@ export default class MainMenuScene extends Phaser.Scene {
     loginButton.addEventListener('click', async () => {
       if (loginUsernameInput.value && loginPasswordInput.value) {
         const result = await loginQuery(loginUsernameInput.value, loginPasswordInput.value);
-        if (result.success) {
-          if (result.userData) this.updateUserPreferences(result.userData);
+        if (result.success && result.userData) {
+          this.updateUserPreferences(result.userData);
+          await this.connectToLobby();
           cleanLoginFormFields();
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
@@ -291,8 +293,9 @@ export default class MainMenuScene extends Phaser.Scene {
 
       if (signUpEmailInput.value && signUpUsernameInput.value && signUpPasswordInput.value) {
         const result = await signUpQuery(signUpEmailInput.value, signUpUsernameInput.value, signUpPasswordInput.value);
-        if (result.success) {
-          if (result.userData) this.updateUserPreferences(result.userData);
+        if (result.success && result.userData) {
+          this.updateUserPreferences(result.userData);
+          await this.connectToLobby();
           cleanSignUpFormFields();
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
@@ -415,7 +418,7 @@ export default class MainMenuScene extends Phaser.Scene {
     };
   }
 
-  async isPlayerLoggedIn() {
+  async isPlayerLoggedIn(): Promise<void> {
     if (this.userId) {
       console.log('User already authenticated, skipping gameList fetch');
       return;
@@ -427,16 +430,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // Login and sign up forms. Only show if user is not authenticated
     this.createSignUpAndLoginForms(this.userId);
 
-    const token = localStorage.getItem("jwt");
-
-    if (!this.userId || !token) return;
-
-    const lobby = await colyseusService.connect(this.userId, token);
-    if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
-    // TODO: get games via lobby message;
-    const gameList =  await getGameList(this.userId); // TODO: add 'fetching games' message and make it go away when the list is fetched. otherwise users can click on play before the data is ready
-
-    this.registry.set('gameList', gameList ?? []);
+    if (this.userId) await this.connectToLobby();
   }
 
   updateUserPreferences(userData: {
@@ -450,5 +444,19 @@ export default class MainMenuScene extends Phaser.Scene {
       chat: userData.preferences.chat,
       sound: userData.preferences.sound
     });
+  }
+
+  async connectToLobby(): Promise<void> {
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      console.error('connectToLobby() - No token found');
+      return;
+    }
+    const lobby = await colyseusService.connect(this.userId!, token);
+    if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
+    // TODO: get games via lobby message;
+    const gameList =  await getGameList(this.userId!); // TODO: add 'fetching games' message and make it go away when the list is fetched. otherwise users can click on play before the data is ready
+
+    this.registry.set('gameList', gameList ?? []);
   }
 }
