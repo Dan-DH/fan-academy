@@ -1,3 +1,4 @@
+import { FetchGameListPopup } from "../classes/popups/fetchGameListPopup";
 import { colyseusService } from "../colyseus/colyseusService";
 import { IUserPreferences } from "../interfaces/userInterface";
 import { getGameList } from "../queries/gameQueries";
@@ -8,6 +9,7 @@ import createMainMenuButton from "./mainMenuUtils/buttons";
 export default class MainMenuScene extends Phaser.Scene {
   userId: string | undefined;
   currentSubScene: string | undefined;
+  fetchingGamesPopup: Phaser.GameObjects.Container | undefined;
 
   constructor() {
     super({ key: 'MainMenuScene' });
@@ -260,7 +262,7 @@ export default class MainMenuScene extends Phaser.Scene {
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
           // this.sound.play(EUiSounds.BUTTON_GENERIC);
-        }else {
+        } else {
           // this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(loginError, result.error); // Show server error to user
         }
@@ -419,7 +421,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   async isPlayerLoggedIn(): Promise<void> {
-    if (this.userId) {
+    if (this.registry.get('userId')) {
       console.log('User already authenticated, skipping gameList fetch');
       return;
     } // TODO: this will do for the moment
@@ -447,16 +449,28 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   async connectToLobby(): Promise<void> {
+    this.fetchingGamesWarning();
+
     const token = localStorage.getItem('jwt');
     if (!token) {
       console.error('connectToLobby() - No token found');
       return;
     }
+
     const lobby = await colyseusService.connect(this.userId!, token);
     if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
     // TODO: get games via lobby message;
-    const gameList =  await getGameList(this.userId!); // TODO: add 'fetching games' message and make it go away when the list is fetched. otherwise users can click on play before the data is ready
+    const gameList =  await getGameList(this.userId!);
 
     this.registry.set('gameList', gameList ?? []);
+    this.removeFetchingGamesWarning();
+  }
+
+  fetchingGamesWarning(): void {
+    this.fetchingGamesPopup = new FetchGameListPopup();
+  }
+
+  removeFetchingGamesWarning(): void {
+    this.fetchingGamesPopup?.destroy();
   }
 }
