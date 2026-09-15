@@ -1,4 +1,4 @@
-import { EActionClass, EActionType, EAttackType, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
+import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
 
 /**
  * Game Over Interface
@@ -38,6 +38,8 @@ export interface IItem {
  * Unit Interface
  */
 export interface IHero {
+  type: EBoardUnit;
+
   class: EClass;
   faction: EFaction;
   unitType: EHeroes;
@@ -128,6 +130,8 @@ export interface IPlayerState {
  * Crystal Interface
  */
 export interface ICrystal {
+  type: EBoardUnit;
+
   unitId?: string;
   belongsTo: number;
   maxHealth: number;
@@ -157,8 +161,7 @@ export interface ITile {
   tileType: ETiles;
   x: number;
   y: number;
-  obstacle: boolean;
-  hero?: IHero | undefined;
+  hero?: IHero | undefined; // FIXME: remove hero and crystal properties
   crystal?: ICrystal | undefined;
 }
 
@@ -168,7 +171,7 @@ export interface ITile {
 export interface IGameState {
   player1: IPlayerState;
   player2?: IPlayerState;
-  boardState: ITile[];
+  boardState: (IHero | ICrystal)[];
   action?: ITurnAction;
 }
 
@@ -192,6 +195,7 @@ export interface IGame {
   _id: string;
   players: IPlayerData[];
   turnNumber: number;
+  map: number;
   currentState: IGameState[];
   previousTurn: IGameState[];
   gameOver?: IGameOver,
@@ -202,4 +206,12 @@ export interface IGame {
   activePlayer: string;
   chatLogs: IChat;
   gameMode: EGameModes
+}
+
+// FIXME: wip
+export interface ISpecialTile {
+  row: number,
+  col: number,
+  boardPosition: number,
+  tileType: ETiles
 }

@@ -4,7 +4,6 @@ import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";
 import { positionHeroImage } from "../../utils/heroImagePosition";
 import { addPriestessDebuffTween, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
-import { Tile } from "../board/tile";
 
 export class HeroVisuals extends Phaser.GameObjects.Container {
   characterImage: Phaser.GameObjects.Image;
@@ -26,7 +25,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   reviveAnimationSprite: Phaser.GameObjects.Sprite;
   smokeAnimationImage: Phaser.GameObjects.Image;
 
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
+  constructor(context: GameScene, data: IHero) {
     super(context, 0, 0);
 
     const inHand = isInHand(data.boardPosition);
@@ -83,11 +82,12 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
      */
     this.specialTileAnimationSprite = context.add.sprite(0, 30, '').setScale(0.8).setVisible(false);
 
-    if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
-    if (tile?.tileType === ETiles.POWER && !data.isKO) this.playSpecialTileAnimation(ETiles.POWER);
-    if (tile?.tileType === ETiles.MAGICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.MAGICAL_RESISTANCE);
-    if (tile?.tileType === ETiles.SPEED && !data.isKO) this.playSpecialTileAnimation(ETiles.SPEED);
-    if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.PHYSICAL_RESISTANCE);
+    // FIXME: use bitmap to check for tile status? Or compare with the specialTileArray
+    // if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
+    // if (tile?.tileType === ETiles.POWER && !data.isKO) this.playSpecialTileAnimation(ETiles.POWER);
+    // if (tile?.tileType === ETiles.MAGICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.MAGICAL_RESISTANCE);
+    // if (tile?.tileType === ETiles.SPEED && !data.isKO) this.playSpecialTileAnimation(ETiles.SPEED);
+    // if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.PHYSICAL_RESISTANCE);
 
     this.superChargeAnimationSprite = context.add.sprite(0, -25, 'gameAtlas', '').setScale(1.1).setVisible(false);
     if (data.superCharge) {

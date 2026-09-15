@@ -48,26 +48,26 @@ export function createNewItem(context: GameScene, itemData: IItem): Item {
   return createItem();
 }
 
-export function createNewHero(context: GameScene, heroData: IHero, tile?: Tile): Hero {
+export function createNewHero(heroData: IHero): Hero {
   const heroTypes: Record<EHeroes, () => Hero> = {
-    [EHeroes.ARCHER]: () => new Archer(context, heroData, tile),
-    [EHeroes.CLERIC]: () => new Cleric(context, heroData, tile),
-    [EHeroes.KNIGHT]: () => new Knight(context, heroData, tile),
-    [EHeroes.NINJA]: () => new Ninja(context, heroData, tile),
-    [EHeroes.WIZARD]: () => new Wizard(context, heroData, tile),
+    [EHeroes.ARCHER]: () => new Archer(heroData),
+    [EHeroes.CLERIC]: () => new Cleric(heroData),
+    [EHeroes.KNIGHT]: () => new Knight(heroData),
+    [EHeroes.NINJA]: () => new Ninja(heroData),
+    [EHeroes.WIZARD]: () => new Wizard(heroData),
 
-    [EHeroes.PRIESTESS]: () => new Priestess(context, heroData, tile),
-    [EHeroes.IMPALER]: () => new Impaler(context, heroData, tile),
-    [EHeroes.NECROMANCER]: () => new Necromancer(context, heroData, tile),
-    [EHeroes.PHANTOM]: () => new Phantom(context, heroData, tile),
-    [EHeroes.VOIDMONK]: () => new VoidMonk(context, heroData, tile),
-    [EHeroes.WRAITH]: () => new Wraith(context, heroData, tile),
+    [EHeroes.PRIESTESS]: () => new Priestess(heroData),
+    [EHeroes.IMPALER]: () => new Impaler(heroData),
+    [EHeroes.NECROMANCER]: () => new Necromancer(heroData),
+    [EHeroes.PHANTOM]: () => new Phantom(heroData),
+    [EHeroes.VOIDMONK]: () => new VoidMonk(heroData),
+    [EHeroes.WRAITH]: () => new Wraith(heroData),
 
-    [EHeroes.PALADIN]: () => new Paladin(context, heroData, tile),
-    [EHeroes.ENGINEER]: () => new Engineer(context, heroData, tile),
-    [EHeroes.GUNNER]: () => new Gunner(context, heroData, tile),
-    [EHeroes.GRENADIER]: () => new Grenadier(context, heroData, tile),
-    [EHeroes.ANNIHILATOR]: () => new Annihilator(context, heroData, tile)
+    [EHeroes.PALADIN]: () => new Paladin(heroData),
+    [EHeroes.ENGINEER]: () => new Engineer(heroData),
+    [EHeroes.GUNNER]: () => new Gunner(heroData),
+    [EHeroes.GRENADIER]: () => new Grenadier(heroData),
+    [EHeroes.ANNIHILATOR]: () => new Annihilator(heroData)
   };
 
   const createHero = heroTypes[heroData.unitType];

@@ -1,16 +1,14 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Cleric extends Council {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {

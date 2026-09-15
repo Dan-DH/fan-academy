@@ -1,13 +1,11 @@
 import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { useAnimation } from "../../../utils/unitAnimations";
 
 export abstract class Council extends Hero {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   equipFactionEquipment(handPosition: number): void {

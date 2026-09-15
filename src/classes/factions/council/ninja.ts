@@ -1,16 +1,14 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn, moveSpecialTileCheck } from "../../../utils/boardUtils";
 import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Ninja extends Council {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -60,11 +58,11 @@ export class Ninja extends Council {
 
     moveSpecialTileCheck(target, targetDestination, unitDestination);
     target.updatePosition(targetDestination);
-    targetDestination.hero = target.exportData();
+    // targetDestination.hero = target.exportData(); // FIXME:
 
     moveSpecialTileCheck(this, unitDestination, targetDestination);
     this.updatePosition(unitDestination);
-    unitDestination.hero = this.exportData();
+    // unitDestination.hero = this.exportData(); // FIXME:
 
     this.context.gameController!.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);
   };

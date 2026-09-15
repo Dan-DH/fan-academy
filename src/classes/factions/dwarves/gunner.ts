@@ -1,16 +1,14 @@
 import { EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
-import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 
 export class Gunner extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {

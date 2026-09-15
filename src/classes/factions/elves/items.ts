@@ -71,7 +71,7 @@ export class SoulHarvest extends Item {
     let totalDamageInflicted = 0;
 
     enemyHeroTiles?.forEach(tile => {
-      const hero = gameController.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
+      const hero = gameController.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
 
       if (!hero) throw new Error('SoulHarvest use() hero not found');
       if (hero.stats.isKO) return;
@@ -89,7 +89,7 @@ export class SoulHarvest extends Item {
     });
 
     // Get total amount of friendly units in the map, including KO'd ones
-    const friendlyUnits = gameController.board.units.filter(unit => unit.stats.belongsTo === this.stats.belongsTo);
+    const friendlyUnits = gameController.board.heroes.filter(unit => unit.stats.belongsTo === this.stats.belongsTo);
 
     // Divide damage dealt by that number + 3, then round to nearest 5. Formula: 1 / (units + 3) * damage
     const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);

@@ -10,6 +10,7 @@ import { Item } from "../factions/item";
 import { Tile } from "./tile";
 import { CrystalVisuals } from "./crystalVisuals";
 import { handleCrystalClick } from "../../utils/handleCrystalClick";
+import { fanAcademy } from "../../main";
 
 export class Crystal extends Phaser.GameObjects.Container {
   context: GameScene;
@@ -18,7 +19,8 @@ export class Crystal extends Phaser.GameObjects.Container {
   healthBar: HealthBar;
   unitCard: CrystalCard;
 
-  constructor(context: GameScene, data: ICrystal) {
+  constructor(data: ICrystal) {
+    const context = fanAcademy.scene.getScene('GameScene') as GameScene;
     const { x, y } = context.centerPoints[data.boardPosition];
     super(context, x, y);
     this.context = context;
@@ -41,18 +43,19 @@ export class Crystal extends Phaser.GameObjects.Container {
     return tile;
   }
 
+  // FIXME:
   updateTileData(): void {
-    const tile = this.getTile();
+    // const tile = this.getTile();
 
-    if (this.stats.debuffLevel < 0) {
-      this.stats.debuffLevel = 0;
-      this.updateCrystalDebuffAnimation(this.stats.debuffLevel);
-    }
+    // if (this.stats.debuffLevel < 0) {
+    //   this.stats.debuffLevel = 0;
+    //   this.updateCrystalDebuffAnimation(this.stats.debuffLevel);
+    // }
 
-    this.getMagicalDamageResistance();
-    this.getPhysicalDamageResistance();
+    // this.getMagicalDamageResistance();
+    // this.getPhysicalDamageResistance();
 
-    tile.crystal = { ...this.stats };
+    // tile.crystal = { ...this.stats };
   }
 
   receiveEngineerShield(engineerId: string): void {
@@ -123,10 +126,11 @@ export class Crystal extends Phaser.GameObjects.Container {
   removeFromGame(): void {
     // this.scene.sound.play(EGameSounds.CRYSTAL_DESTROY);
 
-    const tile = this.getTile();
-    tile.crystal = undefined;
-    tile.obstacle = false;
-    tile.tileType = ETiles.BASIC;
+    // FIXME:
+    // const tile = this.getTile();
+    // tile.crystal = undefined;
+    // tile.obstacle = false;
+    // tile.tileType = ETiles.BASIC;
 
     // Remove destoyed crystal from the board array
     const crystalArray = this.context.gameController!.board.crystals;

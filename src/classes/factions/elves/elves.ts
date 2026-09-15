@@ -1,16 +1,13 @@
-import { EActionType, EAttackType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EBoardUnit, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { useAnimation } from "../../../utils/unitAnimations";
 import { roundToFive } from "../../../utils/gameUtils";
 
 export abstract class DarkElf extends Hero {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
-
   equipFactionEquipment(handPosition: number): void {
     const soulStone = this.scene.add.image(this.x, this.y - 10, 'gameAtlas', 'soulStone').setOrigin(0.5).setDepth(100);
     useAnimation(soulStone);
@@ -42,6 +39,7 @@ export abstract class DarkElf extends Hero {
 export function createElvesPhantomData(data: Partial<IHero>): IHero {
   // Cannot be equipped, buffed or healed, disappears if KO'd
   return {
+    type: EBoardUnit.HERO,
     unitType: EHeroes.PHANTOM,
     baseHealth: 100,
     maxHealth: 100,

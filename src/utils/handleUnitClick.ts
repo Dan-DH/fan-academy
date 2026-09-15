@@ -105,8 +105,8 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
       // Stomp enemy KO'd units
       if (activeUnit instanceof Hero && activeUnit.stats.boardPosition < 45) {
-        const tilesInMovingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
-        const tilesInAttackingRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.ATTACK);
+        const tilesInMovingRange = context.gameController!.board.getUnitsInRange(activeUnit, ERange.MOVE);
+        const tilesInAttackingRange = context.gameController!.board.getUnitsInRange(activeUnit, ERange.ATTACK);
         const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const withinAttackingRange = tilesInAttackingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const necromancerStompCheck = context.gameController!.board.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
@@ -192,7 +192,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
         // Stomp friendly KO'd units, unless you are a Necromancer
         if (activeUnit.stats.boardPosition < 45) {
-          const tilesInRange = context.gameController!.board.getHeroTilesInRange(activeUnit, ERange.MOVE);
+          const tilesInRange = context.gameController!.board.getUnitsInRange(activeUnit, ERange.MOVE);
           const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
           if (
             unit.stats.isKO &&

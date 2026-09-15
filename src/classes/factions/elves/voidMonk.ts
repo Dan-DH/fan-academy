@@ -1,8 +1,6 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { isEnemySpawn } from "../../../utils/boardUtils";
@@ -10,8 +8,8 @@ import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class VoidMonk extends DarkElf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -49,15 +47,16 @@ export class VoidMonk extends DarkElf {
 
         if (!canBeAttacked(this, tile)) continue;
 
-        if (tile.hero) {
-          const hero = board.units.find(unit => unit.stats.unitId === tile.hero!.unitId);
-          if (hero) splashedEnemies.push(hero);
-        }
+        // FIXME:
+        // if (tile.hero) {
+        //   const hero = board.units.find(unit => unit.stats.unitId === tile.hero!.unitId);
+        //   if (hero) splashedEnemies.push(hero);
+        // }
 
-        if (tile.crystal) {
-          const crystal = board.crystals.find(c => c.stats.boardPosition === tile.crystal!.boardPosition);
-          if (crystal) splashedEnemies.push(crystal);
-        }
+        // if (tile.crystal) {
+        //   const crystal = board.crystals.find(c => c.stats.boardPosition === tile.crystal!.boardPosition);
+        //   if (crystal) splashedEnemies.push(crystal);
+        // }
       };
 
       // Apply damage to targets

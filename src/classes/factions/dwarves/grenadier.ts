@@ -1,16 +1,14 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { getAOETiles, getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
-import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 
 export class Grenadier extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -46,7 +44,7 @@ export class Grenadier extends Dwarf {
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK);
 
     enemyHeroTiles?.forEach(tile => {
-      const enemyHero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
+      const enemyHero = this.context.gameController!.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
       if (!enemyHero) throw new Error('Grenadier attack() hero not found');
 
       if (enemyHero.stats.boardPosition === target.stats.boardPosition) {

@@ -14,6 +14,7 @@ import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, useAnim
 import { HeroVisuals } from "./heroVisuals";
 import { enterSpecialTileCheck, exitSpecialTileCheck, removeFromBoard, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
+import { fanAcademy } from "../../main";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   context: GameScene;
@@ -23,9 +24,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   healthBar: HealthBar;
   isActiveValue = false;
 
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
+  constructor(data: IHero) {
+    const context = fanAcademy.scene.getScene('GameScene') as GameScene;
     const { x, y } = context.centerPoints[data.boardPosition];
     super(context, x, y);
+
     this.context = context;
     this.stats = data;
     this.stats.class = EClass.HERO;
@@ -38,7 +41,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.healthBar = new HealthBar(context, data, -38, -75);
     if (this.stats.boardPosition >= 45) this.healthBar.setVisible(false);
 
-    this.visuals = new HeroVisuals(context, data, tile);
+    this.visuals = new HeroVisuals(context, data);
 
     const hitArea = new Phaser.Geom.Rectangle(-35, -50, 75, 85); // centered on (0,0)
 
@@ -77,6 +80,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
   }
 
+  // FIXME:
   updatePosition(tile: Tile): void {
     const { x, y } = this.context.centerPoints[tile.boardPosition];
     this.x = x;
@@ -87,7 +91,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.setDepth(this.stats.row + 10);
     this.visuals.characterImage.setScale(1.2);
     this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
-    tile.hero = this.exportData();
     if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
     this.unitCard.updateCardData(this);
   }
@@ -383,9 +386,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return tile;
   }
 
+  // FIXME:
   updateTileData(): void {
-    const tile = this.getTile();
-    tile.hero = this.exportData();
+    // const tile = this.getTile();
+    // tile.hero = this.exportData();
   }
 
   shuffleInDeck(): void {
@@ -438,19 +442,20 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
     await moveAnimation(this, targetTile, tilesMoved);
 
+    // FIXME:
     // Stomp KO'd units
-    if (targetTile.hero && targetTile.hero.isKO) {
-      const hero = gameController.board.units.find(unit => unit.stats.unitId === targetTile.hero?.unitId);
-      if (!hero) console.error('move() Found heroData on targetTile, but no Hero to remove', targetTile);
-      // this.scene.sound.play(EGameSounds.HERO_STOMP);
-      hero?.removeFromGame(true);
-    }
+    // if (targetTile.hero && targetTile.hero.isKO) {
+    //   const hero = gameController.board.units.find(unit => unit.stats.unitId === targetTile.hero?.unitId);
+    //   if (!hero) console.error('move() Found heroData on targetTile, but no Hero to remove', targetTile);
+    //   // this.scene.sound.play(EGameSounds.HERO_STOMP);
+    //   hero?.removeFromGame(true);
+    // }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
     enterSpecialTileCheck(this, targetTile);
     this.updatePosition(targetTile);
 
-    startTile.removeHero();
+    // startTile.removeHero();
     this.unitCard.updateCardData(this);
     gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
   }
@@ -459,16 +464,17 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const startingPosition = this.stats.boardPosition;
     const gameController = this.context.gameController!;
 
+    // FIXME:
     // Stomp KO'd units and enemy phantoms
-    if (tile.hero && (tile.hero.isKO || tile.hero.unitType === EHeroes.PHANTOM)) {
-      const hero = gameController.board.units.find(unit => unit.stats.unitId === tile.hero?.unitId);
-      if (!hero) console.error('spawn() Found heroData on tile, but no Hero to remove', tile);
-      // this.scene.sound.play(EGameSounds.HERO_STOMP);
-      hero?.removeFromGame(true);
-    }
+    // if (tile.hero && (tile.hero.isKO || tile.hero.unitType === EHeroes.PHANTOM)) {
+    //   const hero = gameController.board.units.find(unit => unit.stats.unitId === tile.hero?.unitId);
+    //   if (!hero) console.error('spawn() Found heroData on tile, but no Hero to remove', tile);
+    //   // this.scene.sound.play(EGameSounds.HERO_STOMP);
+    //   hero?.removeFromGame(true);
+    // }
 
     gameController.hand.removeFromHand(this.stats.unitId);
-    gameController.board.units.push(this);
+    gameController.board.heroes.push(this);
 
     // Modify image
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
@@ -569,7 +575,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.unitCard.updateCardData(this);
 
-    const tile = this.getTile();
-    tile.hero = this.exportData();
+    // FIXME:
+    // const tile = this.getTile();
+    // tile.hero = this.exportData();
   }
 }

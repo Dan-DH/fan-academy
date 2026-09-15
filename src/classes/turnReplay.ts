@@ -89,7 +89,7 @@ export class TurnReplay {
   replayMove(action: ITurnAction): void {
     const actionTaken = action.action;
 
-    const hero = this.gameController.board.units.find(unit => unit.stats.boardPosition === action.actorPosition);
+    const hero = this.gameController.board.heroes.find(unit => unit.stats.boardPosition === action.actorPosition);
 
     const tile = this.gameController.board.getTileFromBoardPosition(action.targetPosition!);
 
@@ -100,8 +100,8 @@ export class TurnReplay {
   };
 
   async replayUnitAction(action: ITurnAction): Promise<void> {
-    const hero = this.gameController.board.units.find(unit => unit.stats.boardPosition === action.actorPosition);
-    const target = this.gameController.board.crystals.find(crystal => crystal.stats.boardPosition === action.targetPosition) ?? this.gameController.board.units.find(unit => unit.stats.boardPosition === action.targetPosition);
+    const hero = this.gameController.board.heroes.find(unit => unit.stats.boardPosition === action.actorPosition);
+    const target = this.gameController.board.crystals.find(crystal => crystal.stats.boardPosition === action.targetPosition) ?? this.gameController.board.heroes.find(unit => unit.stats.boardPosition === action.targetPosition);
     if (!hero || !target) throw new Error('Missing hero or target in attack or heal action');
 
     // VSCode says await has no effect on them, but it does work
@@ -124,7 +124,7 @@ export class TurnReplay {
     }
 
     if (!item.stats.dealsDamage) {
-      const hero = this.gameController.board.units.find(unit => unit.stats.boardPosition === action.targetPosition);
+      const hero = this.gameController.board.heroes.find(unit => unit.stats.boardPosition === action.targetPosition);
       if (!hero) throw new Error('Missing target in use action');
       await item.use(hero);
     }

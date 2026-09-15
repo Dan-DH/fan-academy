@@ -1,6 +1,4 @@
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
-import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
 import { Dwarf } from "./dwarves";
 import { Hero } from "../hero";
@@ -9,8 +7,8 @@ import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Annihilator extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {

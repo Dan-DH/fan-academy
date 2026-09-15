@@ -54,7 +54,7 @@ export class Inferno extends Item {
     const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
 
     enemyHeroTiles?.forEach(tile => {
-      const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
+      const hero = this.context.gameController!.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
       if (!hero) throw new Error('Inferno use() hero not found');
 
       // Inferno removes KO'd enemy units

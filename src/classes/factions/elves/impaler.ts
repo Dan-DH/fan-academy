@@ -1,16 +1,14 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Impaler extends DarkElf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   async attack(target: Hero | Crystal): Promise<void> {

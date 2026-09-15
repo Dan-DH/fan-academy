@@ -1,6 +1,5 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 
 import { Hero } from "../hero";
 import { Tile } from "../../board/tile";
@@ -12,8 +11,8 @@ import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Wizard extends Council {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -104,15 +103,16 @@ export class Wizard extends Council {
       return undefined;
     }
 
-    if (bestTarget.hero) {
-      const hero = board.units.find(unit => unit.stats.unitId === bestTarget.hero!.unitId);
-      if (hero) return hero;
-    }
+    // FIXME:
+    // if (bestTarget.hero) {
+    //   const hero = board.units.find(unit => unit.stats.unitId === bestTarget.hero!.unitId);
+    //   if (hero) return hero;
+    // }
 
-    if (bestTarget.crystal) {
-      const crystal = board.crystals.find(c => c.stats.boardPosition === bestTarget.crystal!.boardPosition);
-      if (crystal) return crystal;
-    }
+    // if (bestTarget.crystal) {
+    //   const crystal = board.crystals.find(c => c.stats.boardPosition === bestTarget.crystal!.boardPosition);
+    //   if (crystal) return crystal;
+    // }
 
     throw new Error("getNextTarget() Target found on tile, but not in board units or crystals");
   }

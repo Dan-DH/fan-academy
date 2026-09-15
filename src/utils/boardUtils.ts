@@ -1,4 +1,5 @@
 import { Crystal } from "../classes/board/crystal";
+import { mapTemplates } from "../classes/board/mapTemplates";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
@@ -26,6 +27,15 @@ export function getAOETiles(aoeAttack: Hero | Item,  targetTile: Tile): {
   };
 }
 
+export function isUnitOnEnemySpawn(context: GameScene, unit: Hero | Crystal): boolean {
+  const spawnMatch = context.gameController?.board.grid.find(t => t.boardPosition === unit.stats.boardPosition && t.tileType === ETiles.SPAWN);
+
+  if (spawnMatch) return context.isPlayerOne ? spawnMatch.col > 5 : spawnMatch.col < 5;
+
+  return false;
+}
+
+// FIXME: replace with isUnitOnEnemySpawn if possible
 export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
   return tile.tileType === ETiles.SPAWN && (context.isPlayerOne ? tile.col > 5 : tile.col < 5);
 }
@@ -101,8 +111,8 @@ export function removeFromBoard(hero: Hero): void {
   tile.removeHero();
 
   // Remove hero from board array
-  const index = hero.context.gameController!.board.units.findIndex(unit => unit.stats.unitId === hero.stats.unitId);
-  if (index !== -1) { hero.context.gameController!.board.units.splice(index, 1); }
+  const index = hero.context.gameController!.board.heroes.findIndex(unit => unit.stats.unitId === hero.stats.unitId);
+  if (index !== -1) { hero.context.gameController!.board.heroes.splice(index, 1); }
 
   checkUnitGameOver(hero);
 }

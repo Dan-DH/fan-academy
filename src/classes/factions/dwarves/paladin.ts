@@ -1,16 +1,14 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
-import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 
 export class Paladin extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {

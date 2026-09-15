@@ -60,7 +60,7 @@ export class Pulverizer extends Item {
   }
 
   directHitOnHero(targetTile: Tile): void {
-    const hero = this.context.gameController?.board.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
+    const hero = this.context.gameController?.board.heroes.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
     if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
     const directHitDamage = 600;
 
@@ -75,7 +75,7 @@ export class Pulverizer extends Item {
     const splashDamage = roundToFive(600 * 0.33);
 
     enemyHeroTiles?.forEach(tile => {
-      const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
+      const hero = this.context.gameController!.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
       hero!.getsDamaged(splashDamage, EAttackType.PHYSICAL, this);
       if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
     });

@@ -68,7 +68,7 @@ export class GameController {
     context.player1 = this.lastTurnState.player1;
     context.player2 = this.lastTurnState.player2;
 
-    this.board = new Board(context, this.lastTurnState.boardState);
+    this.board = new Board(context, this.lastTurnState.boardState, this.game.map);
     this.playerData = this.game.players.map(player => { return player.userData; });
     this.gameUI = new GameUI(context, this.board, this.playerData);
 
@@ -186,7 +186,7 @@ export class GameController {
     // Remove KO'd units from the board
     const unitsToRemove: Hero[] = [];
 
-    this.board.units.forEach(unit => {
+    this.board.heroes.forEach(unit => {
       if (unit.stats.isKO) {
         if (unit.stats.lastBreath) unitsToRemove.push(unit);
         if (!unit.stats.lastBreath) {

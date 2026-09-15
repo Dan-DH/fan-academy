@@ -1,17 +1,13 @@
 import { EActionType, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
-import { createElvesPhantomData, DarkElf } from "./elves";
-import { Phantom } from "./phantom";
+import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { generateFourDigitId } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Necromancer extends DarkElf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -23,18 +19,20 @@ export class Necromancer extends DarkElf {
 
       // this.scene.sound.play(EGameSounds.PHANTOM_SPAWN);
 
-      const phantom = new Phantom(this.context, createElvesPhantomData({
-        unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
-        boardPosition: target.stats.boardPosition,
-        belongsTo: this.stats.belongsTo,
-        row: target.stats.row,
-        col: target.stats.col
-      }), tile, true);
+      // FIXME:
+      // const phantom = new Phantom(this.context, createElvesPhantomData({
+      //   unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
+      //   boardPosition: target.stats.boardPosition,
+      //   belongsTo: this.stats.belongsTo,
+      //   row: target.stats.row,
+      //   col: target.stats.col
+      // }), tile, true);
 
       target.removeFromGame(true);
 
-      this.context.gameController?.board.units.push(phantom);
-      tile.hero = phantom.exportData();
+      // FIXME:
+      // this.context.gameController?.board.units.push(phantom);
+      // tile.hero = phantom.exportData();
 
       this.context.gameController!.afterAction(EActionType.SPAWN_PHANTOM, this.stats.boardPosition, target.stats.boardPosition);
 
