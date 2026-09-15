@@ -26,4 +26,6 @@ dist-ssr
 *.sln
 *.sw?
 
+build
+
 assetsd

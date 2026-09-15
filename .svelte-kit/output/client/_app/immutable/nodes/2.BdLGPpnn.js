@@ -1,0 +1,1 @@
+import{N as e,f as t,u as n}from"../chunks/DvWJxwlQ.js";import"../chunks/xihTtKlq.js";e();var r=t(`<h1 class="text-4xl"></h1>`);function i(e){var t=r();t.textContent=`hello`,n(e,t)}export{i as component};

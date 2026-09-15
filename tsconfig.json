@@ -5,8 +5,9 @@
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": false,
+    "module": "esnext",
+    "moduleResolution": "bundler",
 
     /* Bundler mode */
     "allowImportingTsExtensions": true,
@@ -21,12 +22,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "rewriteRelativeImportExtensions": true,
     "allowJs": true,
     "checkJs": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "sourceMap": true
   },
-  "include": ["_src", "env.d.ts"]
+  "include": ["src", "env.d.ts"]
 }
