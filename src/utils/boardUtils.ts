@@ -7,35 +7,20 @@ import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
 
-// FIXME: changed param from Tile to bp
-// FIXME: this now returns heroes and crystals, not tiles!!
-export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): {
-  enemyHeroes: Hero[],
-  enemyCrystals: Crystal[]
-} {
+export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (Hero | Crystal)[] {
   const board = aoeAttack.context.gameController?.board;
   if (!board) throw new Error('Inferno use() board not found');
 
   const areaOfEffect = board.get3x3AreaOfEffectTiles(boardPosition);
 
-  const enemyHeroes: Hero[] = [];
+  const result: (Hero | Crystal)[] = [];
   areaOfEffect?.forEach(tile => {
     board.units.forEach(u => {
-      if (u.stats.boardPosition === tile.boardPosition && u instanceof Hero && u.stats.belongsTo !== aoeAttack.stats.belongsTo) enemyHeroes.push(u);
+      if (u.stats.boardPosition === tile.boardPosition && u.stats.belongsTo !== aoeAttack.stats.belongsTo) result.push(u);
     });
   });
 
-  const enemyCrystals: Crystal[] = [];
-  areaOfEffect?.forEach(tile => {
-    board.units.forEach(u => {
-      if (u.stats.boardPosition === tile.boardPosition && u instanceof Crystal && u.stats.belongsTo !== aoeAttack.stats.belongsTo) enemyCrystals.push(u);
-    });
-  });
-
-  return {
-    enemyHeroes,
-    enemyCrystals
-  };
+  return result;
 }
 
 export function isUnitOnEnemySpawn(context: GameScene, unit: Hero | Crystal): boolean {

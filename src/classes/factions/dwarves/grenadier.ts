@@ -40,29 +40,15 @@ export class Grenadier extends Dwarf {
   }
 
   rangedAttack(target: Hero | Crystal): void {
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, target.getTile());
+    const enemyUnits = getAOETiles(this, target.stats.boardPosition);
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK);
 
-    enemyHeroTiles?.forEach(tile => {
-      const enemyHero = this.context.gameController!.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      if (!enemyHero) throw new Error('Grenadier attack() hero not found');
-
-      if (enemyHero.stats.boardPosition === target.stats.boardPosition) {
-        enemyHero.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
+    enemyUnits.forEach(u => {
+      if (u.stats.boardPosition === target.stats.boardPosition) {
+        u.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
       } else {
-        enemyHero.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this);
-        if (enemyHero.stats.isKO && enemyHero.stats.unitType === EHeroes.PHANTOM) enemyHero.removeFromGame();
-      }
-    });
-
-    enemyCrystalTiles.forEach(tile => {
-      const enemyCrystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!enemyCrystal) throw new Error('Grenadier attack() crystal not found');
-
-      if (enemyCrystal.stats.boardPosition === target.stats.boardPosition) {
-        enemyCrystal.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
-      } else {
-        enemyCrystal.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this, 0.5);
+        u.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this);
+        if (u instanceof Hero && u.stats.isKO && u.stats.unitType === EHeroes.PHANTOM) u.removeFromGame();
       }
     });
 

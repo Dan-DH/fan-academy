@@ -6,6 +6,7 @@ import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
+import { Crystal } from "../../board/crystal";
 
 export class DragonScale extends Item {
   constructor(context: GameScene, data: IItem) {
@@ -51,28 +52,22 @@ export class Inferno extends Item {
     // Damages enemy units and crystals, and removes enemy KO'd units
     const damage = 350;
 
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
+    const enemyUnits = getAOETiles(this, targetTile.boardPosition);
 
-    enemyHeroTiles?.forEach(tile => {
-      const hero = this.context.gameController!.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      if (!hero) throw new Error('Inferno use() hero not found');
+    enemyUnits?.forEach(u => {
+      if (u instanceof Crystal) u.getsDamaged(damage, EAttackType.MAGICAL, this);
 
-      // Inferno removes KO'd enemy units
-      if (hero.stats.isKO){
-        hero.removeFromGame(true);
-        return;
+      if (u instanceof Hero) {
+        // Inferno removes KO'd enemy units
+        if (u.stats.isKO){
+          u.removeFromGame(true);
+          return;
+        }
+
+        u.getsDamaged(damage, EAttackType.MAGICAL, this);
+
+        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
       }
-
-      hero.getsDamaged(damage, EAttackType.MAGICAL, this);
-
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
-    });
-
-    enemyCrystalTiles.forEach(tile => {
-      const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!crystal) throw new Error('Inferno use() crystal not found');
-
-      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
     });
 
     this.removeFromGame();

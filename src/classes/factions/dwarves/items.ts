@@ -67,21 +67,23 @@ export class Pulverizer extends Item {
   }
 
   directHitOnCrystal(crystal: Crystal): void {
-    const { enemyHeroes, enemyCrystals } = getAOETiles(this, crystal.stats.boardPosition);
-
     const directHitDamage = 600;
     const splashDamage = roundToFive(600 * 0.33);
 
-    enemyHeroes?.forEach(h => {
-      h!.getsDamaged(splashDamage, EAttackType.PHYSICAL, this);
-      if (h.stats.unitType === EHeroes.PHANTOM && h.stats.isKO) h.removeFromGame();
-    });
+    const enemyUnits = getAOETiles(this, crystal.stats.boardPosition);
+    enemyUnits.forEach(u => {
+      if (u instanceof Hero) {
+        u!.getsDamaged(splashDamage, EAttackType.PHYSICAL, this);
+        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
+        return;
+      }
 
-    enemyCrystals.forEach(c => {
-      if (c.stats.boardPosition === crystal.stats.boardPosition) {
-        c.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
-      } else {
-        c.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, 0.33);
+      if (u instanceof Crystal) {
+        if (u.stats.boardPosition === crystal.stats.boardPosition) {
+          u.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
+        } else {
+          u.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, 0.33);
+        }
       }
     });
   }

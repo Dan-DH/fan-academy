@@ -7,6 +7,7 @@ import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { roundToFive } from "../../../utils/gameUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
+import { Crystal } from "../../board/crystal";
 
 export class SoulStone extends Item {
   constructor(context: GameScene, data: IItem) {
@@ -65,27 +66,23 @@ export class SoulHarvest extends Item {
     // Damages enemy units and crystals but doesn't remove KO'd enemy units
     const damage = 100;
 
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
-
     // Keep track of the cumulative damage done (not attack power used) to enemy heroes (not crystals)
     let totalDamageInflicted = 0;
 
-    enemyHeroTiles?.forEach(tile => {
-      const hero = gameController.board.heroes.find(unit => unit.stats.boardPosition === tile.boardPosition);
+    const enemyUnits = getAOETiles(this, targetTile.boardPosition);
+    enemyUnits.forEach(u => {
+      if (u instanceof Crystal) {
+        u.getsDamaged(damage, EAttackType.MAGICAL, this);
+        return;
+      }
 
-      if (!hero) throw new Error('SoulHarvest use() hero not found');
-      if (hero.stats.isKO) return;
+      if (u instanceof Hero) {
+        if (u.stats.isKO) return;
 
-      totalDamageInflicted += hero.getsDamaged(damage, EAttackType.MAGICAL, this);
+        totalDamageInflicted += u.getsDamaged(damage, EAttackType.MAGICAL, this);
 
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
-    });
-
-    enemyCrystalTiles.forEach(tile => {
-      const crystal = gameController.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!crystal) throw new Error('SoulHarvest use() crystal not found');
-
-      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
+        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
+      }
     });
 
     // Get total amount of friendly units in the map, including KO'd ones
