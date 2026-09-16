@@ -50,11 +50,11 @@ declare module '$env/static/private' {
 	export const INFOPATH: string;
 	export const LANG: string;
 	export const LESS: string;
-	export const LOCAL_GIT_DIRECTORY: string;
 	export const LOGNAME: string;
 	export const LSCOLORS: string;
 	export const MACH_PORT_RENDEZVOUS_PEER_VALDATION: string;
 	export const MallocNanoZone: string;
+	export const OLDPWD: string;
 	export const OSLogRateLimit: string;
 	export const P9K_SSH: string;
 	export const PAGER: string;
@@ -84,7 +84,6 @@ declare module '$env/static/private' {
 	export const __CF_USER_TEXT_ENCODING: string;
 	export const ELECTRON_RUN_AS_NODE: string;
 	export const VSCODE_L10N_BUNDLE_LOCATION: string;
-	export const VSCODE_DOTNET_INSTALL_TOOL_ORIGINAL_HOME: string;
 	export const VITEST_VSCODE_LOG: string;
 	export const VITEST_VSCODE: string;
 	export const TEST: string;
@@ -195,11 +194,11 @@ declare module '$env/dynamic/private' {
 		INFOPATH: string;
 		LANG: string;
 		LESS: string;
-		LOCAL_GIT_DIRECTORY: string;
 		LOGNAME: string;
 		LSCOLORS: string;
 		MACH_PORT_RENDEZVOUS_PEER_VALDATION: string;
 		MallocNanoZone: string;
+		OLDPWD: string;
 		OSLogRateLimit: string;
 		P9K_SSH: string;
 		PAGER: string;
@@ -229,7 +228,6 @@ declare module '$env/dynamic/private' {
 		__CF_USER_TEXT_ENCODING: string;
 		ELECTRON_RUN_AS_NODE: string;
 		VSCODE_L10N_BUNDLE_LOCATION: string;
-		VSCODE_DOTNET_INSTALL_TOOL_ORIGINAL_HOME: string;
 		VITEST_VSCODE_LOG: string;
 		VITEST_VSCODE: string;
 		TEST: string;

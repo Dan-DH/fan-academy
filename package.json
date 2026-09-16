@@ -49,6 +49,8 @@
   "dependencies": {
     "@colyseus/sdk": "^0.18.1",
     "@iconify/css-svelte": "^1.0.1",
+    "@tanstack/svelte-query": "^6.2.0",
+    "@tanstack/svelte-query-devtools": "^6.2.0",
     "daisyui": "^5.7.38",
     "phaser": "^3.90.0"
   },
