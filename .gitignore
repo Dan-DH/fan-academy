@@ -26,11 +26,6 @@ dist-ssr
 *.sln
 *.sw?
 
-build
-
-*.svelte
-*.svelte-kit
-.svelte-kit
 
 node_modules
 
@@ -39,7 +34,8 @@ node_modules
 .vercel
 .netlify
 .wrangler
-/.svelte-kit
+.svelte-kit/
+build/
 /build
 /dist
 
