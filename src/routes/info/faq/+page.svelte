@@ -1,6 +1,7 @@
 <script lang="ts">
+
 </script>
 
-<div>
-    how to play
+<div class="">
+    <h1>FAQ</h1>
 </div>

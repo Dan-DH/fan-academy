@@ -10,10 +10,12 @@
 
 <QueryClientProvider client={queryClient}>
 
-  <Navbar/>
-  <div class="min-h-screen flex flex-col bg-base-100 text-base-content selection:bg-primary selection:text-primary-content">
-    <main class="flex-1 flex flex-col">
+  <div class="min-h-screen flex flex-col bg-[url('main_menu_image.webp')] bg-cover bg-center bg-no-repeat text-base-content selection:bg-primary selection:text-primary-content">
+    <Navbar/>
+    <main class="min-h-screen w-full bg-black/40 backdrop-blur-xs">
+    <section class="min-h-screen w-2/3">
       {@render children()}
+    </section>
     </main>
   </div>
 
