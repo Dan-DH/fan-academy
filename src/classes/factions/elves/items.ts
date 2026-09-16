@@ -1,6 +1,5 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
@@ -10,8 +9,8 @@ import { useAnimation } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 
 export class SoulStone extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -21,8 +20,8 @@ export class SoulStone extends Item {
 }
 
 export class ManaVial extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -47,8 +46,8 @@ export class ManaVial extends Item {
 }
 
 export class SoulHarvest extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(targetTile: Tile): void {

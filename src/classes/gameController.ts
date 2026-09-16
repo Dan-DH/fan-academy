@@ -350,7 +350,7 @@ export class GameController {
     const targetNewTile = this.board.getTileFromCoordinates(newPosition.row, newPosition.col);
 
     if (!targetNewTile) return;
-    if (targetNewTile.crystal || targetNewTile.hero) return;
+    if (this.board.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
     if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
@@ -358,8 +358,6 @@ export class GameController {
     await forcedMoveAnimation(this.context, target, targetNewTile, angle);
 
     target.updatePosition(targetNewTile);
-    targetNewTile.hero = target.exportData();
-    targetTile.removeHero();
   }
 
   async pullEnemy(attacker: Hero, target: Hero): Promise<void> {
@@ -375,7 +373,7 @@ export class GameController {
     const targetNewTile = this.board.getTileFromCoordinates(newPosition.row, newPosition.col);
 
     if (!targetNewTile) return;
-    if (targetNewTile.crystal || targetNewTile.hero) return;
+    if (this.board.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
     if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
@@ -383,8 +381,6 @@ export class GameController {
     await forcedMoveAnimation(this.context, target, targetNewTile);
 
     target.updatePosition(targetNewTile);
-    targetNewTile.hero = target.exportData();
-    targetTile.removeHero();
   }
 
   updateCrystals(attackerBelongsTo: number, increase: boolean): void {

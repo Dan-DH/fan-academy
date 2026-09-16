@@ -1,11 +1,10 @@
 import { IItem } from "../../interfaces/gameInterface";
-import GameScene from "../../scenes/game.scene";
 import { Hero } from "./hero";
 import { Item } from "./item";
 
 export class ShiningHelm extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -16,8 +15,8 @@ export class ShiningHelm extends Item {
 }
 
 export class RuneMetal extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -29,8 +28,8 @@ export class RuneMetal extends Item {
 }
 
 export class SuperCharge extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {

@@ -1,6 +1,5 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { getAOETiles } from "../../../utils/boardUtils";
@@ -8,20 +7,21 @@ import { pulverizerAnimation, useAnimation } from "../../../utils/unitAnimations
 import { roundToFive } from "../../../utils/gameUtils";
 import { Crystal } from "../../board/crystal";
 
-export class DragonScale extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
-  }
+// FIXME: using the council's one
+// export class DragonScale extends Item {
+//   constructor(data: IItem) {
+//     super(data);
+//   }
 
-  use(target: Hero): void {
-    target.equipFactionEquipment(this.stats.boardPosition);
-    this.removeFromGame();
-  }
-}
+//   use(target: Hero): void {
+//     target.equipFactionEquipment(this.stats.boardPosition);
+//     this.removeFromGame();
+//   }
+// }
 
 export class DwarvenBrew extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -43,9 +43,9 @@ export class DwarvenBrew extends Item {
 }
 
 export class Pulverizer extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
-  };
+  constructor(data: IItem) {
+    super(data);
+  }
 
   use(target: Hero | Crystal): void {
     const pulverizerImage = this.scene.add.image(target.x, target.y, 'gameAtlas', 'pulverizer').setDepth(100);

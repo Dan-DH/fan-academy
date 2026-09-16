@@ -1,5 +1,6 @@
 import { EClass, EItems } from "../../enums/gameEnums";
 import { IItem } from "../../interfaces/gameInterface";
+import { fanAcademy } from "../../main";
 import GameScene from "../../scenes/game.scene";
 import { handleUnitClick } from "../../utils/handleUnitClick";
 import { ItemCard } from "../cards/itemCard";
@@ -11,9 +12,11 @@ export abstract class Item extends Phaser.GameObjects.Container {
   context: GameScene;
   unitCard: ItemCard;
 
-  constructor(context: GameScene, data: IItem) {
+  constructor(data: IItem) {
+    const context = fanAcademy.scene.getScene('GameScene') as GameScene;
     const { x, y } = context.centerPoints[data.boardPosition];
     super(context, x, y - 20);
+
     this.context = context;
     this.stats = data;
     this.stats.class = EClass.ITEM;

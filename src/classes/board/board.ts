@@ -84,11 +84,17 @@ export class Board {
     return result;
   }
 
-  getBoardState(): (Hero | Crystal)[] {
-    // TODO: probably need to transform this into something thinner for the BE
-    return [...this.heroes, ...this.crystals];
+  // FIXME: confused about this one. It was returning the classes and it game an error on gameController -> boardState: this.board.getBoardState()
+  // TODO: probably need to transform this into something thinner for the BE
+  getBoardState(): (IHero | ICrystal)[] {
+    const result: (IHero | ICrystal)[] = [];
+
+    [...this.heroes, ...this.crystals].forEach(u => result.push(u.stats));
+
+    return result;
   }
 
+  // FIXME: did I delete this?
   clearHighlights() {
     this.grid.forEach(tile => tile.clearHighlight());
   }

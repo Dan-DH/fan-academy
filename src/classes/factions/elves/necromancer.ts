@@ -20,6 +20,7 @@ export class Necromancer extends DarkElf {
       // this.scene.sound.play(EGameSounds.PHANTOM_SPAWN);
 
       // FIXME:
+      console.log(tile);
       // const phantom = new Phantom(this.context, createElvesPhantomData({
       //   unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
       //   boardPosition: target.stats.boardPosition,

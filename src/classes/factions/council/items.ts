@@ -1,6 +1,5 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
@@ -9,8 +8,8 @@ import { useAnimation } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 
 export class DragonScale extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -20,8 +19,8 @@ export class DragonScale extends Item {
 }
 
 export class HealingPotion extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -40,9 +39,9 @@ export class HealingPotion extends Item {
 }
 
 export class Inferno extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
-  };
+  constructor(data: IItem) {
+    super(data);
+  }
 
   use(targetTile: Tile): void {
     const infernoImage = this.scene.add.image(targetTile.x, targetTile.y, 'gameAtlas', 'infernoShockWave').setDepth(100);

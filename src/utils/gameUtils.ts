@@ -56,11 +56,12 @@ export function getActionClass(action: EActionType): EActionClass {
   return [EActionType.PASS, EActionType.DRAW, EActionType.REMOVE_UNITS].includes(action) ? EActionClass.AUTO : EActionClass.USER;
 }
 
-export function canBeAttacked(attacker: Hero, tile: Tile): boolean {
-  let result = false;
+export function canBeAttacked(_attacker: Hero, _tile: Tile): boolean {
+  const result = false;
 
-  if (tile.hero && tile.hero.belongsTo !== attacker.stats.belongsTo && !tile.hero.isKO) result = true;
-  if (tile.crystal && tile.crystal.belongsTo !== attacker.stats.belongsTo) result = true;
+  // FIXME: adapt check
+  // if (tile.hero && tile.hero.belongsTo !== attacker.stats.belongsTo && !tile.hero.isKO) result = true;
+  // if (tile.crystal && tile.crystal.belongsTo !== attacker.stats.belongsTo) result = true;
 
   return result;
 }

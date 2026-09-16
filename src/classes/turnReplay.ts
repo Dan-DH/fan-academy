@@ -65,8 +65,8 @@ export class TurnReplay {
       const opponentData = this.context.isPlayerOne ? this.gameController.lastTurnState.player2 : this.gameController.lastTurnState.player1;
 
       opponentData?.factionData.unitsInHand.forEach(unit => {
-        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(this.context, unit as IHero).setVisible(false).setInteractive(false));
-        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(this.context, unit as IItem).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(unit as IHero).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(unit as IItem).setVisible(false).setInteractive(false));
       });
     }
 

@@ -1,4 +1,3 @@
-import { Tile } from "../classes/board/tile";
 import { Archer } from "../classes/factions/council/archer";
 import { Cleric } from "../classes/factions/council/cleric";
 import { DragonScale, HealingPotion, Inferno } from "../classes/factions/council/items";
@@ -23,24 +22,23 @@ import { Item } from "../classes/factions/item";
 import { ShiningHelm, SuperCharge, RuneMetal } from "../classes/factions/sharedItems";
 import { EItems, EHeroes } from "../enums/gameEnums";
 import { IItem, IHero } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
 
-export function createNewItem(context: GameScene, itemData: IItem): Item {
+export function createNewItem(itemData: IItem): Item {
   const itemTypes: Record<EItems, () => Item> = {
-    [EItems.SHINING_HELM]: () => new ShiningHelm(context, itemData),
-    [EItems.SUPERCHARGE]: () => new SuperCharge(context, itemData),
-    [EItems.RUNE_METAL]: () => new RuneMetal(context, itemData),
+    [EItems.SHINING_HELM]: () => new ShiningHelm(itemData),
+    [EItems.SUPERCHARGE]: () => new SuperCharge(itemData),
+    [EItems.RUNE_METAL]: () => new RuneMetal(itemData),
 
-    [EItems.DRAGON_SCALE]: () => new DragonScale(context, itemData),
-    [EItems.HEALING_POTION]: () => new HealingPotion(context, itemData),
-    [EItems.INFERNO]: () => new Inferno(context, itemData),
+    [EItems.DRAGON_SCALE]: () => new DragonScale(itemData),
+    [EItems.HEALING_POTION]: () => new HealingPotion(itemData),
+    [EItems.INFERNO]: () => new Inferno(itemData),
 
-    [EItems.MANA_VIAL]: () => new ManaVial(context, itemData),
-    [EItems.SOUL_HARVEST]: () => new SoulHarvest(context, itemData),
-    [EItems.SOUL_STONE]: () => new SoulStone(context, itemData),
+    [EItems.MANA_VIAL]: () => new ManaVial(itemData),
+    [EItems.SOUL_HARVEST]: () => new SoulHarvest(itemData),
+    [EItems.SOUL_STONE]: () => new SoulStone(itemData),
 
-    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(context, itemData),
-    [EItems.PULVERIZER]: () => new Pulverizer(context, itemData)
+    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(itemData),
+    [EItems.PULVERIZER]: () => new Pulverizer(itemData)
   };
 
   const createItem = itemTypes[itemData.itemType];

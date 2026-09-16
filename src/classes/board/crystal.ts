@@ -1,5 +1,5 @@
 import { EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
-import { ICrystal, IHero } from "../../interfaces/gameInterface";
+import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
 import { CrystalCard } from "../cards/crystalCard";
