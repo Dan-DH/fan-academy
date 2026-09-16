@@ -25,11 +25,13 @@ export class Board {
   heroes: Hero[];
   crystals: Crystal[]; // keep heroes and crystal separated for the time being
   grid: Tile[]; // FIXME: board state. Using atm
+  assaultTiles: Tile[];
 
   // TODO: we need to pass the array of units and crystal (could be a single array) from the BE
   constructor(context: GameScene, boardUnits: (IHero | ICrystal)[], map: number) {
     this.context = context;
     this.grid = this.createTileGrid(map);
+    this.assaultTiles = this.grid.filter(t => t.tileType === ETiles.CRYSTAL_DAMAGE); // FIXME: check if we can use this often enough to warrant having it as a property
     const createdBoardUnits = this.createBoardUnits(boardUnits);
     this.heroes = createdBoardUnits.heroes;
     this.crystals = createdBoardUnits.crystals;
@@ -210,7 +212,7 @@ export class Board {
   highlightTeleportOptions(hero: Hero) {
     // Teleporting tile
     if (hero.getTile().tileType === ETiles.TELEPORTER) {
-      const teleportTiles: Tile[] = this.grid.filter(tile => tile.tileType === ETiles.TELEPORTER && !this.isTileOccupied(tile.boardPosition));
+      const teleportTiles: Tile[] = this.grid.filter(tile => tile.tileType === ETiles.TELEPORTER && !this.isTileOccupiedExcludingKOs(tile.boardPosition));
       this.highlightTiles(teleportTiles);
     }
 
@@ -307,7 +309,7 @@ export class Board {
 
       if (
         !isEnemySpawn(this.context, t) &&
-        !this.isTileOccupied(t.boardPosition)
+        !this.isTileOccupiedExcludingKOs(t.boardPosition)
       ) inRangeTiles.add(t);
     });
 
@@ -318,9 +320,6 @@ export class Board {
     let range: number;
 
     switch (rangeType) {
-      case ERange.MOVE:
-        throw new Error('getUnitsInRange() used for a movement action. User getTilesInRange instead');
-
       case ERange.ATTACK:
         range = hero.stats.attackRange;
         break;
@@ -350,10 +349,13 @@ export class Board {
     return [...inRangeUnits];
   }
 
-  get3x3AreaOfEffectTiles(tile: Tile): Tile[] {
+  // FIXME: change parameter from Tile to bp
+  get3x3AreaOfEffectTiles(boardPosition: number): Tile[] {
     const totalRows = 4;
     const totalCols = 8;
     const areaTiles: Tile[] = [];
+
+    const tile = this.getTileFromBoardPosition(boardPosition);
 
     // Loop through the 3x3 square centered on the target tile
     for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
@@ -687,11 +689,26 @@ export class Board {
   }): boolean { return unit.x < 0 || unit.x >= 9 || unit.y < 0 || unit.y >= 5 ;}
 
   // FIXME: will have to fix once I add the bitmap
-  getAliveUnitsOnAssaultTiles(belongsTo: number): void {
-    // return this.grid.filter(tile => tile.tileType === ETiles.CRYSTAL_DAMAGE && tile.hero && tile.hero.belongsTo !== belongsTo && !tile.hero.isKO).map(tile => {return tile.hero!;});
+  getAliveEnemyUnitsOnAssaultTiles(belongsTo: number): Hero[] {
+    const result: Hero[] = [];
+
+    this.assaultTiles.forEach(t => {
+      const matchedUnit = this.units.find(u => u.stats.boardPosition === t.boardPosition && u.stats.belongsTo !== belongsTo && u instanceof Hero && !u.stats.isKO);
+      if (matchedUnit) result.push(matchedUnit as Hero);
+    });
+
+    return result;
   }
 
-  isTileOccupied(boardPosition: number): boolean {
+  isTileOccupiedExcludingKOs(boardPosition: number): boolean {
     return !!this.units.find(u => u instanceof Crystal ? u.stats.boardPosition === boardPosition : !u.stats.isKO && u.stats.boardPosition === boardPosition);
+  }
+
+  isTileOccupiedIncludingKOs(boardPosition: number): boolean {
+    return !!this.units.find(u => u.stats.boardPosition === boardPosition);
+  }
+
+  isTileOccupiedByEnemiesIncludingKOs(belongsTo: number, boardPosition: number): boolean {
+    return !!this.units.find(u => u.stats.boardPosition === boardPosition && u.stats.belongsTo !== belongsTo);
   }
 }

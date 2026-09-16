@@ -9,7 +9,7 @@ import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleTileClick(tile: Tile, context: GameScene): void {
   tile.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
-    if (context.currentGame.status === EGameStatus.FINISHED || tile.hero || tile.crystal) return;
+    if (context.currentGame.status === EGameStatus.FINISHED || context.gameController?.board.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
 
     visibleUnitCardCheck(context);
     context.longPressStart = context.time.now;
@@ -17,8 +17,8 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     // Handle right click: show card if empty special tile
     if (pointer.button === 2) {
       const isSpecial = tile.tileType !== ETiles.BASIC && tile.tileType !== ETiles.CRYSTAL;
-      const isEmpty = !tile.hero && !tile.crystal;
-      if (isSpecial && isEmpty) {
+      // const isEmpty = !tile.hero && !tile.crystal; // FIXME: I don't think we need this if we check for empty tile above
+      if (isSpecial) {
         tile.setDepth(1001);
         if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);
         context.visibleUnitCard = tile;
@@ -56,7 +56,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
 
   // Handle long press on the tile
   tile.on('pointerup', () => {
-    if (context.currentGame.status === EGameStatus.FINISHED || tile.hero || tile.crystal) return;
+    if (context.currentGame.status === EGameStatus.FINISHED || context.gameController?.board.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
 
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       tile.setDepth(1001);

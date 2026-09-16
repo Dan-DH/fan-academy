@@ -1,5 +1,4 @@
 import { Crystal } from "../classes/board/crystal";
-import { mapTemplates } from "../classes/board/mapTemplates";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
@@ -8,22 +7,34 @@ import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
 
-export function getAOETiles(aoeAttack: Hero | Item,  targetTile: Tile): {
-  enemyHeroTiles: Tile[],
-  enemyCrystalTiles: Tile[]
+// FIXME: changed param from Tile to bp
+// FIXME: this now returns heroes and crystals, not tiles!!
+export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): {
+  enemyHeroes: Hero[],
+  enemyCrystals: Crystal[]
 } {
   const board = aoeAttack.context.gameController?.board;
   if (!board) throw new Error('Inferno use() board not found');
 
-  const areaOfEffect = board.get3x3AreaOfEffectTiles(targetTile);
+  const areaOfEffect = board.get3x3AreaOfEffectTiles(boardPosition);
 
-  const enemyHeroTiles = areaOfEffect?.filter(tile => tile.hero && tile.hero?.belongsTo !== aoeAttack.stats.belongsTo);
+  const enemyHeroes: Hero[] = [];
+  areaOfEffect?.forEach(tile => {
+    board.units.forEach(u => {
+      if (u.stats.boardPosition === tile.boardPosition && u instanceof Hero && u.stats.belongsTo !== aoeAttack.stats.belongsTo) enemyHeroes.push(u);
+    });
+  });
 
-  const enemyCrystalTiles = areaOfEffect?.filter(tile => tile.crystal && tile.crystal?.belongsTo !== aoeAttack.stats.belongsTo);
+  const enemyCrystals: Crystal[] = [];
+  areaOfEffect?.forEach(tile => {
+    board.units.forEach(u => {
+      if (u.stats.boardPosition === tile.boardPosition && u instanceof Crystal && u.stats.belongsTo !== aoeAttack.stats.belongsTo) enemyCrystals.push(u);
+    });
+  });
 
   return {
-    enemyHeroTiles,
-    enemyCrystalTiles
+    enemyHeroes,
+    enemyCrystals
   };
 }
 
@@ -105,31 +116,12 @@ export function getDistanceToTarget(hero: Hero, target: Hero | Crystal): number 
   return getGridDistance(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col );
 }
 
+// FIXME: may be able to remove this method and use the code in-line
 export function removeFromBoard(hero: Hero): void {
-  // Remove hero data from tile
-  const tile = hero.getTile();
-  tile.removeHero();
-
-  // Remove hero from board array
   const index = hero.context.gameController!.board.heroes.findIndex(unit => unit.stats.unitId === hero.stats.unitId);
   if (index !== -1) { hero.context.gameController!.board.heroes.splice(index, 1); }
 
   checkUnitGameOver(hero);
-}
-
-export function getKeyMapTiles(tiles: Tile[]): Tile[] {
-  const result: Tile[] = [];
-
-  for (const tile of tiles) {
-    if (tile.tileType !== ETiles.BASIC) {
-      result.push(tile);
-      continue;
-    }
-
-    if (tile.hero) result.push(tile);
-  }
-
-  return result;
 }
 
 export function createBasicTileData(coordinates: Coordinates): ITile {
@@ -140,7 +132,6 @@ export function createBasicTileData(coordinates: Coordinates): ITile {
     col: coordinates.col!,
     boardPosition: coordinates.boardPosition!,
     tileType: ETiles.BASIC,
-    obstacle: false,
     hero: undefined,
     crystal: undefined
   };

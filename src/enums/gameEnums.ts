@@ -117,7 +117,7 @@ export enum ETiles {
 }
 
 export enum ERange {
-  MOVE = 'move',
+  // MOVE = 'move', // FIXME: remove if not needed
   ATTACK = 'attack',
   HEAL = 'healing',
   BUFF = 'buff'

@@ -1,4 +1,4 @@
-import { ETiles, EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
+import { EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
 import { ICrystal, IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
@@ -84,7 +84,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     } else {
       // this.scene.sound.play(EGameSounds.CRYSTAL_DAMAGE_BUFF);
 
-      const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getAliveUnitsOnAssaultTiles(this.stats.belongsTo);
+      const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getAliveEnemyUnitsOnAssaultTiles(this.stats.belongsTo);
 
       if (enemyUnitsOnAssaultTiles?.length) enemyUnitsOnAssaultTiles.forEach(unitOnTile => {
         assaultBoostDamage += this.calculateAssaultBoost(unitOnTile);
@@ -225,10 +225,10 @@ export class Crystal extends Phaser.GameObjects.Container {
     return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
   }
 
-  calculateAssaultBoost(unitOnTile: IHero): number {
-    if (unitOnTile.unitType === EHeroes.ENGINEER) return 420;
+  calculateAssaultBoost(unitOnTile: Hero): number {
+    if (unitOnTile.stats.unitType === EHeroes.ENGINEER) return 420;
 
-    if (unitOnTile.faction === EFaction.DWARVES) return 360;
+    if (unitOnTile.stats.faction === EFaction.DWARVES) return 360;
 
     return 300;
   }
