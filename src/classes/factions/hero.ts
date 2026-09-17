@@ -186,7 +186,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     if (rangeModifier === 0) rangeModifier = 1;
     const runeMetalBuff = this.status.has(StatusEffects.RUNE_METAL) ? 1.5 : 1;
-    const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
+    const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura * 0.05 + 1;
@@ -202,7 +202,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
 
-    if (this.stats.physicalResistanceTile) {
+    if (this.status.has(StatusEffects.PHYSICAL_RESISTANCE_TILE)) {
       if (this.stats.faction === EFaction.DWARVES) {
         total += this.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
       } else {
@@ -221,7 +221,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     if (this.status.has(StatusEffects.SHINING_HELM)) total += 20;
 
-    if (this.stats.magicalResistanceTile) {
+    if (this.status.has(StatusEffects.MAGICAL_RESISTANCE_TILE)) {
       if (this.stats.faction === EFaction.DWARVES) {
         total += this.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
       } else {
@@ -260,7 +260,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
 
     const runeMetalBuff = this.status.has(StatusEffects.RUNE_METAL) ? 1.5 : 1;
-    const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
+    const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;

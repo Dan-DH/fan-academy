@@ -297,7 +297,7 @@ export class Board {
 
   getTilesInMoveRange(hero: Hero): Tile[] {
     let speedTileBonus = 0;
-    if (hero.stats.speedTile) {
+    if (hero.status. has(StatusEffects.SPEED_TILE)) {
       if (hero instanceof Dwarf) {
         speedTileBonus = hero instanceof Engineer ? 4 : 3;
       } else {

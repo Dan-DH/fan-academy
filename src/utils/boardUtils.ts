@@ -6,6 +6,7 @@ import { ETiles } from "../enums/gameEnums";
 import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { checkUnitGameOver, getGridDistance } from "./gameUtils";
+import { StatusEffects } from "./statuses";
 
 export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (Hero | Crystal)[] {
   const board = aoeAttack.context.gameController?.board;
@@ -55,19 +56,19 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
     // this.scene.sound.play(EGameSounds.CRYSTAL_TILE);
   };
   if (tile.tileType === ETiles.POWER) {
-    hero.stats.attackTile = true;
+    hero.status.add(StatusEffects.POWER_TILE);
     // this.scene.sound.play(EGameSounds.SWORD_TILE);
   };
   if (tile.tileType === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalResistanceTile = true;
+    hero.status.add(StatusEffects.MAGICAL_RESISTANCE_TILE);
     // this.scene.sound.play(EGameSounds.HELM_TILE);
   };
   if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalResistanceTile = true;
+    hero.status.add(StatusEffects.PHYSICAL_RESISTANCE_TILE);
     // this.scene.sound.play(EGameSounds.SHIELD_TILE);
   };
   if (tile.tileType === ETiles.SPEED) {
-    hero.stats.speedTile = true;
+    hero.status.add(StatusEffects.SPEED_TILE);
     // TODO: missing sound bite
   };
 
@@ -78,10 +79,10 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
 
 export function removeSpecialTile(hero: Hero, tile: Tile): void {
   if (tile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
-  if (tile.tileType === ETiles.POWER) hero.stats.attackTile = false;
-  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = false;
-  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = false;
-  if (tile.tileType === ETiles.SPEED) hero.stats.speedTile = false;
+  if (tile.tileType === ETiles.POWER) hero.status.remove(StatusEffects.POWER_TILE);
+  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.status.remove(StatusEffects.MAGICAL_RESISTANCE_TILE);
+  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.status.remove(StatusEffects.PHYSICAL_RESISTANCE_TILE);
+  if (tile.tileType === ETiles.SPEED) hero.status.remove(StatusEffects.SPEED_TILE);
 
   hero.visuals.stopSpecialTileAnimation();
   hero.unitCard.updateCardData(hero);

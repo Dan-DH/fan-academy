@@ -1,22 +1,28 @@
 export const StatusEffects = {
   NONE: 0,
-  RUNE_METAL: 1 << 0,
-  SHINING_HELM: 1 << 1,
-  SUPER_CHARGE: 1 << 2,
-  FACTION_EQUIPMENT: 1 << 3,
-  MANA_VIAL: 1 << 4,
-  PRIESTESS_DEBUFF: 1 << 5,
-  DWARVEN_BREW: 1 << 6,
-  ANNIHILATOR_DEBUFF: 1 << 7,
-  ENGINEER_SHIELD: 1 << 8
-  // MEAT: 1 << 9,
-  // BLOODLUST: 1 << 10,
-  // KNEELING: 1 << 11,
-  // ENGINEER_ATTACK_BUFF: 1 << 12,
-  // JARATE: 1 << 13,
-  // SANDVICH: 1 << 14,
-  // MONK_DEBUFF: 1 << 15,
-  // POISONER_DEBUFF: 1 << 16
+  POWER_TILE: 1 << 0,
+  PHYSICAL_RESISTANCE_TILE: 1 << 1,
+  MAGICAL_RESISTANCE_TILE: 1 << 2,
+  CRYSTAL_DAMAGE_TILE: 1 << 3,
+  TELEPORTER_TILE: 1 << 4,
+  SPEED_TILE: 1 << 5,
+  RUNE_METAL: 1 << 6,
+  SHINING_HELM: 1 << 7,
+  SUPER_CHARGE: 1 << 8,
+  FACTION_EQUIPMENT: 1 << 9,
+  MANA_VIAL: 1 << 10,
+  PRIESTESS_DEBUFF: 1 << 11,
+  DWARVEN_BREW: 1 << 12,
+  ANNIHILATOR_DEBUFF: 1 << 13,
+  ENGINEER_SHIELD: 1 << 14
+  // MEAT: 1 << 15,
+  // BLOODLUST: 1 << 16,
+  // KNEELING: 1 << 17,
+  // ENGINEER_ATTACK_BUFF: 1 << 18,
+  // JARATE: 1 << 19,
+  // SANDVICH: 1 << 20,
+  // MONK_DEBUFF: 1 << 21,
+  // POISONER_DEBUFF: 1 << 22
 };
 
 export class StatusTracker {

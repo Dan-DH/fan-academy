@@ -36,6 +36,7 @@ export abstract class DarkElf extends Hero {
   }
 }
 
+// FIXME: to be replaced
 export function createElvesPhantomData(data: Partial<IHero>): IHero {
   // Cannot be equipped, buffed or healed, disappears if KO'd
   return {
@@ -54,38 +55,6 @@ export function createElvesPhantomData(data: Partial<IHero>): IHero {
     magicalDamageResistance: 0,
     baseMagicalDamageResistance: 0,
     canHeal: false,
-    magicalResistanceTile: data.magicalResistanceTile ?? false,
-    physicalResistanceTile: data.physicalResistanceTile ?? false,
-    ...createGenericElvesData(data)
-  };
-}
-
-export function createGenericElvesData(data: Partial<IHero>): {
-  class: EClass,
-  faction: EFaction,
-  unitId: string,
-  boardPosition: number,
-  isKO: boolean,
-  belongsTo: number,
-  lastBreath: boolean,
-  row: number,
-  col: number,
-  attackTile: boolean,
-  speedTile: boolean,
-  buffRange: number,
-  canBuff: boolean,
-  paladinAura: number,
-  unitsConsumed: number,
-  status: number
-  // factionEquipment: boolean,
-  // runeMetal: boolean,
-  // shiningHelm: boolean,
-  // superCharge: boolean,
-  // priestessDebuff: boolean,
-  // annihilatorDebuff: boolean,
-  // dwarvenBrew: boolean
-} {
-  return {
     class: EClass.HERO,
     faction: EFaction.DARK_ELVES,
     unitId: data.unitId!,
@@ -95,19 +64,10 @@ export function createGenericElvesData(data: Partial<IHero>): {
     belongsTo: data.belongsTo ?? 1,
     row: data.row ?? 0,
     col: data.col ?? 0,
-    attackTile: data.attackTile ?? false,
-    speedTile: data.speedTile ?? false,
     buffRange: 0,
     canBuff: false,
     paladinAura: data.paladinAura ?? 0,
     unitsConsumed: data.unitsConsumed ?? 0,
     status: 0
-    // factionEquipment: data.factionEquipment ?? false,
-    // runeMetal: data.runeMetal ?? false,
-    // shiningHelm: data.shiningHelm ?? false,
-    // superCharge: data.superCharge ?? false,
-    // priestessDebuff: data.priestessDebuff ?? false,
-    // annihilatorDebuff: data.annihilatorDebuff ?? false,
-    // dwarvenBrew: data.dwarvenBrew ?? false
   };
 }
