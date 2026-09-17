@@ -58,13 +58,14 @@ export class GameController {
     this.context = context;
     this.game = structuredClone(context.currentGame!);
 
-    // If we are in a replay we set everything to the last turn
+    // If we are in a replay we set the state to the first action of last turn
     if (context.triggerReplay) {
       this.lastTurnState =  structuredClone(this.game.previousTurn[0]);
     } else {
       this.lastTurnState =  structuredClone(this.game.previousTurn[this.game.previousTurn.length - 1]);
     }
 
+    // FIXME: can we use the registry for this.
     context.player1 = this.lastTurnState.player1;
     context.player2 = this.lastTurnState.player2;
 
@@ -104,7 +105,6 @@ export class GameController {
     this.blockingLayer.on('pointerdown', () => {
       context.scene.restart({
         userId: context.userId,
-        colyseusClient: context.colyseusClient,
         currentGame: context.currentGame,
         triggerReplay: false
       });

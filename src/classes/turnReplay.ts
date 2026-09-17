@@ -53,7 +53,6 @@ export class TurnReplay {
 
     this.context.scene.restart({
       userId: this.context.userId,
-      colyseusClient: this.context.colyseusClient,
       currentGame: this.context.currentGame,
       triggerReplay: false
     } );

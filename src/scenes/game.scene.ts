@@ -8,11 +8,11 @@ import { Tile } from "../classes/board/tile";
 import { Crystal } from "../classes/board/crystal";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
 import { TurnReplay } from "../classes/turnReplay";
-import { Client, Room } from "@colyseus/sdk";
+import { Room } from "@colyseus/sdk";
 
 export default class GameScene extends Phaser.Scene {
+  // FIXME: check which properties we can remove here
   userId!: string;
-  colyseusClient!: Client;
   centerPoints: Coordinates[];
 
   currentGame!: IGame;
@@ -44,7 +44,6 @@ export default class GameScene extends Phaser.Scene {
 
   init(data: {
     userId: string,
-    colyseusClient: Client,
     currentGame: IGame,
     currentRoom: Room,
     triggerReplay?: boolean
@@ -56,7 +55,6 @@ export default class GameScene extends Phaser.Scene {
     this.longPressStart = undefined;
 
     this.userId = data.userId;
-    this.colyseusClient = data.colyseusClient;
     this.turnNumber = data.currentGame.turnNumber;
     this.currentGame = data.currentGame;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
