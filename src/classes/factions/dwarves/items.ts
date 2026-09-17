@@ -6,18 +6,7 @@ import { getAOETiles } from "../../../utils/boardUtils";
 import { pulverizerAnimation, useAnimation } from "../../../utils/unitAnimations";
 import { roundToFive } from "../../../utils/gameUtils";
 import { Crystal } from "../../board/crystal";
-
-// FIXME: using the council's one
-// export class DragonScale extends Item {
-//   constructor(data: IItem) {
-//     super(data);
-//   }
-
-//   use(target: Hero): void {
-//     target.equipFactionEquipment(this.stats.boardPosition);
-//     this.removeFromGame();
-//   }
-// }
+import { StatusEffects } from "../../../utils/statuses";
 
 export class DwarvenBrew extends Item {
   constructor(data: IItem) {
@@ -32,7 +21,7 @@ export class DwarvenBrew extends Item {
     const dwarvenBrewImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'dwarvenBrew').setDepth(100);
     useAnimation(dwarvenBrewImage);
 
-    target.stats.dwarvenBrew = true;
+    target.status.add(StatusEffects.DWARVEN_BREW);
     target.visuals.dwarvenBrewImage.setVisible(true);
     target.getsHealed(1000);
 

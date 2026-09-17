@@ -17,6 +17,7 @@ import { DwarvenBrew } from "../factions/dwarves/items";
 import { addReticleTween, removeReticleTween } from "../../utils/unitAnimations";
 import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
+import { StatusEffects } from "../../utils/statuses";
 
 export class Board {
   tileSize: number = 90;
@@ -45,8 +46,8 @@ export class Board {
     const heroes: Hero[] = [];
     const crystals: Crystal[] = [];
     boardUnits.forEach(u => {
-      if (u.type === EBoardUnit.HERO) heroes.push(createNewHero(u as IHero));
-      if (u.type === EBoardUnit.CRYSTAL) crystals.push(new Crystal(u as ICrystal));
+      if (u.boardType === EBoardUnit.HERO) heroes.push(createNewHero(u as IHero));
+      if (u.boardType === EBoardUnit.CRYSTAL) crystals.push(new Crystal(u as ICrystal));
     });
 
     return {
@@ -202,7 +203,7 @@ export class Board {
         addReticleTween(target.visuals.healReticle);
       }
       // Will need to update this logic for any future buffs by other units
-      if (hero.stats.canBuff && target.stats.belongsTo === hero.stats.belongsTo && !target.stats.engineerShield) {
+      if (hero.stats.canBuff && target.stats.belongsTo === hero.stats.belongsTo && !target.status.has(StatusEffects.ENGINEER_SHIELD)) {
         if (target instanceof Crystal) addReticleTween(target.visuals.healReticle);
         if (target instanceof Hero && !target.stats.isKO) addReticleTween(target.visuals.healReticle);
       }
@@ -552,16 +553,10 @@ export class Board {
   }
 
   updatePaladinAurasAcrossBoard(): void {
-    this.heroes.map(unit => {
+    this.units.map(unit => {
       unit.stats.paladinAura = this.searchForAliveAdjacentFriendlyUnit(unit, EHeroes.PALADIN);
-      unit.updateTileData();
-      unit.unitCard.updateCardData(unit);
-    });
-
-    this.crystals.map(crystal => {
-      crystal.stats.paladinAura = this.searchForAliveAdjacentFriendlyUnit(crystal, EHeroes.PALADIN);
-      crystal.updateTileData();
-      crystal.unitCard.updateCardData(crystal);
+      if (unit instanceof Hero) unit.unitCard.updateCardData(unit);
+      if (unit instanceof Crystal) unit.unitCard.updateCardData(unit);
     });
   }
 
@@ -577,24 +572,17 @@ export class Board {
   }
 
   removeEngineerShield(unitId: string): void {
-    let target;
+    const target = this.units.find(unit => unit.stats.unitId === unitId);
+    if (!target || !target.status.has(StatusEffects.ENGINEER_SHIELD)) throw new Error(`removeEngineerShield: no target or engineerId found with id ${unitId}`);
 
-    if (unitId.includes('crystal')) {
-      target = this.crystals.find(crystal => crystal.stats.unitId === unitId);
-    } else {
-      target = this.heroes.find(unit => unit.stats.unitId === unitId);
-    }
-
-    if (!target || !target.stats.engineerShield) throw new Error(`removeEngineerShield: no target or engineerId found with id ${unitId}`);
-    this.updateEngineerOnShieldLost(target.stats.engineerShield);
+    this.updateEngineerOnShieldLost(target.stats.unitId!);
     target.removeEngineerShield();
   }
 
-  updateEngineerOnShieldLost(engineerId: string): void {
-    const engineer = this.heroes.find(unit => unit.stats.unitId === engineerId);
+  updateEngineerOnShieldLost(unitId: string): void {
+    const engineer = this.heroes.find(unit => unit.stats.shieldingAlly === unitId);
     if (!engineer) return;
     engineer.stats.shieldingAlly = undefined;
-    engineer.updateTileData();
   }
 
   getGunnerSplashTargets(attacker: Hero, target: Hero | Crystal) {

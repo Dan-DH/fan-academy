@@ -11,10 +11,12 @@ import { Tile } from "./tile";
 import { CrystalVisuals } from "./crystalVisuals";
 import { handleCrystalClick } from "../../utils/handleCrystalClick";
 import { fanAcademy } from "../../main";
+import { StatusEffects, StatusTracker } from "../../utils/statuses";
 
 export class Crystal extends Phaser.GameObjects.Container {
   context: GameScene;
   stats: ICrystal;
+  status: StatusTracker;
   visuals: CrystalVisuals;
   healthBar: HealthBar;
   unitCard: CrystalCard;
@@ -25,8 +27,9 @@ export class Crystal extends Phaser.GameObjects.Container {
     super(context, x, y);
     this.context = context;
 
-    this.stats = data;
-    this.visuals = new CrystalVisuals(context, data);
+    this.stats = data; // FIXME: do we need the data?
+    this.status = new StatusTracker(data.status);
+    this.visuals = new CrystalVisuals(context, data, this.status);
     this.healthBar = new HealthBar(context, data, -38, -75);
     this.unitCard = new CrystalCard(context, data).setVisible(false);
 
@@ -44,35 +47,33 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   // FIXME:
-  updateTileData(): void {
-    // const tile = this.getTile();
+  // updateTileData(): void {
+  // const tile = this.getTile();
 
-    // if (this.stats.debuffLevel < 0) {
-    //   this.stats.debuffLevel = 0;
-    //   this.updateCrystalDebuffAnimation(this.stats.debuffLevel);
-    // }
+  // if (this.stats.debuffLevel < 0) {
+  //   this.stats.debuffLevel = 0;
+  //   this.updateCrystalDebuffAnimation(this.stats.debuffLevel);
+  // }
 
-    // this.getMagicalDamageResistance();
-    // this.getPhysicalDamageResistance();
+  // this.getMagicalDamageResistance();
+  // this.getPhysicalDamageResistance();
 
-    // tile.crystal = { ...this.stats };
-  }
+  // tile.crystal = { ...this.stats };
+  // }
 
-  receiveEngineerShield(engineerId: string): void {
-    this.stats.engineerShield = engineerId;
+  receiveEngineerShield(): void {
+    this.status.add(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(true);
-    this.updateTileData();
   }
 
   removeEngineerShield(): void {
-    this.stats.engineerShield = undefined;
+    this.status.remove(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(false);
-    this.updateTileData();
   }
 
   getsDamaged(damage: number, attackType: EAttackType, _unit: Hero | Item, splashDamage?: number): void {
-    if (this.stats.engineerShield) {
-      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
+    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
+      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.unitId!);
       this.removeEngineerShield();
       return;
     }
@@ -103,7 +104,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     // Remove 1-hit buffs and debuffs
     if (attackType === EAttackType.PHYSICAL) {
-      this.stats.annihilatorDebuff = false;
+      this.status.remove(StatusEffects.ANNIHILATOR_DEBUFF);
       this.visuals.annihilatorDebuffAnimationSprite.setVisible(false);
     }
 
@@ -114,7 +115,6 @@ export class Crystal extends Phaser.GameObjects.Container {
     if (damageTaken > 0) new FloatingText(this.context, this.x, this.y - 50, damageTaken.toString());
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     // Update player HP bar
     if (this.stats.belongsTo === 1) this.context.gameController?.gameUI.banner.playerOneHpBar.setHealth();
@@ -125,12 +125,6 @@ export class Crystal extends Phaser.GameObjects.Container {
 
   removeFromGame(): void {
     // this.scene.sound.play(EGameSounds.CRYSTAL_DESTROY);
-
-    // FIXME:
-    // const tile = this.getTile();
-    // tile.crystal = undefined;
-    // tile.obstacle = false;
-    // tile.tileType = ETiles.BASIC;
 
     // Remove destoyed crystal from the board array
     const crystalArray = this.context.gameController!.board.crystals;
@@ -149,7 +143,6 @@ export class Crystal extends Phaser.GameObjects.Container {
 
       if (otherCrystals.length === 1) {
         otherCrystals[0].stats.isLastCrystal = true;
-        otherCrystals[0].updateTileData();
       }
     }
 
@@ -187,19 +180,18 @@ export class Crystal extends Phaser.GameObjects.Container {
     }
 
     this.stats.debuffLevel = newLevel;
-    this.updateTileData();
   }
 
   getPhysicalDamageResistance(): number {
-    let total = this.stats.basePhysicalDamageResistance;
+    let total = 0;
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
-    if (this.stats.annihilatorDebuff) total -= 50;
+    if (this.status.has(StatusEffects.ANNIHILATOR_DEBUFF)) total -= 50;
     this.setPhysicalDamageResistance(total);
     return total;
   }
 
   getMagicalDamageResistance(): number {
-    let total = this.stats.baseMagicalDamageResistance;
+    let total = 0;
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
     this.setMagicalDamageResistance(total);
     return total;

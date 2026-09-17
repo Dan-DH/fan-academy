@@ -191,7 +191,6 @@ export class GameController {
         if (unit.stats.lastBreath) unitsToRemove.push(unit);
         if (!unit.stats.lastBreath) {
           unit.stats.lastBreath = true;
-          unit.updateTileData();
         }
       }
     });

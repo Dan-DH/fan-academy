@@ -2,6 +2,7 @@ import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { useAnimation } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
 
 export abstract class Dwarf extends Hero {
   constructor(data: IHero) {
@@ -14,7 +15,7 @@ export abstract class Dwarf extends Hero {
     const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
 
-    this.stats.factionEquipment = true;
+    this.status.add(StatusEffects.FACTION_EQUIPMENT);
     this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
@@ -23,7 +24,6 @@ export abstract class Dwarf extends Hero {
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }

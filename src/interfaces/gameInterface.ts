@@ -38,20 +38,25 @@ export interface IItem {
  * Unit Interface
  */
 export interface IHero {
-  type: EBoardUnit;
 
+  // BE properties
   class: EClass;
   faction: EFaction;
   unitType: EHeroes;
   unitId: string; // userId_unitName_unitNumber
   boardPosition: number;
+  currentHealth: number;
+  lastBreath: boolean;
+  status: number;
+  unitsConsumed: number;
+  boardType: EBoardUnit;
+
+  // FE only
   row: number;
   col: number;
   baseHealth: number;
   maxHealth: number;
-  currentHealth: number;
   isKO: boolean;
-  lastBreath: boolean;
   movement: number;
   attackRange: number;
   healingRange: number;
@@ -62,25 +67,24 @@ export interface IHero {
   basePhysicalDamageResistance: number;
   magicalDamageResistance: number;
   baseMagicalDamageResistance: number;
-  factionEquipment: boolean;
-  runeMetal: boolean;
-  shiningHelm: boolean;
-  superCharge: boolean;
   belongsTo: number;
   canHeal: boolean;
   canBuff: boolean;
-  unitsConsumed: number;
-  priestessDebuff: boolean;
   attackTile: boolean;
   magicalResistanceTile: boolean;
   physicalResistanceTile: boolean;
-  manaVial: boolean;
   speedTile: boolean;
-  dwarvenBrew: boolean;
-  engineerShield?: string;
   shieldingAlly?: string;
-  annihilatorDebuff: boolean;
   paladinAura: number;
+  // factionEquipment: boolean;
+  // runeMetal: boolean;
+  // shiningHelm: boolean;
+  // superCharge: boolean;
+  // priestessDebuff: boolean;
+  // manaVial: boolean;
+  // dwarvenBrew: boolean;
+  // engineerShield?: string;
+  // annihilatorDebuff: boolean;
 }
 
 /**
@@ -130,25 +134,28 @@ export interface IPlayerState {
  * Crystal Interface
  */
 export interface ICrystal {
-  type: EBoardUnit;
-
+  // BE fields
   unitId?: string;
   belongsTo: number;
   maxHealth: number;
   currentHealth: number;
+  boardPosition: number;
+  status: number;
+  boardType: EBoardUnit;
+
+  // FE only fields
   row: number;
   col: number;
-  isDestroyed: boolean;
   isLastCrystal: boolean;
-  boardPosition: number;
   debuffLevel: number;
-  engineerShield?: string;
   paladinAura: number;
-  annihilatorDebuff: boolean;
   physicalDamageResistance: number;
   magicalDamageResistance: number;
-  basePhysicalDamageResistance: number;
-  baseMagicalDamageResistance: number;
+  // engineerShield?: string;
+  // basePhysicalDamageResistance: number;
+  // baseMagicalDamageResistance: number;
+  // isDestroyed: boolean;
+  // annihilatorDebuff: boolean;
 }
 
 /**

@@ -5,6 +5,7 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { addPriestessDebuffTween, attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class Priestess extends DarkElf {
   constructor(data: IHero) {
@@ -29,15 +30,14 @@ export class Priestess extends DarkElf {
     } else {
       // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
 
-      const isTargetShielded = target.stats.engineerShield;
+      const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
       const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
       if (damageDone) this.lifeSteal(damageDone);
 
       // Apply a 50% debuff to the target's next attack or heal
       if (target instanceof Hero && !isTargetShielded) {
-        target.stats.priestessDebuff = true;
+        target.status.add(StatusEffects.PRIESTESS_DEBUFF);
         addPriestessDebuffTween(target.visuals.priestessDebuffImage);
-        target.updateTileData();
         target.unitCard.updateCardData(target);
       }
 

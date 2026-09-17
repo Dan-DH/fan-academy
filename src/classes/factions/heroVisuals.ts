@@ -3,6 +3,7 @@ import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";
 import { positionHeroImage } from "../../utils/heroImagePosition";
+import { StatusEffects, StatusTracker } from "../../utils/statuses";
 import { addPriestessDebuffTween, engineerShieldAnimation, paladinAuraAnimation } from "../../utils/unitAnimations";
 
 export class HeroVisuals extends Phaser.GameObjects.Container {
@@ -25,9 +26,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   reviveAnimationSprite: Phaser.GameObjects.Sprite;
   smokeAnimationImage: Phaser.GameObjects.Image;
 
-  constructor(context: GameScene, data: IHero) {
+  status: StatusTracker;
+
+  // FIXME: do we need data?
+  constructor(context: GameScene, data: IHero, status: StatusTracker) {
     super(context, 0, 0);
 
+    this.status = status;
     const inHand = isInHand(data.boardPosition);
     const { charImageX, charImageY } = positionHeroImage(data.unitType, data.belongsTo === 1, inHand, data.isKO);
     this.characterImage = context.add.image(charImageX, charImageY, 'gameAtlas', this.updateCharacterImage(data)).setOrigin(0.5).setName('body').setDepth(data.row + 10);
@@ -38,28 +43,28 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
      * EQUIPMENT AND BUFFS
      */
     this.runeMetalImage = context.add.image(33, 25, 'gameAtlas', 'runeMetal').setOrigin(0.5).setScale(0.5).setName('runeMetal');
-    if (!data.runeMetal) this.runeMetalImage.setVisible(false);
+    if (!status.has(StatusEffects.RUNE_METAL)) this.runeMetalImage.setVisible(false);
 
     this.shiningHelmImage = context.add.image(-28, 25, 'gameAtlas', 'shiningHelm').setOrigin(0.5).setScale(0.5).setName('shiningHelm');
-    if (!data.shiningHelm) this.shiningHelmImage.setVisible(false);
+    if (!status.has(StatusEffects.SHINING_HELM)) this.shiningHelmImage.setVisible(false);
 
     if (data.faction === EFaction.COUNCIL || data.faction === EFaction.DWARVES) {
       this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'dragonScale').setOrigin(0.5).setScale(0.5).setName('dragonScale');
     } else {
       this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'soulStone').setOrigin(0.5).setScale(0.5).setName('soulStone');
     }
-    if (!data.factionEquipment) this.factionEquipmentImage.setVisible(false);
+    if (!status.has(StatusEffects.FACTION_EQUIPMENT)) this.factionEquipmentImage.setVisible(false);
 
     this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.5).setName('dwarvenBrew');
-    if (!data.dwarvenBrew) this.dwarvenBrewImage.setVisible(false);
+    if (!status.has(StatusEffects.DWARVEN_BREW)) this.dwarvenBrewImage.setVisible(false);
 
     this.annihilatorDebuffAnimationSprite = context.add.sprite(25, -35, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.8).setName('annihilatorDebuff_1');
 
-    if (data.annihilatorDebuff) { this.playAnnihilatorDebuffAnimation(); } else {this.annihilatorDebuffAnimationSprite.setVisible(false);};
+    if (status.has(StatusEffects.ANNIHILATOR_DEBUFF)) { this.playAnnihilatorDebuffAnimation(); } else {this.annihilatorDebuffAnimationSprite.setVisible(false);};
 
     this.engineerShieldImage = context.add.image(0, 0, 'gameAtlas', 'engineerShield').setOrigin(0.5).setScale(1.2);
     engineerShieldAnimation(this.engineerShieldImage);
-    if (!data.engineerShield) this.engineerShieldImage.setVisible(false);
+    if (!status.has(StatusEffects.ENGINEER_SHIELD)) this.engineerShieldImage.setVisible(false);
 
     this.paladinAuraImage = context.add.image(0, 30, 'gameAtlas', 'paladinAura').setOrigin(0.5);
     paladinAuraAnimation(this.paladinAuraImage);
@@ -74,7 +79,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.healReticle = context.add.image(0, -10, 'gameAtlas', 'healReticle').setOrigin(0.5).setScale(1).setName('healReticle').setVisible(false);
     this.allyReticle = context.add.image(0, -10, 'gameAtlas', 'allyReticle').setOrigin(0.5).setScale(0.8).setName('allyReticle').setVisible(false);
     this.priestessDebuffImage = context.add.image(0, -10, 'gameAtlas', 'priestessDebuff').setOrigin(0.5).setScale(3).setName('priestessDebuff').setVisible(false);
-    if (data.priestessDebuff) addPriestessDebuffTween(this.priestessDebuffImage);
+    if (status.has(StatusEffects.PRIESTESS_DEBUFF)) addPriestessDebuffTween(this.priestessDebuffImage);
     this.blockedLOS = context.add.image(0, -10, 'gameAtlas', 'blockedLOS').setOrigin(0.5).setName('blockedLOS').setScale(1.2).setVisible(false);
 
     /**
@@ -90,7 +95,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     // if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.PHYSICAL_RESISTANCE);
 
     this.superChargeAnimationSprite = context.add.sprite(0, -25, 'gameAtlas', '').setScale(1.1).setVisible(false);
-    if (data.superCharge) {
+    if (status.has(StatusEffects.SUPER_CHARGE)) {
       this.superChargeAnimationSprite.play({
         key: 'superChargeAnim',
         showOnStart: true,
@@ -126,13 +131,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     if (data.isKO) return `${data.unitType}_9`;
 
-    if (data.runeMetal && data.factionEquipment && data.shiningHelm) return `${data.unitType}_8`;
-    if (data.runeMetal && data.shiningHelm) return `${data.unitType}_7`;
-    if (data.factionEquipment && data.shiningHelm) return `${data.unitType}_6`;
-    if (data.factionEquipment && data.runeMetal) return `${data.unitType}_5`;
-    if (data.factionEquipment) return `${data.unitType}_4`;
-    if (data.shiningHelm) return `${data.unitType}_3`;
-    if (data.runeMetal) return `${data.unitType}_2`;
+    if (this.status.has(StatusEffects.RUNE_METAL) && this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_8`;
+    if (this.status.has(StatusEffects.RUNE_METAL) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_7`;
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_6`;
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_5`;
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT)) return `${data.unitType}_4`;
+    if (this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_3`;
+    if (this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_2`;
 
     return `${data.unitType}_1`;
   }

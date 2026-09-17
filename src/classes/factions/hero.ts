@@ -15,10 +15,12 @@ import { HeroVisuals } from "./heroVisuals";
 import { enterSpecialTileCheck, exitSpecialTileCheck, removeFromBoard, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
 import { fanAcademy } from "../../main";
+import { StatusEffects, StatusTracker } from "../../utils/statuses";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   context: GameScene;
   stats: IHero;
+  status: StatusTracker;
   visuals: HeroVisuals;
   unitCard: HeroCard;
   healthBar: HealthBar;
@@ -31,6 +33,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.context = context;
     this.stats = data;
+    this.status = new StatusTracker(data.status);
     this.stats.class = EClass.HERO;
 
     this.unitCard = new HeroCard(context, {
@@ -41,7 +44,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.healthBar = new HealthBar(context, data, -38, -75);
     if (this.stats.boardPosition >= 45) this.healthBar.setVisible(false);
 
-    this.visuals = new HeroVisuals(context, data);
+    this.visuals = new HeroVisuals(context, data, this.status);
 
     const hitArea = new Phaser.Geom.Rectangle(-35, -50, 75, 85); // centered on (0,0)
 
@@ -113,9 +116,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
   getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit?: number): number {
-    if (this.stats.engineerShield) {
+    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
       // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
-      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
+      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.unitId);
       this.removeEngineerShield();
       return 0;
     }
@@ -128,8 +131,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     let assaultTileDamage = 0;
 
     if (unit instanceof Pulverizer) {
-      if (directHit && this.stats.factionEquipment) {
-        this.stats.factionEquipment = false;
+      if (directHit && this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
+        this.status.remove(StatusEffects.FACTION_EQUIPMENT);
         this.reduceMaxHealth(this.stats.baseHealth * 0.1);
         this.visuals.factionEquipmentImage.setVisible(false);
         this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
@@ -155,14 +158,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // Remove 1-hit buffs and debuffs
     if (attackType === EAttackType.PHYSICAL) {
-      this.stats.annihilatorDebuff = false;
+      this.status.remove(StatusEffects.ANNIHILATOR_DEBUFF);
       this.visuals.stopAnnihilatorDebuffAnimation();
     }
-    this.stats.dwarvenBrew = false;
+    this.status.remove(StatusEffects.DWARVEN_BREW);
     this.visuals.dwarvenBrewImage.setVisible(false);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     return totalDamage; // Return damage taken for lifesteal
   }
@@ -183,10 +185,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
 
     if (rangeModifier === 0) rangeModifier = 1;
-    const runeMetalBuff = this.stats.runeMetal ? 1.5 : 1;
+    const runeMetalBuff = this.status.has(StatusEffects.RUNE_METAL) ? 1.5 : 1;
     const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
-    const superCharge = this.stats.superCharge ? 3 : 1;
-    const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
+    const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
+    const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura * 0.05 + 1;
 
     return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
@@ -195,10 +197,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   getPhysicalDamageResistance(): number {
     let total = this.stats.basePhysicalDamageResistance;
 
-    if (this.stats.annihilatorDebuff) total -= 50;
-    if (this.stats.dwarvenBrew) total += 50;
+    if (this.status.has(StatusEffects.ANNIHILATOR_DEBUFF)) total -= 50;
+    if (this.status.has(StatusEffects.DWARVEN_BREW)) total += 50;
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
-    if (this.stats.factionEquipment && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
 
     if (this.stats.physicalResistanceTile) {
       if (this.stats.faction === EFaction.DWARVES) {
@@ -215,9 +217,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   getMagicalDamageResistance(): number {
     let total = this.stats.baseMagicalDamageResistance;
 
-    if (this.stats.dwarvenBrew) total += 50;
+    if (this.status.has(StatusEffects.DWARVEN_BREW)) total += 50;
     if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
-    if (this.stats.shiningHelm) total += 20;
+    if (this.status.has(StatusEffects.SHINING_HELM)) total += 20;
 
     if (this.stats.magicalResistanceTile) {
       if (this.stats.faction === EFaction.DWARVES) {
@@ -257,10 +259,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       attackTileDamage = 100;
     }
 
-    const runeMetalBuff = this.stats.runeMetal ? 1.5 : 1;
+    const runeMetalBuff = this.status.has(StatusEffects.RUNE_METAL) ? 1.5 : 1;
     const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
-    const superCharge = this.stats.superCharge ? 3 : 1;
-    const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
+    const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
+    const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;
 
     return roundToFive((this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
@@ -289,7 +291,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (this.stats.isKO) this.getsRevived();
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     return actualHealing;
   }
@@ -325,7 +326,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (addText) new FloatingText(this.context, this.x, this.y - 50, roundedHealthGain.toString(), true);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
   }
 
   healAndIncreaseHealth(healing: number, increase: number): void {
@@ -350,7 +350,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (addText) new FloatingText(this.context, this.x, this.y - 90, amount.toString(), false);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     return amount;
   }
@@ -366,8 +365,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.stats.currentHealth = 0;
     this.stats.isKO = true;
-
-    this.updateTileData();
 
     if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
 
@@ -387,10 +384,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   // FIXME:
-  updateTileData(): void {
-    // const tile = this.getTile();
-    // tile.hero = this.exportData();
-  }
+  // updateTileData(): void {
+  //   // const tile = this.getTile();
+  //   // tile.hero = this.exportData();
+  // }
 
   shuffleInDeck(): void {
     this.stats.boardPosition = 51;
@@ -418,16 +415,15 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.destroy(true);
   }
 
-  receiveEngineerShield(engineerId: string): void {
-    this.stats.engineerShield = engineerId;
+  // FIXME: no longer getting the engineer id. We'll loop through units when losing it to find the engie with the matching id to this unit. Same if the shield is lost on the engie's side
+  receiveEngineerShield(): void {
+    this.status.add(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(true);
-    this.updateTileData();
   }
 
   removeEngineerShield(): void {
-    this.stats.engineerShield = undefined;
+    this.status.remove(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(false);
-    this.updateTileData();
   }
 
   async move(currentTile: Tile, targetTile: Tile): Promise<void> {
@@ -491,9 +487,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     enterSpecialTileCheck(this, tile);
     // Position hero on the board
     this.updatePosition(tile);
-    // Update tile data
-    this.updateTileData();
-
     this.healthBar.setVisible(true);
 
     // this.scene.sound.play(EGameSounds.HERO_SPAWN);
@@ -512,12 +505,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   isAlreadyEquipped(item: Item): boolean {
     const map: Partial<Record<EItems, boolean>> = {
-      [EItems.DRAGON_SCALE]: this.stats.factionEquipment,
-      [EItems.SOUL_STONE]: this.stats.factionEquipment,
-      [EItems.RUNE_METAL]: this.stats.runeMetal,
-      [EItems.SHINING_HELM]: this.stats.shiningHelm,
-      [EItems.SUPERCHARGE]: this.stats.superCharge,
-      [EItems.DWARVEN_BREW]: this.stats.dwarvenBrew
+      [EItems.DRAGON_SCALE]: this.status.has(StatusEffects.FACTION_EQUIPMENT),
+      [EItems.SOUL_STONE]: this.status.has(StatusEffects.FACTION_EQUIPMENT),
+      [EItems.RUNE_METAL]: this.status.has(StatusEffects.RUNE_METAL),
+      [EItems.SHINING_HELM]: this.status.has(StatusEffects.SHINING_HELM),
+      [EItems.SUPERCHARGE]: this.status.has(StatusEffects.SUPER_CHARGE),
+      [EItems.DWARVEN_BREW]: this.status.has(StatusEffects.DWARVEN_BREW)
     };
 
     return !!map[item.stats.itemType];
@@ -527,15 +520,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const helmImage = this.scene.add.image(this.x, this.y, 'gameAtlas', 'shiningHelm').setDepth(100);
     useAnimation(helmImage);
 
-    this.stats.shiningHelm = true;
-
+    this.status.add(StatusEffects.SHINING_HELM);
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
-
     this.visuals.shiningHelmImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
@@ -544,39 +534,31 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const helmImage = this.scene.add.image(this.x, this.y, 'gameAtlas', 'runeMetal').setDepth(100);
     useAnimation(helmImage);
 
-    this.stats.runeMetal = true;
-    this.visuals.runeMetalImage.setVisible(true);
-
+    this.status.add(StatusEffects.RUNE_METAL);
     this.visuals.runeMetalImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   equipSuperCharge(handPosition: number): void {
-    this.stats.superCharge = true;
+    this.status.add(StatusEffects.SUPER_CHARGE);
+    this.visuals.playSuperChargeAnimation();
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
-
-    this.visuals.playSuperChargeAnimation();
 
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   removeAttackModifiers() {
-    this.stats.priestessDebuff = false;
+    this.status.remove(StatusEffects.PRIESTESS_DEBUFF);
     removePriestessDebuffTween(this.visuals.priestessDebuffImage);
-    this.stats.superCharge = false;
+
+    this.status.remove(StatusEffects.SUPER_CHARGE);
     this.visuals.stopSuperChargeAnimation();
 
     this.unitCard.updateCardData(this);
-
-    // FIXME:
-    // const tile = this.getTile();
-    // tile.hero = this.exportData();
   }
 }

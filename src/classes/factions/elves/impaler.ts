@@ -5,6 +5,7 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class Impaler extends DarkElf {
   constructor(data: IHero) {
@@ -27,7 +28,7 @@ export class Impaler extends DarkElf {
       // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
-      if (this.stats.superCharge) {
+      if (this.status.has(StatusEffects.SUPER_CHARGE)) {
         // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_BIG);
       } else {
         // if (distance === 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);

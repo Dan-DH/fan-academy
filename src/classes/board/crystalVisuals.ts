@@ -1,5 +1,6 @@
 import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
+import { StatusEffects, StatusTracker } from "../../utils/statuses";
 import { engineerShieldAnimation } from "../../utils/unitAnimations";
 
 export class CrystalVisuals extends Phaser.GameObjects.Container {
@@ -12,7 +13,8 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
   annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
   crystalDebuffAnimationSprite: Phaser.GameObjects.Sprite;
 
-  constructor(context: GameScene, data: ICrystal) {
+  // FIXME: adding status tracker?
+  constructor(context: GameScene, data: ICrystal, status: StatusTracker) {
     super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
 
@@ -30,12 +32,12 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     if (data.debuffLevel === 1) this.playSingleCrystalDebuffAnimation();
     if (data.debuffLevel === 2) this.playDoubleCrystalDebuffAnimation();
 
-    const isShielded = data.engineerShield ? true : false;
+    const isShielded = status.has(StatusEffects.ENGINEER_SHIELD);
     this.engineerShieldImage = context.add.image(0, -20, 'gameAtlas', 'engineerShield').setOrigin(0.5).setVisible(isShielded);
     engineerShieldAnimation(this.engineerShieldImage);
 
     this.annihilatorDebuffAnimationSprite = context.add.sprite(25, -35, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.8).setName('annihilatorDebuff_1');
-    if (!data.annihilatorDebuff) this.annihilatorDebuffAnimationSprite.setVisible(false);
+    if (!status.has(StatusEffects.ANNIHILATOR_DEBUFF)) this.annihilatorDebuffAnimationSprite.setVisible(false);
 
     // Attack  and healing reticle animations
     this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);

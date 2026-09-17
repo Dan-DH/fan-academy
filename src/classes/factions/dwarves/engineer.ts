@@ -43,9 +43,8 @@ export class Engineer extends Dwarf {
       this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);
     }
 
-    target.receiveEngineerShield(this.stats.unitId);
+    target.receiveEngineerShield();
     this.stats.shieldingAlly = target.stats.unitId;
-    this.updateTileData();
     this.context.gameController!.afterAction(EActionType.BUFF, this.stats.boardPosition, target.stats.boardPosition);
   }
 

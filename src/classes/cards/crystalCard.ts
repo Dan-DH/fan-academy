@@ -58,14 +58,14 @@ export class CrystalCard extends Phaser.GameObjects.Container {
     this.magicalResistanceText = this.context.add.text(100, -10, `${data.magicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: this.getTextColor(data.magicalDamageResistance, data.baseMagicalDamageResistance)
+      color: this.getTextColor(data.magicalDamageResistance, 0)
     }).setOrigin(0.5);
 
     this.physicalResistanceImage = context.add.image(-150, -10, 'gameAtlas', 'physicalResistance').setOrigin(0.5).setScale(1.3);
     this.physicalResistanceText = this.context.add.text(-85, -10, `${data.physicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: this.getTextColor(data.physicalDamageResistance, data.basePhysicalDamageResistance)
+      color: this.getTextColor(data.physicalDamageResistance, 0)
     }).setOrigin(0.5);
 
     // Flavour text
@@ -111,12 +111,12 @@ export class CrystalCard extends Phaser.GameObjects.Container {
 
   updateCardPhysicalResistance(crystal: Crystal): void {
     this.physicalResistanceText.setText(`${crystal.stats.physicalDamageResistance} %`);
-    this.physicalResistanceText.setColor(this.getTextColor(crystal.stats.physicalDamageResistance, crystal.stats.basePhysicalDamageResistance));
+    this.physicalResistanceText.setColor(this.getTextColor(crystal.stats.physicalDamageResistance, 0));
   }
 
   updateCardMagicalResistance(crystal: Crystal): void {
     this.magicalResistanceText.setText(`${crystal.stats.magicalDamageResistance} %`);
-    this.magicalResistanceText.setColor(this.getTextColor(crystal.stats.magicalDamageResistance, crystal.stats.baseMagicalDamageResistance));
+    this.magicalResistanceText.setColor(this.getTextColor(crystal.stats.magicalDamageResistance, 0));
   }
 
   updateCardHealth(crystal: Crystal): void {

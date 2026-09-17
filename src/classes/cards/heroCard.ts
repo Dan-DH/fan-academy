@@ -1,6 +1,7 @@
 import { EAttackType, EHeroes } from "../../enums/gameEnums";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
+import { StatusEffects } from "../../utils/statuses";
 import { capitalize } from "../../utils/textAnimations";
 import { getCardText } from "../../utils/unitCards";
 import { Hero } from "../factions/hero";
@@ -177,7 +178,7 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
     const basePower = hero.stats.unitType === EHeroes.WRAITH ? 250 : hero.stats.basePower;
 
-    if (hero.stats.priestessDebuff) {
+    if (hero.status.has(StatusEffects.PRIESTESS_DEBUFF)) {
       this.powerText.setColor('#ff0000');
     } else {
       this.powerText.setColor(this.getTextColor(totalPow, basePower));

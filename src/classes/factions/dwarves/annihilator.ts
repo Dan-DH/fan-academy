@@ -5,6 +5,7 @@ import { Hero } from "../hero";
 import { EActionType, EHeroes } from "../../../enums/gameEnums";
 import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class Annihilator extends Dwarf {
   constructor(data: IHero) {
@@ -31,13 +32,12 @@ export class Annihilator extends Dwarf {
     } else {
       // this.scene.sound.play(EGameSounds.ANNIHILATOR_ATTACK);
 
-      const isTargetShielded = target.stats.engineerShield;
+      const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
 
       if (!isTargetShielded && target.active) {
-        target.stats.annihilatorDebuff = true;
+        target.status.add(StatusEffects.ANNIHILATOR_DEBUFF);
         target.visuals.playAnnihilatorDebuffAnimation();
-        target.updateTileData();
         if (target instanceof Hero) target.unitCard.updateCardData(target);
         if (target instanceof Crystal) target.unitCard.updateCardData(target);
       }

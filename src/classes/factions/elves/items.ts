@@ -7,6 +7,7 @@ import { getAOETiles } from "../../../utils/boardUtils";
 import { roundToFive } from "../../../utils/gameUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class SoulStone extends Item {
   constructor(data: IItem) {
@@ -31,12 +32,11 @@ export class ManaVial extends Item {
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'manaVial').setDepth(100);
     useAnimation(potionImage);
 
-    if (target.stats.manaVial) {
+    if (target.status.has(StatusEffects.MANA_VIAL)) {
       target.getsHealed(1000);
     } else {
       target.healAndIncreaseHealth(1000, 50);
-      target.stats.manaVial = true;
-      target.updateTileData();
+      target.status.add(StatusEffects.MANA_VIAL);
     }
 
     this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
