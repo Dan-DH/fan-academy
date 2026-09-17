@@ -43,7 +43,7 @@ function closePopovers(event: MouseEvent) {
         <div class="flex max-sm:flex-col items-start">
           <ul class="menu md:menu-horizontal w-full">
             <li class="w-full flex flex-col gap-2">
-              <a class="btn btn-wide btn-soft w-full" href="/community/players">
+              <a class="btn btn-wide btn-soft w-full " href="/community/players">
                 <span class="icon-[ci--users]"></span>
                 Players
               </a>
@@ -62,7 +62,7 @@ function closePopovers(event: MouseEvent) {
     </div>
   </div>
   <div class="navbar-end gap-2">
-    <a class="btn btn-accent" href="/auth/login">
+    <a class="btn btn-accent" href="/auth">
       <span class="icon-[akar-icons--double-sword] text-xl"></span>
       Start Battle
     </a>

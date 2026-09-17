@@ -3,3 +3,9 @@
   themes: all;
 }
 @plugin "@iconify/tailwind4";
+
+@theme {
+  --font-nunito: "Nunito", sans-serif;
+}
+
+
