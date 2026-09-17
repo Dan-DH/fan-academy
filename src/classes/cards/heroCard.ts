@@ -85,14 +85,14 @@ export class HeroCard extends Phaser.GameObjects.Container {
     this.magicalResistanceText = this.context.add.text(100, 30, `${data.magicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: this.getTextColor(data.magicalDamageResistance, data.baseMagicalDamageResistance)
+      color: this.getTextColor(data.magicalDamageResistance!, data.baseMagicalDamageResistance)
     }).setOrigin(0.5);
 
     this.physicalResistanceImage = context.add.image(-150, 30, 'gameAtlas', 'physicalResistance').setOrigin(0.5).setScale(1.3);
     this.physicalResistanceText = this.context.add.text(-85, 30, `${data.physicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: this.getTextColor(data.physicalDamageResistance, data.basePhysicalDamageResistance)
+      color: this.getTextColor(data.physicalDamageResistance!, data.basePhysicalDamageResistance)
     }).setOrigin(0.5);
 
     // Range
@@ -187,12 +187,12 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
   updateCardPhysicalResistance(hero: Hero): void {
     this.physicalResistanceText.setText(`${hero.stats.physicalDamageResistance} %`);
-    this.physicalResistanceText.setColor(this.getTextColor(hero.stats.physicalDamageResistance, hero.stats.basePhysicalDamageResistance));
+    this.physicalResistanceText.setColor(this.getTextColor(hero.stats.physicalDamageResistance!, hero.stats.basePhysicalDamageResistance));
   }
 
   updateCardMagicalResistance(hero: Hero): void {
     this.magicalResistanceText.setText(`${hero.stats.magicalDamageResistance} %`);
-    this.magicalResistanceText.setColor(this.getTextColor(hero.stats.magicalDamageResistance, hero.stats.baseMagicalDamageResistance));
+    this.magicalResistanceText.setColor(this.getTextColor(hero.stats.magicalDamageResistance!, hero.stats.baseMagicalDamageResistance));
   }
 
   updateCardHealth(hero: Hero ): void {

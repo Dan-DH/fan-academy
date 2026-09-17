@@ -1,4 +1,4 @@
-import { EActionType, EAttackType, EClass, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
+import { EActionType, EAttackType, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
@@ -32,9 +32,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     super(context, x, y);
 
     this.context = context;
-    this.stats = data;
     this.status = new StatusTracker(data.status);
-    this.stats.class = EClass.HERO;
+    this.stats = data;
+    this.stats.physicalDamageResistance = this.getPhysicalDamageResistance();
+    this.stats.magicalDamageResistance = this.getMagicalDamageResistance();
+    // this.stats.class = EClass.HERO;
 
     this.unitCard = new HeroCard(context, {
       ...data,
@@ -98,6 +100,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.updateCardData(this);
   }
 
+  // FIXME: is this used?
   exportData(): IHero {
     this.getMagicalDamageResistance();
     this.getPhysicalDamageResistance();
@@ -189,7 +192,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
-    const paladinAura = this.stats.paladinAura * 0.05 + 1;
+    const paladinAura = this.stats.paladinAura! * 0.05 + 1;
 
     return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
@@ -199,7 +202,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     if (this.status.has(StatusEffects.ANNIHILATOR_DEBUFF)) total -= 50;
     if (this.status.has(StatusEffects.DWARVEN_BREW)) total += 50;
-    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    if (this.stats.paladinAura! > 0) total += 5 * this.stats.paladinAura!;
     if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
 
     if (this.status.has(StatusEffects.PHYSICAL_RESISTANCE_TILE)) {
@@ -218,7 +221,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     let total = this.stats.baseMagicalDamageResistance;
 
     if (this.status.has(StatusEffects.DWARVEN_BREW)) total += 50;
-    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
+    if (this.stats.paladinAura! > 0) total += 5 * this.stats.paladinAura!;
     if (this.status.has(StatusEffects.SHINING_HELM)) total += 20;
 
     if (this.status.has(StatusEffects.MAGICAL_RESISTANCE_TILE)) {
@@ -263,7 +266,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
-    const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;
+    const paladinAura = this.stats.paladinAura! > 0 ? this.stats.paladinAura! * 0.05 + 1 : 1;
 
     return roundToFive((this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
@@ -552,7 +555,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
-  removeAttackModifiers() {
+  removeAttackModifiers(): void {
     this.status.remove(StatusEffects.PRIESTESS_DEBUFF);
     removePriestessDebuffTween(this.visuals.priestessDebuffImage);
 

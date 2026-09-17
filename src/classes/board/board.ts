@@ -37,6 +37,7 @@ export class Board {
     this.heroes = createdBoardUnits.heroes;
     this.crystals = createdBoardUnits.crystals;
     this.units = [...createdBoardUnits.heroes, ...createdBoardUnits.crystals];
+    this.updatePaladinAurasAcrossBoard(); // run once on game start, after this.units is set
   }
 
   createBoardUnits(boardUnits: (IHero | ICrystal)[]): {
@@ -85,7 +86,7 @@ export class Board {
     return result;
   }
 
-  // FIXME: confused about this one. It was returning the classes and it game an error on gameController -> boardState: this.board.getBoardState()
+  // FIXME: confused about this one. It was returning the classes and it gave an error on gameController -> boardState: this.board.getBoardState()
   // TODO: probably need to transform this into something thinner for the BE
   getBoardState(): (IHero | ICrystal)[] {
     const result: (IHero | ICrystal)[] = [];
@@ -552,6 +553,7 @@ export class Board {
       !unit.stats.isKO).length;
   }
 
+  // FIXME: rund this once after createing all units on the board
   updatePaladinAurasAcrossBoard(): void {
     this.units.map(unit => {
       unit.stats.paladinAura = this.searchForAliveAdjacentFriendlyUnit(unit, EHeroes.PALADIN);

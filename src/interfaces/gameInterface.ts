@@ -34,6 +34,15 @@ export interface IItem {
   dealsDamage: boolean;
 }
 
+export interface IItemBE {
+  class: EClass;
+  faction: EFaction;
+  unitId: string; // userId_itemName_itemNumber
+  itemType: EItems;
+  boardPosition: number // 45-51
+  belongsTo: number;
+}
+
 /**
  * Unit Interface
  */
@@ -63,19 +72,19 @@ export interface IHero {
   buffRange: number;
   attackType: EAttackType;
   basePower: number;
-  physicalDamageResistance: number;
+  physicalDamageResistance?: number; // FIXME: calculated in Hero constructor
   basePhysicalDamageResistance: number;
-  magicalDamageResistance: number;
+  magicalDamageResistance?: number;
   baseMagicalDamageResistance: number;
   belongsTo: number;
   canHeal: boolean;
   canBuff: boolean;
-  attackTile: boolean;
-  magicalResistanceTile: boolean;
-  physicalResistanceTile: boolean;
-  speedTile: boolean;
   shieldingAlly?: string;
-  paladinAura: number;
+  paladinAura?: number;
+  // attackTile: boolean;
+  // magicalResistanceTile: boolean;
+  // physicalResistanceTile: boolean;
+  // speedTile: boolean;
   // factionEquipment: boolean;
   // runeMetal: boolean;
   // shiningHelm: boolean;
@@ -85,6 +94,35 @@ export interface IHero {
   // dwarvenBrew: boolean;
   // engineerShield?: string;
   // annihilatorDebuff: boolean;
+}
+
+export interface IHeroBE {
+  class: EClass;
+  faction: EFaction;
+  unitType: EHeroes;
+  unitId: string; // userId_unitName_unitNumber
+  boardPosition: number;
+  currentHealth?: number;
+  maxHealth?: number,
+  lastBreath?: boolean;
+  status: number;
+  unitsConsumed?: number;
+  boardType: EBoardUnit;
+  belongsTo: number
+}
+
+export interface IHeroBaseStats {
+  baseHealth: number,
+  movement: number,
+  attackType: EAttackType,
+  attackRange: number,
+  healingRange: number,
+  buffRange: number,
+  basePower: number,
+  basePhysicalDamageResistance: number,
+  baseMagicalDamageResistance: number,
+  canHeal: boolean,
+  canBuff: boolean
 }
 
 /**

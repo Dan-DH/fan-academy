@@ -19,7 +19,7 @@ export abstract class Council extends Hero {
     this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
-    this.stats.physicalDamageResistance += 20;
+    this.stats.physicalDamageResistance! += 20;
 
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 

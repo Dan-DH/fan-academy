@@ -21,24 +21,26 @@ import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
 import { ShiningHelm, SuperCharge, RuneMetal } from "../classes/factions/sharedItems";
 import { EItems, EHeroes } from "../enums/gameEnums";
-import { IItem, IHero } from "../interfaces/gameInterface";
+import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
+import { mapItemFromBE } from "./mapItemFromBE";
+import { mapUnitFromBE } from "./mapUnitFromBE";
 
-export function createNewItem(itemData: IItem): Item {
+export function createNewItem(itemData: IItemBE): Item {
   const itemTypes: Record<EItems, () => Item> = {
-    [EItems.SHINING_HELM]: () => new ShiningHelm(itemData),
-    [EItems.SUPERCHARGE]: () => new SuperCharge(itemData),
-    [EItems.RUNE_METAL]: () => new RuneMetal(itemData),
+    [EItems.SHINING_HELM]: () => new ShiningHelm(mapItemFromBE(itemData)),
+    [EItems.SUPERCHARGE]: () => new SuperCharge(mapItemFromBE(itemData)),
+    [EItems.RUNE_METAL]: () => new RuneMetal(mapItemFromBE(itemData)),
 
-    [EItems.DRAGON_SCALE]: () => new DragonScale(itemData),
-    [EItems.HEALING_POTION]: () => new HealingPotion(itemData),
-    [EItems.INFERNO]: () => new Inferno(itemData),
+    [EItems.DRAGON_SCALE]: () => new DragonScale(mapItemFromBE(itemData)),
+    [EItems.HEALING_POTION]: () => new HealingPotion(mapItemFromBE(itemData)),
+    [EItems.INFERNO]: () => new Inferno(mapItemFromBE(itemData)),
 
-    [EItems.MANA_VIAL]: () => new ManaVial(itemData),
-    [EItems.SOUL_HARVEST]: () => new SoulHarvest(itemData),
-    [EItems.SOUL_STONE]: () => new SoulStone(itemData),
+    [EItems.MANA_VIAL]: () => new ManaVial(mapItemFromBE(itemData)),
+    [EItems.SOUL_HARVEST]: () => new SoulHarvest(mapItemFromBE(itemData)),
+    [EItems.SOUL_STONE]: () => new SoulStone(mapItemFromBE(itemData)),
 
-    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(itemData),
-    [EItems.PULVERIZER]: () => new Pulverizer(itemData)
+    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(mapItemFromBE(itemData)),
+    [EItems.PULVERIZER]: () => new Pulverizer(mapItemFromBE(itemData))
   };
 
   const createItem = itemTypes[itemData.itemType];
@@ -46,26 +48,26 @@ export function createNewItem(itemData: IItem): Item {
   return createItem();
 }
 
-export function createNewHero(heroData: IHero): Hero {
+export function createNewHero(heroData: IHeroBE): Hero {
   const heroTypes: Record<EHeroes, () => Hero> = {
-    [EHeroes.ARCHER]: () => new Archer(heroData),
-    [EHeroes.CLERIC]: () => new Cleric(heroData),
-    [EHeroes.KNIGHT]: () => new Knight(heroData),
-    [EHeroes.NINJA]: () => new Ninja(heroData),
-    [EHeroes.WIZARD]: () => new Wizard(heroData),
+    [EHeroes.ARCHER]: () => new Archer(mapUnitFromBE(heroData)),
+    [EHeroes.CLERIC]: () => new Cleric(mapUnitFromBE(heroData)),
+    [EHeroes.KNIGHT]: () => new Knight(mapUnitFromBE(heroData)),
+    [EHeroes.NINJA]: () => new Ninja(mapUnitFromBE(heroData)),
+    [EHeroes.WIZARD]: () => new Wizard(mapUnitFromBE(heroData)),
 
-    [EHeroes.PRIESTESS]: () => new Priestess(heroData),
-    [EHeroes.IMPALER]: () => new Impaler(heroData),
-    [EHeroes.NECROMANCER]: () => new Necromancer(heroData),
-    [EHeroes.PHANTOM]: () => new Phantom(heroData),
-    [EHeroes.VOIDMONK]: () => new VoidMonk(heroData),
-    [EHeroes.WRAITH]: () => new Wraith(heroData),
+    [EHeroes.PRIESTESS]: () => new Priestess(mapUnitFromBE(heroData)),
+    [EHeroes.IMPALER]: () => new Impaler(mapUnitFromBE(heroData)),
+    [EHeroes.NECROMANCER]: () => new Necromancer(mapUnitFromBE(heroData)),
+    [EHeroes.PHANTOM]: () => new Phantom(mapUnitFromBE(heroData)),
+    [EHeroes.VOIDMONK]: () => new VoidMonk(mapUnitFromBE(heroData)),
+    [EHeroes.WRAITH]: () => new Wraith(mapUnitFromBE(heroData)),
 
-    [EHeroes.PALADIN]: () => new Paladin(heroData),
-    [EHeroes.ENGINEER]: () => new Engineer(heroData),
-    [EHeroes.GUNNER]: () => new Gunner(heroData),
-    [EHeroes.GRENADIER]: () => new Grenadier(heroData),
-    [EHeroes.ANNIHILATOR]: () => new Annihilator(heroData)
+    [EHeroes.PALADIN]: () => new Paladin(mapUnitFromBE(heroData)),
+    [EHeroes.ENGINEER]: () => new Engineer(mapUnitFromBE(heroData)),
+    [EHeroes.GUNNER]: () => new Gunner(mapUnitFromBE(heroData)),
+    [EHeroes.GRENADIER]: () => new Grenadier(mapUnitFromBE(heroData)),
+    [EHeroes.ANNIHILATOR]: () => new Annihilator(mapUnitFromBE(heroData))
   };
 
   const createHero = heroTypes[heroData.unitType];

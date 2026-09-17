@@ -8,7 +8,6 @@ export function replayButton(context: GameScene): Phaser.GameObjects.Image {
 
     context.scene.restart({
       userId: context.userId,
-      colyseusClient: context.colyseusClient,
       currentGame: context.currentGame,
       triggerReplay: true
     });
