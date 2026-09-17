@@ -1,6 +1,7 @@
 import { addTextContainer, getContainerHeight, addHyperlinks, addPictures } from "./aboutSceneUtils/aboutUtils";
 import { loadAboutUI } from "./aboutSceneUtils/loadAboutUI";
 
+// FIXME: correct ui
 export default class AboutScene extends Phaser.Scene {
   constructor() {
     super({ key: 'AboutScene' });
