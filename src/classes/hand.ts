@@ -1,5 +1,5 @@
 import { EClass } from "../enums/gameEnums";
-import { IGameState, IHero, IItem } from "../interfaces/gameInterface";
+import { IGameState, IHero, IHeroBE, IItem, IItemBE } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { Hero } from "./factions/hero";
@@ -31,8 +31,8 @@ export class Hand {
   }
 
   renderUnit(unit: IHero | IItem): Hero | Item {
-    if (unit.class === EClass.HERO) return createNewHero(unit as IHero);
-    if (unit.class === EClass.ITEM) return createNewItem(unit as IItem);
+    if (unit.class === EClass.HERO) return createNewHero(unit as IHeroBE);
+    if (unit.class === EClass.ITEM) return createNewItem(unit as IItemBE);
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 

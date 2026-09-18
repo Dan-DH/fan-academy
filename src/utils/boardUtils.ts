@@ -117,9 +117,7 @@ export function createBasicTileData(coordinates: Coordinates): ITile {
     row: coordinates.row!,
     col: coordinates.col!,
     boardPosition: coordinates.boardPosition!,
-    tileType: ETiles.BASIC,
-    hero: undefined,
-    crystal: undefined
+    tileType: ETiles.BASIC
   };
 }
 

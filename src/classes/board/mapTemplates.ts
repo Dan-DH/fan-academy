@@ -7,30 +7,30 @@ import { ETiles } from "../../enums/gameEnums";
   * 1 assault tile
   */
 const map1 = [
-  {
-    row: 0,
-    col: 2,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 2
-  },
-  {
-    row: 0,
-    col: 6,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 6
-  },
-  {
-    row: 4,
-    col: 6,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 42
-  },
-  {
-    row: 4,
-    col: 2,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 38
-  },
+//   {
+//     row: 0,
+//     col: 2,
+//     tileType: ETiles.CRYSTAL,
+//     boardPosition: 2
+//   },
+//   {
+//     row: 0,
+//     col: 6,
+//     tileType: ETiles.CRYSTAL,
+//     boardPosition: 6
+//   },
+//   {
+//     row: 4,
+//     col: 6,
+//     tileType: ETiles.CRYSTAL,
+//     boardPosition: 42
+//   },
+//   {
+//     row: 4,
+//     col: 2,
+//     tileType: ETiles.CRYSTAL,
+//     boardPosition: 38
+//   },
   {
     row: 1,
     col: 0,
@@ -94,30 +94,30 @@ const map1 = [
   * 1 assault tile
   */
 const map2 = [
-  {
-    row: 1,
-    col: 2,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 11
-  },
-  {
-    row: 1,
-    col: 6,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 15
-  },
-  {
-    row: 3,
-    col: 7,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 34
-  },
-  {
-    row: 3,
-    col: 1,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 28
-  },
+  // {
+  //   row: 1,
+  //   col: 2,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 11
+  // },
+  // {
+  //   row: 1,
+  //   col: 6,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 15
+  // },
+  // {
+  //   row: 3,
+  //   col: 7,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 34
+  // },
+  // {
+  //   row: 3,
+  //   col: 1,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 28
+  // },
   {
     row: 0,
     col: 0,
@@ -176,30 +176,30 @@ const map2 = [
   * 2 teleporters
   */
 const map3 = [
-  {
-    row: 0,
-    col: 3,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 3
-  },
-  {
-    row: 2,
-    col: 0,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 18
-  },
-  {
-    row: 2,
-    col: 8,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 26
-  },
-  {
-    row: 4,
-    col: 5,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 41
-  },
+  // {
+  //   row: 0,
+  //   col: 3,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 3
+  // },
+  // {
+  //   row: 2,
+  //   col: 0,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 18
+  // },
+  // {
+  //   row: 2,
+  //   col: 8,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 26
+  // },
+  // {
+  //   row: 4,
+  //   col: 5,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 41
+  // },
   {
     row: 1,
     col: 0,
@@ -263,18 +263,18 @@ const map3 = [
   * 2 physical resistance tiles
   */
 const map4 = [
-  {
-    row: 2,
-    col: 2,
-    tileType: ETiles.CRYSTAL_BIG,
-    boardPosition: 20
-  },
-  {
-    row: 2,
-    col: 6,
-    tileType: ETiles.CRYSTAL_BIG,
-    boardPosition: 24
-  },
+  // {
+  //   row: 2,
+  //   col: 2,
+  //   tileType: ETiles.CRYSTAL_BIG,
+  //   boardPosition: 20
+  // },
+  // {
+  //   row: 2,
+  //   col: 6,
+  //   tileType: ETiles.CRYSTAL_BIG,
+  //   boardPosition: 24
+  // },
   {
     row: 0,
     col: 0,
@@ -344,42 +344,42 @@ const map4 = [
   * 2 magical resist tiles
   */
 const map5 = [
-  {
-    row: 0,
-    col: 1,
-    tileType: ETiles.CRYSTAL_SMALL,
-    boardPosition: 1
-  },
-  {
-    row: 2,
-    col: 2,
-    tileType: ETiles.CRYSTAL_SMALL,
-    boardPosition: 20
-  },
-  {
-    row: 4,
-    col: 1,
-    tileType: ETiles.CRYSTAL_SMALL,
-    boardPosition: 37
-  },
-  {
-    row: 0,
-    col: 7,
-    tileType: ETiles.CRYSTAL_SMALL,
-    boardPosition: 7
-  },
-  {
-    row: 2,
-    col: 6,
-    tileType: ETiles.CRYSTAL_SMALL,
-    boardPosition: 24
-  },
-  {
-    row: 4,
-    col: 7,
-    tileType: ETiles.CRYSTAL_SMALL,
-    boardPosition: 43
-  },
+  // {
+  //   row: 0,
+  //   col: 1,
+  //   tileType: ETiles.CRYSTAL_SMALL,
+  //   boardPosition: 1
+  // },
+  // {
+  //   row: 2,
+  //   col: 2,
+  //   tileType: ETiles.CRYSTAL_SMALL,
+  //   boardPosition: 20
+  // },
+  // {
+  //   row: 4,
+  //   col: 1,
+  //   tileType: ETiles.CRYSTAL_SMALL,
+  //   boardPosition: 37
+  // },
+  // {
+  //   row: 0,
+  //   col: 7,
+  //   tileType: ETiles.CRYSTAL_SMALL,
+  //   boardPosition: 7
+  // },
+  // {
+  //   row: 2,
+  //   col: 6,
+  //   tileType: ETiles.CRYSTAL_SMALL,
+  //   boardPosition: 24
+  // },
+  // {
+  //   row: 4,
+  //   col: 7,
+  //   tileType: ETiles.CRYSTAL_SMALL,
+  //   boardPosition: 43
+  // },
   {
     row: 1,
     col: 0,
@@ -450,30 +450,30 @@ const map5 = [
  * 2 speed tiles
  */
 const map6 = [
-  {
-    row: 2,
-    col: 1,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 19
-  },
-  {
-    row: 1,
-    col: 3,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 12
-  },
-  {
-    row: 2,
-    col: 7,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 25
-  },
-  {
-    row: 3,
-    col: 5,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 32
-  },
+  // {
+  //   row: 2,
+  //   col: 1,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 19
+  // },
+  // {
+  //   row: 1,
+  //   col: 3,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 12
+  // },
+  // {
+  //   row: 2,
+  //   col: 7,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 25
+  // },
+  // {
+  //   row: 3,
+  //   col: 5,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 32
+  // },
   {
     row: 0,
     col: 2,
@@ -538,30 +538,30 @@ const map6 = [
  * 1 speed tile
  */
 const map7 = [
-  {
-    row: 0,
-    col: 2,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 2
-  },
-  {
-    row: 3,
-    col: 0,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 27
-  },
-  {
-    row: 0,
-    col: 6,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 6
-  },
-  {
-    row: 3,
-    col: 8,
-    tileType: ETiles.CRYSTAL,
-    boardPosition: 35
-  },
+  // {
+  //   row: 0,
+  //   col: 2,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 2
+  // },
+  // {
+  //   row: 3,
+  //   col: 0,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 27
+  // },
+  // {
+  //   row: 0,
+  //   col: 6,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 6
+  // },
+  // {
+  //   row: 3,
+  //   col: 8,
+  //   tileType: ETiles.CRYSTAL,
+  //   boardPosition: 35
+  // },
   {
     row: 1,
     col: 0,

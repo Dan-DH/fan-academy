@@ -1,5 +1,5 @@
 import { EHeroes, ETiles, ERange, EBoardUnit } from "../../enums/gameEnums";
-import { ICrystal, IHero } from "../../interfaces/gameInterface";
+import { ICrystalBE, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
 import { createBasicTileData, isEnemySpawn } from "../../utils/boardUtils";
@@ -18,6 +18,7 @@ import { addReticleTween, removeReticleTween } from "../../utils/unitAnimations"
 import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
+import { mapCrystalFromBE } from "../../utils/mapCrystalFromBE";
 
 export class Board {
   tileSize: number = 90;
@@ -28,8 +29,7 @@ export class Board {
   grid: Tile[]; // FIXME: board state. Using atm
   assaultTiles: Tile[];
 
-  // TODO: we need to pass the array of units and crystal (could be a single array) from the BE
-  constructor(context: GameScene, boardUnits: (IHero | ICrystal)[], map: number) {
+  constructor(context: GameScene, boardUnits: (IHeroBE | ICrystalBE)[], map: number) {
     this.context = context;
     this.grid = this.createTileGrid(map);
     this.assaultTiles = this.grid.filter(t => t.tileType === ETiles.CRYSTAL_DAMAGE); // FIXME: check if we can use this often enough to warrant having it as a property
@@ -40,15 +40,15 @@ export class Board {
     this.updatePaladinAurasAcrossBoard(); // run once on game start, after this.units is set
   }
 
-  createBoardUnits(boardUnits: (IHero | ICrystal)[]): {
+  createBoardUnits(boardUnits: (IHeroBE | ICrystalBE)[]): {
     heroes: Hero[],
     crystals: Crystal[]
   } {
     const heroes: Hero[] = [];
     const crystals: Crystal[] = [];
     boardUnits.forEach(u => {
-      if (u.boardType === EBoardUnit.HERO) heroes.push(createNewHero(u as IHero));
-      if (u.boardType === EBoardUnit.CRYSTAL) crystals.push(new Crystal(u as ICrystal));
+      if (u.boardType === EBoardUnit.HERO) heroes.push(createNewHero(u as IHeroBE));
+      if (u.boardType === EBoardUnit.CRYSTAL) crystals.push(new Crystal(mapCrystalFromBE(u as ICrystalBE)));
     });
 
     return {
@@ -88,10 +88,11 @@ export class Board {
 
   // FIXME: confused about this one. It was returning the classes and it gave an error on gameController -> boardState: this.board.getBoardState()
   // TODO: probably need to transform this into something thinner for the BE
-  getBoardState(): (IHero | ICrystal)[] {
-    const result: (IHero | ICrystal)[] = [];
+  getBoardState(): (IHeroBE | ICrystalBE)[] {
+    const result: (IHeroBE | ICrystalBE)[] = [];
 
-    [...this.heroes, ...this.crystals].forEach(u => result.push(u.stats));
+    // [...this.heroes, ...this.crystals].forEach(u => result.push(u.stats)); // FIXME: need to map the data back for sending to the BE
+    console.log('getBoardState() - gotta map the data back for the BE');
 
     return result;
   }

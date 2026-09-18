@@ -178,22 +178,28 @@ export interface ICrystal {
   maxHealth: number;
   currentHealth: number;
   boardPosition: number;
-  status: number;
+  status?: number;
   boardType: EBoardUnit;
 
   // FE only fields
   row: number;
   col: number;
-  isLastCrystal: boolean;
   debuffLevel: number;
   paladinAura: number;
   physicalDamageResistance: number;
   magicalDamageResistance: number;
-  // engineerShield?: string;
-  // basePhysicalDamageResistance: number;
-  // baseMagicalDamageResistance: number;
-  // isDestroyed: boolean;
-  // annihilatorDebuff: boolean;
+  basePhysicalDamageResistance: number;
+  baseMagicalDamageResistance: number;
+}
+
+export interface ICrystalBE {
+  unitId?: string;
+  belongsTo: number;
+  maxHealth: number;
+  currentHealth: number;
+  boardPosition: number;
+  status: number;
+  boardType: EBoardUnit;
 }
 
 /**
@@ -216,7 +222,7 @@ export interface ITile {
 export interface IGameState {
   player1: IPlayerState;
   player2?: IPlayerState;
-  boardState: (IHero | ICrystal)[];
+  boardState: (IHeroBE | ICrystalBE)[];
   action?: ITurnAction;
 }
 
