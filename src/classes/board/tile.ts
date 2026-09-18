@@ -34,19 +34,18 @@ export class Tile extends Phaser.GameObjects.Container {
     this.add(this.baseRectangle);
     this.isHighlighted = this.baseRectangle.isFilled;
 
-    if (this.tileType !== ETiles.BASIC) this.unitCard = new SpecialTileCard(context, this.tileType).setVisible(false);
-
     // If tileType is not basic or a crystal, add the visual representation
     const typesToIgnore = [ETiles.BASIC, ETiles.CRYSTAL, ETiles.CRYSTAL_SMALL, ETiles.CRYSTAL_BIG];
     if (!typesToIgnore.includes(this.tileType)) {
-      this.icon = context.add.image(0, 0, 'gameAtlas', this.tileType).setScale(1.2);
+      this.icon = context.add.image(0, 0, 'gameAtlas', this.tileType).setScale(1.2).setDepth(0);
       if (this.col > 4) this.icon.setFlipX(true);
-      this.add(this.icon);
+      this.unitCard = new SpecialTileCard(context, this.tileType).setVisible(false).setDepth(100);
+      this.add([this.icon, this.unitCard]);
     }
 
-    if (this.unitCard) this.add(this.unitCard);
-    this.setSize(90, 90).setInteractive({ useHandCursor: true }).setDepth(2);
+    this.setSize(90, 90).setInteractive({ useHandCursor: true });
     handleTileClick(this, context);
+    // parentLayer.add(this);
     context.add.existing(this);
   }
 

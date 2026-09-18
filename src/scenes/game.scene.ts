@@ -7,8 +7,8 @@ import { createChatComponent } from "./gameSceneUtils/chatComponent";
 import { Tile } from "../classes/board/tile";
 import { Crystal } from "../classes/board/crystal";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
-import { TurnReplay } from "../classes/turnReplay";
 import { Room } from "@colyseus/sdk";
+import { TurnReplay } from "../classes/turnReplay";
 
 export default class GameScene extends Phaser.Scene {
   // FIXME: check which properties we can remove here

@@ -10,7 +10,6 @@ import { Board } from "./board/board";
 import { Deck } from "./board/deck";
 import { Door } from "./board/door";
 import { GameOverScreen } from "./board/gameOverScreen";
-import { GameUI } from "./board/gameUI";
 import { Tile } from "./board/tile";
 import { RematchButton } from "./buttons/rematchButton";
 import { TurnButton } from "./buttons/turnButton";
@@ -23,11 +22,12 @@ import { getActionClass } from "../utils/gameUtils";
 import { moveSpecialTileCheck } from "../utils/boardUtils";
 import { Crystal } from "./board/crystal";
 import { colyseusService } from "../colyseus/colyseusService";
+import { Banner } from "./board/banner";
 
 export class GameController {
   context: GameScene;
   game: IGame;
-  gameUI: GameUI;
+  banner: Banner;
   board: Board;
   hand: Hand;
   deck: Deck;
@@ -69,10 +69,17 @@ export class GameController {
     context.player1 = this.lastTurnState.player1;
     context.player2 = this.lastTurnState.player2;
 
+    // Game map
+    const gameMap = context.add.image(0, 0, 'gameBoard').setOrigin(0).setInteractive();
+    gameMap.y += 14; // FIXME: this used to be inside the gameUI and render correctly, not sure why it blocks tiles and crystals
+    gameMap.x = 1434 - gameMap.width - 14;
+    // Item rack
+    context.add.image(0, 0, 'gameAtlas', 'itemRack').setOrigin(0.5).setPosition(900, 736).setScale(1.125);
+
     this.board = new Board(context, this.lastTurnState.boardState, this.game.map);
     this.playerData = this.game.players.map(player => { return player.userData; });
-    this.gameUI = new GameUI(context, this.board, this.playerData);
 
+    this.banner = new Banner(context, this.board, this.playerData);
     this.deck  = new Deck(context, this.lastTurnState);
     this.hand = new Hand(context, this.lastTurnState);
     this.actionPie = new ActionPie(context);
@@ -85,6 +92,8 @@ export class GameController {
     this.concedeButton = this.addConcedeButton(context);
     this.concedePopup = new ConcedeWarningPopup(context);
 
+    this.door = new Door(context);
+
     if (context.triggerReplay) {
       this.rematchButton.setVisible(false);
       this.turnButton.buttonImage.setVisible(false);
@@ -96,8 +105,6 @@ export class GameController {
     }
 
     if (context.activePlayer !== context.userId) this.turnButton.buttonImage.setVisible(false);
-
-    this.door = new Door(context);
 
     // Clicking skips replay
     this.blockingLayer = context.add.rectangle(910, 0, 1040, 1650, 0x000000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.context.triggerReplay);
@@ -114,6 +121,7 @@ export class GameController {
 
     this.currentTurn = [];
 
+    // FIXME:
     // Add a generic gameobject pointer event to make it easier to hide a unit info card
     context.input.on('gameobjectdown', () => visibleUnitCardCheck(context));
 

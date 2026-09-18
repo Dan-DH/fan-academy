@@ -1,4 +1,4 @@
-import { EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
+import { EAttackType, EWinConditions, EFaction, EHeroes, EBoardUnit } from "../../enums/gameEnums";
 import { ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
@@ -33,7 +33,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.healthBar = new HealthBar(context, data, -38, -75);
     this.unitCard = new CrystalCard(context, data).setVisible(false);
 
-    this.add([this.visuals,  this.healthBar, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.stats.row + 9.5);
+    this.add([this.visuals, this.healthBar, this.unitCard]).setSize(90, 95).setInteractive({ useHandCursor: true }).setDepth(this.stats.row + 9.5);
     handleCrystalClick(this, this.context);
 
     context.add.existing(this);
@@ -45,21 +45,6 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     return tile;
   }
-
-  // FIXME:
-  // updateTileData(): void {
-  // const tile = this.getTile();
-
-  // if (this.stats.debuffLevel < 0) {
-  //   this.stats.debuffLevel = 0;
-  //   this.updateCrystalDebuffAnimation(this.stats.debuffLevel);
-  // }
-
-  // this.getMagicalDamageResistance();
-  // this.getPhysicalDamageResistance();
-
-  // tile.crystal = { ...this.stats };
-  // }
 
   receiveEngineerShield(): void {
     this.status.add(StatusEffects.ENGINEER_SHIELD);
@@ -117,8 +102,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.unitCard.updateCardData(this);
 
     // Update player HP bar
-    if (this.stats.belongsTo === 1) this.context.gameController?.gameUI.banner.playerOneHpBar.setHealth();
-    if (this.stats.belongsTo === 2) this.context.gameController?.gameUI.banner.playerTwoHpBar.setHealth();
+    if (this.stats.belongsTo === 1) this.context.gameController?.banner.playerOneHpBar.setHealth();
+    if (this.stats.belongsTo === 2) this.context.gameController?.banner.playerTwoHpBar.setHealth();
 
     if (this.stats.currentHealth <= 0) this.removeFromGame();
   }
@@ -132,18 +117,11 @@ export class Crystal extends Phaser.GameObjects.Container {
     crystalArray.splice(index, 1);
 
     // Update the remaining crystal or set gameOver
-    if (this.stats.isLastCrystal) {
+    if (this.isLastCrystal()) {
       this.context.gameController!.gameOver = {
         winCondition: EWinConditions.CRYSTAL,
         winner: this.context.activePlayer!
       };
-    } else {
-      const otherCrystals = crystalArray.filter(crystal => crystal.stats.belongsTo === this.stats.belongsTo);
-      if (!otherCrystals.length) throw new Error('Crystal getsDestroyed() No other crystals found');
-
-      if (otherCrystals.length === 1) {
-        otherCrystals[0].stats.isLastCrystal = true;
-      }
     }
 
     // Remove animations
@@ -223,5 +201,12 @@ export class Crystal extends Phaser.GameObjects.Container {
     if (unitOnTile.stats.faction === EFaction.DWARVES) return 360;
 
     return 300;
+  }
+
+  isLastCrystal(): boolean {
+    const atLeastOneFriendlyCrystalLeft = this.context?.gameController?.board.units.find(u => u.stats.boardType === EBoardUnit.CRYSTAL && u.stats.belongsTo === this.stats.belongsTo && u.stats.unitId !== this.stats.unitId);
+
+    if (atLeastOneFriendlyCrystalLeft) return false;
+    return true;
   }
 }
