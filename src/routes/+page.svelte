@@ -1,8 +1,12 @@
 <script lang="ts">
-import TopPlayers from "$lib/components/TopPlayers.svelte";
+	import PatchNotes from '$lib/components/PatchNotes.svelte';
+	import TopPlayers from '$lib/components/TopPlayers.svelte';
 </script>
 
-<div class="flex-1 flex flex-col">
-    <h1> Home </h1>
-    <TopPlayers/>
+<div class="flex flex-col gap-5 justify-center items-center">
+	<h1>home</h1>
+	<div class="flex w-full gap-5 justify-center items-center">
+		<PatchNotes />
+		<TopPlayers />
+	</div>
 </div>

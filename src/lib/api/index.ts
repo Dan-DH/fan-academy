@@ -1,4 +1,4 @@
-import { AuthLoginUser } from "$lib/types/AuthType";
+import { AuthLoginUser } from "$lib/types/authType"
 
 const BASE_URL = import.meta.env.BASE_URL;
 export const getCurrentUser = async () => {
