@@ -121,7 +121,6 @@ export class GameController {
 
     this.currentTurn = [];
 
-    // FIXME:
     // Add a generic gameobject pointer event to make it easier to hide a unit info card
     context.input.on('gameobjectdown', () => visibleUnitCardCheck(context));
 

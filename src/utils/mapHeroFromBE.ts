@@ -2,7 +2,7 @@ import { EAttackType, EHeroes } from "../enums/gameEnums";
 import { Coordinates, IHero, IHeroBaseStats, IHeroBE } from "../interfaces/gameInterface";
 import { fanAcademy } from "../main";
 
-export function mapUnitFromBE(data: IHeroBE): IHero {
+export function mapHeroFromBE(data: IHeroBE): IHero {
   const coordinates = fanAcademy.registry.get('tileCoords') as Coordinates[];
   const unitCoordinates = coordinates.find(c => c.boardPosition === data.boardPosition);
   const baseUnitStats = mapUnitBaseStats(data.unitType);

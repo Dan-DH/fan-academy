@@ -20,6 +20,8 @@ import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
 import { mapCrystalFromBE } from "../../utils/mapCrystalFromBE";
 import { fanAcademy } from "../../main";
+import { mapCrystalToBE } from "../../utils/mapCrystalToBE";
+import { mapHeroToBE } from "../../utils/mapHeroToBE";
 
 export class Board {
   tileSize: number = 90;
@@ -97,6 +99,13 @@ export class Board {
     console.log('getBoardState() - gotta map the data back for the BE');
 
     return result;
+  }
+
+  getBoardStateForBE(): (IHeroBE | ICrystalBE)[] {
+    return this.units.map(u => {
+      if (u instanceof Hero) return mapHeroToBE(u);
+      if (u instanceof Crystal) return mapCrystalToBE(u);
+    }) as (IHeroBE | ICrystalBE)[];
   }
 
   // FIXME: did I delete this?

@@ -23,7 +23,7 @@ import { ShiningHelm, SuperCharge, RuneMetal } from "../classes/factions/sharedI
 import { EItems, EHeroes } from "../enums/gameEnums";
 import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import { mapItemFromBE } from "./mapItemFromBE";
-import { mapUnitFromBE } from "./mapUnitFromBE";
+import { mapHeroFromBE } from "./mapHeroFromBE";
 
 export function createNewItem(itemData: IItemBE): Item {
   const itemTypes: Record<EItems, () => Item> = {
@@ -50,24 +50,24 @@ export function createNewItem(itemData: IItemBE): Item {
 
 export function createNewHero(heroData: IHeroBE): Hero {
   const heroTypes: Record<EHeroes, () => Hero> = {
-    [EHeroes.ARCHER]: () => new Archer(mapUnitFromBE(heroData)),
-    [EHeroes.CLERIC]: () => new Cleric(mapUnitFromBE(heroData)),
-    [EHeroes.KNIGHT]: () => new Knight(mapUnitFromBE(heroData)),
-    [EHeroes.NINJA]: () => new Ninja(mapUnitFromBE(heroData)),
-    [EHeroes.WIZARD]: () => new Wizard(mapUnitFromBE(heroData)),
+    [EHeroes.ARCHER]: () => new Archer(mapHeroFromBE(heroData)),
+    [EHeroes.CLERIC]: () => new Cleric(mapHeroFromBE(heroData)),
+    [EHeroes.KNIGHT]: () => new Knight(mapHeroFromBE(heroData)),
+    [EHeroes.NINJA]: () => new Ninja(mapHeroFromBE(heroData)),
+    [EHeroes.WIZARD]: () => new Wizard(mapHeroFromBE(heroData)),
 
-    [EHeroes.PRIESTESS]: () => new Priestess(mapUnitFromBE(heroData)),
-    [EHeroes.IMPALER]: () => new Impaler(mapUnitFromBE(heroData)),
-    [EHeroes.NECROMANCER]: () => new Necromancer(mapUnitFromBE(heroData)),
-    [EHeroes.PHANTOM]: () => new Phantom(mapUnitFromBE(heroData)),
-    [EHeroes.VOIDMONK]: () => new VoidMonk(mapUnitFromBE(heroData)),
-    [EHeroes.WRAITH]: () => new Wraith(mapUnitFromBE(heroData)),
+    [EHeroes.PRIESTESS]: () => new Priestess(mapHeroFromBE(heroData)),
+    [EHeroes.IMPALER]: () => new Impaler(mapHeroFromBE(heroData)),
+    [EHeroes.NECROMANCER]: () => new Necromancer(mapHeroFromBE(heroData)),
+    [EHeroes.PHANTOM]: () => new Phantom(mapHeroFromBE(heroData)),
+    [EHeroes.VOIDMONK]: () => new VoidMonk(mapHeroFromBE(heroData)),
+    [EHeroes.WRAITH]: () => new Wraith(mapHeroFromBE(heroData)),
 
-    [EHeroes.PALADIN]: () => new Paladin(mapUnitFromBE(heroData)),
-    [EHeroes.ENGINEER]: () => new Engineer(mapUnitFromBE(heroData)),
-    [EHeroes.GUNNER]: () => new Gunner(mapUnitFromBE(heroData)),
-    [EHeroes.GRENADIER]: () => new Grenadier(mapUnitFromBE(heroData)),
-    [EHeroes.ANNIHILATOR]: () => new Annihilator(mapUnitFromBE(heroData))
+    [EHeroes.PALADIN]: () => new Paladin(mapHeroFromBE(heroData)),
+    [EHeroes.ENGINEER]: () => new Engineer(mapHeroFromBE(heroData)),
+    [EHeroes.GUNNER]: () => new Gunner(mapHeroFromBE(heroData)),
+    [EHeroes.GRENADIER]: () => new Grenadier(mapHeroFromBE(heroData)),
+    [EHeroes.ANNIHILATOR]: () => new Annihilator(mapHeroFromBE(heroData))
   };
 
   const createHero = heroTypes[heroData.unitType];
