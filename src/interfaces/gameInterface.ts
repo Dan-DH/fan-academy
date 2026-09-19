@@ -173,7 +173,7 @@ export interface IPlayerState {
  */
 export interface ICrystal {
   // BE fields
-  unitId?: string;
+  unitId: string;
   belongsTo: number;
   maxHealth: number;
   currentHealth: number;
@@ -193,7 +193,7 @@ export interface ICrystal {
 }
 
 export interface ICrystalBE {
-  unitId?: string;
+  unitId: string;
   belongsTo: number;
   maxHealth: number;
   currentHealth: number;

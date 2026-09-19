@@ -1,4 +1,4 @@
-import { EActionType, EAttackType, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
+import { EActionType, EAttackType, EBoardUnit, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
 import { Coordinates, IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
@@ -36,7 +36,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats = data;
     this.stats.physicalDamageResistance = this.getPhysicalDamageResistance();
     this.stats.magicalDamageResistance = this.getMagicalDamageResistance();
-    // this.stats.class = EClass.HERO;
+    this.stats.boardType = EBoardUnit.HERO;
 
     this.unitCard = new HeroCard(context, {
       ...data,
@@ -473,7 +473,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // }
 
     gameController.hand.removeFromHand(this.stats.unitId);
-    gameController.board.heroes.push(this);
+    gameController.board.units.push(this);
 
     // Modify image
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);

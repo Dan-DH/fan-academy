@@ -6,6 +6,7 @@ export function mapCrystalFromBE(data: ICrystalBE): ICrystal {
   const unitCoordinates = coordinates.find(c => c.boardPosition === data.boardPosition);
 
   return {
+    unitId: data.unitId,
     maxHealth: data.maxHealth,
     currentHealth: data.currentHealth,
     boardPosition: data.boardPosition,
