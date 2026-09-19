@@ -243,7 +243,9 @@ export class GameController {
     this.door.updateBannerText();
 
     // Add the last action of the previous turn at index 0 of the actions array to serve as the base for the replay
-    this.currentTurn.unshift(this.game.previousTurn[this.game.previousTurn.length - 1]);
+    // FIXME: when setting the reply feature, we'll have to ignore the first item each turn array after the first turn (or find a better way of organizing this)
+    const lastTurnFromBE = this.game.previousTurn[this.game.previousTurn.length - 1];
+    this.currentTurn.unshift(lastTurnFromBE);
 
     this.context.activePlayer = this.context.opponentId;
     this.context.turnNumber!++;
@@ -296,7 +298,6 @@ export class GameController {
   }
 
   afterAction(actionType: EActionType, activePosition: number, targetPosition?: number): void {
-    // Don't trigger pie animation during replays
     if (this.context.triggerReplay) return;
 
     // Add action to current state

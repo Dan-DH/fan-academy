@@ -90,18 +90,8 @@ export class Board {
     return result;
   }
 
-  // FIXME: confused about this one. It was returning the classes and it gave an error on gameController -> boardState: this.board.getBoardState()
-  // TODO: probably need to transform this into something thinner for the BE
+  // Only used for saving the board state after an action
   getBoardState(): (IHeroBE | ICrystalBE)[] {
-    const result: (IHeroBE | ICrystalBE)[] = [];
-
-    // [...this.heroes, ...this.crystals].forEach(u => result.push(u.stats)); // FIXME: need to map the data back for sending to the BE
-    console.log('getBoardState() - gotta map the data back for the BE');
-
-    return result;
-  }
-
-  getBoardStateForBE(): (IHeroBE | ICrystalBE)[] {
     return this.units.map(u => {
       if (u instanceof Hero) return mapHeroToBE(u);
       if (u instanceof Crystal) return mapCrystalToBE(u);
