@@ -1,8 +1,7 @@
 import { GameController } from "../classes/gameController";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { Coordinates, IGame, IPlayerData, IPlayerState } from "../interfaces/gameInterface";
-import { calculateAllCenterPoints } from "../utils/boardCalculations";
+import { IGame, IPlayerData, IPlayerState } from "../interfaces/gameInterface";
 import { createChatComponent } from "./gameSceneUtils/chatComponent";
 import { Tile } from "../classes/board/tile";
 import { Crystal } from "../classes/board/crystal";
@@ -13,7 +12,6 @@ import { TurnReplay } from "../classes/turnReplay";
 export default class GameScene extends Phaser.Scene {
   // FIXME: check which properties we can remove here
   userId!: string;
-  centerPoints: Coordinates[];
 
   currentGame!: IGame;
   currentTurnAction: number | undefined;
@@ -39,7 +37,6 @@ export default class GameScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'GameScene' });
-    this.centerPoints = calculateAllCenterPoints();
   }
 
   init(data: {

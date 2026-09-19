@@ -1,4 +1,5 @@
 import { ETiles } from "../enums/gameEnums";
+import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
 export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@cc4a03e';
 
@@ -20,6 +21,7 @@ export default class PreloaderScene extends Phaser.Scene {
 
   create(): void {
     this.createSpriteAnimations();
+    this.registry.set('tileCoords', calculateAllCenterPoints());
 
     // Move to main scene after loading
     this.scene.start('MainMenuScene');

@@ -1,5 +1,5 @@
 import { EClass, EItems } from "../../enums/gameEnums";
-import { IItem } from "../../interfaces/gameInterface";
+import { Coordinates, IItem } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
 import GameScene from "../../scenes/game.scene";
 import { handleUnitClick } from "../../utils/handleUnitClick";
@@ -14,7 +14,7 @@ export abstract class Item extends Phaser.GameObjects.Container {
 
   constructor(data: IItem) {
     const context = fanAcademy.scene.getScene('GameScene') as GameScene;
-    const { x, y } = context.centerPoints[data.boardPosition];
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
     super(context, x, y - 20);
 
     this.context = context;
@@ -68,7 +68,7 @@ export abstract class Item extends Phaser.GameObjects.Container {
   }
 
   updatePosition(boardPosition: number): void {
-    const { x, y } = this.context.centerPoints[boardPosition];
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[boardPosition];
     this.x = x;
     this.y = y;
     this.stats.boardPosition = boardPosition;

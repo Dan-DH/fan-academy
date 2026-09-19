@@ -1,5 +1,5 @@
 import { EActionType, EAttackType, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
-import { IHero } from "../../interfaces/gameInterface";
+import { Coordinates, IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
 import { handleUnitClick } from "../../utils/handleUnitClick";
@@ -28,7 +28,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   constructor(data: IHero) {
     const context = fanAcademy.scene.getScene('GameScene') as GameScene;
-    const { x, y } = context.centerPoints[data.boardPosition];
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
     super(context, x, y);
 
     this.context = context;
@@ -87,7 +87,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   // FIXME:
   updatePosition(tile: Tile): void {
-    const { x, y } = this.context.centerPoints[tile.boardPosition];
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[tile.boardPosition];
     this.x = x;
     this.y = y;
     this.stats.boardPosition = tile.boardPosition;

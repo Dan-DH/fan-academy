@@ -1,8 +1,8 @@
-import { ICrystal, ICrystalBE } from "../interfaces/gameInterface";
-import { calculateAllCenterPoints } from "./boardCalculations";
+import { Coordinates, ICrystal, ICrystalBE } from "../interfaces/gameInterface";
+import { fanAcademy } from "../main";
 
 export function mapCrystalFromBE(data: ICrystalBE): ICrystal {
-  const coordinates = calculateAllCenterPoints(); // FIXME: need a better way to deal with this function
+  const coordinates = fanAcademy.registry.get('tileCoords') as Coordinates[];
   const unitCoordinates = coordinates.find(c => c.boardPosition === data.boardPosition);
 
   return {

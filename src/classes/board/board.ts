@@ -1,5 +1,5 @@
 import { EHeroes, ETiles, ERange, EBoardUnit } from "../../enums/gameEnums";
-import { ICrystalBE, IHeroBE } from "../../interfaces/gameInterface";
+import { Coordinates, ICrystalBE, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
 import { createBasicTileData, isEnemySpawn } from "../../utils/boardUtils";
@@ -19,6 +19,7 @@ import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
 import { mapCrystalFromBE } from "../../utils/mapCrystalFromBE";
+import { fanAcademy } from "../../main";
 
 export class Board {
   tileSize: number = 90;
@@ -60,9 +61,10 @@ export class Board {
   createTileGrid(map: number) {
     const gridArray = [];
     const specialTilesFromMap = mapTemplates[map];
+    const tileCoordinates = fanAcademy.registry.get('tileCoords') as Coordinates[];
 
     for (let boardPosition = 0; boardPosition < 45; boardPosition++) {
-      const coordinates = this.context.centerPoints[boardPosition];
+      const coordinates = tileCoordinates[boardPosition];
       const specialTileMatch = specialTilesFromMap.find(tile => tile.boardPosition === boardPosition);
 
       if (specialTileMatch) {

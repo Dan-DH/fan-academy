@@ -1,5 +1,6 @@
 import { ETiles } from "../../enums/gameEnums";
-import { ISpecialTile, ITile } from "../../interfaces/gameInterface";
+import { Coordinates, ISpecialTile, ITile } from "../../interfaces/gameInterface";
+import { fanAcademy } from "../../main";
 import GameScene from "../../scenes/game.scene";
 import { handleTileClick } from "../../utils/handleTileClick";
 import { SpecialTileCard } from "../cards/specialTileCard";
@@ -19,7 +20,7 @@ export class Tile extends Phaser.GameObjects.Container {
   icon: Phaser.GameObjects.Image | undefined;
 
   constructor(context: GameScene, data: ISpecialTile) {
-    const coordinates = context.centerPoints[data.boardPosition];
+    const coordinates = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
     super(context, coordinates.x, coordinates.y);
 
     this.x = coordinates.x;

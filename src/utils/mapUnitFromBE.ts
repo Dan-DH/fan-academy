@@ -1,13 +1,10 @@
 import { EAttackType, EHeroes } from "../enums/gameEnums";
-import { IHero, IHeroBaseStats, IHeroBE } from "../interfaces/gameInterface";
-import { calculateAllCenterPoints } from "./boardCalculations";
+import { Coordinates, IHero, IHeroBaseStats, IHeroBE } from "../interfaces/gameInterface";
+import { fanAcademy } from "../main";
 
 export function mapUnitFromBE(data: IHeroBE): IHero {
-  const coordinates = calculateAllCenterPoints(); // FIXME: need a better way to deal with this function
+  const coordinates = fanAcademy.registry.get('tileCoords') as Coordinates[];
   const unitCoordinates = coordinates.find(c => c.boardPosition === data.boardPosition);
-
-  // if (!unitCoordinates) throw new Error('mapUnitFromBE() - No matching coordinates for board position: ' + data.boardPosition);
-
   const baseUnitStats = mapUnitBaseStats(data.unitType);
 
   return {

@@ -1,5 +1,5 @@
 import { EAttackType, EWinConditions, EFaction, EHeroes, EBoardUnit } from "../../enums/gameEnums";
-import { ICrystal } from "../../interfaces/gameInterface";
+import { Coordinates, ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
 import { CrystalCard } from "../cards/crystalCard";
@@ -23,7 +23,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
   constructor(data: ICrystal) {
     const context = fanAcademy.scene.getScene('GameScene') as GameScene;
-    const { x, y } = context.centerPoints[data.boardPosition];
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
     super(context, x, y);
     this.context = context;
 
