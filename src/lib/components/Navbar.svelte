@@ -11,7 +11,7 @@ function closePopovers(event: MouseEvent) {
   }
 </script>
 
-  <div class="navbar bg-base-300 shadow-sm">
+<div class="navbar bg-base-300 shadow-sm px-5">
   <div class="navbar-start">
     <a class="btn btn-ghost text-lg" href="/">Fan Academy</a>
   </div>
