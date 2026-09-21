@@ -52,7 +52,8 @@ export function moveSpecialTileCheck(hero: Hero, endTile: Tile, startTile: Tile)
 
 export function specialTileCheck(hero: Hero, tile: Tile): void {
   if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
+    hero.context.gameController?.board.updateCrystalsAfterUnitMove(hero.stats.belongsTo, true);
+    hero.status.add(StatusEffects.CRYSTAL_DAMAGE_TILE);
     // this.scene.sound.play(EGameSounds.CRYSTAL_TILE);
   };
   if (tile.tileType === ETiles.POWER) {
@@ -78,7 +79,10 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
 }
 
 export function removeSpecialTile(hero: Hero, tile: Tile): void {
-  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
+  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
+    hero.context.gameController?.board.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
+    hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE);
+  }
   if (tile.tileType === ETiles.POWER) hero.status.remove(StatusEffects.POWER_TILE);
   if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.status.remove(StatusEffects.MAGICAL_RESISTANCE_TILE);
   if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.status.remove(StatusEffects.PHYSICAL_RESISTANCE_TILE);

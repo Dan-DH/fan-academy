@@ -17,8 +17,8 @@ export const StatusEffects = {
   ENGINEER_SHIELD: 1 << 14
   // MEAT: 1 << 15,
   // BLOODLUST: 1 << 16,
-  // KNEELING: 1 << 17,
-  // ENGINEER_ATTACK_BUFF: 1 << 18,
+  // SNIPER_KNEELING: 1 << 17,
+  // TF2_ENGINEER_ATTACK_BUFF: 1 << 18,
   // JARATE: 1 << 19,
   // SANDVICH: 1 << 20,
   // MONK_DEBUFF: 1 << 21,

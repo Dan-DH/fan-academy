@@ -28,7 +28,6 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
   status: StatusTracker;
 
-  // FIXME: do we need data?
   constructor(context: GameScene, data: IHero, status: StatusTracker) {
     super(context, 0, 0);
 
@@ -87,12 +86,11 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
      */
     this.specialTileAnimationSprite = context.add.sprite(0, 30, '').setScale(0.8).setVisible(false);
 
-    // FIXME: use bitmap to check for tile status? Or compare with the specialTileArray
-    // if (tile?.tileType === ETiles.CRYSTAL_DAMAGE && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
-    // if (tile?.tileType === ETiles.POWER && !data.isKO) this.playSpecialTileAnimation(ETiles.POWER);
-    // if (tile?.tileType === ETiles.MAGICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.MAGICAL_RESISTANCE);
-    // if (tile?.tileType === ETiles.SPEED && !data.isKO) this.playSpecialTileAnimation(ETiles.SPEED);
-    // if (tile?.tileType === ETiles.PHYSICAL_RESISTANCE && !data.isKO) this.playSpecialTileAnimation(ETiles.PHYSICAL_RESISTANCE);
+    if (status.has(StatusEffects.CRYSTAL_DAMAGE_TILE) && !data.isKO) this.playSpecialTileAnimation(ETiles.CRYSTAL_DAMAGE);
+    if (status.has(StatusEffects.POWER_TILE) && !data.isKO) this.playSpecialTileAnimation(ETiles.POWER);
+    if (status.has(StatusEffects.MAGICAL_RESISTANCE_TILE) && !data.isKO) this.playSpecialTileAnimation(ETiles.MAGICAL_RESISTANCE);
+    if (status.has(StatusEffects.SPEED_TILE) && !data.isKO) this.playSpecialTileAnimation(ETiles.SPEED);
+    if (status.has(StatusEffects.PHYSICAL_RESISTANCE_TILE) && !data.isKO) this.playSpecialTileAnimation(ETiles.PHYSICAL_RESISTANCE);
 
     this.superChargeAnimationSprite = context.add.sprite(0, -25, 'gameAtlas', '').setScale(1.1).setVisible(false);
     if (status.has(StatusEffects.SUPER_CHARGE)) {

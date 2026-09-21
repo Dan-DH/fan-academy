@@ -36,7 +36,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats = data;
     this.stats.physicalDamageResistance = this.getPhysicalDamageResistance();
     this.stats.magicalDamageResistance = this.getMagicalDamageResistance();
-    this.stats.boardType = EBoardUnit.HERO;
 
     this.unitCard = new HeroCard(context, {
       ...data,
@@ -85,11 +84,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
   }
 
-  // FIXME:
   updatePosition(tile: Tile): void {
-    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[tile.boardPosition];
-    this.x = x;
-    this.y = y;
+    this.x = tile.x;
+    this.y = tile.y;
     this.stats.boardPosition = tile.boardPosition;
     this.stats.row = tile.row;
     this.stats.col = tile.col;
@@ -192,7 +189,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
-    const paladinAura = this.stats.paladinAura! * 0.05 + 1;
+    const paladinAura = this.stats.paladinAura ? this.stats.paladinAura * 0.05 + 1 : 1; // Check for  units in hand. Otherwise getTotalPower returns NaN
     console.log('totalpower', roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura)); // FIXME: total power is nan
     return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }

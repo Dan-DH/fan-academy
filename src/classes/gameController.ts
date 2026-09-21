@@ -389,18 +389,4 @@ export class GameController {
 
     target.updatePosition(targetNewTile);
   }
-
-  updateCrystals(attackerBelongsTo: number, increase: boolean): void {
-    this.board.units.forEach(u => {
-      if (u instanceof Hero) return;
-      if (u.stats.belongsTo !== attackerBelongsTo) {
-        let newLevel: number = 0;
-
-        if (increase) newLevel = u.stats.debuffLevel + 1;
-        if (!increase && u.stats.debuffLevel > 0) newLevel = u.stats.debuffLevel - 1; // Safeguard to avoid it going negative until I figure out the bug
-
-        u.updateCrystalDebuffAnimation(newLevel);
-      }
-    });
-  };
 }

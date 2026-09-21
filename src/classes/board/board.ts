@@ -26,14 +26,15 @@ import { mapHeroToBE } from "../../utils/mapHeroToBE";
 export class Board {
   tileSize: number = 90;
   context: GameScene;
-  units: (Hero | Crystal)[];
   grid: Tile[];
+  units: (Hero | Crystal)[];
 
   constructor(context: GameScene, boardUnits: (IHeroBE | ICrystalBE)[], map: number) {
     this.context = context;
     this.grid = this.createTileGrid(map);
-    this.units =  this.createBoardUnits(boardUnits);
+    this.units = this.createBoardUnits(boardUnits);
     this.updatePaladinAurasAcrossBoard(); // run once on game start, after this.units is set
+    this.checkCrystalDebuffLevelOnTurnStart();
   }
 
   createBoardUnits(boardUnits: (IHeroBE | ICrystalBE)[]): (Hero | Crystal)[] {
@@ -509,7 +510,6 @@ export class Board {
       !u.stats.isKO).length;
   }
 
-  // FIXME: rund this once after createing all units on the board
   updatePaladinAurasAcrossBoard(): void {
     this.units.map(unit => {
       unit.stats.paladinAura = this.searchForAliveAdjacentFriendlyUnit(unit, EHeroes.PALADIN);
@@ -517,6 +517,39 @@ export class Board {
       if (unit instanceof Crystal) unit.unitCard.updateCardData(unit);
     });
   }
+
+  checkCrystalDebuffLevelOnTurnStart(): void {
+    const assaultTiles = this.grid.filter(t => t.tileType === ETiles.CRYSTAL_DAMAGE);
+    let pOneUnitsOnAssaultTiles = 0;
+    let pTwoUnitsOnAssaultTiles = 0;
+
+    this.units.forEach(u => {
+      if (u instanceof Crystal) return;
+      const tileMatch = assaultTiles.find(t => t.boardPosition === u.stats.boardPosition);
+      if (tileMatch) {
+        if (u.stats.belongsTo === 1) pOneUnitsOnAssaultTiles += 1;
+        if (u.stats.belongsTo === 2) pTwoUnitsOnAssaultTiles += 1;
+      }
+    });
+
+    this.units.forEach(u => {
+      if (u instanceof Crystal) u.updateCrystalDebuffAnimation(u.stats.belongsTo === 1 ? pTwoUnitsOnAssaultTiles : pOneUnitsOnAssaultTiles);
+    });
+  }
+
+  updateCrystalsAfterUnitMove(attackerBelongsTo: number, increase: boolean): void {
+    this.units.forEach(u => {
+      if (u instanceof Hero) return;
+      if (u.stats.belongsTo !== attackerBelongsTo) {
+        let newLevel: number = 0;
+
+        if (increase) newLevel = u.stats.debuffLevel + 1;
+        if (!increase && u.stats.debuffLevel > 0) newLevel = u.stats.debuffLevel - 1; // Safeguard to avoid it going negative until I figure out the bug
+
+        u.updateCrystalDebuffAnimation(newLevel);
+      }
+    });
+  };
 
   // Check if a Necromancer should stomp an enemit unit or create a phantom
   necromancerStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
