@@ -676,9 +676,12 @@ export class Board {
   getAliveEnemyUnitsOnAssaultTiles(belongsTo: number): Hero[] {
     const result: Hero[] = [];
 
-    this.grid.forEach(t => {
-      const matchedUnit = this.units.find(u => u.stats.boardPosition === t.boardPosition && u.stats.belongsTo !== belongsTo && u instanceof Hero && !u.stats.isKO);
-      if (matchedUnit) result.push(matchedUnit as Hero);
+    this.units.forEach(u => {
+      if (u instanceof Crystal) return;
+      if (u instanceof Hero && u.stats.isKO || u.stats.belongsTo === belongsTo) return;
+
+      const matchedTile = this.grid.find(t => t.boardPosition === u.stats.boardPosition && t.tileType === ETiles.CRYSTAL_DAMAGE);
+      if (matchedTile) result.push(u);
     });
 
     return result;

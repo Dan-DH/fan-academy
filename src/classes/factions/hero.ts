@@ -190,7 +190,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura ? this.stats.paladinAura * 0.05 + 1 : 1; // Check for  units in hand. Otherwise getTotalPower returns NaN
-    console.log('totalpower', roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura)); // FIXME: total power is nan
     return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
 
