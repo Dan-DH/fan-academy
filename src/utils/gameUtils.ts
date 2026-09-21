@@ -69,10 +69,10 @@ export function canBeAttacked(_attacker: Hero, _tile: Tile): boolean {
 export function isLastUnit(hero: Hero): boolean {
   const opponentData = hero.context.isPlayerOne ? hero.context.gameController!.lastTurnState.player2 : hero.context.gameController!.lastTurnState.player1;
 
-  const handUnits = opponentData?.factionData.unitsInHand.find(unit => unit instanceof Hero);
+  const handUnits = opponentData?.hand.find(unit => unit instanceof Hero);
   if (handUnits) return false;
 
-  const deckUnits = opponentData?.factionData.unitsInDeck.find(unit => unit.class === EClass.HERO && unit.belongsTo === hero.stats.belongsTo);
+  const deckUnits = opponentData?.deck.find(unit => unit.class === EClass.HERO && unit.belongsTo === hero.stats.belongsTo);
   if (deckUnits) return false;
 
   const boardUnits = hero.context.gameController?.board.units;

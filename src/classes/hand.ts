@@ -14,9 +14,9 @@ export class Hand {
 
     let handData: (IHeroBE | IItemBE)[];
     if (context.isPlayerOne){
-      handData = structuredClone(lastTurnState.player1.factionData.unitsInHand) ?? [];
+      handData = structuredClone(lastTurnState.player1.hand) ?? [];
     } else {
-      handData = structuredClone(lastTurnState.player2!.factionData.unitsInHand) ?? [];
+      handData = structuredClone(lastTurnState.player2!.hand) ?? [];
     }
 
     this.hand = handData?.map(unit => this.renderUnit(unit)) ?? [];

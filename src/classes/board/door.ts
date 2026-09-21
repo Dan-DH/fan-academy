@@ -19,7 +19,7 @@ export class Door extends Phaser.GameObjects.Container {
     this.doorOpen = context.add.image(55, -15, 'gameAtlas', 'doorOpen').setScale(1.1).setVisible(false);
 
     this.doorBanner = context.add.image(0, 45, 'gameAtlas', 'doorBanner').setScale(1.2);
-    const deckSize: number = getCurrentPlayer(context).factionData.unitsInDeck.length ?? 99;
+    const deckSize: number = getCurrentPlayer(context).deck.length ?? 99;
     this.bannerText = this.context.add.text(0, 45 + 2, deckSize!.toString(), {
       fontFamily: "proLight",
       fontSize: 30,

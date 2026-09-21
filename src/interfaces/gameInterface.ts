@@ -126,17 +126,6 @@ export interface IHeroBaseStats {
 }
 
 /**
- * Faction Interface
- */
-export interface IFaction {
-  userId?: string;
-  factionName: string;
-  unitsInHand: (IHeroBE | IItemBE)[];
-  unitsInDeck: (IHeroBE | IItemBE)[];
-  unitsLeft: number;
-}
-
-/**
  * User and player data Interface
  */
 export interface IUserData {
@@ -165,7 +154,8 @@ export interface ITurnAction {
  */
 export interface IPlayerState {
   playerId: string;
-  factionData: IFaction;
+  hand: (IHeroBE | IItemBE)[];
+  deck: (IHeroBE | IItemBE)[];
 }
 
 /**

@@ -38,7 +38,7 @@ export class Banner extends Phaser.GameObjects.Container {
         this.deckPopup.showDeckContents(context.gameController!.deck.getDeck());
       } else {
         const { opponent } = getPlayersKey(context);
-        const opponentUnits = [...context[opponent]!.factionData.unitsInDeck, ...context[opponent]!.factionData.unitsInHand];
+        const opponentUnits = [...context[opponent]!.deck, ...context[opponent]!.hand];
 
         this.deckPopup.showDeckContents(opponentUnits);
       }

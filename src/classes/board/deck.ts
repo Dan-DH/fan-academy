@@ -6,11 +6,11 @@ export class Deck {
   deck: (IHeroBE | IItemBE)[];
   constructor(context: GameScene, lasTurnState: IGameState) {
     if (context.isPlayerOne){
-      this.deck = structuredClone(lasTurnState.player1.factionData.unitsInDeck) ?? [];
+      this.deck = structuredClone(lasTurnState.player1.deck) ?? [];
     } else {
-      this.deck = structuredClone(lasTurnState.player2!.factionData.unitsInDeck) ?? [];
+      this.deck = structuredClone(lasTurnState.player2!.deck) ?? [];
     }
-    this.deck = structuredClone(getCurrentPlayer(context).factionData.unitsInDeck);
+    this.deck = structuredClone(getCurrentPlayer(context).deck);
   }
 
   getDeckSize(): number {

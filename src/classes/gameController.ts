@@ -166,11 +166,8 @@ export class GameController {
 
     const playerState: IPlayerState = {
       ...this.context[player]!,
-      factionData: {
-        ...this.context[player]!.factionData,
-        unitsInHand: this.hand.exportHandData(),
-        unitsInDeck: this.deck.getDeck()
-      }
+      hand: this.hand.exportHandData(),
+      deck: this.deck.getDeck()
     };
     const opponentState = this.context[opponent];
     this.currentTurn.push({
@@ -313,11 +310,8 @@ export class GameController {
 
     const playerState: IPlayerState = {
       ...this.context[player]!,
-      factionData: {
-        ...this.context[player]!.factionData,
-        unitsInHand: this.hand.exportHandData(),
-        unitsInDeck: this.deck.getDeck()
-      }
+      hand: this.hand.exportHandData(),
+      deck: this.deck.getDeck()
     };
 
     const opponentState = this.context[opponent];
