@@ -130,9 +130,9 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (data.isKO) return `${data.unitType}_9`;
 
     if (this.status.has(StatusEffects.RUNE_METAL) && this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_8`;
-    if (this.status.has(StatusEffects.RUNE_METAL) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_7`;
-    if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_6`;
-    if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_5`;
+    if (this.status.hasAll(StatusEffects.RUNE_METAL, StatusEffects.SHINING_HELM) ) return `${data.unitType}_7`;
+    if (this.status.hasAll(StatusEffects.FACTION_EQUIPMENT, StatusEffects.SHINING_HELM)) return `${data.unitType}_6`;
+    if (this.status.hasAll(StatusEffects.FACTION_EQUIPMENT, StatusEffects.RUNE_METAL)) return `${data.unitType}_5`;
     if (this.status.has(StatusEffects.FACTION_EQUIPMENT)) return `${data.unitType}_4`;
     if (this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_3`;
     if (this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_2`;
