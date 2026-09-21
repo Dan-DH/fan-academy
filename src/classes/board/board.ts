@@ -32,26 +32,19 @@ export class Board {
   constructor(context: GameScene, boardUnits: (IHeroBE | ICrystalBE)[], map: number) {
     this.context = context;
     this.grid = this.createTileGrid(map);
-    const createdBoardUnits = this.createBoardUnits(boardUnits);
-    this.units = [...createdBoardUnits.heroes, ...createdBoardUnits.crystals];
+    this.units =  this.createBoardUnits(boardUnits);
     this.updatePaladinAurasAcrossBoard(); // run once on game start, after this.units is set
   }
 
-  createBoardUnits(boardUnits: (IHeroBE | ICrystalBE)[]): {
-    heroes: Hero[],
-    crystals: Crystal[]
-  } {
-    const heroes: Hero[] = [];
-    const crystals: Crystal[] = [];
+  createBoardUnits(boardUnits: (IHeroBE | ICrystalBE)[]): (Hero | Crystal)[] {
+    const units: (Hero | Crystal)[] = [];
+
     boardUnits.forEach(u => {
-      if (u.boardType === EBoardUnit.HERO) heroes.push(createNewHero(u as IHeroBE));
-      if (u.boardType === EBoardUnit.CRYSTAL) crystals.push(new Crystal(mapCrystalFromBE(u as ICrystalBE)));
+      if (u.boardType === EBoardUnit.HERO) units.push(createNewHero(u as IHeroBE));
+      if (u.boardType === EBoardUnit.CRYSTAL) units.push(new Crystal(mapCrystalFromBE(u as ICrystalBE)));
     });
 
-    return {
-      heroes,
-      crystals
-    };
+    return units;
   }
 
   createTileGrid(map: number) {
