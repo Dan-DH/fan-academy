@@ -28,14 +28,11 @@ export class Board {
   context: GameScene;
   units: (Hero | Crystal)[];
   grid: Tile[];
-  assaultTiles: Tile[];
 
   constructor(context: GameScene, boardUnits: (IHeroBE | ICrystalBE)[], map: number) {
     this.context = context;
     this.grid = this.createTileGrid(map);
-    this.assaultTiles = this.grid.filter(t => t.tileType === ETiles.CRYSTAL_DAMAGE); // FIXME: check if we can use this often enough to warrant having it as a property
     const createdBoardUnits = this.createBoardUnits(boardUnits);
-    // this.crystals = createdBoardUnits.crystals;
     this.units = [...createdBoardUnits.heroes, ...createdBoardUnits.crystals];
     this.updatePaladinAurasAcrossBoard(); // run once on game start, after this.units is set
   }
@@ -650,11 +647,10 @@ export class Board {
     y: number
   }): boolean { return unit.x < 0 || unit.x >= 9 || unit.y < 0 || unit.y >= 5 ;}
 
-  // FIXME: will have to fix once I add the bitmap
   getAliveEnemyUnitsOnAssaultTiles(belongsTo: number): Hero[] {
     const result: Hero[] = [];
 
-    this.assaultTiles.forEach(t => {
+    this.grid.forEach(t => {
       const matchedUnit = this.units.find(u => u.stats.boardPosition === t.boardPosition && u.stats.belongsTo !== belongsTo && u instanceof Hero && !u.stats.isKO);
       if (matchedUnit) result.push(matchedUnit as Hero);
     });
