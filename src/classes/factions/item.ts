@@ -1,8 +1,9 @@
 import { EClass, EItems } from "../../enums/gameEnums";
-import { Coordinates, IItem } from "../../interfaces/gameInterface";
+import { Coordinates, IItem, IItemBE } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
 import GameScene from "../../scenes/game.scene";
 import { handleUnitClick } from "../../utils/handleUnitClick";
+import { mapItemToBE } from "../../utils/mapItemToBE";
 import { ItemCard } from "../cards/itemCard";
 
 export abstract class Item extends Phaser.GameObjects.Container {
@@ -63,8 +64,16 @@ export abstract class Item extends Phaser.GameObjects.Container {
     }
   }
 
-  exportData(): IItem {
-    return { ... this.stats };
+  onActivate() {
+    this.setScale(1.2);
+  }
+
+  onDeactivate() {
+    this.setScale(1);
+  }
+
+  exportData(): IItemBE {
+    return mapItemToBE(this);
   }
 
   updatePosition(boardPosition: number): void {
@@ -72,14 +81,6 @@ export abstract class Item extends Phaser.GameObjects.Container {
     this.x = x;
     this.y = y;
     this.stats.boardPosition = boardPosition;
-  }
-
-  onActivate() {
-    this.setScale(1.2);
-  }
-
-  onDeactivate() {
-    this.setScale(1);
   }
 
   shuffleInDeck(): void {

@@ -1,5 +1,5 @@
 import { EClass } from "../enums/gameEnums";
-import { IGameState, IHero, IHeroBE, IItem, IItemBE } from "../interfaces/gameInterface";
+import { IGameState, IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { Hero } from "./factions/hero";
@@ -7,19 +7,19 @@ import { Item } from "./factions/item";
 
 export class Hand {
   context: GameScene;
-  handData: (IHero | IItem)[];
   hand: (Hero | Item)[];
 
   constructor(context: GameScene, lastTurnState: IGameState) {
     this.context = context;
 
+    let handData: (IHeroBE | IItemBE)[];
     if (context.isPlayerOne){
-      this.handData = structuredClone(lastTurnState.player1.factionData.unitsInHand) ?? [];
+      handData = structuredClone(lastTurnState.player1.factionData.unitsInHand) ?? [];
     } else {
-      this.handData = structuredClone(lastTurnState.player2!.factionData.unitsInHand) ?? [];
+      handData = structuredClone(lastTurnState.player2!.factionData.unitsInHand) ?? [];
     }
 
-    this.hand = this.handData?.map(unit => this.renderUnit(unit)) ?? [];
+    this.hand = handData?.map(unit => this.renderUnit(unit)) ?? [];
   }
 
   getHandSize(): number {
@@ -30,13 +30,13 @@ export class Hand {
     return this.hand;
   }
 
-  renderUnit(unit: IHero | IItem): Hero | Item {
+  renderUnit(unit: IHeroBE | IItemBE): Hero | Item {
     if (unit.class === EClass.HERO) return createNewHero(unit as IHeroBE);
     if (unit.class === EClass.ITEM) return createNewItem(unit as IItemBE);
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 
-  addToHand(units: (IHero | IItem)[]): void {
+  addToHand(units: (IHeroBE | IItemBE)[]): void {
     const defaultPositions = [45, 46, 47, 48, 49, 50];
 
     let previousIndex = -1;
@@ -61,8 +61,8 @@ export class Hand {
     if (index !== -1) this.hand.splice(index, 1);
   }
 
-  exportHandData(): (IHero | IItem)[] {
+  exportHandData(): (IHeroBE | IItemBE)[] {
     if (this.hand.length === 0) return [];
-    return this.hand.map(unit =>  unit.exportData());
+    return this.hand.map(unit => unit.exportData());
   }
 }

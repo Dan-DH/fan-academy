@@ -149,10 +149,6 @@ export class GameController {
     this.context.scene.restart();
   };
 
-  // getDeck() {
-  //   return this.deck.getDeck();
-  // } FIXME: unused
-
   drawUnits() {
     // this.context.sound.play(EGameSounds.DRAW);
 
@@ -161,7 +157,7 @@ export class GameController {
 
     this.door.openDoor();
 
-    const drawnUnits = this.deck.removeFromDeck(drawAmount); // IHero IItem
+    const drawnUnits = this.deck.removeFromDeck(drawAmount);
 
     this.hand.addToHand(drawnUnits);
 

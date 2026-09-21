@@ -1,5 +1,5 @@
 import { EActionType, EAttackType, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
-import { Coordinates, IHero } from "../../interfaces/gameInterface";
+import { Coordinates, IHero, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
 import { handleUnitClick } from "../../utils/handleUnitClick";
@@ -16,6 +16,7 @@ import { enterSpecialTileCheck, exitSpecialTileCheck, removeSpecialTile } from "
 import { Pulverizer } from "./dwarves/items";
 import { fanAcademy } from "../../main";
 import { StatusEffects, StatusTracker } from "../../utils/statuses";
+import { mapHeroToBE } from "../../utils/mapHeroToBE";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   context: GameScene;
@@ -97,11 +98,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.updateCardData(this);
   }
 
-  // FIXME: is this used?
-  exportData(): IHero {
-    this.getMagicalDamageResistance();
-    this.getPhysicalDamageResistance();
-    return { ...this.stats };
+  exportData(): IHeroBE {
+    return mapHeroToBE(this);
   }
 
   onActivate(): void {

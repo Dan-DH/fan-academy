@@ -1,5 +1,5 @@
 import { EClass } from "../../enums/gameEnums";
-import { IHero, IItem } from "../../interfaces/gameInterface";
+import { IHero, IHeroBE, IItem, IItemBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 
 const turnPopupCoordinates = {
@@ -38,7 +38,7 @@ export class DeckPopup extends Phaser.GameObjects.Container {
     context.add.existing(this);
   }
 
-  showDeckContents(deck: (IHero | IItem)[]) {
+  showDeckContents(deck: (IHeroBE | IItemBE)[]) {
     // Clear old card images
     this.cardImages.forEach(img => img.destroy());
     this.cardImages = [];

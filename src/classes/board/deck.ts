@@ -1,9 +1,9 @@
-import { IGameState, IHero, IItem } from "../../interfaces/gameInterface";
+import { IGameState, IHeroBE, IItemBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getCurrentPlayer } from "../../utils/playerUtils";
 
 export class Deck {
-  deck: (IHero | IItem)[];
+  deck: (IHeroBE | IItemBE)[];
   constructor(context: GameScene, lasTurnState: IGameState) {
     if (context.isPlayerOne){
       this.deck = structuredClone(lasTurnState.player1.factionData.unitsInDeck) ?? [];
@@ -21,11 +21,11 @@ export class Deck {
     return this.deck;
   }
 
-  removeFromDeck(amount: number): (IHero | IItem)[] {
+  removeFromDeck(amount: number): (IHeroBE | IItemBE)[] {
     return this.deck.splice(0, amount);
   }
 
-  addToDeck(unit: IHero | IItem): (IHero | IItem)[] {
+  addToDeck(unit: IHeroBE | IItemBE): (IHeroBE | IItemBE)[] {
     this.deck.push(unit);
     return this.deck;
   }

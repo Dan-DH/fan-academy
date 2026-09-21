@@ -131,8 +131,8 @@ export interface IHeroBaseStats {
 export interface IFaction {
   userId?: string;
   factionName: string;
-  unitsInHand: (IHero | IItem)[];
-  unitsInDeck: (IHero | IItem)[];
+  unitsInHand: (IHeroBE | IItemBE)[];
+  unitsInDeck: (IHeroBE | IItemBE)[];
   unitsLeft: number;
 }
 
