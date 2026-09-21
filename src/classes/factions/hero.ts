@@ -12,7 +12,7 @@ import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
 import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
-import { enterSpecialTileCheck, exitSpecialTileCheck, removeFromBoard, removeSpecialTile } from "../../utils/boardUtils";
+import { enterSpecialTileCheck, exitSpecialTileCheck, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
 import { fanAcademy } from "../../main";
 import { StatusEffects, StatusTracker } from "../../utils/statuses";
@@ -142,7 +142,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       }
 
       if (!directHit) {
-        const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
+        const debuffLevel = (this.context.gameController?.board.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
         assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
       }
     }
@@ -412,7 +412,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       this.scene.tweens.killTweensOf(child);
     });
 
-    if (board) removeFromBoard(this);
+    if (board) {
+      const index = this.context.gameController!.board.units.findIndex(unit => unit.stats.unitId === this.stats.unitId);
+      if (index !== -1) { this.context.gameController!.board.units.splice(index, 1); }
+
+      checkUnitGameOver(this);
+    }
 
     // Destroy container and children
     this.destroy(true);

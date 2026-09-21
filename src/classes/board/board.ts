@@ -26,10 +26,8 @@ import { mapHeroToBE } from "../../utils/mapHeroToBE";
 export class Board {
   tileSize: number = 90;
   context: GameScene;
-  units: (Hero | Crystal)[]; // FIXME: testing how often I use this over the individual arrays
-  heroes: Hero[];
-  crystals: Crystal[]; // keep heroes and crystal separated for the time being
-  grid: Tile[]; // FIXME: board state. Using atm
+  units: (Hero | Crystal)[];
+  grid: Tile[];
   assaultTiles: Tile[];
 
   constructor(context: GameScene, boardUnits: (IHeroBE | ICrystalBE)[], map: number) {
@@ -37,8 +35,7 @@ export class Board {
     this.grid = this.createTileGrid(map);
     this.assaultTiles = this.grid.filter(t => t.tileType === ETiles.CRYSTAL_DAMAGE); // FIXME: check if we can use this often enough to warrant having it as a property
     const createdBoardUnits = this.createBoardUnits(boardUnits);
-    this.heroes = createdBoardUnits.heroes;
-    this.crystals = createdBoardUnits.crystals;
+    // this.crystals = createdBoardUnits.crystals;
     this.units = [...createdBoardUnits.heroes, ...createdBoardUnits.crystals];
     this.updatePaladinAurasAcrossBoard(); // run once on game start, after this.units is set
   }
@@ -106,23 +103,19 @@ export class Board {
   highlightSpawns(unitType: EHeroes) {
     const spawns = new Set<Tile>();
 
-    // FIXME: i can just loop the special tiles array
-    this.grid.forEach(tile => {
-      const enemySpawn = isEnemySpawn(this.context, tile);
-      /** We add:
+    /** We add:
        *  -friendly spawn tiles (unless they are occupied by a live unit other than an enemy phantom)
        *  -any tile with a KO'd unit if the unit spawning is a Wraith (and the tile is not an enemy spawn)
        */
-      const unitOnTile = this.heroes.find(u => u.stats.boardPosition === tile.boardPosition);
-      if (tile.tileType === ETiles.SPAWN && !enemySpawn){
+    this.grid.forEach(tile => {
+      const enemySpawn = isEnemySpawn(this.context, tile);
+      const unitOnTile = this.units.find(u => u instanceof Hero && u.stats.boardPosition === tile.boardPosition) as Hero;
+
+      if (tile.tileType === ETiles.SPAWN && !enemySpawn) {
         if (!unitOnTile || unitOnTile.stats.isKO || unitOnTile.stats.unitType === EHeroes.PHANTOM) spawns.add(tile);
       }
-      if (
-        unitType === EHeroes.WRAITH &&
-        unitOnTile?.stats.isKO &&
-        !enemySpawn
-      )
-        spawns.add(tile);
+
+      if (unitType === EHeroes.WRAITH && unitOnTile?.stats.isKO && !enemySpawn) spawns.add(tile);
     });
 
     this.highlightTiles([...spawns]);
@@ -144,12 +137,6 @@ export class Board {
     const enemyLOSCheck: (Hero | Crystal)[] = [];
 
     unitsInRange.forEach(u => {
-      const target = u instanceof Hero ? this.heroes.find(unit => unit.stats.unitId === u.stats.unitId) : u instanceof Crystal ? this.crystals.find(crystal => crystal.stats.boardPosition === u.stats.boardPosition) : undefined;
-      if (!target) {
-        console.error('highlightEnemyTargets() - No target found:', u);
-        return;
-      }
-
       /**
        * Show attack reticle if one of the below is true:
        *  -target is an enemy hero and it's not KO
@@ -159,12 +146,12 @@ export class Board {
        */
 
       if (
-        target instanceof Crystal && target.stats.belongsTo !== hero.stats.belongsTo ||
-        target instanceof Hero && target.stats.belongsTo !== hero.stats.belongsTo && !target.stats.isKO ||
-        (hero.stats.unitType === EHeroes.NECROMANCER || hero.stats.unitType === EHeroes.WRAITH) && target instanceof Hero && target.stats.isKO ||
-        target instanceof Hero && target.stats.isKO && this.isOrthogonalAdjacent(hero, target) && isEnemySpawn(this.context, target.getTile())
+        u instanceof Crystal && u.stats.belongsTo !== hero.stats.belongsTo ||
+        u instanceof Hero && u.stats.belongsTo !== hero.stats.belongsTo && !u.stats.isKO ||
+        (hero.stats.unitType === EHeroes.NECROMANCER || hero.stats.unitType === EHeroes.WRAITH) && u instanceof Hero && u.stats.isKO ||
+        u instanceof Hero && u.stats.isKO && this.isOrthogonalAdjacent(hero, u) && isEnemySpawn(this.context, u.getTile())
       ) {
-        enemyLOSCheck.push(target);
+        enemyLOSCheck.push(u);
       }
     });
 
@@ -193,22 +180,16 @@ export class Board {
     if (!totalUnitsInRange.length) return;
 
     totalUnitsInRange.forEach(u => {
-      const target = u instanceof Hero ? this.heroes.find(unit => unit.stats.unitId === u.stats.unitId) : u instanceof Crystal ? this.crystals.find(crystal => crystal.stats.boardPosition === u.stats.boardPosition) : undefined;
-      if (!target) {
-        console.error('No healing target found', u);
-        return;
-      }
+      const maxHealth = u.stats.maxHealth;
+      const currentHealth = u.stats.currentHealth;
 
-      const maxHealth = target.stats.maxHealth;
-      const currentHealth = target.stats.currentHealth;
-
-      if (target instanceof Hero && hero.stats.canHeal && target.stats.belongsTo === hero.stats.belongsTo && currentHealth! < maxHealth!) {
-        addReticleTween(target.visuals.healReticle);
+      if (u instanceof Hero && hero.stats.canHeal && u.stats.belongsTo === hero.stats.belongsTo && currentHealth! < maxHealth!) {
+        addReticleTween(u.visuals.healReticle);
       }
       // Will need to update this logic for any future buffs by other units
-      if (hero.stats.canBuff && target.stats.belongsTo === hero.stats.belongsTo && !target.status.has(StatusEffects.ENGINEER_SHIELD)) {
-        if (target instanceof Crystal) addReticleTween(target.visuals.healReticle);
-        if (target instanceof Hero && !target.stats.isKO) addReticleTween(target.visuals.healReticle);
+      if (hero.stats.canBuff && u.stats.belongsTo === hero.stats.belongsTo && !u.status.has(StatusEffects.ENGINEER_SHIELD)) {
+        if (u instanceof Crystal) addReticleTween(u.visuals.healReticle);
+        if (u instanceof Hero && !u.stats.isKO) addReticleTween(u.visuals.healReticle);
       }
     });
   }
@@ -229,36 +210,28 @@ export class Board {
     // Ninja teleporting
     if (hero.stats.unitType !== EHeroes.NINJA) return;
 
-    const friendlyUnitsOnBoard: Hero[] = [];
-    this.heroes.forEach(unit => {
-      if (hero.stats.belongsTo === unit.stats.belongsTo && !unit.stats.isKO && unit.stats.unitId !== hero.stats.unitId) friendlyUnitsOnBoard.push(unit);
-    });
-
-    if (friendlyUnitsOnBoard.length <= 1) return;
-
-    friendlyUnitsOnBoard.forEach(unit => {
-      addReticleTween(unit.visuals.allyReticle);
+    this.units.forEach(u => {
+      if (hero.stats.belongsTo === u.stats.belongsTo) return;
+      if (u instanceof Crystal) return;
+      if(!u.stats.isKO && u.stats.unitId !== hero.stats.unitId) addReticleTween(u.visuals.allyReticle);
     });
   }
 
   highlightEquipmentTargets(item: Item): void {
-    const tilesToHighlight: Tile[] = [];
-
-    this.heroes.forEach(hero => {
-      if (hero.stats.belongsTo !== item.stats.belongsTo) return;
-      if (hero instanceof Phantom) return;
-      if (hero.isAlreadyEquipped(item)) return;
-      if (item instanceof HealingPotion && hero.isFullHP()) return;
-      if (!item.stats.canHeal && hero.stats.isKO) return;
-      if (item.stats.canHeal &&  hero.stats.isKO) {
+    this.units.forEach(u => {
+      if (u instanceof Crystal) return;
+      if (u.stats.belongsTo !== item.stats.belongsTo) return;
+      if (u instanceof Phantom) return;
+      if (u.isAlreadyEquipped(item)) return;
+      if (item instanceof HealingPotion && u.isFullHP()) return;
+      if (!item.stats.canHeal && u.stats.isKO) return;
+      if (item.stats.canHeal && u.stats.isKO) {
         if (item instanceof ManaVial) return;
         if (item instanceof DwarvenBrew) return;
       }
 
-      tilesToHighlight.push(hero.getTile());
+      u.getTile().setHighlight();
     });
-
-    this.highlightTiles(tilesToHighlight);
   }
 
   highlightAllBoard() {
@@ -284,17 +257,11 @@ export class Board {
   }
 
   removeReticles(): void {
-    this.heroes.forEach(unit => {
-      removeReticleTween(unit.visuals.attackReticle);
-      removeReticleTween(unit.visuals.healReticle);
-      removeReticleTween(unit.visuals.allyReticle);
-      unit.visuals.blockedLOS.setVisible(false);
-    });
-
-    this.crystals.forEach(crystal => {
-      removeReticleTween(crystal.visuals.attackReticle);
-      removeReticleTween(crystal.visuals.healReticle);
-      crystal.visuals.blockedLOS.setVisible(false);
+    this.units.forEach(u => {
+      removeReticleTween(u.visuals.attackReticle);
+      removeReticleTween(u.visuals.healReticle);
+      u.visuals.blockedLOS.setVisible(false);
+      if (u instanceof Hero) removeReticleTween(u.visuals.allyReticle);
     });
   }
 
@@ -535,24 +502,21 @@ export class Board {
   }
 
   getAliveAdjacentFriendlyUnitsOnBoard(target: Hero | Crystal): (Hero | Crystal)[] {
-    const result: (Hero | Crystal)[] = [];
-
-    this.heroes.forEach(unit => {
-      if (!unit.stats.isKO && target.stats.belongsTo === unit.stats.belongsTo && this.isAdjacent(target, unit)) result.push(unit);
+    return this.units.filter(u => {
+      if (target.stats.belongsTo === u.stats.belongsTo && this.isAdjacent(target, u)) {
+        if (u instanceof Crystal) return true;
+        if (u instanceof Hero && !u.stats.isKO) return true;
+      }
     });
-    this.crystals.forEach(crystal => {
-      if (target.stats.belongsTo === crystal.stats.belongsTo && this.isAdjacent(target, crystal)) result.push(crystal);
-    });
-
-    return result;
   }
 
   searchForAliveAdjacentFriendlyUnit(target: Hero | Crystal, unitToSearch: EHeroes): number {
-    return this.heroes.filter(unit =>
-      unit.stats.unitType === unitToSearch &&
-      target.stats.belongsTo === unit.stats.belongsTo &&
-      this.isAdjacent(target, unit) &&
-      !unit.stats.isKO).length;
+    return this.units.filter(u =>
+      u instanceof Hero &&
+      u.stats.unitType === unitToSearch &&
+      target.stats.belongsTo === u.stats.belongsTo &&
+      this.isAdjacent(target, u) &&
+      !u.stats.isKO).length;
   }
 
   // FIXME: rund this once after createing all units on the board
@@ -584,7 +548,7 @@ export class Board {
   }
 
   updateEngineerOnShieldLost(unitId: string): void {
-    const engineer = this.heroes.find(unit => unit.stats.shieldingAlly === unitId);
+    const engineer = this.units.find(u => u instanceof Hero && u.stats.shieldingAlly === unitId) as Hero;
     if (!engineer) return;
     engineer.stats.shieldingAlly = undefined;
   }
@@ -672,13 +636,13 @@ export class Board {
   }): Hero | Crystal | undefined {
     if (this.isOffBoard(pair)) return undefined;
 
-    const found = this.heroes.find(unit => unit.stats.col === pair.x &&
-      unit.stats.row === pair.y &&
-      unit.stats.belongsTo !== attacker.stats.belongsTo &&
-      !unit.stats.isKO) ||
-      this.crystals.find(unit => unit.stats.col === pair.x && unit.stats.row === pair.y && unit.stats.belongsTo !== attacker.stats.belongsTo);
+    const match = this.units.find(u => u.stats.col === pair.x &&
+      u.stats.row === pair.y &&
+      u.stats.belongsTo !== attacker.stats.belongsTo);
 
-    return found || undefined;
+    if (match instanceof Crystal || match instanceof Hero && !match.stats.isKO) return match;
+
+    return  undefined;
   }
 
   isOffBoard(unit: {

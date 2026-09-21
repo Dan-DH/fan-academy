@@ -149,9 +149,9 @@ export class GameController {
     this.context.scene.restart();
   };
 
-  getDeck() {
-    return this.deck.getDeck();
-  }
+  // getDeck() {
+  //   return this.deck.getDeck();
+  // } FIXME: unused
 
   drawUnits() {
     // this.context.sound.play(EGameSounds.DRAW);
@@ -193,11 +193,11 @@ export class GameController {
     // Remove KO'd units from the board
     const unitsToRemove: Hero[] = [];
 
-    this.board.heroes.forEach(unit => {
-      if (unit.stats.isKO) {
-        if (unit.stats.lastBreath) unitsToRemove.push(unit);
-        if (!unit.stats.lastBreath) {
-          unit.stats.lastBreath = true;
+    this.board.units.forEach(u => {
+      if (u instanceof Hero && u.stats.isKO) {
+        if (u.stats.lastBreath) unitsToRemove.push(u);
+        if (!u.stats.lastBreath) {
+          u.stats.lastBreath = true;
         }
       }
     });
@@ -391,14 +391,15 @@ export class GameController {
   }
 
   updateCrystals(attackerBelongsTo: number, increase: boolean): void {
-    this.board.crystals.forEach(crystal => {
-      if (crystal.stats.belongsTo !== attackerBelongsTo) {
+    this.board.units.forEach(u => {
+      if (u instanceof Hero) return;
+      if (u.stats.belongsTo !== attackerBelongsTo) {
         let newLevel: number = 0;
 
-        if (increase) newLevel = crystal.stats.debuffLevel + 1;
-        if (!increase && crystal.stats.debuffLevel > 0) newLevel = crystal.stats.debuffLevel - 1; // Safeguard to avoid it going negative until I figure out the bug
+        if (increase) newLevel = u.stats.debuffLevel + 1;
+        if (!increase && u.stats.debuffLevel > 0) newLevel = u.stats.debuffLevel - 1; // Safeguard to avoid it going negative until I figure out the bug
 
-        crystal.updateCrystalDebuffAnimation(newLevel);
+        u.updateCrystalDebuffAnimation(newLevel);
       }
     });
   };

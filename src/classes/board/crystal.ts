@@ -112,9 +112,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     // this.scene.sound.play(EGameSounds.CRYSTAL_DESTROY);
 
     // Remove destoyed crystal from the board array
-    const crystalArray = this.context.gameController!.board.crystals;
-    const index = crystalArray.findIndex(crystal => crystal.stats.boardPosition === this.stats.boardPosition);
-    crystalArray.splice(index, 1);
+    const index = this.context.gameController!.board.units.findIndex(u => u instanceof Crystal && u.stats.boardPosition === this.stats.boardPosition);
+    this.context.gameController!.board.units.splice(index, 1);
 
     // Update the remaining crystal or set gameOver
     if (this.isLastCrystal()) {
