@@ -22,6 +22,6 @@ import HomeCard from './HomeCard.svelte';
 			</li>
 			{/each}
 		</ul>
-		<a href="/leaderboard" class="btn btn-ghost my-3">See all patch notes</a>
+		<a href="/leaderboard" class="btn btn-ghost my-3">See All Patch Notes</a>
 	</div>
 </HomeCard>

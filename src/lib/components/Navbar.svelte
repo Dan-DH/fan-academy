@@ -11,7 +11,7 @@ function closePopovers(event: MouseEvent) {
   }
 </script>
 
-<div class="navbar bg-base-300 shadow-sm px-5">
+<div class="navbar bg-base-300 shadow-sm px-5 sticky top-0 left-0 right-0 z-10">
   <div class="navbar-start">
     <a class="btn btn-ghost text-lg" href="/">Fan Academy</a>
   </div>
@@ -64,7 +64,7 @@ function closePopovers(event: MouseEvent) {
   <div class="navbar-end gap-2">
     <a class="btn btn-accent" href="/auth">
       <span class="icon-[akar-icons--double-sword] text-xl"></span>
-      Start Battle
+      Battle Now!
     </a>
     <button class="btn sm:hidden" popovertarget="my-megamenu-4" aria-label="hamburger-menu">
       <span class="icon-[charm--menu-hamburger]"></span>
