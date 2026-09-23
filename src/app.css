@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Grandstander:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: all;
@@ -5,7 +7,9 @@
 @plugin "@iconify/tailwind4";
 
 @theme {
-  --font-nunito: "Nunito", sans-serif;
+  --font-grandstander: "Grandstander", sans-serif;
 }
+
+
 
 

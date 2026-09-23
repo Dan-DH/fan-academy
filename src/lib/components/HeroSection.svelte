@@ -2,13 +2,13 @@
 
 </script>
 
-<div class="relative max-w-7xl mx-auto w-full">
+<div class="relative max-w-6xl mx-auto w-full">
   <!-- Outer Glow Effect -->
   <div class="absolute w-full -inset-1 rounded-2xl bg-linear-to-b from-amber-400/40 via-amber-600/20 to-amber-900/40 blur-md -z-10"></div>
 
   <!-- Main Card Container -->
   <div class="relative w-full bg-stone-900/90 bg-[url('game_board.webp')] bg-cover bg-center bg-no-repeat bg-blend-multiply
-         backdrop-blur-md text-base-content selection:bg-primary selection:text-primary-content rounded-xl p-8 border-2 border-amber-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.8),0_10px_30px_rgba(0,0,0,0.7)]">
+         backdrop-blur-md text-base-content selection:bg-primary selection:text-primary-content rounded-xl p-8 py-10 border-2 border-amber-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.8),0_10px_30px_rgba(0,0,0,0.7)]">
 
     <!-- Inner Inset Gold Line -->
     <div class="pointer-events-none absolute inset-1.5 rounded-lg border border-amber-400/30"></div>
@@ -24,7 +24,7 @@
 
     <div class="w-11/12 mx-auto flex sm:col justify-center items-center gap-10">
       <div class="hidden md:inline-grid md:hover-3d">
-        <figure class="w-48 aspect-square">
+        <figure class="w-48 aspect-square scale-x-100">
           <img src="paladin.webp" alt="paladin" class="w-90 aspect-square">
         </figure>
         <div></div>
@@ -38,10 +38,10 @@
       </div>
 
         <div class="text-center sm:text-left space-y-1">
-          <h1 class="md:text-4xl sm:text-md text-center font-black tracking-wide text-transparent bg-clip-text bg-linear-to-b from-amber-100 via-amber-300 to-amber-600 drop-shadow">
+          <h1 class="md:text-5xl sm:text-md text-center font-black tracking-wide text-transparent bg-clip-text bg-linear-to-b from-amber-100 via-amber-300 to-amber-600 drop-shadow">
             MASTER THE GRID
           </h1>
-          <h1 class="md:text-2xl sm:text-md text-center font-black tracking-wide text-transparent bg-clip-text bg-linear-to-b from-amber-100 via-amber-300 to-amber-600 drop-shadow">
+          <h1 class="md:text-2xl sm:text-md text-center font-black tracking-wide text-transparent bg-clip-text bg-linear-to-b from-amber-100 via-amber-5000 to-amber-300 drop-shadow">
             DEFEAT THE RIVALS
           </h1>
         </div>
