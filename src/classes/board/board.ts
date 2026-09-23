@@ -202,7 +202,7 @@ export class Board {
     if (hero.stats.unitType !== EHeroes.NINJA) return;
 
     this.units.forEach(u => {
-      if (hero.stats.belongsTo === u.stats.belongsTo) return;
+      if (hero.stats.belongsTo !== u.stats.belongsTo) return;
       if (u instanceof Crystal) return;
       if(!u.stats.isKO && u.stats.unitId !== hero.stats.unitId) addReticleTween(u.visuals.allyReticle);
     });
