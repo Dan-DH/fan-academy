@@ -9,3 +9,13 @@ export type PlayerStat = {
         elo: number,
         icon: string
     }
+
+export type PlayerData = PlayerStat & {
+    wins: number;
+    loses: number;
+    total_matches: number;
+    win_rate: number;
+    ranked_matches: number;
+    ranked_wins: number;
+    tier: "diamond" | "gold" | "silver" | "bronze" | "iron" | "wood"
+}
