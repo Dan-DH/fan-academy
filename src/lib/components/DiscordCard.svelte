@@ -13,11 +13,11 @@
         </div>
 
         <p class="text-md text-center text-slate-300 mt-1">
-            Find squad mates, discuss strategies, and participate in events.
+            Find rivals, discuss strategies, and participate in events.
         </p>
 
     <a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="btn btn-ghost my-3">
-      Join Server
+      Join Discord
     </a>
     </div>
 

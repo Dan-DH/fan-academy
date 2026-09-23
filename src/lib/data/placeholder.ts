@@ -9,11 +9,11 @@ export const topPlayers: PlayerStat[] = [
 export const patchNotes: PatchNote[] = [
     {version: "1.1.50", date: "20/09/2026", description:[
         "New fraction is added.",
-        "Fixed a case where chat messages not appeared.",
+        "Fixed a case where chat messages are not appeared.",
          "Players can see all moves."]
     },
     {version: "1.0.13", date: "14/03/2026", description:[
-        "New character added.",
-        "New map added."]
+        "New character is added.",
+        "New map is added."]
     }
 ]

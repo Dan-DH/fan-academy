@@ -4,10 +4,10 @@
 </script>
 
 <HomeCard title="Top 3 Players">
-    <div class=" flex flex-col justify-between items-center h-full gap-2 p-3">
-        <ul class="p-2 flex flex-col">
+    <div class=" flex flex-col justify-between items-center h-full w-full gap-2 p-3 ">
+        <ul class="p-2 flex flex-col w-full">
             {#each topPlayers as player}
-                <li class="inline-flex w-full items-center justify-between gap-5">
+                <li class="flex w-full items-center justify-between gap-5">
                     <span class="{player.icon} text-5xl"></span>
                     <div class="flex justify-between items-start gap-3 w-full">
                         <h4 class="text-lg font-medium">{player.username}</h4>

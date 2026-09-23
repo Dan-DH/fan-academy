@@ -7,7 +7,7 @@ import PatchNotes from '$lib/components/PatchNotes.svelte';
 
 <div class="flex flex-col gap-5 justify-center items-center">
 	<HeroSection/>
-	<div class="flex flex-col md:flex-row w-full gap-5 justify-center items-center">
+	<div class="flex flex-col md:flex-row w-full flex-wrap gap-5 justify-center items-center">
 		<PatchNotes />
 		<TopPlayers />
 		<DiscordCard/>
