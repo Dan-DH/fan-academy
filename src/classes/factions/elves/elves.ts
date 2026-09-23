@@ -1,4 +1,4 @@
-import { EActionType, EAttackType, EBoardUnit, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { useAnimation } from "../../../utils/unitAnimations";
@@ -40,7 +40,6 @@ export abstract class DarkElf extends Hero {
 export function createElvesPhantomData(data: Partial<IHero>): IHero {
   // Cannot be equipped, buffed or healed, disappears if KO'd
   return {
-    boardType: EBoardUnit.HERO,
     unitType: EHeroes.PHANTOM,
     baseHealth: 100,
     maxHealth: 100,

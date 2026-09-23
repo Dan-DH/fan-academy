@@ -14,7 +14,6 @@ export function mapHeroFromBE(data: IHeroBE): IHero {
     unitId: data.unitId,
     boardPosition: data.boardPosition,
     status: data.status,
-    boardType: data.boardType,
     belongsTo: data.belongsTo,
 
     currentHealth: data.currentHealth ?? baseUnitStats.baseHealth,

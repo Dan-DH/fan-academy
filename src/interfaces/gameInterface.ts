@@ -58,7 +58,6 @@ export interface IHero {
   lastBreath: boolean;
   status: number;
   unitsConsumed: number;
-  boardType: EBoardUnit;
 
   // FE only
   row: number;

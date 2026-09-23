@@ -1,4 +1,4 @@
-import { EHeroes, ETiles, ERange, EBoardUnit } from "../../enums/gameEnums";
+import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
 import { Coordinates, ICrystalBE, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
@@ -41,8 +41,8 @@ export class Board {
     const units: (Hero | Crystal)[] = [];
 
     boardUnits.forEach(u => {
-      if (u.boardType === EBoardUnit.HERO) units.push(createNewHero(u as IHeroBE));
-      if (u.boardType === EBoardUnit.CRYSTAL) units.push(new Crystal(mapCrystalFromBE(u as ICrystalBE)));
+      if (!u.unitId.includes('crystal')) units.push(createNewHero(u as IHeroBE));
+      if (u.unitId.includes('crystal')) units.push(new Crystal(mapCrystalFromBE(u as ICrystalBE)));
     });
 
     return units;

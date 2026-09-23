@@ -1,4 +1,4 @@
-import { EAttackType, EWinConditions, EFaction, EHeroes, EBoardUnit } from "../../enums/gameEnums";
+import { EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
 import { Coordinates, ICrystal } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
@@ -203,7 +203,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   isLastCrystal(): boolean {
-    const atLeastOneFriendlyCrystalLeft = this.context?.gameController?.board.units.find(u => u.stats.boardType === EBoardUnit.CRYSTAL && u.stats.belongsTo === this.stats.belongsTo && u.stats.unitId !== this.stats.unitId);
+    const atLeastOneFriendlyCrystalLeft = this.context?.gameController?.board.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo && u.stats.unitId !== this.stats.unitId);
 
     if (atLeastOneFriendlyCrystalLeft) return false;
     return true;

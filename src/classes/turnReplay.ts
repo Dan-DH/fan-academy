@@ -1,5 +1,5 @@
 import { EClass, EActionType } from "../enums/gameEnums";
-import { IHero, IItem, ITurnAction } from "../interfaces/gameInterface";
+import { IHeroBE, IItemBE, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { textAnimationSizeIncrease } from "../utils/textAnimations";
@@ -64,8 +64,8 @@ export class TurnReplay {
       const opponentData = this.context.isPlayerOne ? this.gameController.lastTurnState.player2 : this.gameController.lastTurnState.player1;
 
       opponentData?.hand.forEach(unit => {
-        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(unit as IHero).setVisible(false).setInteractive(false));
-        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(unit as IItem).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(unit as IHeroBE).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(unit as IItemBE).setVisible(false).setInteractive(false));
       });
     }
 

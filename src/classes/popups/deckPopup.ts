@@ -1,5 +1,5 @@
 import { EClass } from "../../enums/gameEnums";
-import { IHero, IHeroBE, IItem, IItemBE } from "../../interfaces/gameInterface";
+import { IHeroBE, IItemBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 
 const turnPopupCoordinates = {
@@ -87,9 +87,9 @@ export class DeckPopup extends Phaser.GameObjects.Container {
 
       let imageKey: string;
       if (card.class === EClass.HERO) {
-        imageKey = `${(card as IHero).unitType}_v1-hd`;
+        imageKey = `${(card as IHeroBE).unitType}_v1-hd`;
       } else {
-        imageKey = `${(card as IItem).itemType}Icon`;
+        imageKey = `${(card as IItemBE).itemType}Icon`;
       }
 
       const cardImage = this.context.add.image(x, y, 'gameAtlas', imageKey)
