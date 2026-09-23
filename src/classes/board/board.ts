@@ -203,7 +203,7 @@ export class Board {
       if (hero.stats.belongsTo === unit.stats.belongsTo && !unit.stats.isKO && unit.stats.unitId !== hero.stats.unitId) friendlyUnitsOnBoard.push(unit);
     });
 
-    if (friendlyUnitsOnBoard.length <= 1) return;
+    if (!friendlyUnitsOnBoard.length) return;
 
     friendlyUnitsOnBoard.forEach(unit => {
       addReticleTween(unit.visuals.allyReticle);
