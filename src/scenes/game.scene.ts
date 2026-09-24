@@ -8,6 +8,7 @@ import { Crystal } from "../classes/board/crystal";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
 import { Room } from "@colyseus/sdk";
 import { TurnReplay } from "../classes/turnReplay";
+import { GameReplay } from "../classes/gameReplay";
 
 export default class GameScene extends Phaser.Scene {
   // FIXME: check which properties we can remove here
@@ -22,6 +23,7 @@ export default class GameScene extends Phaser.Scene {
   gameController: GameController | undefined;
 
   activePlayer: string | undefined;
+  firstPlayer: string | undefined; // only used for replays
   isPlayerOne: boolean | undefined;
   opponentId!: string;
 
@@ -32,6 +34,7 @@ export default class GameScene extends Phaser.Scene {
   visibleUnitCard: Hero | Item | Crystal | Tile | undefined;
 
   triggerReplay = true;
+  fullReplay = false;
 
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
 
@@ -43,6 +46,7 @@ export default class GameScene extends Phaser.Scene {
     userId: string,
     currentGame: IGame,
     currentRoom: Room,
+    fullReplay: boolean,
     triggerReplay?: boolean
   }) {
     this.activeUnit = undefined;
@@ -50,6 +54,7 @@ export default class GameScene extends Phaser.Scene {
     this.visibleUnitCard = undefined;
     this.chatComponent = undefined;
     this.longPressStart = undefined;
+    this.firstPlayer = undefined;
 
     this.userId = data.userId;
     this.turnNumber = data.currentGame.turnNumber;
@@ -57,10 +62,13 @@ export default class GameScene extends Phaser.Scene {
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
 
-    this.triggerReplay = data.triggerReplay ?? true;
+    this.fullReplay = data.fullReplay;
+    this.triggerReplay = data.fullReplay ? false : data.triggerReplay ?? true;
+    console.log('freplay', this.fullReplay, 'treplay', this.triggerReplay);
 
     // Updating GameScene properties
-    this.activePlayer = this.currentGame.activePlayer.toString();
+    this.activePlayer = this.currentGame.activePlayer;
+    this.firstPlayer = this.currentGame.firstPlayer ?? undefined;
     this.isPlayerOne = this.currentGame?.players[0].userData._id === this.userId;
     this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
   }
@@ -78,6 +86,9 @@ export default class GameScene extends Phaser.Scene {
     this.gameController = new GameController(this);
     if (this.triggerReplay) {
       new TurnReplay(this.gameController).replayTurn();
+    }
+    if (this.fullReplay) {
+      new GameReplay(this.gameController).replayAllTurns();
     }
     this.game.events.on('messageToGameScene', this.handleMessageToGameScene);
   }

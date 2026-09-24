@@ -5,7 +5,6 @@ import { IChatMessage, IGame, IGameOver, IGameState } from "../interfaces/gameIn
 import UIScene from "../scenes/ui.scene";
 import { EFaction, EGameModes, EGameStatus } from "../enums/gameEnums";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
-import { showDisconnectWarning } from "../scenes/uiSceneUtils/disconnectWarning";
 
 class ColyseusService {
   client: Client;
@@ -143,6 +142,7 @@ class ColyseusService {
       if (fanAcademy.scene.isActive('UIScene')) createGameList();
     });
 
+    // FIXME: check if these messages need to be async
     lobby.onMessage('userDeletedUpdate', async (message: {
       gameIds: string[],
       userIds: string[]
@@ -164,7 +164,7 @@ class ColyseusService {
       }
     });
 
-    lobby.onMessage('chatMessageReceived', async (chatMessage: {
+    lobby.onMessage('chatMessageReceived', (chatMessage: {
       roomId: string,
       message: IChatMessage
     }) => {
@@ -177,16 +177,24 @@ class ColyseusService {
       const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
       if (uiScene.scene.isActive() && uiScene.activeGame === chatMessage.roomId) renderChatMessage(chatMessage.message);
     });
-
-    lobby.onLeave((code: number) => {
-      console.log("Left room with code:", code);
-      showDisconnectWarning();
-    });
   }
 
   //
   // SENDING MESSAGES
   //
+  async sendGetTurnHistoryMessage(gameId: string): Promise<void> {
+    const turnHistory: {
+      _id: string,
+      turnHistory: IGameState[][]
+    } = await this.lobby!.request('getTurnHistoryMessage', { gameId });
+
+    const gameList = fanAcademy.registry.get('gameList') as IGame[];
+    if (!gameList) console.error('turnHistoryReceived - No context.gameList found');
+    // Phaser updates the registry automatically since we are setting the whole array
+    const gameToUpdate = gameList.find(g => g._id === turnHistory._id);
+    if (gameToUpdate) gameToUpdate.turnHistory = turnHistory.turnHistory;
+  }
+
   sendDeletedGameMessage(gameId: string, userId: string): void {
     this.lobby!.send('gameDeletedMessage', {
       gameId,

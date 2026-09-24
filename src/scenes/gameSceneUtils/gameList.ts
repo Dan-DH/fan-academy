@@ -145,9 +145,17 @@ export function createGameList() {
           }
 
           uiScene.activeGame = game._id;
+          let fullReplay = false;
+
+          if (game.status === EGameStatus.FINISHED) {
+            await colyseusService.sendGetTurnHistoryMessage(game._id);
+            fullReplay = true;
+          }
+
           uiScene.scene.launch('GameScene', {
             userId: uiScene.userId,
-            currentGame: game
+            currentGame: game,
+            fullReplay
           });
         });
       }

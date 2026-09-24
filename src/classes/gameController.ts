@@ -36,6 +36,7 @@ export class GameController {
   turnButton: TurnButton;
   turnPopup: TurnWarningPopup;
   rematchButton: RematchButton;
+  turnHistory?: IGameState[][];
   lastTurnState: IGameState;
   currentTurn: IGameState[];
   blockingLayer: Phaser.GameObjects.Rectangle;
@@ -48,9 +49,10 @@ export class GameController {
   concedePopup: ConcedeWarningPopup;
 
   constructor(context: GameScene) {
-    if (context.triggerReplay && context.chatComponent) context.chatComponent!.pointerEvents = 'none';
+    const isReplay = context.triggerReplay || context.fullReplay;
+    if (isReplay && context.chatComponent) context.chatComponent!.pointerEvents = 'none';
 
-    if (context.currentGame.status === EGameStatus.FINISHED && !context.triggerReplay){
+    if (context.currentGame.status === EGameStatus.FINISHED && !isReplay){
       const gameOverScreen =  new GameOverScreen(context);
       gameOverScreen.init();
     }
@@ -58,9 +60,11 @@ export class GameController {
     this.context = context;
     this.game = structuredClone(context.currentGame!);
 
-    // If we are in a replay we set the state to the first action of last turn
     if (context.triggerReplay) {
       this.lastTurnState =  structuredClone(this.game.previousTurn[0]);
+    } else if (context.fullReplay) {
+      this.turnHistory = this.game.turnHistory;
+      this.lastTurnState =  structuredClone(this.game.turnHistory![0][0]);
     } else {
       this.lastTurnState =  structuredClone(this.game.previousTurn[this.game.previousTurn.length - 1]);
     }
@@ -94,7 +98,7 @@ export class GameController {
 
     this.door = new Door(context);
 
-    if (context.triggerReplay) {
+    if (isReplay) {
       this.rematchButton.setVisible(false);
       this.turnButton.buttonImage.setVisible(false);
     }
@@ -107,13 +111,14 @@ export class GameController {
     if (context.activePlayer !== context.userId) this.turnButton.buttonImage.setVisible(false);
 
     // Clicking skips replay
-    this.blockingLayer = context.add.rectangle(910, 0, 1040, 1650, 0x000000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.context.triggerReplay);
+    this.blockingLayer = context.add.rectangle(910, 0, 1040, 1650, 0x000000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(isReplay);
 
     this.blockingLayer.on('pointerdown', () => {
       context.scene.restart({
         userId: context.userId,
         currentGame: context.currentGame,
-        triggerReplay: false
+        triggerReplay: false,
+        fullReplay: false
       });
     });
 
@@ -235,8 +240,6 @@ export class GameController {
     await this.removeKOUnits();
     this.door.updateBannerText();
 
-    // Add the last action of the previous turn at index 0 of the actions array to serve as the base for the replay
-    // FIXME: when setting the reply feature, we'll have to ignore the first item each turn array after the first turn (or find a better way of organizing this)
     const lastTurnFromBE = this.game.previousTurn[this.game.previousTurn.length - 1];
     this.currentTurn.unshift(lastTurnFromBE);
 

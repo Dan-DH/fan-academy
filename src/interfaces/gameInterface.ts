@@ -144,7 +144,7 @@ export interface IPlayerData {
 export interface ITurnAction {
   actorPosition?: number;
   targetPosition?: number; // an item can be a target for shuffle
-  action: EActionType;
+  action: EActionType; // FIXME: rename to actionType
   actionClass: EActionClass,
 }
 
@@ -236,6 +236,7 @@ export interface IGame {
   players: IPlayerData[];
   turnNumber: number;
   map: number;
+  turnHistory?: IGameState[][];
   currentState: IGameState[];
   previousTurn: IGameState[];
   gameOver?: IGameOver,
@@ -243,6 +244,7 @@ export interface IGame {
   createdAt: Date;
   finishedAt: Date;
   lastPlayedAt: Date;
+  firstPlayer?: string;
   activePlayer: string;
   chatLogs: IChat;
   gameMode: EGameModes

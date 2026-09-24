@@ -459,7 +459,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     const lobby = await colyseusService.connect(this.userId!, token);
     if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
-    // TODO: get games via lobby message;
+    // FIXME: get games via lobby message;
     const gameList =  await getGameList(this.userId!);
 
     this.registry.set('gameList', gameList ?? []);
