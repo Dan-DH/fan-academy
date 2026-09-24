@@ -16,7 +16,7 @@
   });
 </script>
 
-<div class="overflow-x-auto space-y-4 " >
+<div class="overflow-x-auto space-y-4" >
   <table class="table p-4">
 
     <thead>

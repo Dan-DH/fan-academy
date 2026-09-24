@@ -43,10 +43,6 @@ function closePopovers(event: MouseEvent) {
         <div class="flex max-sm:flex-col items-start">
           <ul class="menu md:menu-horizontal w-full">
             <li class="w-full flex flex-col gap-2">
-              <a class="btn btn-wide btn-soft w-full " href="/community/players">
-                <span class="icon-[ci--users]"></span>
-                Players
-              </a>
               <a class="btn btn-wide btn-soft w-full" href="/community/discord">
                 <span class="icon-[akar-icons--discord-fill]"></span>
                 Discord
