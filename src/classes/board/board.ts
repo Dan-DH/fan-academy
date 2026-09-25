@@ -2,7 +2,7 @@ import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
 import { Coordinates, ICrystalBE, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
-import { createBasicTileData, isEnemySpawn } from "../../utils/boardUtils";
+import { createBasicTileData, isEnemySpawn, moveSpecialTileCheck } from "../../utils/boardUtils";
 import { ManaVial } from "../factions/elves/items";
 import { Phantom } from "../factions/elves/phantom";
 import { Item } from "../factions/item";
@@ -14,7 +14,7 @@ import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
 import { HealingPotion } from "../factions/council/items";
 import { DwarvenBrew } from "../factions/dwarves/items";
-import { addReticleTween, removeReticleTween } from "../../utils/unitAnimations";
+import { addReticleTween, canBeMovedIntoSpawn, forcedMoveAnimation, getNewPositionAfterForce, removeReticleTween } from "../../utils/unitAnimations";
 import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
@@ -697,5 +697,56 @@ export class Board {
 
   isTileOccupiedByEnemiesIncludingKOs(belongsTo: number, boardPosition: number): boolean {
     return !!this.units.find(u => u.stats.boardPosition === boardPosition && u.stats.belongsTo !== belongsTo);
+  }
+
+  async pushEnemy(attacker: Hero | Crystal, target: Hero, angle = 0): Promise<void> {
+    const attackerTile = this.getTileFromBoardPosition(attacker.stats.boardPosition);
+    const targetTile = this.getTileFromBoardPosition(target.stats.boardPosition);
+    if (!attackerTile || !targetTile) {
+      console.error('pushEnemy() no attacker or target board position');
+      return;
+    }
+
+    const newPosition = getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, true);
+
+    // If the tile is beyond the boundaries of the map, ignore
+    const isWrongRow = newPosition.row < 0 || newPosition.row > 4;
+    const isWrongCol = newPosition.col < 0 || newPosition.col > 8;
+    if (isWrongRow || isWrongCol) return;
+
+    const targetNewTile = this.getTileFromCoordinates(newPosition.row, newPosition.col);
+
+    if (!targetNewTile) return;
+    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
+
+    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
+
+    await forcedMoveAnimation(this.context, target, targetNewTile, angle);
+
+    target.updatePosition(targetNewTile);
+  }
+
+  async pullEnemy(attacker: Hero, target: Hero): Promise<void> {
+    const attackerTile = this.getTileFromBoardPosition(attacker.stats.boardPosition);
+    const targetTile = this.getTileFromBoardPosition(target.stats.boardPosition);
+    if (!attackerTile || !targetTile) {
+      console.error('pullEnemy() no attacker or target board position');
+      return;
+    }
+
+    const newPosition = getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, false);
+
+    const targetNewTile = this.getTileFromCoordinates(newPosition.row, newPosition.col);
+
+    if (!targetNewTile) return;
+    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
+
+    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
+
+    await forcedMoveAnimation(this.context, target, targetNewTile);
+
+    target.updatePosition(targetNewTile);
   }
 }

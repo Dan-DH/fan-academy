@@ -11,7 +11,7 @@ import { HealingPotion } from "../classes/factions/council/items";
 
 export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
-    if (context.currentGame.status === EGameStatus.FINISHED) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED) return;
     visibleUnitCardCheck(context);
 
     if (pointer.button === 2) {
@@ -26,7 +26,7 @@ export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   });
 
   unit.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-    if (context.currentGame.status === EGameStatus.FINISHED) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED) return;
 
     if (pointer.button === 2) return;
 
@@ -96,7 +96,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
     // CASE 3.1: Clicking an enemy unit
     if (isEnemy) {
-      const unitTile = context.gameController!.board.getTileFromBoardPosition(unit.stats.boardPosition);
+      const unitTile = context.board!.getTileFromBoardPosition(unit.stats.boardPosition);
 
       if (activeUnit instanceof Hero && attackReticle?.visible) {
         activeUnit.attack(unit);
@@ -105,11 +105,11 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
       // Stomp enemy KO'd units
       if (activeUnit instanceof Hero && activeUnit.stats.boardPosition < 45) {
-        const tilesInMovingRange = context.gameController!.board.getTilesInMoveRange(activeUnit);
-        const unitsInAttackingRange = context.gameController!.board.getUnitsInRange(activeUnit, ERange.ATTACK);
+        const tilesInMovingRange = context.board!.getTilesInMoveRange(activeUnit);
+        const unitsInAttackingRange = context.board!.getUnitsInRange(activeUnit, ERange.ATTACK);
         const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const withinAttackingRange = unitsInAttackingRange.find(unit => unit.stats.boardPosition === unit.stats.boardPosition);
-        const necromancerStompCheck = context.gameController!.board.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
+        const necromancerStompCheck = context.board!.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
 
         if (
           unit.stats.isKO &&
@@ -192,7 +192,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
         // Stomp friendly KO'd units, unless you are a Necromancer
         if (activeUnit.stats.boardPosition < 45) {
-          const tilesInRange = context.gameController!.board.getTilesInMoveRange(activeUnit);
+          const tilesInRange = context.board!.getTilesInMoveRange(activeUnit);
           const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
           if (
             unit.stats.isKO &&

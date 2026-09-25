@@ -45,7 +45,7 @@ export class Priestess extends DarkElf {
     }
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   async heal(target: Hero): Promise<void> {
@@ -65,7 +65,7 @@ export class Priestess extends DarkElf {
 
     this.removeAttackModifiers();
 
-    this.context.gameController?.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
   };
 
   teleport(_target: Hero): void {};

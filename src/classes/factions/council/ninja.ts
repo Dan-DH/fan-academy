@@ -44,7 +44,7 @@ export class Ninja extends Council {
     }
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   teleport(target: Hero): void {
@@ -64,7 +64,7 @@ export class Ninja extends Council {
     this.updatePosition(unitDestination);
     // unitDestination.hero = this.exportData(); // FIXME:
 
-    this.context.gameController!.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);
+    this.context.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);
   };
 
   heal(_target: Hero): void {};

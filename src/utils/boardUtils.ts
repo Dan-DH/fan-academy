@@ -9,7 +9,7 @@ import { getGridDistance } from "./gameUtils";
 import { StatusEffects } from "./statuses";
 
 export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (Hero | Crystal)[] {
-  const board = aoeAttack.context.gameController?.board;
+  const board = aoeAttack.context.board!;
   if (!board) throw new Error('Inferno use() board not found');
 
   const areaOfEffect = board.get3x3AreaOfEffectTiles(boardPosition);
@@ -26,7 +26,7 @@ export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (He
 
 // FIXME: not used
 export function isUnitOnEnemySpawn(context: GameScene, unit: Hero | Crystal): boolean {
-  const spawnMatch = context.gameController?.board.grid.find(t => t.boardPosition === unit.stats.boardPosition && t.tileType === ETiles.SPAWN);
+  const spawnMatch = context.board!.grid.find(t => t.boardPosition === unit.stats.boardPosition && t.tileType === ETiles.SPAWN);
 
   if (spawnMatch) return context.isPlayerOne ? spawnMatch.col > 5 : spawnMatch.col < 5;
 
@@ -52,7 +52,7 @@ export function moveSpecialTileCheck(hero: Hero, endTile: Tile, startTile: Tile)
 
 export function specialTileCheck(hero: Hero, tile: Tile): void {
   if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.board.updateCrystalsAfterUnitMove(hero.stats.belongsTo, true);
+    hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, true);
     hero.status.add(StatusEffects.CRYSTAL_DAMAGE_TILE);
     // this.scene.sound.play(EGameSounds.CRYSTAL_TILE);
   };
@@ -80,7 +80,7 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
 
 export function removeSpecialTile(hero: Hero, tile: Tile): void {
   if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.board.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
+    hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
     hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE);
   }
   if (tile.tileType === ETiles.POWER) hero.status.remove(StatusEffects.POWER_TILE);
@@ -93,10 +93,8 @@ export function removeSpecialTile(hero: Hero, tile: Tile): void {
 }
 
 export function getDistanceToTarget(hero: Hero, target: Hero | Crystal): number {
-  const gameController = hero.context.gameController!;
-
-  const attackerTile = gameController.board.getTileFromBoardPosition(hero.stats.boardPosition);
-  const targetTile = gameController.board.getTileFromBoardPosition(target.stats.boardPosition);
+  const attackerTile = hero.context.board!.getTileFromBoardPosition(hero.stats.boardPosition);
+  const targetTile = hero.context.board!.getTileFromBoardPosition(target.stats.boardPosition);
 
   if (!attackerTile || !targetTile) {
     console.error('Archer attack() No attacker or target tile found');

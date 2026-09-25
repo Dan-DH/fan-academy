@@ -34,7 +34,7 @@ export class HealingPotion extends Item {
 
     this.removeFromGame();
 
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 }
 
@@ -70,6 +70,6 @@ export class Inferno extends Item {
     });
 
     this.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
   }
 }

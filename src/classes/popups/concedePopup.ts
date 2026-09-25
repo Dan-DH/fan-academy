@@ -59,9 +59,7 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
       // this.scene.sound.play(EUiSounds.RESIGN);
 
       this.setVisible(false);
-      const gameController = context.gameController!;
-
-      const winner = context.currentGame.players.find(player => player.userData._id.toString() !== context.userId)?.userData._id;
+      const winner = context.clonedGame!.players.find(player => player.userData._id.toString() !== context.userId)?.userData._id;
       if (!winner) {
         console.error('concedePopup() no winnder found');
         return;
@@ -73,20 +71,20 @@ export class ConcedeWarningPopup extends Phaser.GameObjects.Container {
       };
 
       const turn = {
-        ...gameController.lastTurnState,
+        ...context.startTurnState!,
         action: {
           action: EActionType.CONCEDE,
           actionClass: EActionClass.USER
         }
       };
-      gameController.currentTurn = [turn];
+      context.currentTurn = [turn];
 
       context.activePlayer = context.opponentId;
       context.turnNumber!++;
 
       colyseusService.sendTurnMessage({
-        gameId: context.currentGame._id,
-        currentTurn: gameController.currentTurn,
+        gameId: context.clonedGame!._id,
+        currentTurn: context.currentTurn!,
         newActivePlayer: context.opponentId,
         turnNumber: context.turnNumber!,
         gameOver: gameOver

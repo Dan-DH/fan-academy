@@ -34,7 +34,7 @@ export class Cleric extends Council {
     }
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(target: Hero): void {
@@ -54,7 +54,7 @@ export class Cleric extends Council {
 
     this.removeAttackModifiers();
 
-    this.context.gameController?.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
   };
 
   teleport(_target: Hero): void {};

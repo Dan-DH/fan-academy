@@ -1,24 +1,13 @@
 import { EClass } from "../enums/gameEnums";
-import { IGameState, IHeroBE, IItemBE } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
+import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
 
 export class Hand {
-  context: GameScene;
   hand: (Hero | Item)[];
 
-  constructor(context: GameScene, lastTurnState: IGameState) {
-    this.context = context;
-
-    let handData: (IHeroBE | IItemBE)[];
-    if (context.isPlayerOne){
-      handData = structuredClone(lastTurnState.player1.hand) ?? [];
-    } else {
-      handData = structuredClone(lastTurnState.player2!.hand) ?? [];
-    }
-
+  constructor(handData: (IHeroBE | IItemBE)[]) {
     this.hand = handData?.map(unit => this.renderUnit(unit)) ?? [];
   }
 
@@ -36,7 +25,7 @@ export class Hand {
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 
-  addToHand(units: (IHeroBE | IItemBE)[]): void {
+  addToHand(units: (IHeroBE | IItemBE)[], isPlayerHand = true): void {
     const defaultPositions = [45, 46, 47, 48, 49, 50];
 
     let previousIndex = -1;
@@ -49,7 +38,7 @@ export class Hand {
         const unitData = units.shift();
         if (unitData) {
           unitData.boardPosition = element;
-          const newUnit = this.renderUnit(unitData);
+          const newUnit = this.renderUnit(unitData).setVisible(isPlayerHand); // added boolean to hide opponent hand units during replays
           this.hand.splice(++previousIndex, 0, newUnit);
         }
       }
@@ -64,5 +53,9 @@ export class Hand {
   exportHandData(): (IHeroBE | IItemBE)[] {
     if (this.hand.length === 0) return [];
     return this.hand.map(unit => unit.exportData());
+  }
+
+  disableOpponentHand(): void {
+    this.hand.forEach(u => u.setVisible(false).setInteractive(false));
   }
 }

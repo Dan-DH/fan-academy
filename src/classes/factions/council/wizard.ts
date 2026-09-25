@@ -18,7 +18,6 @@ export class Wizard extends Council {
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
 
-    const gameController = this.context.gameController!;
     turnIfBehind(this.context, this, target);
 
     const distance = getDistanceToTarget(this, target);
@@ -37,12 +36,12 @@ export class Wizard extends Council {
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK);
 
       // Get directions for finding out the next targets
-      const attackDirection = gameController.board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
+      const attackDirection = this.context.board!.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
 
       // Collect all targets
-      const secondTarget = this.getNextTarget(target, attackDirection, gameController.board, false);
+      const secondTarget = this.getNextTarget(target, attackDirection, this.context.board!, false);
       let thirdTarget: Hero | Crystal | undefined;
-      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, gameController.board, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
+      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, this.context.board!, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
 
       // Apply damage to targets
       target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
@@ -56,7 +55,7 @@ export class Wizard extends Council {
       this.removeAttackModifiers();
     }
 
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   getNextTarget(target: Hero | Crystal, attackDirection: number, board: Board, isLastTarget: boolean, toIgnore?: number[]): Hero | Crystal | undefined {
@@ -134,7 +133,7 @@ export class Wizard extends Council {
       const tilePosition = boardPosition + offset;
 
       if (isOnBoard(tilePosition) && !ignorePosition.includes(tilePosition)) {
-        const tile = this.context.gameController!.board.getTileFromBoardPosition(tilePosition);
+        const tile = this.context.board!.getTileFromBoardPosition(tilePosition);
         if (canBeAttacked(this, tile)) adjacentTiles.push(tile);
       }
     }

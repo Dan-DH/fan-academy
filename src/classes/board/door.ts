@@ -38,7 +38,7 @@ export class Door extends Phaser.GameObjects.Container {
         context.activeUnit.shuffleInDeck();
 
         // Add action to state
-        context.gameController?.afterAction(EActionType.SHUFFLE, activePosition, 51);
+        context.afterAction(EActionType.SHUFFLE, activePosition, 51);
 
         this.updateBannerText();
       }
@@ -48,7 +48,7 @@ export class Door extends Phaser.GameObjects.Container {
   }
 
   updateBannerText(): void {
-    const deckSize: number = this.context.gameController?.deck.getDeckSize() ?? 0;
+    const deckSize: number = this.context.deck!.getDeckSize() ?? 0;
 
     this.bannerText.setText(deckSize.toString());
   }

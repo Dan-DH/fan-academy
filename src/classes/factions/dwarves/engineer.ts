@@ -30,7 +30,7 @@ export class Engineer extends Dwarf {
     }
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   shieldAlly(target: Hero | Crystal): void {
@@ -40,12 +40,12 @@ export class Engineer extends Dwarf {
 
     if (this.stats.shieldingAlly) {
       if (this.stats.shieldingAlly === target.stats.unitId) return;
-      this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);
+      this.context.board!.removeEngineerShield(this.stats.shieldingAlly);
     }
 
     target.receiveEngineerShield();
     this.stats.shieldingAlly = target.stats.unitId;
-    this.context.gameController!.afterAction(EActionType.BUFF, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.BUFF, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

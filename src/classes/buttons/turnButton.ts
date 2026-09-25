@@ -10,13 +10,13 @@ export class TurnButton {
 
     // Sending a turn
     this.buttonImage.on('pointerdown', async () => {
-      if (context.currentGame && context.activePlayer === context.userId) {
+      if (this.context.clonedGame! && context.activePlayer === context.userId) {
         // context.sound.play(EUiSounds.BUTTON_PLAY);
 
         console.log('Clicked on send turn');
 
-        if (context.gameController!.hasActionsLeft()) {
-          context.gameController!.turnPopup.setVisible(true);
+        if (context.hasActionsLeft()) {
+          context.turnPopup!.setVisible(true);
           return;
         }
 
@@ -26,12 +26,11 @@ export class TurnButton {
   }
 
   async handleSendingTurn(): Promise<void> {
-    const gameController = this.context.gameController!;
-    if (this.context.currentTurnAction!  < 5 ) gameController.addActionToState(EActionType.PASS);
+    if (this.context.currentTurnAction!  < 5 ) this.context.addActionToState(EActionType.PASS);
 
     const status = this.context.registry.get('networkStatus');
     if (status === 'online') {
-      await gameController.endOfTurnActions();
+      await this.context.endOfTurnActions();
     } else {
       console.log('No internet connection detected, unable to send turn');
     }

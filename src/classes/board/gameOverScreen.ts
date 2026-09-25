@@ -11,12 +11,10 @@ export class GameOverScreen extends GameObjects.Container {
     super(context, 0, 0);
     this.context = context;
     context.add.existing(this).setDepth(999);
-  }
 
-  async init() {
     let gameOverEffectKey: string;
     let gameOverImageKey: string;
-    if (this.context.currentGame.gameOver?.winner === this.context.userId) {
+    if (this.context.clonedGame!.gameOver?.winner === this.context.userId) {
       gameOverEffectKey = 'gameOverVictoryEffect';
       gameOverImageKey = 'gameOverVictoryText';
     } else {

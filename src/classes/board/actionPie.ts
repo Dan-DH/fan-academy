@@ -102,7 +102,7 @@ export class ActionPie extends Phaser.GameObjects.Container {
     this.setSize(90, 90).setInteractive({ useHandCursor: true });
 
     this.on('pointerdown', () => {
-      this.context.gameController!.resetTurn();
+      this.context.resetTurn();
     });
   };
 }

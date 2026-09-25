@@ -9,7 +9,7 @@ import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleTileClick(tile: Tile, context: GameScene): void {
   tile.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
-    if (context.currentGame.status === EGameStatus.FINISHED || context.gameController?.board.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED || context.board!.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
 
     visibleUnitCardCheck(context);
     context.longPressStart = context.time.now;
@@ -31,8 +31,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
 
     const activeUnit = context.activeUnit;
-    const gameController = context.gameController;
-    if (!activeUnit || !gameController) return;
+    if (!activeUnit) return;
 
     // If unit is on the board and the tile clicked on is in range, move the unit
     if (activeUnit.stats.boardPosition < 45 && tile.isHighlighted && activeUnit instanceof Hero) {
@@ -56,7 +55,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
 
   // Handle long press on the tile
   tile.on('pointerup', () => {
-    if (context.currentGame.status === EGameStatus.FINISHED || context.gameController?.board.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED || context.board!.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
 
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       tile.setDepth(1001);

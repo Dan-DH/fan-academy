@@ -40,7 +40,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   getTile(): Tile {
-    const tile = this.context?.gameController?.board.getTileFromBoardPosition(this.stats.boardPosition);
+    const tile = this.context.board!.getTileFromBoardPosition(this.stats.boardPosition);
     if (!tile) throw new Error('getTile() -> No tile found');
 
     return tile;
@@ -58,7 +58,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
   getsDamaged(damage: number, attackType: EAttackType, _unit: Hero | Item, splashDamage?: number): void {
     if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
-      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.unitId!);
+      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId!);
       this.removeEngineerShield();
       return;
     }
@@ -70,7 +70,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     } else {
       // this.scene.sound.play(EGameSounds.CRYSTAL_DAMAGE_BUFF);
 
-      const enemyUnitsOnAssaultTiles = this.context.gameController?.board.getAliveEnemyUnitsOnAssaultTiles(this.stats.belongsTo);
+      const enemyUnitsOnAssaultTiles = this.context.board!.getAliveEnemyUnitsOnAssaultTiles(this.stats.belongsTo);
 
       if (enemyUnitsOnAssaultTiles?.length) enemyUnitsOnAssaultTiles.forEach(unitOnTile => {
         assaultBoostDamage += this.calculateAssaultBoost(unitOnTile);
@@ -102,8 +102,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.unitCard.updateCardData(this);
 
     // Update player HP bar
-    if (this.stats.belongsTo === 1) this.context.gameController?.banner.playerOneHpBar.setHealth();
-    if (this.stats.belongsTo === 2) this.context.gameController?.banner.playerTwoHpBar.setHealth();
+    if (this.stats.belongsTo === 1) this.context.banner!.playerOneHpBar.setHealth();
+    if (this.stats.belongsTo === 2) this.context.banner!.playerTwoHpBar.setHealth();
 
     if (this.stats.currentHealth <= 0) this.removeFromGame();
   }
@@ -112,12 +112,12 @@ export class Crystal extends Phaser.GameObjects.Container {
     // this.scene.sound.play(EGameSounds.CRYSTAL_DESTROY);
 
     // Remove destoyed crystal from the board array
-    const index = this.context.gameController!.board.units.findIndex(u => u instanceof Crystal && u.stats.boardPosition === this.stats.boardPosition);
-    this.context.gameController!.board.units.splice(index, 1);
+    const index = this.context.board!.units.findIndex(u => u instanceof Crystal && u.stats.boardPosition === this.stats.boardPosition);
+    this.context.board!.units.splice(index, 1);
 
     // Update the remaining crystal or set gameOver
     if (this.isLastCrystal()) {
-      this.context.gameController!.gameOver = {
+      this.context.gameOver = {
         winCondition: EWinConditions.CRYSTAL,
         winner: this.context.activePlayer!
       };
@@ -203,7 +203,7 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   isLastCrystal(): boolean {
-    const atLeastOneFriendlyCrystalLeft = this.context?.gameController?.board.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo && u.stats.unitId !== this.stats.unitId);
+    const atLeastOneFriendlyCrystalLeft = this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo && u.stats.unitId !== this.stats.unitId);
 
     if (atLeastOneFriendlyCrystalLeft) return false;
     return true;

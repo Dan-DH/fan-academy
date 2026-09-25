@@ -27,7 +27,7 @@ export class DwarvenBrew extends Item {
 
     this.removeFromGame();
 
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 }
 
@@ -45,7 +45,7 @@ export class Pulverizer extends Item {
     if (target instanceof Crystal) this.directHitOnCrystal(target);
 
     this.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   directHitOnHero(hero: Hero): void {

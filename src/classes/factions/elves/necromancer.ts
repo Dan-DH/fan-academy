@@ -35,7 +35,7 @@ export class Necromancer extends DarkElf {
       // this.context.gameController?.board.units.push(phantom);
       // tile.hero = phantom.exportData();
 
-      this.context.gameController!.afterAction(EActionType.SPAWN_PHANTOM, this.stats.boardPosition, target.stats.boardPosition);
+      this.context.afterAction(EActionType.SPAWN_PHANTOM, this.stats.boardPosition, target.stats.boardPosition);
 
       return;
     } else {
@@ -48,7 +48,7 @@ export class Necromancer extends DarkElf {
     }
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

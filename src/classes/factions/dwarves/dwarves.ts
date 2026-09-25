@@ -25,6 +25,6 @@ export abstract class Dwarf extends Hero {
 
     this.unitCard.updateCardData(this);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 }

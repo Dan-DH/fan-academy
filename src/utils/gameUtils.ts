@@ -67,7 +67,7 @@ export function canBeAttacked(_attacker: Hero, _tile: Tile): boolean {
 }
 
 export function isLastUnit(hero: Hero): boolean {
-  const opponentData = hero.context.isPlayerOne ? hero.context.gameController!.lastTurnState.player2 : hero.context.gameController!.lastTurnState.player1;
+  const opponentData = hero.context.isPlayerOne ? hero.context.startTurnState!.player2 : hero.context.startTurnState!.player1;
 
   const handUnits = opponentData?.hand.find(unit => unit instanceof Hero);
   if (handUnits) return false;
@@ -75,7 +75,7 @@ export function isLastUnit(hero: Hero): boolean {
   const deckUnits = opponentData?.deck.find(unit => unit.class === EClass.HERO && unit.belongsTo === hero.stats.belongsTo);
   if (deckUnits) return false;
 
-  const boardUnits = hero.context.gameController?.board.units;
+  const boardUnits = hero.context.board!.units;
   const aliveBoardUnits = boardUnits!.filter(unit => unit.stats.belongsTo === hero.stats.belongsTo && unit instanceof Hero && !unit.stats.isKO);
   if (aliveBoardUnits) return false;
 
@@ -87,7 +87,7 @@ export function checkUnitGameOver(hero: Hero): void {
 
   const attackingPlayer = hero.stats.unitId.includes(hero.context.player1!.playerId) ? hero.context.player2 : hero.context.player1;
 
-  hero.context.gameController!.gameOver = {
+  hero.context.gameOver = {
     winCondition: EWinConditions.HERO,
     winner: attackingPlayer!.playerId
   };

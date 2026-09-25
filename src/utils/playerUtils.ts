@@ -32,8 +32,8 @@ export function selectUnit(context: GameScene, unit: Hero | Item): void {
   context.activeUnit = unit;
 
   // Highlight tiles
-  if (unit instanceof Hero) context.gameController?.onHeroClicked(unit);
-  if (unit instanceof Item) context.gameController?.onItemClicked(unit);
+  if (unit instanceof Hero) context.onHeroClicked(unit);
+  if (unit instanceof Item) context.onItemClicked(unit);
 }
 
 export function deselectUnit(context: GameScene): void {
@@ -41,6 +41,6 @@ export function deselectUnit(context: GameScene): void {
 
   context.activeUnit.isActive = false;
   context.activeUnit = undefined;
-  context.gameController?.board.clearHighlights();
-  context.gameController?.board.removeReticles();
+  context.board!.clearHighlights();
+  context.board!.removeReticles();
 }

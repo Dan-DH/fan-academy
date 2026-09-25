@@ -56,7 +56,7 @@ export class TurnWarningPopup extends Phaser.GameObjects.Container {
     this.okButtonImage.on('pointerdown', () => {
       // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.setVisible(false);
-      context.gameController!.turnButton.handleSendingTurn();
+      context.turnButton!.handleSendingTurn();
     });
 
     this.cancelButtonImage.on('pointerdown', () => {

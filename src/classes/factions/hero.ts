@@ -93,8 +93,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.col = tile.col;
     this.setDepth(this.stats.row + 10);
     this.visuals.characterImage.setScale(1.2);
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
     this.unitCard.updateCardData(this);
   }
 
@@ -116,7 +116,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit?: number): number {
     if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
       // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
-      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.unitId);
+      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId);
       this.removeEngineerShield();
       return 0;
     }
@@ -137,7 +137,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       }
 
       if (!directHit) {
-        const debuffLevel = (this.context.gameController?.board.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
+        const debuffLevel = (this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
         assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
       }
     }
@@ -300,9 +300,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
 
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     enterSpecialTileCheck(this, this.getTile());
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -356,14 +356,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     removeSpecialTile(this, this.getTile());
 
     if (this.stats.shieldingAlly) {
-      this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);
+      this.context.board!.removeEngineerShield(this.stats.shieldingAlly);
       this.stats.shieldingAlly = undefined;
     }
 
     this.stats.currentHealth = 0;
     this.stats.isKO = true;
 
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
@@ -374,7 +374,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   getTile(): Tile {
-    const tile = this.context?.gameController?.board.getTileFromBoardPosition(this.stats.boardPosition);
+    const tile = this.context?.board!.getTileFromBoardPosition(this.stats.boardPosition);
     if (!tile) throw new Error('getTile() -> No tile found');
 
     return tile;
@@ -391,8 +391,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const unitData = this.exportData();
 
-    this.context.gameController!.hand.removeFromHand(this.stats.unitId);
-    this.context.gameController!.deck.addToDeck(unitData);
+    this.context.hand!.removeFromHand(this.stats.unitId);
+    this.context.deck!.addToDeck(unitData);
 
     this.removeFromGame(false);
   }
@@ -407,8 +407,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     });
 
     if (board) {
-      const index = this.context.gameController!.board.units.findIndex(unit => unit.stats.unitId === this.stats.unitId);
-      if (index !== -1) { this.context.gameController!.board.units.splice(index, 1); }
+      const index = this.context.board!.units.findIndex(unit => unit.stats.unitId === this.stats.unitId);
+      if (index !== -1) { this.context.board!.units.splice(index, 1); }
 
       checkUnitGameOver(this);
     }
@@ -429,11 +429,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   async move(currentTile: Tile, targetTile: Tile): Promise<void> {
-    const gameController = this.context.gameController!;
-
     const tilesMoved = getGridDistance(currentTile.row, currentTile.col, targetTile.row, targetTile.col);
 
-    const startTile = gameController.board.getTileFromBoardPosition(this.stats.boardPosition);
+    const startTile = this.context.board!.getTileFromBoardPosition(this.stats.boardPosition);
     if (!startTile) return;
     exitSpecialTileCheck(this, startTile);
 
@@ -455,13 +453,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // startTile.removeHero();
     this.unitCard.updateCardData(this);
-    gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
   }
 
   spawn(tile: Tile): void {
     const startingPosition = this.stats.boardPosition;
-    const gameController = this.context.gameController!;
-
     // FIXME:
     // Stomp KO'd units and enemy phantoms
     // if (tile.hero && (tile.hero.isKO || tile.hero.unitType === EHeroes.PHANTOM)) {
@@ -471,9 +467,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     //   hero?.removeFromGame(true);
     // }
 
-    gameController.hand.removeFromHand(this.stats.unitId);
-    gameController.board.units.push(this);
+    this.context.hand!.removeFromHand(this.stats.unitId);
+    this.context.board!.units.push(this);
+    this.updateUnitAfterSpawn(tile);
 
+    this.context.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
+  }
+
+  updateUnitAfterSpawn(tile: Tile): void {
     // Modify image
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
     this.visuals.characterImage.x = charImageX;
@@ -484,7 +485,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // Update vertical positioning of the info card
     this.unitCard.y = 0;
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     // A Wraith can spawn on a special tile. Phantom spawning is handled within its class
     enterSpecialTileCheck(this, tile);
     // Position hero on the board
@@ -495,10 +496,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     if (this.stats.unitType === EHeroes.PALADIN) {
       this.visuals.paladinAuraImage.setVisible(true);
-      this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+      this.context.board!.updatePaladinAurasAcrossBoard();
     }
-
-    gameController.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
   }
 
   isFullHP(): boolean {
@@ -529,7 +528,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.unitCard.updateCardData(this);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   equipRunemetal(handPosition: number): void {
@@ -542,7 +541,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.unitCard.updateCardData(this);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   equipSuperCharge(handPosition: number): void {
@@ -551,7 +550,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.unitCard.updateCardData(this);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   removeAttackModifiers(): void {

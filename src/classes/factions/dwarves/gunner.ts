@@ -24,7 +24,7 @@ export class Gunner extends Dwarf {
     }
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   singleTargetAttack(target: Hero | Crystal): void {
@@ -44,7 +44,7 @@ export class Gunner extends Dwarf {
     // this.context.time.delayedCall(100, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
     // this.context.time.delayedCall(200, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
 
-    const splashedUnits = this.context.gameController?.board.getGunnerSplashTargets(this, target);
+    const splashedUnits = this.context.board!.getGunnerSplashTargets(this, target);
 
     splashedUnits?.forEach(unit =>  {
       unit.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this, 0.6667);

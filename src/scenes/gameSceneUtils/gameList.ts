@@ -1,6 +1,6 @@
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { colyseusService } from "../../colyseus/colyseusService";
-import { EChallengePopup, EGameModes, EGameStatus } from "../../enums/gameEnums";
+import { EChallengePopup, EGameModes, EGameSceneMode, EGameStatus } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
 import { factionEnumToEmblem } from "../../utils/gameUtils";
@@ -145,17 +145,17 @@ export function createGameList() {
           }
 
           uiScene.activeGame = game._id;
-          let fullReplay = false;
+          let gameSceneMode = EGameSceneMode.GAME;
 
           if (game.status === EGameStatus.FINISHED) {
             await colyseusService.sendGetTurnHistoryMessage(game._id);
-            fullReplay = true;
+            gameSceneMode = EGameSceneMode.GAME_REPLAY;
           }
 
           uiScene.scene.launch('GameScene', {
             userId: uiScene.userId,
             currentGame: game,
-            fullReplay
+            gameSceneMode
           });
         });
       }

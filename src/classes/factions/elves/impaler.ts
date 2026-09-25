@@ -41,11 +41,11 @@ export class Impaler extends DarkElf {
       this.removeAttackModifiers();
     }
 
-    if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.gameController!.pullEnemy(this, target);
+    if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pullEnemy(this, target);
 
     if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
 
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

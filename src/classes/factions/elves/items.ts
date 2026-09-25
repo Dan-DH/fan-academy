@@ -39,7 +39,7 @@ export class ManaVial extends Item {
       target.status.add(StatusEffects.MANA_VIAL);
     }
 
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
 
     this.removeFromGame();
   }
@@ -56,12 +56,6 @@ export class SoulHarvest extends Item {
 
     // this.scene.sound.play(EGameSounds.USE_HARVEST);
 
-    const gameController = this.context.gameController;
-
-    if (!gameController) {
-      console.error('SoulHarvest use() No gamecontroller');
-      return;
-    }
     // Damages enemy units and crystals but doesn't remove KO'd enemy units
     const damage = 100;
 
@@ -85,7 +79,7 @@ export class SoulHarvest extends Item {
     });
 
     // Get total amount of friendly units in the map, including KO'd ones
-    const friendlyUnits = gameController.board.units.filter(u => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo) as Hero[];
+    const friendlyUnits = this.context.board!.units.filter(u => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo) as Hero[];
 
     // Divide damage dealt by that number + 3, then round to nearest 5. Formula: 1 / (units + 3) * damage
     const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);
@@ -93,7 +87,7 @@ export class SoulHarvest extends Item {
     // Increase max health of all units, including KO'd ones, and revive them
     friendlyUnits.forEach(unit => unit.increaseMaxHealth(lifeIncreaseAmount));
 
-    gameController.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
     this.removeFromGame();
   }
 }

@@ -1,16 +1,9 @@
-import { IGameState, IHeroBE, IItemBE } from "../../interfaces/gameInterface";
-import GameScene from "../../scenes/game.scene";
-import { getCurrentPlayer } from "../../utils/playerUtils";
+import { IHeroBE, IItemBE } from "../../interfaces/gameInterface";
 
 export class Deck {
   deck: (IHeroBE | IItemBE)[];
-  constructor(context: GameScene, lasTurnState: IGameState) {
-    if (context.isPlayerOne){
-      this.deck = structuredClone(lasTurnState.player1.deck) ?? [];
-    } else {
-      this.deck = structuredClone(lasTurnState.player2!.deck) ?? [];
-    }
-    this.deck = structuredClone(getCurrentPlayer(context).deck);
+  constructor(deckData: (IHeroBE | IItemBE)[]) {
+    this.deck = deckData;
   }
 
   getDeckSize(): number {

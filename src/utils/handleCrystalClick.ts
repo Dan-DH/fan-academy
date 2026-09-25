@@ -9,7 +9,7 @@ import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleCrystalClick(crystal: Crystal, context: GameScene): void {
   crystal.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _Y: number, event: Types.Input.EventData) => {
-    if (context.currentGame.status === EGameStatus.FINISHED) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED) return;
     visibleUnitCardCheck(context);
 
     // Handling right click
@@ -48,7 +48,7 @@ export function handleCrystalClick(crystal: Crystal, context: GameScene): void {
   });
 
   crystal.on('pointerup', () => {
-    if (context.currentGame.status === EGameStatus.FINISHED) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED) return;
 
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       crystal.setDepth(1001);

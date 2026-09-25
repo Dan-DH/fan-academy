@@ -88,7 +88,7 @@ export abstract class Item extends Phaser.GameObjects.Container {
 
     const unitData = this.exportData();
 
-    this.context.gameController!.deck.addToDeck(unitData);
+    this.context.deck!.addToDeck(unitData);
 
     this.removeFromGame();
   }
@@ -97,7 +97,7 @@ export abstract class Item extends Phaser.GameObjects.Container {
     // Remove animations
     this.scene.tweens.killTweensOf(this);
 
-    this.context.gameController?.hand.removeFromHand(this.stats.unitId);
+    this.context.hand!.removeFromHand(this.stats.unitId);
 
     this.destroy(true);
   }
