@@ -1,4 +1,4 @@
-import { EActionType, EGameSceneMode } from "../enums/gameEnums";
+import { EActionClass, EActionType, EGameSceneMode } from "../enums/gameEnums";
 import { IGameState, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { Deck } from "./board/deck";
@@ -16,7 +16,8 @@ export class GameReplay {
   isFirstPlayer: boolean;
   isPlayerTurn: boolean;
 
-  replayToggleButton;
+  replayToggleButton: Phaser.GameObjects.Image;
+  actionNumberTextBox: Phaser.GameObjects.Text;
 
   constructor(context: GameScene) {
     this.context = context;
@@ -24,6 +25,13 @@ export class GameReplay {
 
     ////
     ////
+
+    this.actionNumberTextBox = this.context.add.text(this.context.turnNumberTextBox!.x, this.context.turnNumberTextBox!.y + 30, `Action ${ this.actionNumber + 1 }`, {
+      fontFamily: 'proLight',
+      fontSize: 30,
+      color: '#ffffff'
+    });
+
     this.replayToggleButton = context.add.image(460, 200, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(context.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
     this.replayToggleButton.on('pointerdown', () => {
@@ -68,6 +76,7 @@ export class GameReplay {
   async replayAllTurns() {
     for (let i = this.turnNumber; i <= this.turnHistory.length - 1; i++) {
       console.log('TURN', i);
+      this.context.turnNumberTextBox?.setText(`TURN ${i}`);
 
       this.isPlayerTurn = this.isFirstPlayer ? i % 2 !== 0 : i % 2 === 0;
 
@@ -94,6 +103,7 @@ export class GameReplay {
 
       await new Promise<void>(resolve => {
         this.context.time.delayedCall(1000, async () => {
+          if (turnAction.action?.actionClass === EActionClass.USER) this.actionNumberTextBox.setText(`Action ${ i + 1 }`);
           switch (actionTaken) {
             case EActionType.SPAWN:
               this.replaySpawn(turnAction.action!, hand);

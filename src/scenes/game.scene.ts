@@ -55,6 +55,7 @@ export default class GameScene extends Phaser.Scene {
   gameOverScreen: GameOverScreen | undefined;
   concedeButton: Phaser.GameObjects.Image | undefined;
   concedePopup: ConcedeWarningPopup | undefined;
+  turnNumberTextBox: Phaser.GameObjects.Text | undefined;
 
   player1: IPlayerState | undefined;
   player2: IPlayerState | undefined;
@@ -187,7 +188,7 @@ export default class GameScene extends Phaser.Scene {
     // Add a generic gameobject pointer event to make it easier to hide a unit info card
     this.input.on('gameobjectdown', () => visibleUnitCardCheck(this));
 
-    this.add.text(850, 110, `TURN ${this.turnNumber }`, {
+    this.turnNumberTextBox = this.add.text(850, 110, `TURN ${ this.turnNumber }`, {
       fontFamily: 'proHeavy',
       fontSize: 35,
       color: '#ffffff'
