@@ -8,6 +8,7 @@ import { adjustUnitCardPositionAndMakeVisible, isEnemySpawn } from "./boardUtils
 import { visibleUnitCardCheck } from "./unitCards";
 import { belongsToPlayer } from "./gameUtils";
 import { HealingPotion } from "../classes/factions/council/items";
+import { Pulverizer } from "../classes/factions/dwarves/items";
 
 export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
@@ -153,7 +154,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       }
 
       if (activeUnit instanceof Item && activeUnit.stats.dealsDamage) {
-        activeUnit.use(unit.getTile());
+        activeUnit.use(unit instanceof Pulverizer ? unit : unit.getTile());
         return;
       }
     }
