@@ -3,7 +3,7 @@ import { fanAcademy } from "../main";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import { IChatMessage, IGame, IGameOver, IGameState } from "../interfaces/gameInterface";
 import UIScene from "../scenes/ui.scene";
-import { EFaction, EGameModes, EGameStatus } from "../enums/gameEnums";
+import { EFaction, EGameModes, EGameSceneMode, EGameStatus } from "../enums/gameEnums";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 
 class ColyseusService {
@@ -80,7 +80,7 @@ class ColyseusService {
           uiScene.scene.get('GameScene').scene.restart({
             userId: uiScene.userId,
             currentGame: game,
-            triggerReplay: message.newActivePlayer !== uiScene.userId ? false : true
+            gameSceneMode: message.newActivePlayer !== uiScene.userId ? EGameSceneMode.GAME : EGameSceneMode.TURN_REPLAY
           });
         }
       }
@@ -182,21 +182,6 @@ class ColyseusService {
   //
   // SENDING MESSAGES
   //
-  async sendGetTurnHistoryMessage(gameId: string): Promise<void> {
-    const turnHistory: {
-      _id: string,
-      turnHistory: IGameState[][]
-    } = await this.lobby!.request('getTurnHistoryMessage', { gameId });
-    console.log('this should log first');
-
-    const gameList = fanAcademy.registry.get('gameList') as IGame[];
-    if (!gameList) console.error('turnHistoryReceived - No context.gameList found');
-    // Phaser updates the registry automatically since we are setting the whole array
-    const gameToUpdate = gameList.find(g => g._id === turnHistory._id);
-    if (gameToUpdate) gameToUpdate.turnHistory = turnHistory.turnHistory;
-    console.log('this should log first');
-  }
-
   sendDeletedGameMessage(gameId: string, userId: string): void {
     this.lobby!.send('gameDeletedMessage', {
       gameId,

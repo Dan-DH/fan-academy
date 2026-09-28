@@ -9,14 +9,12 @@ import { Tile } from "../../board/tile";
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
 
-  constructor(data: IHero, tile: Tile, spawned = false) {
+  constructor(data: IHero, spawned = false, tile?: Tile) {
     super(data);
 
-    // FIXME:
     if (spawned) {
       this.spawnAnim = this.context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(1.3);
-
-      enterSpecialTileCheck(this, tile);
+      if (tile) enterSpecialTileCheck(this, tile);
       this.add([this.spawnAnim]);
       sizeReduceTween(this.spawnAnim, 500, this.spawnAnim.scale);
     }

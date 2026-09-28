@@ -38,7 +38,7 @@ export class Necromancer extends DarkElf {
         isKO: false,
         lastBreath: false,
         ...mapUnitBaseStats(EHeroes.PHANTOM)
-      }, tile, true);
+      }, true, tile);
 
       target.removeFromGame(true);
 

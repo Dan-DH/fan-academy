@@ -236,7 +236,6 @@ export interface IGame {
   players: IPlayerData[];
   turnNumber: number;
   map: number;
-  turnHistory?: IGameState[][];
   currentState: IGameState[];
   previousTurn: IGameState[];
   gameOver?: IGameOver,

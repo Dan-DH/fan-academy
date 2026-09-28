@@ -1,7 +1,6 @@
 import { IGame, IGameOver, IGameState, IPlayerData, IPlayerState, IUserData } from "../interfaces/gameInterface";
 import { createChatComponent } from "./gameSceneUtils/chatComponent";
 import { gameListFadeOutText, textAnimationFadeOut } from "../utils/textAnimations";
-import { Room } from "@colyseus/sdk";
 import { GameOverScreen } from "../classes/board/gameOverScreen";
 import { EActionClass, EActionType, EGameSceneMode, EGameStatus, EHeroes, EItems, ETiles } from "../enums/gameEnums";
 import { ActionPie } from "../classes/board/actionPie";
@@ -23,6 +22,7 @@ import { getActionClass } from "../utils/gameUtils";
 import { deselectUnit, getPlayersKey } from "../utils/playerUtils";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
+import { TurnReplay } from "../classes/turnReplay";
 
 export default class GameScene extends Phaser.Scene {
   userId!: string;
@@ -41,9 +41,7 @@ export default class GameScene extends Phaser.Scene {
   banner: Banner | undefined;
   board: Board | undefined;
   hand: Hand | undefined;
-  opponentHand: Hand | undefined;
   deck: Deck | undefined;
-  opponentDeck: Deck | undefined;
   actionPie: ActionPie | undefined;
   door: Door | undefined;
   turnButton: TurnButton | undefined;
@@ -67,6 +65,7 @@ export default class GameScene extends Phaser.Scene {
 
   longPressStart: number | undefined;
   visibleUnitCard: Hero | Item | Crystal | Tile | undefined;
+  blockingLayer: Phaser.GameObjects.Rectangle | undefined;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -75,23 +74,21 @@ export default class GameScene extends Phaser.Scene {
   init(data: {
     userId: string,
     currentGame: IGame,
-    currentRoom: Room, // FIXME: do we need this?
     gameSceneMode: EGameSceneMode,
-    startTurnState?: IGameState;
   }) {
     // FIXME: check undefine everything
     this.chatComponent = undefined;
     this.longPressStart = undefined;
     this.visibleUnitCard = undefined;
     this.activeUnit = undefined;
+    this.startTurnState = undefined;
 
     this.currentGame = data.currentGame;
     this.userId = data.userId;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
     this.gameSceneMode = data.gameSceneMode;
-    this.startTurnState = data.startTurnState;
-    this.isReplay = [EGameSceneMode.GAME_REPLAY, EGameSceneMode.TURN_REPLAY].includes(data.gameSceneMode);
+    this.isReplay = data.gameSceneMode === EGameSceneMode.TURN_REPLAY;
 
     const networkStatus = navigator.onLine ? 'online' : 'offline';
     this.registry.set('networkStatus', networkStatus);
@@ -99,7 +96,7 @@ export default class GameScene extends Phaser.Scene {
     window.addEventListener('online', this.handleOnline);
     this.game.events.on('messageToGameScene', this.handleMessageToGameScene);
 
-    // this.input.mouse!.disableContextMenu(); // FIXME: what was this for?
+    this.input.mouse!.disableContextMenu(); // disable normal mouse right click behaviour
   }
 
   create() {
@@ -109,19 +106,10 @@ export default class GameScene extends Phaser.Scene {
       this.gameOverScreen =  new GameOverScreen(this);
     }
 
-    console.log('startturnstate', this.startTurnState);
-    if (this.startTurnState) this.startTurnState = structuredClone(this.startTurnState);
-
-    if (!this.startTurnState) {
-      console.log('this logs');
-      if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
-        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
-      } else if (this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
-        console.log('this also logs');
-        this.startTurnState = structuredClone(this.clonedGame!.turnHistory![0][0]);
-      } else {
-        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
-      }
+    if (this.isReplay) {
+      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
+    } else {
+      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
     }
 
     this.player1 = this.startTurnState.player1;
@@ -147,12 +135,8 @@ export default class GameScene extends Phaser.Scene {
 
     const { player1, player2 } = this.startTurnState;
     const activePlayer = this.isPlayerOne ? player1 : player2!;
-    const opponentPlayer = this.isPlayerOne ? player2! : player1;
     this.deck = new Deck(activePlayer.deck);
-    this.opponentDeck = new Deck(opponentPlayer.deck);
     this.hand = new Hand(activePlayer.hand);
-    this.opponentHand = new Hand(opponentPlayer.hand);
-    this.opponentHand.disableOpponentHand(); // FIXME: do we need the same for the deck?
 
     this.actionPie = new ActionPie(this);
     this.turnButton = new TurnButton(this);
@@ -174,19 +158,18 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.activePlayer !== this.userId) this.turnButton.buttonImage.setVisible(false);
 
-    // Clicking skips replay // FIXME:
-    // this.blockingLayer = this.add.rectangle(910, 0, 1040, 1650).setOrigin(0.5).setInteractive().setDepth(999).setVisible(isReplay);
+    // Clicking skips replay
+    this.blockingLayer = this.add.rectangle(910, 0, 1040, 1650, 0x000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.isReplay);
 
-    // this.blockingLayer.on('pointerdown', () => {
-    //   this.scene.restart({
-    //     userId: this.userId,
-    //     currentGame: this.currentGame,
-    //     triggerReplay: false,
-    //     fullReplay: false
-    //   });
-    // });
+    this.blockingLayer.on('pointerdown', () => {
+      this.scene.restart({
+        userId: this.userId,
+        currentGame: this.currentGame,
+        gameSceneMode: EGameSceneMode.GAME
+      });
+    });
 
-    this.replayButton = replayButton(this); // FIXME: modified for testing purposes. Transfor into class
+    this.replayButton = replayButton(this);
 
     this.currentTurn = [];
 
@@ -202,7 +185,7 @@ export default class GameScene extends Phaser.Scene {
     const userPreferences = this.registry.get('userPreferences');
     if (userPreferences.chat) this.chatComponent = createChatComponent(this);
 
-    // if (this.turnReplay) new GameReplay(this); FIXME:
+    if (this.isReplay) new TurnReplay(this);
   }
 
   addConcedeButton(context: GameScene): Phaser.GameObjects.Image {

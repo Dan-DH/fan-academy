@@ -267,6 +267,5 @@ export enum EBoardUnit {
 
 export enum EGameSceneMode {
   GAME = 'game',
-  TURN_REPLAY = 'turnReplay',
-  GAME_REPLAY = 'gameReplay'
+  TURN_REPLAY = 'turnReplay'
 }
