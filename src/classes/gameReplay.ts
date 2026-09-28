@@ -1,15 +1,16 @@
 import { EActionClass, EActionType, EGameSceneMode } from "../enums/gameEnums";
-import { IGameState, ITurnAction } from "../interfaces/gameInterface";
+import { IGame, IGameState, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { Banner } from "./board/banner";
-import { Board } from "./board/board";
+import UIScene from "../scenes/ui.scene";
 import { Deck } from "./board/deck";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
 import { Hand } from "./hand";
 
 export class GameReplay {
-  context: GameScene;
+  context: UIScene;
+  gameScene: GameScene;
+  gameData: IGame;
   turnHistory: IGameState[][];
 
   turnNumber = 1;
@@ -28,16 +29,31 @@ export class GameReplay {
   nextActionButton!: Phaser.GameObjects.Image;
   previousActionButton!: Phaser.GameObjects.Image;
 
-  constructor(context: GameScene) {
+  constructor(context: UIScene, gameScene: GameScene) {
     this.context = context;
-    this.turnHistory = context.currentGame! .turnHistory!;
-
-    this.addUiElements();
-
-    this.isFirstPlayer = context.firstPlayer === context.userId;
+    this.gameScene = gameScene;
+    this.gameData = gameScene.clonedGame!;
+    this.turnHistory = this.gameScene.clonedGame!.turnHistory!;
+    this.isFirstPlayer = this.gameScene.firstPlayer === context.userId;
     this.isPlayerTurn = this.isFirstPlayer;
 
-    // this.replayAllTurns();
+    this.addUiElements();
+    this.replayAllTurns();
+  }
+
+  restartSceneOnTurn(turnNumber: number, actionNumber: number): void {
+    this.context.scene.stop('GameScene');
+
+    this.context.scene.launch('GameScene', {
+      userId: this.context.userId,
+      currentGame: this.gameData,
+      startTurnState: this.gameData.turnHistory![turnNumber][actionNumber],
+      gameSceneMode: EGameSceneMode.GAME_REPLAY
+    });
+
+    this.gameScene = this.context.scene.get('GameScene') as GameScene;
+
+    this. gameScene.events.once(Phaser.Scenes.Events.CREATE, () => this.addUiElements());
   }
 
   togglePause(): void {
@@ -46,53 +62,66 @@ export class GameReplay {
     if (!this.isPaused) this.replayAllTurns(); // FIXME: bug if we pause first then go to a specific turn
   }
 
-  changeTurn(n: number): void {
+  goToPreviousTurn(): void {
     if (!this.isPaused) this.togglePause();
-    this.turnNumber += n; // if negative we go back one turn
+
+    console.log('turnNumber previous turn', this.turnNumber);
+    console.log('actionNumber previous turn', this.actionNumber);
+    if (this.turnNumber - 1 <= 1) {
+      this.goToFirst();
+      return;
+    }
+
+    this.turnNumber -= 1;
     this.actionNumber = 0;
-    this.goToState(this.turnNumber, this.actionNumber);
+
+    const turnsToDialBack = this.actionNumber === 0 ? 1 : 0;
+    this.restartSceneOnTurn(this.turnNumber - turnsToDialBack, this.turnHistory[this.turnNumber].length - 1);
   }
 
-  changeAction(n: number): void {
+  goToNextTurn(): void {
     if (!this.isPaused) this.togglePause();
-    this.actionNumber = n; // if negative we go back one
-    this.goToState(this.turnNumber, this.actionNumber);
+    if (this.turnNumber >= this.turnHistory.length - 1) {
+      this.goToLast();
+      return;
+    }
+
+    this.actionNumber = this.turnHistory[this.turnNumber].length - 1;
+    this.restartSceneOnTurn(this.turnNumber, this.actionNumber);
   }
 
   goToLast(): void {
     if (!this.isPaused) this.togglePause();
     this.turnNumber = this.turnHistory.length - 1 ;
-    this.actionNumber = 0;
-    this.goToState(this.turnNumber, this.actionNumber);
+    this.actionNumber = this.turnHistory[this.turnNumber].length - 1;
+    this.restartSceneOnTurn(this.turnNumber, this.actionNumber);
   }
 
   goToFirst(): void {
     if (!this.isPaused) this.togglePause();
     this.turnNumber = 1;
     this.actionNumber = 0;
-    this.goToState(0, this.actionNumber);
+    this.restartSceneOnTurn(0, this.actionNumber);
   }
 
   addUiElements(): void {
-    this.actionNumberTextBox = this.context.add.text(this.context.turnNumberTextBox!.x, this.context.turnNumberTextBox!.y + 30, `Action ${ this.actionNumber + 1 }`, {
+    this.actionNumberTextBox = this.gameScene.add.text(this.gameScene.turnNumberTextBox!.x, this.gameScene.turnNumberTextBox!.y + 30, `Action ${ this.actionNumber + 1 }`, {
       fontFamily: 'proLight',
       fontSize: 30,
       color: '#ffffff'
     });
 
-    this.replayToggleButton = this.context.add.image(900, 660, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.replayToggleButton = this.gameScene.add.image(900, 660, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
     const replayButtonX = this.replayToggleButton.x;
     const replayButtonY = this.replayToggleButton.y;
     const separationX = 65;
 
-    this.previousActionButton = this.context.add.image(replayButtonX - separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
-    this.previousTurnButton = this.context.add.image(replayButtonX - separationX * 2, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
-    this.firstTurnButton = this.context.add.image(replayButtonX - separationX * 3, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
+    this.previousTurnButton = this.gameScene.add.image(replayButtonX - separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
+    this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
 
-    this.nextActionButton = this.context.add.image(replayButtonX + separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-    this.nextTurnButton = this.context.add.image(replayButtonX + separationX * 2, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-    this.lastTurnButton = this.context.add.image(replayButtonX + separationX * 3, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.context.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.nextTurnButton = this.gameScene.add.image(replayButtonX + separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
     this.replayToggleButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
@@ -108,18 +137,12 @@ export class GameReplay {
     this.previousTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
       console.log('previousTurnButton clicked');
-    });
-    this.previousActionButton.on('pointerdown', () => {
-      // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('previousActionButton clicked');
-    });
-    this.nextActionButton.on('pointerdown', () => {
-      // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('nextActionButton clicked');
+      this.goToPreviousTurn();
     });
     this.nextTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
       console.log('nextTurnButton clicked');
+      this.goToNextTurn();
     });
     this.lastTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
@@ -128,33 +151,10 @@ export class GameReplay {
     });
   }
 
-  goToState(turn: number, action: number): void {
-    // TODO: restart UI elements and gameState with the correct snapshot
-    this.context.startTurnState = structuredClone(this.context.clonedGame!.turnHistory![turn][action]);
-
-    this.context.board?.units.forEach(u => u.removeAll(true).destroy());
-    this.context.board = new Board(this.context, this.context.startTurnState.boardState, this.context.clonedGame!.map);
-
-    this.context.banner?.removeAll(true).destroy();
-    this.context.banner = new Banner(this.context, this.context.board, this.context.playerData!);
-
-    const { player1, player2 } = this.context.startTurnState;
-    const activePlayer = this.context.isPlayerOne ? player1 : player2!;
-    const opponentPlayer = this.context.isPlayerOne ? player2! : player1;
-    this.context.deck = new Deck(activePlayer.deck);
-    this.context.opponentDeck = new Deck(opponentPlayer.deck);
-
-    this.context.hand?.hand.forEach(u => u.removeAll(true).destroy());
-    this.context.hand = new Hand(activePlayer.hand);
-    this.context.opponentHand?.hand.forEach(u => u.removeAll(true).destroy());
-    this.context.opponentHand = new Hand(opponentPlayer.hand);
-    this.context.opponentHand.disableOpponentHand(); // FIXME: do we need the same for the deck?
-  }
-
   async replayAllTurns() {
     for (let i = this.turnNumber; i <= this.turnHistory.length - 1; i++) {
       console.log('TURN', i);
-      this.context.turnNumberTextBox?.setText(`TURN ${i}`);
+      this.gameScene.turnNumberTextBox?.setText(`TURN ${i}`);
 
       this.isPlayerTurn = this.isFirstPlayer ? i % 2 !== 0 : i % 2 === 0;
 
@@ -165,8 +165,8 @@ export class GameReplay {
   }
 
   async replayTurn(turn: IGameState[]) {
-    const hand = this.isPlayerTurn ? this.context.hand! : this.context.opponentHand!;
-    const deck = this.isPlayerTurn ? this.context.deck! : this.context.opponentDeck!;
+    const hand = this.isPlayerTurn ? this.gameScene.hand! : this.gameScene.opponentHand!;
+    const deck = this.isPlayerTurn ? this.gameScene.deck! : this.gameScene.opponentDeck!;
 
     for (let i = this.actionNumber; i <= turn.length - 1; i++) {
       const turnAction = turn[i];
@@ -188,20 +188,12 @@ export class GameReplay {
 
       if (this.isPaused) return;
     }
-
-    // FIXME: add check for gameOver and add gameOver screen
-
-    // this.context.scene.restart({
-    //   userId: this.context.userId,
-    //   currentGame: this.context.currentGame,
-    //   triggerReplay: false
-    // } );
   }
 
   async replayAction(turnAction: IGameState, hand: Hand, deck: Deck, actionNumber: number): Promise<void> {
     const actionTaken = turnAction.action?.action;
     await new Promise<void>(resolve => {
-      this.context.time.delayedCall(1000, async () => {
+      this.gameScene.time.delayedCall(1000, async () => {
         if (turnAction.action?.actionClass === EActionClass.USER) this.actionNumberTextBox.setText(`Action ${ actionNumber + 1 }`);
         switch (actionTaken) {
           case EActionType.SPAWN:
@@ -227,7 +219,7 @@ export class GameReplay {
             this.replayDraw(hand, deck);
             break;
           case EActionType.REMOVE_UNITS:
-            await this.context.removeKOUnits();
+            await this.gameScene.removeKOUnits();
             break;
           default:
             console.error('Replay: action not covered: ', actionTaken);
@@ -243,18 +235,18 @@ export class GameReplay {
 
   replaySpawn(action: ITurnAction, hand: Hand): void {
     const hero = hand.getHand().find(unit => unit.stats.boardPosition === action.actorPosition) as Hero;
-    const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
+    const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
-    this.context.board!.units.push(hero);
+    this.gameScene.board!.units.push(hero);
     hero.setVisible(true).updateUnitAfterSpawn(tile);
     hand.removeFromHand(hero.stats.unitId);
   };
 
   replayMove(action: ITurnAction): void {
-    const hero = this.context.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
+    const hero = this.gameScene.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
 
-    const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
+    const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
 
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
@@ -262,8 +254,8 @@ export class GameReplay {
   };
 
   async replayUnitAction(action: ITurnAction): Promise<void> {
-    const hero = this.context.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
-    const target = this.context.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
+    const hero = this.gameScene.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
+    const target = this.gameScene.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
     if (!hero || !target) throw new Error('Missing hero or target in attack or heal action');
 
     // VSCode says await has no effect on them, but it does work
@@ -278,13 +270,13 @@ export class GameReplay {
     if (!item) throw new Error('Missing item in use action');
 
     if (item.stats.dealsDamage) {
-      const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
+      const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
       if (!item) throw new Error('Missing tile in use action');
       await item.use(tile);
     }
 
     if (!item.stats.dealsDamage) {
-      const hero = this.context.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
+      const hero = this.gameScene.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
       if (!hero) throw new Error('Missing target in use action');
       await item.use(hero);
     }
@@ -307,12 +299,12 @@ export class GameReplay {
     const drawAmount = 6 - hand!.getHandSize();
     if (deck!.getDeckSize() === 0 || drawAmount === 0) return;
 
-    this.context.door!.openDoor();
+    this.gameScene.door!.openDoor();
 
     const drawnUnits = deck!.removeFromDeck(drawAmount);
 
     hand!.addToHand(drawnUnits, this.isPlayerTurn);
 
-    if (this.isPlayerTurn) this.context.door?.updateBannerText();
+    if (this.isPlayerTurn) this.gameScene.door?.updateBannerText();
   }
 }

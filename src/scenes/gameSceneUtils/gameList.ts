@@ -1,3 +1,4 @@
+import { GameReplay } from "../../classes/gameReplay";
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { colyseusService } from "../../colyseus/colyseusService";
 import { EChallengePopup, EGameModes, EGameSceneMode, EGameStatus } from "../../enums/gameEnums";
@@ -6,6 +7,7 @@ import { fanAcademy } from "../../main";
 import { factionEnumToEmblem } from "../../utils/gameUtils";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
+import GameScene from "../game.scene";
 import UIScene from "../ui.scene";
 
 export function createGameList() {
@@ -145,18 +147,26 @@ export function createGameList() {
           }
 
           uiScene.activeGame = game._id;
-          let gameSceneMode = EGameSceneMode.GAME;
+
+          if (game.status === EGameStatus.PLAYING) {
+            uiScene.scene.launch('GameScene', {
+              userId: uiScene.userId,
+              currentGame: game,
+              gameSceneMode: EGameSceneMode.GAME
+            });
+          }
 
           if (game.status === EGameStatus.FINISHED) {
             await colyseusService.sendGetTurnHistoryMessage(game._id);
-            gameSceneMode = EGameSceneMode.GAME_REPLAY;
-          }
+            uiScene.scene.launch('GameScene', {
+              userId: uiScene.userId,
+              currentGame: game,
+              gameSceneMode: EGameSceneMode.GAME_REPLAY
+            });
+            const gameScene = uiScene.scene.get('GameScene') as GameScene;
 
-          uiScene.scene.launch('GameScene', {
-            userId: uiScene.userId,
-            currentGame: game,
-            gameSceneMode
-          });
+            gameScene.events.once(Phaser.Scenes.Events.CREATE, () => new GameReplay(uiScene, gameScene));
+          }
         });
       }
 

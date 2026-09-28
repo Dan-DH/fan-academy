@@ -23,7 +23,6 @@ import { getActionClass } from "../utils/gameUtils";
 import { deselectUnit, getPlayersKey } from "../utils/playerUtils";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
-import { GameReplay } from "../classes/gameReplay";
 
 export default class GameScene extends Phaser.Scene {
   userId!: string;
@@ -77,7 +76,8 @@ export default class GameScene extends Phaser.Scene {
     userId: string,
     currentGame: IGame,
     currentRoom: Room, // FIXME: do we need this?
-    gameSceneMode: EGameSceneMode
+    gameSceneMode: EGameSceneMode,
+    startTurnState?: IGameState;
   }) {
     // FIXME: check undefine everything
     this.chatComponent = undefined;
@@ -89,11 +89,9 @@ export default class GameScene extends Phaser.Scene {
     this.userId = data.userId;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
-
     this.gameSceneMode = data.gameSceneMode;
-
-    this.isReplay = [EGameSceneMode.GAME_REPLAY, EGameSceneMode.TURN_REPLAY].includes(this.gameSceneMode);
-    console.log('GameSceneMode: ', this.gameSceneMode);
+    this.startTurnState = data.startTurnState;
+    this.isReplay = [EGameSceneMode.GAME_REPLAY, EGameSceneMode.TURN_REPLAY].includes(data.gameSceneMode);
 
     const networkStatus = navigator.onLine ? 'online' : 'offline';
     this.registry.set('networkStatus', networkStatus);
@@ -111,12 +109,19 @@ export default class GameScene extends Phaser.Scene {
       this.gameOverScreen =  new GameOverScreen(this);
     }
 
-    if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
-      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
-    } else if (this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
-      this.startTurnState = structuredClone(this.clonedGame!.turnHistory![0][0]);
-    } else {
-      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+    console.log('startturnstate', this.startTurnState);
+    if (this.startTurnState) this.startTurnState = structuredClone(this.startTurnState);
+
+    if (!this.startTurnState) {
+      console.log('this logs');
+      if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
+        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
+      } else if (this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
+        console.log('this also logs');
+        this.startTurnState = structuredClone(this.clonedGame!.turnHistory![0][0]);
+      } else {
+        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+      }
     }
 
     this.player1 = this.startTurnState.player1;
@@ -197,7 +202,6 @@ export default class GameScene extends Phaser.Scene {
     const userPreferences = this.registry.get('userPreferences');
     if (userPreferences.chat) this.chatComponent = createChatComponent(this);
 
-    if (this.gameSceneMode === EGameSceneMode.GAME_REPLAY) new GameReplay(this);
     // if (this.turnReplay) new GameReplay(this); FIXME:
   }
 

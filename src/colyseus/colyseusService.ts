@@ -187,12 +187,14 @@ class ColyseusService {
       _id: string,
       turnHistory: IGameState[][]
     } = await this.lobby!.request('getTurnHistoryMessage', { gameId });
+    console.log('this should log first');
 
     const gameList = fanAcademy.registry.get('gameList') as IGame[];
     if (!gameList) console.error('turnHistoryReceived - No context.gameList found');
     // Phaser updates the registry automatically since we are setting the whole array
     const gameToUpdate = gameList.find(g => g._id === turnHistory._id);
     if (gameToUpdate) gameToUpdate.turnHistory = turnHistory.turnHistory;
+    console.log('this should log first');
   }
 
   sendDeletedGameMessage(gameId: string, userId: string): void {
