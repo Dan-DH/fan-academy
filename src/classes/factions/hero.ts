@@ -168,13 +168,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   getTotalPower(rangeModifier = 1): number {
-    /**
-     * Calculation order:
-     * - base attack power
-     * - range modifiers (archer, ninja)
-     * - assault tile bonus
-     * - any other multiplicative modifier (scroll, debuff, runemetal)
-     */
+    const unitsConsumedBonus = this.stats.unitType == EHeroes.WRAITH ? this.stats.unitsConsumed * 50 : 0;
     let attackTileDamage;
     if (this.stats.faction === EFaction.DWARVES) {
       attackTileDamage = this.stats.unitType === EHeroes.ENGINEER ? 140 : 120;
@@ -188,7 +182,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura ? this.stats.paladinAura * 0.05 + 1 : 1; // Check for  units in hand. Otherwise getTotalPower returns NaN
-    return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
+    return roundToFive((this.stats.basePower + unitsConsumedBonus + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
 
   getPhysicalDamageResistance(): number {
