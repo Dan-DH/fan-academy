@@ -2,23 +2,24 @@ import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
-import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { enterSpecialTileCheck, isEnemySpawn } from "../../../utils/boardUtils";
+import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { Tile } from "../../board/tile";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
 
-  constructor(data: IHero) {
+  constructor(data: IHero, tile: Tile, spawned = false) {
     super(data);
 
     // FIXME:
-    // if (spawned && tile) {
-    //   this.spawnAnim = context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(1.3);
+    if (spawned) {
+      this.spawnAnim = this.context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(1.3);
 
-    //   enterSpecialTileCheck(this, tile);
-    //   this.add([this.spawnAnim]);
-    //   sizeReduceTween(this.spawnAnim, 500, this.spawnAnim.scale);
-    // }
+      enterSpecialTileCheck(this, tile);
+      this.add([this.spawnAnim]);
+      sizeReduceTween(this.spawnAnim, 500, this.spawnAnim.scale);
+    }
   }
 
   async attack(target: Hero | Crystal): Promise<void> {

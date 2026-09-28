@@ -458,14 +458,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   spawn(tile: Tile): void {
     const startingPosition = this.stats.boardPosition;
-    // FIXME:
+
     // Stomp KO'd units and enemy phantoms
-    // if (tile.hero && (tile.hero.isKO || tile.hero.unitType === EHeroes.PHANTOM)) {
-    //   const hero = gameController.board.units.find(unit => unit.stats.unitId === tile.hero?.unitId);
-    //   if (!hero) console.error('spawn() Found heroData on tile, but no Hero to remove', tile);
-    //   // this.scene.sound.play(EGameSounds.HERO_STOMP);
-    //   hero?.removeFromGame(true);
-    // }
+    const matchingUnit = this.context.board!.units.find(u => u instanceof Hero && u.stats.boardPosition === tile.boardPosition && (u.stats.isKO || u.stats.unitType === EHeroes.PHANTOM));
+    if (matchingUnit) matchingUnit.removeFromGame(true);
 
     this.context.hand!.removeFromHand(this.stats.unitId);
     this.context.board!.units.push(this);

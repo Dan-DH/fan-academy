@@ -27,7 +27,7 @@ export function mapHeroFromBE(data: IHeroBE): IHero {
   };
 }
 
-function mapUnitBaseStats(unitType: EHeroes): IHeroBaseStats {
+export function mapUnitBaseStats(unitType: EHeroes): IHeroBaseStats {
   const map = {
     [EHeroes.ARCHER]: {
       baseHealth: 800,

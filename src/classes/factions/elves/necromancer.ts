@@ -1,9 +1,12 @@
-import { EActionType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { Phantom } from "./phantom";
+import { mapUnitBaseStats } from "../../../utils/mapHeroFromBE";
+import { generateFourDigitId } from "../../../utils/gameUtils";
 
 export class Necromancer extends DarkElf {
   constructor(data: IHero) {
@@ -19,21 +22,27 @@ export class Necromancer extends DarkElf {
 
       // this.scene.sound.play(EGameSounds.PHANTOM_SPAWN);
 
-      // FIXME:
-      console.log(tile);
-      // const phantom = new Phantom(this.context, createElvesPhantomData({
-      //   unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
-      //   boardPosition: target.stats.boardPosition,
-      //   belongsTo: this.stats.belongsTo,
-      //   row: target.stats.row,
-      //   col: target.stats.col
-      // }), tile, true);
+      const phantom = new Phantom({
+        unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
+        class: EClass.HERO,
+        faction: EFaction.DARK_ELVES,
+        unitType: EHeroes.PHANTOM,
+        boardPosition: target.stats.boardPosition,
+        belongsTo: this.stats.belongsTo,
+        row: target.stats.row,
+        col: target.stats.col,
+        maxHealth: 100,
+        currentHealth: 100,
+        status: 0,
+        unitsConsumed: 0,
+        isKO: false,
+        lastBreath: false,
+        ...mapUnitBaseStats(EHeroes.PHANTOM)
+      }, tile, true);
 
       target.removeFromGame(true);
 
-      // FIXME:
-      // this.context.gameController?.board.units.push(phantom);
-      // tile.hero = phantom.exportData();
+      this.context.board!.units.push(phantom);
 
       this.context.afterAction(EActionType.SPAWN_PHANTOM, this.stats.boardPosition, target.stats.boardPosition);
 
