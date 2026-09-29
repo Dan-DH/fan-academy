@@ -13,7 +13,6 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
   annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
   crystalDebuffAnimationSprite: Phaser.GameObjects.Sprite;
 
-  // FIXME: adding status tracker?
   constructor(context: GameScene, data: ICrystal, status: StatusTracker) {
     super(context, 0, 0);
     const isBigCrystal = data.maxHealth === 9000;
@@ -37,7 +36,7 @@ export class CrystalVisuals extends Phaser.GameObjects.Container {
     engineerShieldAnimation(this.engineerShieldImage);
 
     this.annihilatorDebuffAnimationSprite = context.add.sprite(25, -35, 'gameAtlas', 'annihilatorDebuff_1').setOrigin(0.5).setScale(0.8).setName('annihilatorDebuff_1');
-    if (!status.has(StatusEffects.ANNIHILATOR_DEBUFF)) this.annihilatorDebuffAnimationSprite.setVisible(false);
+    if (status.has(StatusEffects.ANNIHILATOR_DEBUFF)) { this.playAnnihilatorDebuffAnimation(); } else {this.annihilatorDebuffAnimationSprite.setVisible(false);};
 
     // Attack  and healing reticle animations
     this.attackReticle = context.add.image(0, -10, 'gameAtlas', 'attackReticle').setOrigin(0.5).setScale(1).setName('attackReticle').setVisible(false);

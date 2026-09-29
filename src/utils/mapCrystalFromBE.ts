@@ -12,6 +12,7 @@ export function mapCrystalFromBE(data: ICrystalBE): ICrystal {
     boardPosition: data.boardPosition,
     belongsTo: data.belongsTo,
     boardType: data.boardType,
+    status: data.status,
     row: unitCoordinates!.row!,
     col: unitCoordinates!.col!,
     debuffLevel: 0, // FIXME: to be calculated after all the units are set up
