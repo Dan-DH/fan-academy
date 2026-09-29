@@ -154,7 +154,7 @@ export function addHyperlinks(context: Phaser.Scene, container: Phaser.GameObjec
   ];
 
   mainMenuElem.forEach((elem, index) => {
-    const link = addLink(context, elem, index, 1090, container, topY, bottomY, contentHeight);
+    const link = addLink(context, elem, index, 1160, container, topY, bottomY, contentHeight);
 
     container.add(link);
   });
@@ -183,14 +183,14 @@ export function addLink(context: Phaser.Scene, elem: {
 
 export function addPictures(context: Phaser.Scene, container: Phaser.GameObjects.Container): void {
   // UI
-  container.add(context.add.image(87, 1280, 'aboutPlayButton').setScale(0.5));
-  container.add(context.add.image(490, 1690, 'aboutPlayPage').setScale(0.7));
+  container.add(context.add.image(87, 1350, 'aboutPlayButton').setScale(0.5));
+  container.add(context.add.image(490, 1750, 'aboutPlayPage').setScale(0.7));
 
-  container.add(context.add.image(170, 3270, 'aboutProfileButton'));
-  container.add(context.add.image(490, 3700, 'aboutProfilePage'));
+  container.add(context.add.image(170, 3340, 'aboutProfileButton'));
+  container.add(context.add.image(490, 3770, 'aboutProfilePage'));
 
-  container.add(context.add.image(170, 4670, 'aboutLeaderboardButton'));
-  container.add(context.add.image(490, 4860, 'aboutLeaderboardPage'));
+  container.add(context.add.image(170, 4760, 'aboutLeaderboardButton'));
+  container.add(context.add.image(490, 4930, 'aboutLeaderboardPage'));
 
   // Factions
   const pictureX = 840;
