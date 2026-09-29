@@ -1,4 +1,4 @@
-import { PatchNote, PlayerData, PlayerStat } from "$lib/types/infoType";
+import type { PatchNote, PlayerData, PlayerStat } from "$lib/types/InfoType";
 
 export const topPlayers: PlayerStat[] = [
         {username: "damsa",elo: 8967,icon: "icon-[at-icons--medal-1st] bg-yellow-300"},
