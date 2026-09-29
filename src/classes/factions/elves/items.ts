@@ -85,7 +85,10 @@ export class SoulHarvest extends Item {
     const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);
 
     // Increase max health of all units, including KO'd ones, and revive them
-    friendlyUnits.forEach(unit => unit.increaseMaxHealth(lifeIncreaseAmount));
+    friendlyUnits.forEach(unit => {
+      if (unit.stats.isKO) unit.getsRevived();
+      unit.increaseMaxHealth(lifeIncreaseAmount);
+    });
 
     this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
     this.removeFromGame();

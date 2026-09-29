@@ -286,7 +286,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return actualHealing;
   }
 
-  private getsRevived(): void {
+  getsRevived(): void {
     this.visuals.playReviveAnimation();
 
     this.stats.isKO = false;
@@ -304,7 +304,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   increaseMaxHealth(amount: number, addText = true): void {
     if (amount <= 0) return;
-    if (this.stats.isKO) this.getsRevived(); // for Soul Harvest // FIXME: revive on sould harvest method
 
     const roundedHealthGain = roundToFive(amount);
     this.stats.maxHealth += roundedHealthGain;
