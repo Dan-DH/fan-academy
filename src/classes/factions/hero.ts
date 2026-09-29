@@ -373,12 +373,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return tile;
   }
 
-  // FIXME:
-  // updateTileData(): void {
-  //   // const tile = this.getTile();
-  //   // tile.hero = this.exportData();
-  // }
-
   shuffleInDeck(): void {
     this.stats.boardPosition = 51;
 
@@ -410,7 +404,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.destroy(true);
   }
 
-  // FIXME: no longer getting the engineer id. We'll loop through units when losing it to find the engie with the matching id to this unit. Same if the shield is lost on the engie's side
   receiveEngineerShield(): void {
     this.status.add(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(true);

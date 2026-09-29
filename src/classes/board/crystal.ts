@@ -27,7 +27,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     super(context, x, y);
     this.context = context;
 
-    this.stats = data; // FIXME: do we need the data?
+    this.stats = data;
     this.status = new StatusTracker(data.status);
     this.visuals = new CrystalVisuals(context, data, this.status);
     this.healthBar = new HealthBar(context, data, -38, -75);

@@ -86,7 +86,6 @@ export class Board {
     }) as (IHeroBE | ICrystalBE)[];
   }
 
-  // FIXME: did I delete this?
   clearHighlights() {
     this.grid.forEach(tile => tile.clearHighlight());
   }
@@ -112,13 +111,10 @@ export class Board {
     this.highlightTiles([...spawns]);
   }
 
-  // FIXME: confirm this works
   highlightAllLivingEnemyTargets(unit: Hero | Item): void {
     this.units.map(u => {
       if (unit.stats.belongsTo !== unit.stats.belongsTo) u.getTile().setHighlight();
     });
-    // this.crystals.map(crystal => { if (crystal.stats.belongsTo !== unit.stats.belongsTo) crystal.getTile().setHighlight();});
-    // this.heroes.map(u => {if (u.stats.belongsTo !== unit.stats.belongsTo && !u.stats.isKO) u.getTile().setHighlight();});
   }
 
   highlightEnemyTargets(hero: Hero): void {
@@ -235,18 +231,6 @@ export class Board {
     });
   }
 
-  // FIXME: remove if not used, or adapt for single number param
-  highlightTilesByPosition(positions: number[]) {
-    positions.forEach(p => {
-      if (p < 0 || p > 44) {
-        console.error('highlightTilesByPosition() - position not in board: ', p);
-        return;
-      }
-      const tile = this.grid.find(t => t.boardPosition === p);
-      tile!.setHighlight();
-    });
-  }
-
   removeReticles(): void {
     this.units.forEach(u => {
       removeReticleTween(u.visuals.attackReticle);
@@ -317,7 +301,6 @@ export class Board {
     return [...inRangeUnits];
   }
 
-  // FIXME: change parameter from Tile to bp
   get3x3AreaOfEffectTiles(boardPosition: number): Tile[] {
     const totalRows = 4;
     const totalCols = 8;

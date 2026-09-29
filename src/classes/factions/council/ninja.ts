@@ -58,11 +58,9 @@ export class Ninja extends Council {
 
     moveSpecialTileCheck(target, targetDestination, unitDestination);
     target.updatePosition(targetDestination);
-    // targetDestination.hero = target.exportData(); // FIXME:
 
     moveSpecialTileCheck(this, unitDestination, targetDestination);
     this.updatePosition(unitDestination);
-    // unitDestination.hero = this.exportData(); // FIXME:
 
     this.context.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);
   };

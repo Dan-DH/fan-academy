@@ -24,15 +24,6 @@ export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (He
   return result;
 }
 
-// FIXME: not used
-export function isUnitOnEnemySpawn(context: GameScene, unit: Hero | Crystal): boolean {
-  const spawnMatch = context.board!.grid.find(t => t.boardPosition === unit.stats.boardPosition && t.tileType === ETiles.SPAWN);
-
-  if (spawnMatch) return context.isPlayerOne ? spawnMatch.col > 5 : spawnMatch.col < 5;
-
-  return false;
-}
-
 export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
   return tile.tileType === ETiles.SPAWN && (context.isPlayerOne ? tile.col > 5 : tile.col < 5);
 }
