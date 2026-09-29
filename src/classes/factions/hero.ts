@@ -424,14 +424,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
     await moveAnimation(this, targetTile, tilesMoved);
 
-    // FIXME:
     // Stomp KO'd units
-    // if (targetTile.hero && targetTile.hero.isKO) {
-    //   const hero = gameController.board.units.find(unit => unit.stats.unitId === targetTile.hero?.unitId);
-    //   if (!hero) console.error('move() Found heroData on targetTile, but no Hero to remove', targetTile);
-    //   // this.scene.sound.play(EGameSounds.HERO_STOMP);
-    //   hero?.removeFromGame(true);
-    // }
+    const heroToStomp = this.context.board!.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
+    if (heroToStomp) {
+      // this.scene.sound.play(EGameSounds.HERO_STOMP);
+      heroToStomp?.removeFromGame(true);
+    }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
     enterSpecialTileCheck(this, targetTile);
