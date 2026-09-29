@@ -42,21 +42,8 @@ export class VoidMonk extends DarkElf {
         const tileBP = target.stats.boardPosition + offset;
         if (!isOnBoard(tileBP)) continue;
 
-        const tile = board.getTileFromBoardPosition(tileBP);
-        if (!tile) throw new Error(`voidMonk attack() No tile found`);
-
-        if (!canBeAttacked(this, tile)) continue;
-
-        // FIXME:
-        // if (tile.hero) {
-        //   const hero = board.units.find(unit => unit.stats.unitId === tile.hero!.unitId);
-        //   if (hero) splashedEnemies.push(hero);
-        // }
-
-        // if (tile.crystal) {
-        //   const crystal = board.crystals.find(c => c.stats.boardPosition === tile.crystal!.boardPosition);
-        //   if (crystal) splashedEnemies.push(crystal);
-        // }
+        const matchedEnemy = board.units.find(u => u.stats.boardPosition === tileBP && u.stats.belongsTo !== this.stats.belongsTo);
+        if (matchedEnemy && canBeAttacked(this, matchedEnemy)) splashedEnemies.push(matchedEnemy);
       };
 
       // Apply damage to targets

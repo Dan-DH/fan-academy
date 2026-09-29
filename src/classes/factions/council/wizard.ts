@@ -2,7 +2,6 @@ import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Board } from "../../board/board";
 import { Crystal } from "../../board/crystal";
@@ -63,10 +62,10 @@ export class Wizard extends Council {
     const adjacentEnemies = this.getAdjacentEnemyTiles(target.stats.boardPosition, positionsToIgnore);
 
     let maxScore = -1;
-    let bestTarget: Tile | undefined;
+    let bestTarget: Hero | Crystal | undefined;
 
-    for (const enemyTile of adjacentEnemies) {
-      const enemyTileDirection = board.getAttackDirection(target.stats.boardPosition, enemyTile.boardPosition);
+    for (const enemy of adjacentEnemies) {
+      const enemyTileDirection = board.getAttackDirection(target.stats.boardPosition, enemy.stats.boardPosition);
 
       let score = 0;
 
@@ -83,7 +82,7 @@ export class Wizard extends Council {
       if (this.getGeneralDirections(attackDirection).includes(enemyTileDirection)) score += 2.5;
 
       if (!isLastTarget) {
-        const enemyHasAdjacentEnemies = this.getAdjacentEnemyTiles(enemyTile.boardPosition, [...positionsToIgnore, enemyTile.boardPosition]);
+        const enemyHasAdjacentEnemies = this.getAdjacentEnemyTiles(enemy.stats.boardPosition, [...positionsToIgnore, enemy.stats.boardPosition]);
         if (enemyHasAdjacentEnemies.length) {
           score += 2.5;
         }
@@ -91,10 +90,8 @@ export class Wizard extends Council {
 
       if (score > maxScore) {
         maxScore = score;
-        bestTarget = enemyTile;
+        bestTarget = enemy;
       }
-
-      // if (maxScore === 6) break;
     }
 
     if (!bestTarget) {
@@ -102,25 +99,14 @@ export class Wizard extends Council {
       return undefined;
     }
 
-    // FIXME:
-    // if (bestTarget.hero) {
-    //   const hero = board.units.find(unit => unit.stats.unitId === bestTarget.hero!.unitId);
-    //   if (hero) return hero;
-    // }
-
-    // if (bestTarget.crystal) {
-    //   const crystal = board.crystals.find(c => c.stats.boardPosition === bestTarget.crystal!.boardPosition);
-    //   if (crystal) return crystal;
-    // }
-
-    throw new Error("getNextTarget() Target found on tile, but not in board units or crystals");
+    return board.units.find(u => u.stats.boardPosition === bestTarget?.stats.boardPosition);
   }
 
-  getAdjacentEnemyTiles(boardPosition: number, ignorePosition: number[] = []): Tile[] {
+  getAdjacentEnemyTiles(boardPosition: number, ignorePosition: number[] = []): (Hero | Crystal)[] {
     const adjacentOffsets = [-10, -9, -8, -1, +1, +8, +9, +10];
     const leftOffset = [-10, -1, +8];
     const rightOffset = [+10, +1, -8];
-    const adjacentTiles: Tile[] = [];
+    const adjacentEnemyHeroes: (Hero | Crystal)[] = [];
     const boardWidth = 9;
 
     const isOnLeftEdge = boardPosition % boardWidth === 0;
@@ -133,26 +119,12 @@ export class Wizard extends Council {
       const tilePosition = boardPosition + offset;
 
       if (isOnBoard(tilePosition) && !ignorePosition.includes(tilePosition)) {
-        const tile = this.context.board!.getTileFromBoardPosition(tilePosition);
-        if (canBeAttacked(this, tile)) adjacentTiles.push(tile);
+        const matchedUnit = this.context.board!.units.find(u => u.stats.belongsTo !== this.stats.belongsTo && u.stats.boardPosition === tilePosition);
+        if (matchedUnit && canBeAttacked(this, matchedUnit)) adjacentEnemyHeroes.push(matchedUnit);
       }
     }
-    return adjacentTiles;
+    return adjacentEnemyHeroes;
   }
-
-  // private getGeneralDirections(direction: number): number[] {
-  //   switch (direction) {
-  //     case 1: return [1, 2, 8];
-  //     case 2: return [[1, 2, 8], [2, 3, 4]].flat();
-  //     case 3: return [2, 3, 4];
-  //     case 4: return [[2, 3, 4], [4, 5, 6]].flat();
-  //     case 5: return [4, 5, 6];
-  //     case 6: return [[4, 5, 6], [6, 7, 8]].flat();
-  //     case 7: return [6, 7, 8];
-  //     case 8: return [[1, 2, 8], [6, 7, 8]].flat();
-  //     default: return [];
-  //   }
-  // }
 
   private getGeneralDirections(direction: number): number[] {
     switch (direction) {

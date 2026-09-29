@@ -1,5 +1,4 @@
 import { Crystal } from "../classes/board/crystal";
-import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
 import { EActionType, EActionClass, EClass, EWinConditions } from "../enums/gameEnums";
@@ -56,14 +55,10 @@ export function getActionClass(action: EActionType): EActionClass {
   return [EActionType.PASS, EActionType.DRAW, EActionType.REMOVE_UNITS].includes(action) ? EActionClass.AUTO : EActionClass.USER;
 }
 
-export function canBeAttacked(_attacker: Hero, _tile: Tile): boolean {
-  const result = false;
-
-  // FIXME: adapt check
-  // if (tile.hero && tile.hero.belongsTo !== attacker.stats.belongsTo && !tile.hero.isKO) result = true;
-  // if (tile.crystal && tile.crystal.belongsTo !== attacker.stats.belongsTo) result = true;
-
-  return result;
+export function canBeAttacked(attacker: Hero, target: Hero | Crystal): boolean {
+  if (target.stats.belongsTo === attacker.stats.belongsTo) return false;
+  if (target instanceof Hero && target.stats.isKO) return false;
+  return true;
 }
 
 export function isLastUnit(hero: Hero): boolean {
