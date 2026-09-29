@@ -17,7 +17,6 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     // Handle right click: show card if empty special tile
     if (pointer.button === 2) {
       const isSpecial = tile.tileType !== ETiles.BASIC && tile.tileType !== ETiles.CRYSTAL;
-      // const isEmpty = !tile.hero && !tile.crystal; // FIXME: I don't think we need this if we check for empty tile above
       if (isSpecial) {
         tile.setDepth(1001);
         if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);

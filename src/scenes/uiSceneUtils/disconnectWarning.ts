@@ -5,7 +5,7 @@ export function showDisconnectWarning(): void {
   if (warningDiv) warningDiv.style.display = 'block';
 }
 
-// FIXME: never used
+// FIXME: not used atm
 export function hideDisconnectWarning(): void {
   const warningDiv = document.getElementById('disconnect-warning');
   if (warningDiv) warningDiv.style.display = 'none';

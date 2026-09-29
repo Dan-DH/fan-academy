@@ -33,7 +33,7 @@ export default class GameScene extends Phaser.Scene {
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
   currentGame: IGame | undefined;
   currentTurn: IGameState[] | undefined;
-  clonedGame: IGame | undefined; // FIXME:
+  clonedGame: IGame | undefined;
   startTurnState: IGameState | undefined;
   currentTurnAction: number | undefined;
 
@@ -76,7 +76,6 @@ export default class GameScene extends Phaser.Scene {
     currentGame: IGame,
     gameSceneMode: EGameSceneMode,
   }) {
-    // FIXME: check undefine everything
     this.chatComponent = undefined;
     this.longPressStart = undefined;
     this.visibleUnitCard = undefined;
@@ -123,7 +122,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Game map
     const gameMap = this.add.image(0, 0, 'gameBoard').setOrigin(0).setInteractive();
-    gameMap.y += 14; // FIXME: this used to be inside the gameUI and render correctly, not sure why it blocks tiles and crystals
+    gameMap.y += 14;
     gameMap.x = 1434 - gameMap.width - 14;
     // Item rack
     this.add.image(0, 0, 'gameAtlas', 'itemRack').setOrigin(0.5).setPosition(900, 736).setScale(1.125);

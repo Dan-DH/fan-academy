@@ -71,7 +71,7 @@ export interface IHero {
   buffRange: number;
   attackType: EAttackType;
   basePower: number;
-  physicalDamageResistance?: number; // FIXME: calculated in Hero constructor
+  physicalDamageResistance?: number;
   basePhysicalDamageResistance: number;
   magicalDamageResistance?: number;
   baseMagicalDamageResistance: number;
@@ -80,19 +80,6 @@ export interface IHero {
   canBuff: boolean;
   shieldingAlly?: string;
   paladinAura?: number;
-  // attackTile: boolean;
-  // magicalResistanceTile: boolean;
-  // physicalResistanceTile: boolean;
-  // speedTile: boolean;
-  // factionEquipment: boolean;
-  // runeMetal: boolean;
-  // shiningHelm: boolean;
-  // superCharge: boolean;
-  // priestessDebuff: boolean;
-  // manaVial: boolean;
-  // dwarvenBrew: boolean;
-  // engineerShield?: string;
-  // annihilatorDebuff: boolean;
 }
 
 export interface IHeroBE {
@@ -145,7 +132,7 @@ export interface IPlayerData {
 export interface ITurnAction {
   actorPosition?: number;
   targetPosition?: number; // an item can be a target for shuffle
-  action: EActionType; // FIXME: rename to actionType
+  action: EActionType; // TODO: rename to actionType
   actionClass: EActionClass,
 }
 
@@ -202,8 +189,6 @@ export interface ITile {
   tileType: ETiles;
   x: number;
   y: number;
-  hero?: IHero | undefined; // FIXME: remove hero and crystal properties
-  crystal?: ICrystal | undefined;
 }
 
 /**
@@ -250,7 +235,6 @@ export interface IGame {
   gameMode: EGameModes
 }
 
-// FIXME: wip
 export interface ISpecialTile {
   row: number,
   col: number,

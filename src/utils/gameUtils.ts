@@ -21,14 +21,6 @@ export function isOnBoard(position: number): boolean {
   return position >= 0 && position <= 44;
 }
 
-// FIXME: replace belongsToPlayer if possible
-// this can also be updated to use a registry instead of context
-export function belongsToPlayer20(context: GameScene, unit: Hero | Item | Crystal): boolean {
-  const playerNumber = context.isPlayerOne ? 1 : 2;
-  return unit.stats.belongsTo === playerNumber;
-}
-
-// FIXME: why does this have all the types
 export function belongsToPlayer(context: GameScene, unit: Hero | Item | IItem | Crystal | ICrystal | IHero): boolean {
   const playerNumber = context.isPlayerOne ? 1 : 2;
   if (unit instanceof Hero || unit instanceof Item || unit instanceof Crystal) return unit.stats.belongsTo === playerNumber;

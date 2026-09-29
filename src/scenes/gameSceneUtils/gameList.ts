@@ -166,7 +166,7 @@ export function createGameList() {
           if (uiScene.activeGame) {
             uiScene.activeGame = undefined;
             uiScene.scene.stop('GameScene');
-          } // TODO: check if we actually need to leave the game for this. Same with new game
+          }
 
           new ChallengePopup({
             context: uiScene,

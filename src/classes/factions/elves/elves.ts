@@ -36,7 +36,6 @@ export abstract class DarkElf extends Hero {
   }
 }
 
-// FIXME: to be replaced
 export function createElvesPhantomData(data: Partial<IHero>): IHero {
   // Cannot be equipped, buffed or healed, disappears if KO'd
   return {

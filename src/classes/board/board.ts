@@ -295,7 +295,7 @@ export class Board {
 
       if (distance > range) return;
 
-      if (u instanceof Crystal || u instanceof Hero && u.stats.unitId !== hero.stats.unitId) inRangeUnits.add(u); // TODO: refactor this for legibility
+      if (u instanceof Crystal || u instanceof Hero && u.stats.unitId !== hero.stats.unitId) inRangeUnits.add(u);
     });
 
     return [...inRangeUnits];

@@ -47,7 +47,6 @@ export class PlayerHealthBar extends Phaser.GameObjects.Container {
   // Updates health visually
   setHealth() {
     this.currentHealth = 0;
-    // FIXME: I'm passing the board all the way here to check the crystal hp...
     this.board.units.forEach(u => {if (u instanceof Crystal && u.stats.belongsTo === this.player) this.currentHealth += u.stats.currentHealth;});
 
     const ratio = this.currentHealth / this.maxHealth;

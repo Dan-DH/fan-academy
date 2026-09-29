@@ -89,7 +89,6 @@ class ColyseusService {
     lobby.onMessage('gameOverUpdate', (message: {
       gameId: string,
       previousTurn: IGameState[],
-      // userIds: string[], // FIXME: if not needed, remove as well in BE
       turnNumber: number,
       lastPlayedAt: Date,
       gameOver: IGameOver
@@ -104,7 +103,7 @@ class ColyseusService {
 
       const unfinishedGames = gameList?.filter(game => game.status !== EGameStatus.FINISHED);
       const game = unfinishedGames?.find(game => game._id === message.gameId);
-      if (!game) throw new Error('gameOverUpdate - No game found'); // TODO: swithc this kind of error for a error message?
+      if (!game) throw new Error('gameOverUpdate - No game found');
 
       game.previousTurn = message.previousTurn;
       game.turnNumber = message.turnNumber;
@@ -142,7 +141,6 @@ class ColyseusService {
       if (fanAcademy.scene.isActive('UIScene')) createGameList();
     });
 
-    // FIXME: check if these messages need to be async
     lobby.onMessage('userDeletedUpdate', async (message: {
       gameIds: string[],
       userIds: string[]

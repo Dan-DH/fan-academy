@@ -25,5 +25,5 @@ export function mapFactionEnumsToLowerCase(faction: EFaction): string {
     [EFaction.DWARVES]: 'dwarves'
   };
 
-  return factionMap[faction]; // TODO: place somewhere else and rename
+  return factionMap[faction];
 }

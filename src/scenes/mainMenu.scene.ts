@@ -424,7 +424,7 @@ export default class MainMenuScene extends Phaser.Scene {
     if (this.registry.get('userId')) {
       console.log('User already authenticated, skipping gameList fetch');
       return;
-    } // TODO: this will do for the moment
+    }
 
     const authCheckResult = await authCheck();
     if (authCheckResult) this.updateUserPreferences(authCheckResult);
@@ -459,7 +459,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     const lobby = await colyseusService.connect(this.userId!, token);
     if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
-    // FIXME: get games via lobby message;
+    // TODO: get games via lobby message;
     const gameList =  await getGameList(this.userId!);
 
     this.registry.set('gameList', gameList ?? []);

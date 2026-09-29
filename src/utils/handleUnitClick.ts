@@ -209,7 +209,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       if (activeUnit instanceof Item) {
         if (unit.isAlreadyEquipped(activeUnit) || unit.stats.unitType === EHeroes.PHANTOM && !activeUnit.stats.dealsDamage) return;
 
-        if (activeUnit.stats.dealsDamage && unit.getTile().isHighlighted) activeUnit.use(unit); // TODO: changed from using
+        if (activeUnit.stats.dealsDamage && unit.getTile().isHighlighted) activeUnit.use(unit);
 
         if (activeUnit instanceof HealingPotion && unit.isFullHP()) return;
 

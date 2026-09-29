@@ -15,8 +15,8 @@ export function mapCrystalFromBE(data: ICrystalBE): ICrystal {
     status: data.status,
     row: unitCoordinates!.row!,
     col: unitCoordinates!.col!,
-    debuffLevel: 0, // FIXME: to be calculated after all the units are set up
-    paladinAura: 0, // same, alongside resistance
+    debuffLevel: 0, // debuff and paladinAura are udpated after all units are rendered
+    paladinAura: 0,
     basePhysicalDamageResistance: 0,
     baseMagicalDamageResistance: 0,
     physicalDamageResistance: 0,
