@@ -104,6 +104,7 @@ export interface IHeroBE {
   currentHealth?: number;
   maxHealth?: number,
   lastBreath?: boolean;
+  shieldingAlly?: string;
   status: number;
   unitsConsumed?: number;
   boardType: EBoardUnit;

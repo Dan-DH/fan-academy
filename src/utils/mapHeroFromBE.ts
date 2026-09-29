@@ -20,6 +20,7 @@ export function mapHeroFromBE(data: IHeroBE): IHero {
     maxHealth: data.maxHealth ?? baseUnitStats.baseHealth,
     lastBreath: data.lastBreath ?? false,
     unitsConsumed: data.unitsConsumed ?? 0,
+    shieldingAlly: data.shieldingAlly ?? undefined,
     row: unitCoordinates?.row ?? 0,
     col: unitCoordinates?.col ?? 0,
     isKO: data.currentHealth === 0,
