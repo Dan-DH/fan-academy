@@ -154,7 +154,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       }
 
       if (activeUnit instanceof Item && activeUnit.stats.dealsDamage) {
-        activeUnit.use(unit instanceof Pulverizer ? unit : unit.getTile());
+        activeUnit.use(activeUnit instanceof Pulverizer ? unit : unit.getTile());
         return;
       }
     }
