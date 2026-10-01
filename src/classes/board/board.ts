@@ -14,7 +14,7 @@ import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
 import { HealingPotion } from "../factions/council/items";
 import { DwarvenBrew } from "../factions/dwarves/items";
-import { addReticleTween, forcedMoveAnimation, getNewPositionAfterForce, removeReticleTween } from "../../utils/unitAnimations";
+import { addReticleTween, forcedMoveAnimation, removeReticleTween } from "../../utils/unitAnimations";
 import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
@@ -690,7 +690,7 @@ export class Board {
       return;
     }
 
-    const newPosition = getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, true);
+    const newPosition = this.getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, true);
 
     // If the tile is beyond the boundaries of the map, ignore
     const isWrongRow = newPosition.row < 0 || newPosition.row > 4;
@@ -718,7 +718,7 @@ export class Board {
       return;
     }
 
-    const newPosition = getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, false);
+    const newPosition = this.getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, false);
 
     const targetNewTile = this.getTileFromCoordinates(newPosition.row, newPosition.col);
 
@@ -736,5 +736,26 @@ export class Board {
   canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {
     const spawnBelongsTo = tile.col < 5 ? 1 : 2;
     return tile.tileType === ETiles.SPAWN && hero.stats.belongsTo === spawnBelongsTo;
+  }
+
+  getNewPositionAfterForce(attackerRow: number, attackerCol: number, targetRow: number, targetCol: number, isPush: boolean) {
+  // Direction from attacker to target
+    let directionRow = targetRow - attackerRow;
+    let directionColumn = targetCol - attackerCol;
+
+    // Normalize to single step
+    directionRow = Math.sign(directionRow);
+    directionColumn = Math.sign(directionColumn);
+
+    // For pull, reverse the direction
+    if (!isPush) {
+      directionRow *= -1;
+      directionColumn *= -1;
+    }
+
+    return {
+      row: targetRow + directionRow,
+      col: targetCol + directionColumn
+    };
   }
 }

@@ -157,27 +157,6 @@ export async function forcedMoveAnimation(context: GameScene, hero: Hero, target
   await animation.call(context, hero, targetTile);
 };
 
-export function getNewPositionAfterForce(attackerRow: number, attackerCol: number, targetRow: number, targetCol: number, isPush: boolean) {
-  // Direction from attacker to target
-  let directionRow = targetRow - attackerRow;
-  let directionColumn = targetCol - attackerCol;
-
-  // Normalize to single step
-  directionRow = Math.sign(directionRow);
-  directionColumn = Math.sign(directionColumn);
-
-  // For pull, reverse the direction
-  if (!isPush) {
-    directionRow *= -1;
-    directionColumn *= -1;
-  }
-
-  return {
-    row: targetRow + directionRow,
-    col: targetCol + directionColumn
-  };
-}
-
 export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal): void {
   const isLookingRight = attacker.stats.belongsTo === 1;
   const attackerImage = attacker.visuals.characterImage;
