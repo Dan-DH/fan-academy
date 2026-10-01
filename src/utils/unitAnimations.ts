@@ -2,8 +2,7 @@ import { GameObjects } from "phaser";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
-import { EHeroes, ETiles } from "../enums/gameEnums";
-import { ITile } from "../interfaces/gameInterface";
+import { EHeroes } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
 
 export function flashActingUnit(hero: Hero): void {
@@ -177,11 +176,6 @@ export function getNewPositionAfterForce(attackerRow: number, attackerCol: numbe
     row: targetRow + directionRow,
     col: targetCol + directionColumn
   };
-}
-
-export function canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {
-  const spawnBelongsTo = tile.col < 5 ? 1 : 2;
-  return tile.tileType === ETiles.SPAWN && hero.stats.belongsTo === spawnBelongsTo;
 }
 
 export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal): void {

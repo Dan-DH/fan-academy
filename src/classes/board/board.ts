@@ -1,5 +1,5 @@
 import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
-import { Coordinates, ICrystalBE, IHeroBE } from "../../interfaces/gameInterface";
+import { Coordinates, ICrystalBE, IHeroBE, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
 import { createBasicTileData, isEnemySpawn, moveSpecialTileCheck } from "../../utils/boardUtils";
@@ -14,7 +14,7 @@ import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
 import { HealingPotion } from "../factions/council/items";
 import { DwarvenBrew } from "../factions/dwarves/items";
-import { addReticleTween, canBeMovedIntoSpawn, forcedMoveAnimation, getNewPositionAfterForce, removeReticleTween } from "../../utils/unitAnimations";
+import { addReticleTween, forcedMoveAnimation, getNewPositionAfterForce, removeReticleTween } from "../../utils/unitAnimations";
 import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
@@ -701,7 +701,7 @@ export class Board {
 
     if (!targetNewTile) return;
     if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
 
@@ -724,12 +724,17 @@ export class Board {
 
     if (!targetNewTile) return;
     if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && this.canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
 
     await forcedMoveAnimation(this.context, target, targetNewTile);
 
     target.updatePosition(targetNewTile);
+  }
+
+  canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {
+    const spawnBelongsTo = tile.col < 5 ? 1 : 2;
+    return tile.tileType === ETiles.SPAWN && hero.stats.belongsTo === spawnBelongsTo;
   }
 }
