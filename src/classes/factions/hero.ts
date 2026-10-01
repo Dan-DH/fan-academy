@@ -292,6 +292,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.isKO = false;
     this.stats.lastBreath = false;
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    this.healthBar.setVisible(true);
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
 
     this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
@@ -362,6 +363,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
+    this.healthBar.setVisible(false);
 
     checkUnitGameOver(this);
   }
@@ -378,10 +380,20 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const unitData = this.exportData();
 
-    this.context.hand!.removeFromHand(this.stats.unitId);
-    this.context.deck!.addToDeck(unitData);
+    if (this.inPlayerHand()) {
+      this.context.hand!.removeFromHand(this.stats.unitId);
+      this.context.deck!.addToDeck(unitData);
+    } else {
+      this.context.opponentHand!.removeFromHand(this.stats.unitId);
+      this.context.opponentDeck!.addToDeck(unitData);
+    }
 
     this.removeFromGame(false);
+  }
+
+  private inPlayerHand(): boolean {
+    const pDeck = this.context.hand!.getHandElement(this.stats.unitId);
+    return !!pDeck;
   }
 
   removeFromGame(board = true): void {
@@ -447,7 +459,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const matchingUnit = this.context.board!.units.find(u => u instanceof Hero && u.stats.boardPosition === tile.boardPosition && (u.stats.isKO || u.stats.unitType === EHeroes.PHANTOM));
     if (matchingUnit) matchingUnit.removeFromGame(true);
 
-    this.context.hand!.removeFromHand(this.stats.unitId);
+    if (this.inPlayerHand()) {
+      this.context.hand!.removeFromHand(this.stats.unitId);
+    } else {
+      this.context.opponentHand!.removeFromHand(this.stats.unitId);
+    }
     this.context.board!.units.push(this);
     this.updateUnitAfterSpawn(tile);
 
@@ -456,6 +472,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   updateUnitAfterSpawn(tile: Tile): void {
     // Modify image
+    this.setVisible(true); // FIXME: add check if hiding untis during fast forward replay
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;

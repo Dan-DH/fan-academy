@@ -41,7 +41,9 @@ export default class GameScene extends Phaser.Scene {
   banner: Banner | undefined;
   board: Board | undefined;
   hand: Hand | undefined;
+  opponentHand: Hand | undefined;
   deck: Deck | undefined;
+  opponentDeck: Deck | undefined;
   actionPie: ActionPie | undefined;
   door: Door | undefined;
   turnButton: TurnButton | undefined;
@@ -87,7 +89,7 @@ export default class GameScene extends Phaser.Scene {
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
     this.gameSceneMode = data.gameSceneMode;
-    this.isReplay = data.gameSceneMode === EGameSceneMode.TURN_REPLAY;
+    this.isReplay = data.gameSceneMode === EGameSceneMode.TURN_REPLAY || data.gameSceneMode === EGameSceneMode.GAME_REPLAY;
 
     const networkStatus = navigator.onLine ? 'online' : 'offline';
     this.registry.set('networkStatus', networkStatus);
@@ -105,8 +107,10 @@ export default class GameScene extends Phaser.Scene {
       this.gameOverScreen =  new GameOverScreen(this);
     }
 
-    if (this.isReplay) {
+    if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
       this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
+    } else if(this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
+      this.startTurnState = structuredClone(this.clonedGame!.startState!);
     } else {
       this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
     }
@@ -134,8 +138,12 @@ export default class GameScene extends Phaser.Scene {
 
     const { player1, player2 } = this.startTurnState;
     const activePlayer = this.isPlayerOne ? player1 : player2!;
+    const opponent = this.isPlayerOne ? player2! : player1;
     this.deck = new Deck(activePlayer.deck);
     this.hand = new Hand(activePlayer.hand);
+    this.opponentDeck = new Deck(opponent.deck);
+    this.opponentHand = new Hand(opponent.hand);
+    this.opponentHand.disableOpponentHand();
 
     this.actionPie = new ActionPie(this);
     this.turnButton = new TurnButton(this);
@@ -184,7 +192,7 @@ export default class GameScene extends Phaser.Scene {
     const userPreferences = this.registry.get('userPreferences');
     if (userPreferences.chat) this.chatComponent = createChatComponent(this);
 
-    if (this.isReplay) new TurnReplay(this);
+    if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) new TurnReplay(this);
   }
 
   addConcedeButton(context: GameScene): Phaser.GameObjects.Image {
@@ -226,6 +234,7 @@ export default class GameScene extends Phaser.Scene {
       deck: this.deck!.getDeck()
     };
     const opponentState = this[opponent];
+
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
       player2: !this.isPlayerOne ? playerState : opponentState!,
@@ -354,6 +363,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addActionToState(action: EActionType, actorPosition?: number, targetPosition?: number): void {
+    if (this.isReplay) return;
+
     const { player, opponent } = getPlayersKey(this);
 
     const actionClass = getActionClass(action);
@@ -365,7 +376,7 @@ export default class GameScene extends Phaser.Scene {
     };
 
     const opponentState = this[opponent];
-    // Add action to current turn state
+
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
       player2: !this.isPlayerOne ? playerState : opponentState!,

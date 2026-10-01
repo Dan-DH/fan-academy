@@ -19,6 +19,10 @@ export class Hand {
     return this.hand;
   }
 
+  getHandElement(unitId: string): Hero | Item | undefined {
+    return this.hand.find(u => u.stats.unitId === unitId);
+  }
+
   renderUnit(unit: IHeroBE | IItemBE): Hero | Item {
     if (unit.class === EClass.HERO) return createNewHero(unit as IHeroBE);
     if (unit.class === EClass.ITEM) return createNewItem(unit as IItemBE);
@@ -30,6 +34,7 @@ export class Hand {
 
     let previousIndex = -1;
     defaultPositions.forEach(element => {
+      if (!units.length) return;
       const matchIndex = this.hand.findIndex((unit) => unit.stats.boardPosition === element);
 
       if (matchIndex !== -1) {
@@ -39,14 +44,17 @@ export class Hand {
         if (unitData) {
           unitData.boardPosition = element;
           const newUnit = this.renderUnit(unitData).setVisible(isPlayerHand); // added boolean to hide opponent hand units during replays
-          this.hand.splice(++previousIndex, 0, newUnit);
+          this.hand.push(newUnit);
         }
       }
     });
+
+    this.hand.sort((a, b) => a.stats.boardPosition - b.stats.boardPosition);
   }
 
   removeFromHand(unitId: string): void {
     const index = this.hand.findIndex(unit => unit.stats.unitId === unitId);
+    if (index === -1) console.log('missing item in hand', unitId, this.hand);
     if (index !== -1) this.hand.splice(index, 1);
   }
 

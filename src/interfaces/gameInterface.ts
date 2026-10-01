@@ -1,16 +1,10 @@
 import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
 
-/**
- * Game Over Interface
- */
 export interface IGameOver {
   winCondition: EWinConditions,
   winner: string
 }
 
-/**
- * Coordinates Interface
- */
 export type Coordinates = {
   x: number,
   y: number,
@@ -19,9 +13,6 @@ export type Coordinates = {
   boardPosition?: number
 };
 
-/**
- * Item Interface
- */
 export interface IItem {
   class: EClass;
   faction: EFaction;
@@ -43,9 +34,6 @@ export interface IItemBE {
   belongsTo: number;
 }
 
-/**
- * Unit Interface
- */
 export interface IHero {
 
   // BE properties
@@ -112,9 +100,6 @@ export interface IHeroBaseStats {
   canBuff: boolean
 }
 
-/**
- * User and player data Interface
- */
 export interface IUserData {
   _id: string;
   username: string; // from populate in the BE
@@ -126,9 +111,6 @@ export interface IPlayerData {
   faction: EFaction;
 }
 
-/**
- * TurnAction Interface
- */
 export interface ITurnAction {
   actorPosition?: number;
   targetPosition?: number; // an item can be a target for shuffle
@@ -136,18 +118,12 @@ export interface ITurnAction {
   actionClass: EActionClass,
 }
 
-/**
- * UserState Interface
- */
 export interface IPlayerState {
   playerId: string;
   hand: (IHeroBE | IItemBE)[];
   deck: (IHeroBE | IItemBE)[];
 }
 
-/**
- * Crystal Interface
- */
 export interface ICrystal {
   // BE fields
   unitId: string;
@@ -179,9 +155,6 @@ export interface ICrystalBE {
   boardType: EBoardUnit;
 }
 
-/**
- * Tile Interface
- */
 export interface ITile {
   row: number;
   col: number;
@@ -191,9 +164,6 @@ export interface ITile {
   y: number;
 }
 
-/**
- * GameState Interface
- */
 export interface IGameState {
   player1: IPlayerState;
   player2?: IPlayerState;
@@ -201,9 +171,6 @@ export interface IGameState {
   action?: ITurnAction;
 }
 
-/**
- * Chat message interface
- */
 export interface IChatMessage {
   username: string;
   message: string;
@@ -214,9 +181,17 @@ export interface IChat {
   messages: IChatMessage[]
 }
 
-/**
- * Game Interface
- */
+export interface ITurnHistoryAction {
+  actionType: EActionType,
+  actorPosition?: number;
+  targetPosition?: number;
+}
+
+export interface ITurnHistoryElement {
+  activePlayer: string;
+  actions: ITurnHistoryAction[];
+}
+
 export interface IGame {
   _id: string;
   players: IPlayerData[];
@@ -224,6 +199,8 @@ export interface IGame {
   map: number;
   currentState: IGameState[];
   previousTurn: IGameState[];
+  startState?: IGameState;
+  turnHistory?: ITurnHistoryElement[];
   gameOver?: IGameOver,
   status: EGameStatus;
   createdAt: Date;

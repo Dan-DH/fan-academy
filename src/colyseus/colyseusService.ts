@@ -1,7 +1,7 @@
 import { Client, Room } from "@colyseus/sdk";
 import { fanAcademy } from "../main";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
-import { IChatMessage, IGame, IGameOver, IGameState } from "../interfaces/gameInterface";
+import { IChatMessage, IGame, IGameOver, IGameState, ITurnHistoryElement } from "../interfaces/gameInterface";
 import UIScene from "../scenes/ui.scene";
 import { EFaction, EGameModes, EGameSceneMode, EGameStatus } from "../enums/gameEnums";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
@@ -180,6 +180,20 @@ class ColyseusService {
   //
   // SENDING MESSAGES
   //
+  async sendGetTurnHistoryMessage(gameId: string): Promise<void> {
+    const turnHistory: {
+      _id: string,
+      turnHistory: ITurnHistoryElement[]
+    } = await this.lobby!.request('getTurnHistoryMessage', { gameId });
+
+    const gameList = fanAcademy.registry.get('gameList') as IGame[];
+    if (!gameList) console.error('turnHistoryReceived - No context.gameList found');
+    // Phaser updates the registry automatically since we are setting the whole array
+    const gameToUpdate = gameList.find(g => g._id === turnHistory._id);
+    if (gameToUpdate) gameToUpdate.turnHistory = turnHistory.turnHistory;
+    console.log('TurnHistory successfully fetched');
+  }
+
   sendDeletedGameMessage(gameId: string, userId: string): void {
     this.lobby!.send('gameDeletedMessage', {
       gameId,
