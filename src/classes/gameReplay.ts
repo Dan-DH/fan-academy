@@ -1,5 +1,5 @@
 import { EActionType } from "../enums/gameEnums";
-import { IGame, ITurnHistoryAction, ITurnHistoryElement } from "../interfaces/gameInterface";
+import { IGame, IGameState, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import UIScene from "../scenes/ui.scene";
 import { Deck } from "./board/deck";
@@ -12,17 +12,17 @@ export class GameReplay {
   context: UIScene;
   gameScene: GameScene;
   gameData: IGame;
-  turnHistory: ITurnHistoryElement[];
+  turnHistory: IGameState[][];
 
-  turnNumber = 0;
-  actionNumber = 0;
+  turnNumber = 1;
+  actionNumber = 1;
   isPaused = false;
   isFirstPlayer: boolean;
   isPlayerTurn: boolean;
 
   actionNumberTextBox!: Phaser.GameObjects.Text;
 
-  // replayToggleButton!: Phaser.GameObjects.Image;
+  // replayToggleButton!: Phaser.GameObjects.Image;,
   // nextTurnButton!: Phaser.GameObjects.Image;
   // lastTurnButton!: Phaser.GameObjects.Image;
   // previousTurnButton!: Phaser.GameObjects.Image;
@@ -34,11 +34,12 @@ export class GameReplay {
     this.context = context;
     this.gameScene = gameScene;
     this.gameData = gameScene.clonedGame!;
-    this.turnHistory = this.gameScene.clonedGame!.turnHistory!;
+    this.turnHistory = this.gameScene.registry.get('FullGameReplay');
     this.isFirstPlayer = this.gameScene.firstPlayer === context.userId;
     this.isPlayerTurn = this.isFirstPlayer;
+    // this.gameScene.skipAnimations = false;
     // this.addUiElements();
-    this.replayAllTurns();
+    // this.replayAllTurns();
   }
 
   // restartSceneOnTurn(turnNumber: number, actionNumber: number): void {
@@ -151,13 +152,22 @@ export class GameReplay {
   //   });
   // }
 
+  restartGameSceneAfterReplayMap(): void {
+    // this.gameScene.skipAnimations = false; // FIXME: not needed when restarting the scene
+    // this.gameScene.sys.setVisible(true);
+
+    // this.gameScene.events.once(Phaser.Scenes.Events.CREATE, () => this.replayAllTurns());
+    // this.gameScene.events.once(Phaser.Scenes.Events.CREATE, () => this.addUiElements());
+    // this.replayAllTurns();
+  }
+
   async replayAllTurns() {
     for (let i = this.turnNumber; i <= this.turnHistory.length - 1; i++) {
-      console.log('TURN', i);
+      console.log('TURN NUMBER', i, this.turnHistory[i]);
 
       this.gameScene.turnNumberTextBox?.setText(`TURN ${i}`);
 
-      this.isPlayerTurn = i % 2 === 0 === this.isFirstPlayer;
+      this.isPlayerTurn = i % 2 !== 0 === this.isFirstPlayer;
 
       await this.replayTurn(this.turnHistory[i]);
 
@@ -165,89 +175,64 @@ export class GameReplay {
     }
   }
 
-  async replayTurn(turn: ITurnHistoryElement) {
+  async replayTurn(turn: IGameState[]) {
     const hand = this.isPlayerTurn ? this.gameScene.hand! : this.gameScene.opponentHand!;
     const deck = this.isPlayerTurn ? this.gameScene.deck! : this.gameScene.opponentDeck!;
 
-    console.log('replayTurn hand', hand);
+    for (let i = this.actionNumber; i <= turn.length - 1; i++) {
+      const turnAction = turn[i];
 
-    for (let i = this.actionNumber; i <= turn.actions.length - 1; i++) {
-      const turnAction = turn.actions[i];
+      console.log('turn: ', this.turnNumber, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.action?.action, turnAction.action?.actorPosition, turnAction.action?.targetPosition);
 
-      console.log('turn: ', this.turnNumber, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.actionType, turnAction.actorPosition, turnAction.targetPosition);
-
-      if (!turnAction.actionType) continue;
+      if (!turnAction.action?.action) continue;
 
       await this.replayAction(turnAction, hand, deck, i);
-
-      // if (i === turn.actions.length - 1) {
-      //   this.actionNumber = 0;
-      //   this.turnNumber++;
-      //   console.log('turnNumber triggers. Previous turn: ', this.turnNumber, ' New turn: ', this.turnNumber + 1);
-      // } else {
-      //   this.actionNumber++;
-      // }
 
       if (this.isPaused) return;
     }
   }
 
-  async replayAction(turnAction: ITurnHistoryAction, hand: Hand, deck: Deck, actionNumber: number): Promise<void> {
-    const actionTaken = turnAction.actionType;
-    await new Promise<void>(resolve => {
-      this.gameScene.time.delayedCall(50, async () => {
-        // FIXME: movig can take up to 1000ms
-        // if (turnAction.actionType?.actionClass === EActionClass.USER) this.actionNumberTextBox.setText(`Action ${ actionNumber + 1 }`);
-        switch (actionTaken) {
-          case EActionType.SPAWN:
-            this.replaySpawn(turnAction, hand);
-            break;
-          case EActionType.MOVE:
-            this.replayMove(turnAction);
-            break;
-          case EActionType.ATTACK:
-          case EActionType.HEAL:
-          case EActionType.BUFF:
-          case EActionType.TELEPORT:
-          case EActionType.SPAWN_PHANTOM:
-            this.replayUnitAction(turnAction);;
-            break;
-          case EActionType.SHUFFLE:
-            this.replayShuffle();
-            break;
-          case EActionType.USE:
-            this.replayUse(turnAction, hand);
-            break;
-          case EActionType.DRAW:
-            this.replayDraw(hand, deck);
-            break;
-          case EActionType.REMOVE_UNITS:
-            this.gameScene.removeKOUnits();
-            break;
-          default:
-            console.error('Replay: action not covered: ', actionTaken);
-            break;
-        }
+  async replayAction(turnAction: IGameState, hand: Hand, deck: Deck, _actionNumber: number): Promise<void> {
+    const actionTaken = turnAction.action?.action;
+    if (!actionTaken) throw new Error('gameReplay(): no action found ' + actionTaken);
+    const actionDelay = 1000;
 
+    const replayActionMap = {
+      [EActionType.SPAWN]: () => this.replaySpawn(turnAction.action!, hand),
+      [EActionType.MOVE]: () => this.replayMove(turnAction.action!),
+      [EActionType.ATTACK]: () => this.replayUnitAction(turnAction.action!),
+      [EActionType.HEAL]: () => this.replayUnitAction(turnAction.action!),
+      [EActionType.BUFF]: () => this.replayUnitAction(turnAction.action!),
+      [EActionType.TELEPORT]: () => this.replayUnitAction(turnAction.action!),
+      [EActionType.SPAWN_PHANTOM]: () => this.replayUnitAction(turnAction.action!),
+      [EActionType.SHUFFLE]: ()=> this.replayShuffle(),
+      [EActionType.USE]: () => this.replayUse(turnAction.action!, hand),
+      [EActionType.DRAW]: () => this.replayDraw(hand, deck),
+      [EActionType.REMOVE_UNITS]: () => this.gameScene.removeKOUnits(),
+      [EActionType.PASS]: () => console.log('Implement pass?'),
+      [EActionType.CONCEDE]: () => console.log('Implement concede?')
+    };
+
+    await new Promise<void>(resolve => {
+      this.gameScene.time.delayedCall(actionDelay, async () => {
+        replayActionMap[actionTaken]();
         resolve();
       });
     });
-
-    // this.startTurnState = turn[i];
   }
 
-  replaySpawn(action: ITurnHistoryAction, hand: Hand): void {
+  replaySpawn(action: ITurnAction, hand: Hand): void {
+    console.log('hand', hand);
     const hero = hand.getHand().find(unit => unit.stats.boardPosition === action.actorPosition) as Hero;
     const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
+    console.log('hero', hero);
+
     hero.spawn(tile);
-    // this.gameScene.board!.units.push(hero);
-    // hero.setVisible(true).updateUnitAfterSpawn(tile);
-    // hand.removeFromHand(hero.stats.unitId);
   };
 
-  replayMove(action: ITurnHistoryAction): void {
+  replayMove(action: ITurnAction): void {
     const hero = this.gameScene.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
 
     const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
@@ -257,19 +242,19 @@ export class GameReplay {
     hero.move(hero.getTile(), tile);
   };
 
-  replayUnitAction(action: ITurnHistoryAction): void {
+  replayUnitAction(action: ITurnAction): void {
     const hero = this.gameScene.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
     const target = this.gameScene.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
     if (!hero || !target) throw new Error('Missing hero or target in attack or heal action');
 
     // VSCode says await has no effect on them, but it does work
-    if (action.actionType === EActionType.ATTACK || action.actionType === EActionType.SPAWN_PHANTOM) hero.attack(target);
-    if (action.actionType === EActionType.HEAL) hero.heal(target as Hero);
-    if (action.actionType === EActionType.BUFF) hero.shieldAlly(target);
-    if (action.actionType === EActionType.TELEPORT) hero.teleport(target as Hero);
+    if (action.action === EActionType.ATTACK || action.action === EActionType.SPAWN_PHANTOM) hero.attack(target);
+    if (action.action === EActionType.HEAL) hero.heal(target as Hero);
+    if (action.action === EActionType.BUFF) hero.shieldAlly(target);
+    if (action.action === EActionType.TELEPORT) hero.teleport(target as Hero);
   };
 
-  replayUse(action: ITurnHistoryAction, hand: Hand): void {
+  replayUse(action: ITurnAction, hand: Hand): void {
     const item = hand.getHand().find(item => item.stats.boardPosition === action.actorPosition) as Item;
     console.log('item is found: ', item.stats.unitId);
     if (!item) throw new Error('Missing item in use action');

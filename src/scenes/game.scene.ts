@@ -28,6 +28,7 @@ export default class GameScene extends Phaser.Scene {
   userId!: string;
   opponentId!: string;
   isReplay = false;
+  skipAnimations = false;
   gameSceneMode: EGameSceneMode | undefined;
 
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
@@ -77,6 +78,8 @@ export default class GameScene extends Phaser.Scene {
     userId: string,
     currentGame: IGame,
     gameSceneMode: EGameSceneMode,
+    skipAnimations: boolean,
+    startTurnState?: IGameState
   }) {
     this.chatComponent = undefined;
     this.longPressStart = undefined;
@@ -84,12 +87,14 @@ export default class GameScene extends Phaser.Scene {
     this.activeUnit = undefined;
     this.startTurnState = undefined;
 
+    this.startTurnState = data.startTurnState;
     this.currentGame = data.currentGame;
     this.userId = data.userId;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
     this.gameSceneMode = data.gameSceneMode;
     this.isReplay = data.gameSceneMode === EGameSceneMode.TURN_REPLAY || data.gameSceneMode === EGameSceneMode.GAME_REPLAY;
+    this.skipAnimations = data.skipAnimations ?? false;
 
     const networkStatus = navigator.onLine ? 'online' : 'offline';
     this.registry.set('networkStatus', networkStatus);
@@ -107,12 +112,14 @@ export default class GameScene extends Phaser.Scene {
       this.gameOverScreen =  new GameOverScreen(this);
     }
 
-    if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
-      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
-    } else if(this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
-      this.startTurnState = structuredClone(this.clonedGame!.startState!);
-    } else {
-      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+    if (!this.startTurnState) {
+      if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
+        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
+      } else if(this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
+        this.startTurnState = structuredClone(this.clonedGame!.startState!);
+      } else {
+        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+      }
     }
 
     this.player1 = this.startTurnState.player1;
@@ -350,7 +357,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   afterAction(actionType: EActionType, activePosition: number, targetPosition?: number): void {
-    if (this.isReplay) return;
+    // if (this.isReplay) return; // FIXME: only for turnReplay?
 
     // Add action to current state
     this.addActionToState(actionType, activePosition, targetPosition);
@@ -363,7 +370,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addActionToState(action: EActionType, actorPosition?: number, targetPosition?: number): void {
-    if (this.isReplay) return;
+    // if (this.isReplay) return; // FIXME: only for turnReplay?
 
     const { player, opponent } = getPlayersKey(this);
 

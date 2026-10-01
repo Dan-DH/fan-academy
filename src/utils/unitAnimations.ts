@@ -2,8 +2,9 @@ import { GameObjects } from "phaser";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
-import { EHeroes } from "../enums/gameEnums";
+import { EHeroes, EUnitMoveType } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
+import { TMoveParams } from "../interfaces/gameInterface";
 
 export function flashActingUnit(hero: Hero): void {
   hero.visuals.characterImage.setTint(0x3399ff);
@@ -39,7 +40,19 @@ export function getDamagedAnimation(hero: Hero): void {
   });
 }
 
-export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
+export async function unitMoveAnimation(params: TMoveParams): Promise<void> {
+  if ((params.hero.scene as GameScene).skipAnimations) return;
+  if (params.move === EUnitMoveType.MOVE) moveAnimation(params);
+  if (params.move === EUnitMoveType.FORCED_MOVE) forcedMoveAnimation(params);
+};
+
+async function moveAnimation(params: {
+  hero: Hero,
+  targetTile: Tile,
+  tilesMoved: number
+}): Promise<void> {
+  const { hero, targetTile, tilesMoved } = params;
+
   const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType);
 
   hero.context.input.enabled = false;
@@ -134,27 +147,31 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
   });
 }
 
-export async function forcedMoveAnimation(context: GameScene, hero: Hero, targetTile: Tile, angle = 0): Promise<void> {
-  context.input.enabled = false;
+async function forcedMoveAnimation(params: {
+  hero: Hero,
+  targetTile: Tile,
+  angle: number
+}): Promise<void> {
+  params.hero.scene.input.enabled = false;
 
   const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
     return new Promise((resolve) => {
-      context.tweens.add({
+      hero.scene.tweens.add({
         targets: hero,
         x: targetTile.x,
         y: targetTile.y,
-        angle,
+        angle: params.angle ?? 0,
         duration: 200,
         ease: 'Linear',
         onComplete: () => {
-          context.input.enabled = true;
+          hero.scene.input.enabled = true;
           resolve();
         }
       });
     });
   };
 
-  await animation.call(context, hero, targetTile);
+  await animation.call(params.hero.scene, params.hero, params.targetTile);
 };
 
 export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal): void {

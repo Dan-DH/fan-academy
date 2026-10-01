@@ -1,4 +1,6 @@
-import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
+import { Tile } from "../classes/board/tile";
+import { Hero } from "../classes/factions/hero";
+import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EUnitMoveType, EWinConditions } from "../enums/gameEnums";
 
 export interface IGameOver {
   winCondition: EWinConditions,
@@ -218,3 +220,17 @@ export interface ISpecialTile {
   boardPosition: number,
   tileType: ETiles
 }
+
+export type TMoveParams =
+  | {
+    move: EUnitMoveType.MOVE;
+    hero: Hero;
+    targetTile: Tile;
+    tilesMoved: number
+  }
+  | {
+    move: EUnitMoveType.FORCED_MOVE;
+    hero: Hero;
+    targetTile: Tile;
+    angle: number
+  };

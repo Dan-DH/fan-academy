@@ -181,16 +181,20 @@ class ColyseusService {
   // SENDING MESSAGES
   //
   async sendGetTurnHistoryMessage(gameId: string): Promise<void> {
-    const turnHistory: {
+    const turnHistoryMessage: {
       _id: string,
+      startState: IGameState,
       turnHistory: ITurnHistoryElement[]
     } = await this.lobby!.request('getTurnHistoryMessage', { gameId });
 
     const gameList = fanAcademy.registry.get('gameList') as IGame[];
     if (!gameList) console.error('turnHistoryReceived - No context.gameList found');
     // Phaser updates the registry automatically since we are setting the whole array
-    const gameToUpdate = gameList.find(g => g._id === turnHistory._id);
-    if (gameToUpdate) gameToUpdate.turnHistory = turnHistory.turnHistory;
+    const gameToUpdate = gameList.find(g => g._id === turnHistoryMessage._id);
+    if (gameToUpdate) {
+      gameToUpdate.turnHistory = turnHistoryMessage.turnHistory;
+      gameToUpdate.startState = turnHistoryMessage.startState;
+    }
     console.log('TurnHistory successfully fetched');
   }
 

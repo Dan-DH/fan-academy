@@ -1,4 +1,3 @@
-import { IGame } from "../interfaces/gameInterface";
 import { createGameList } from "./gameSceneUtils/gameList";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
@@ -8,7 +7,6 @@ export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 export default class UIScene extends Phaser.Scene {
   userId!: string;
   gameListContainer: Phaser.GameObjects.Container | undefined;
-  gameList: IGame[] | undefined;
 
   gameScene: Phaser.Scene | undefined;
 
@@ -27,7 +25,6 @@ export default class UIScene extends Phaser.Scene {
   init() {
     this.userId = this.registry.get('userId');
     this.gameListContainer = undefined;
-    this.gameList = undefined;
     this.gameScene = undefined;
     this.activeGameImage = undefined;
     this.activeGame = undefined;

@@ -1,10 +1,11 @@
+import { MapGameReplay } from "../../classes/mapGameReplay";
 import { GameReplay } from "../../classes/gameReplay";
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { colyseusService } from "../../colyseus/colyseusService";
 import { EChallengePopup, EGameModes, EGameSceneMode, EGameStatus } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
-import { factionEnumToEmblem } from "../../utils/gameUtils";
+import { factionEnumToEmblem, waitUntilSceneCreated } from "../../utils/gameUtils";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
 import GameScene from "../game.scene";
@@ -153,13 +154,31 @@ export function createGameList() {
           uiScene.scene.launch('GameScene', {
             userId: uiScene.userId,
             currentGame: game,
-            gameSceneMode: game.status === EGameStatus.PLAYING ? EGameSceneMode.TURN_REPLAY : EGameSceneMode.GAME_REPLAY
+            gameSceneMode: game.status === EGameStatus.PLAYING ? EGameSceneMode.TURN_REPLAY : EGameSceneMode.GAME_REPLAY,
+            skipAnimations: game.status === EGameStatus.PLAYING ? false : true
           });
 
           if (game.status === EGameStatus.FINISHED) {
-            const gameScene = uiScene.scene.get('GameScene') as GameScene;
+            const gameSceneForMapping = await waitUntilSceneCreated(uiScene, 'GameScene') as GameScene;
+            const mapReplay = new MapGameReplay(uiScene, gameSceneForMapping);
+            await mapReplay.mapFullReplay();
 
-            gameScene.events.once(Phaser.Scenes.Events.CREATE, () => new GameReplay(uiScene, gameScene));
+            await new Promise<void>((resolve) => {
+              gameSceneForMapping.events.once(Phaser.Scenes.Events.SHUTDOWN, resolve);
+              uiScene.scene.stop('GameScene');
+            });
+
+            uiScene.scene.launch('GameScene', {
+              userId: uiScene.userId,
+              currentGame: game,
+              startTurnState: game.startState,
+              gameSceneMode: EGameSceneMode.GAME_REPLAY,
+              skipAnimations: false
+            });
+
+            const gameSceneForReplay = await waitUntilSceneCreated(uiScene, 'GameScene') as GameScene;
+            const replay = new GameReplay(uiScene, gameSceneForReplay);
+            await replay.replayAllTurns();
           }
         });
       }

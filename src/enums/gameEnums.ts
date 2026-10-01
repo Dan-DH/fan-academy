@@ -269,3 +269,8 @@ export enum EGameSceneMode {
   TURN_REPLAY = 'turnReplay',
   GAME_REPLAY = 'gameReplay'
 }
+
+export enum EUnitMoveType {
+  MOVE = 'move',
+  FORCED_MOVE = 'forcedMove'
+}

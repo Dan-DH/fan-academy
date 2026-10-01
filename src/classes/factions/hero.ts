@@ -1,4 +1,4 @@
-import { EActionType, EAttackType, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
+import { EActionType, EAttackType, EFaction, EHeroes, EItems, EUnitMoveType } from "../../enums/gameEnums";
 import { Coordinates, IHero, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
@@ -10,7 +10,7 @@ import { HeroCard } from "../cards/heroCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
-import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, useAnimation } from "../../utils/unitAnimations";
+import { getDamagedAnimation, removePriestessDebuffTween, unitMoveAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
 import { enterSpecialTileCheck, exitSpecialTileCheck, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
@@ -434,7 +434,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     exitSpecialTileCheck(this, startTile);
 
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
-    await moveAnimation(this, targetTile, tilesMoved);
+
+    await unitMoveAnimation({
+      move: EUnitMoveType.MOVE,
+      hero: this,
+      targetTile,
+      tilesMoved
+    });
 
     // Stomp KO'd units
     const heroToStomp = this.context.board!.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);

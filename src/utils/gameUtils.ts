@@ -93,3 +93,16 @@ export function factionEnumToEmblem(faction: string): string {
 
   return factionMap[faction] ?? 'unknownFaction';
 }
+
+export function waitUntilSceneCreated(currentScene: Phaser.Scene, targetSceneKey: string): Promise<Phaser.Scene> {
+  return new Promise((resolve) => {
+    const targetScene = currentScene.scene.get(targetSceneKey);
+    if (targetScene.scene.settings.status === Phaser.Scenes.RUNNING) {
+      resolve(targetScene);
+      return;
+    }
+    targetScene.events.once(Phaser.Scenes.Events.CREATE, () => {
+      resolve(targetScene);
+    });
+  });
+}

@@ -1,4 +1,4 @@
-import { EHeroes, ETiles, ERange } from "../../enums/gameEnums";
+import { EHeroes, ETiles, ERange, EUnitMoveType } from "../../enums/gameEnums";
 import { Coordinates, ICrystalBE, IHeroBE, ITile } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { getGridDistance, belongsToPlayer } from "../../utils/gameUtils";
@@ -14,7 +14,7 @@ import { Hero } from "../factions/hero";
 import { Grenadier } from "../factions/dwarves/grenadier";
 import { HealingPotion } from "../factions/council/items";
 import { DwarvenBrew } from "../factions/dwarves/items";
-import { addReticleTween, forcedMoveAnimation, removeReticleTween } from "../../utils/unitAnimations";
+import { addReticleTween, removeReticleTween, unitMoveAnimation } from "../../utils/unitAnimations";
 import { mapTemplates } from "./mapTemplates";
 import { createNewHero } from "../../utils/createUnit";
 import { StatusEffects } from "../../utils/statuses";
@@ -705,7 +705,12 @@ export class Board {
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
 
-    await forcedMoveAnimation(this.context, target, targetNewTile, angle);
+    await unitMoveAnimation({
+      move: EUnitMoveType.FORCED_MOVE,
+      hero: target,
+      targetTile: targetNewTile,
+      angle
+    });
 
     target.updatePosition(targetNewTile);
   }
@@ -728,7 +733,12 @@ export class Board {
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
 
-    await forcedMoveAnimation(this.context, target, targetNewTile);
+    await unitMoveAnimation({
+      move: EUnitMoveType.FORCED_MOVE,
+      hero: target,
+      targetTile: targetNewTile,
+      angle: 0
+    });
 
     target.updatePosition(targetNewTile);
   }
