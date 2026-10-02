@@ -92,7 +92,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.row = tile.row;
     this.stats.col = tile.col;
     this.setDepth(this.stats.row + 10);
-    this.visuals.characterImage.setScale(1.2);
+    // this.visuals.characterImage.setScale(1.2); // FIXME: is this needed?
     this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
     this.unitCard.updateCardData(this);

@@ -42,8 +42,8 @@ export function getDamagedAnimation(hero: Hero): void {
 
 export async function unitMoveAnimation(params: TMoveParams): Promise<void> {
   if ((params.hero.scene as GameScene).skipAnimations) return;
-  if (params.move === EUnitMoveType.MOVE) moveAnimation(params);
-  if (params.move === EUnitMoveType.FORCED_MOVE) forcedMoveAnimation(params);
+  if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
+  if (params.move === EUnitMoveType.FORCED_MOVE) await forcedMoveAnimation(params);
 };
 
 async function moveAnimation(params: {
@@ -114,7 +114,7 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
   // this.scene.sound.play(EGameSounds.MOVE_WALK);
 
   const hopSpeed = 100;
-  const moveDuration = hopSpeed * 2 * tilesMoved;
+  const moveDuration = Math.min(900, hopSpeed * 2 * tilesMoved);
   const unitImage = hero.visuals.characterImage;
   const unitBaseY = unitImage.y;
 
@@ -133,7 +133,7 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
 
     const hop = unitImage.scene.tweens.add({
       targets: unitImage,
-      scale: 1.2,
+      // scale: 1.2, // FIXME:l was this needed?
       y: '-=20',
       duration: hopSpeed,
       yoyo: true,
@@ -141,7 +141,7 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
       ease: 'Sine.easeOut',
       onStop: () => {
         unitImage.y = unitBaseY;
-        unitImage.setScale(1);
+        // unitImage.setScale(1);
       }
     });
   });
