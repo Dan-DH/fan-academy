@@ -87,6 +87,7 @@ export default class GameScene extends Phaser.Scene {
     this.activeUnit = undefined;
     this.startTurnState = undefined;
 
+    this.gameOver = data.currentGame.gameOver ?? undefined;
     this.startTurnState = data.startTurnState;
     this.currentGame = data.currentGame;
     this.userId = data.userId;
