@@ -300,8 +300,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   hasActionsLeft(): boolean {
-    if (this.turnNumber === 1 && this.currentTurnAction! < 4) return true;
-    if (this.currentTurnAction! < 6) return true;
+    if (this.turnNumber === 1 && this.currentTurnAction! < 3) return true;
+    if (this.turnNumber !== 1 && this.currentTurnAction! < 6) return true;
     return false;
   }
 
