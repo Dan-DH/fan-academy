@@ -67,6 +67,10 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('gameBoard', `${CDN_PATH}/images/maps/game_board.webp`);
     this.load.html('chatComponent', 'html/chat.html');
 
+    // FIXME: add to atlas
+    this.load.image('fastForwardButton', 'UI_FFButton-hd.png');
+    this.load.image('refreshButton', 'UI_ResfreshButton-hd.png');
+
     // sounds
     // this.load.audio('buttonFailedSound', `${CDN_PATH}/audio/ui/buttonFailed.mp3`);
     // this.load.audio('battleButtonSound', `${CDN_PATH}/audio/ui/battleButton.mp3`);

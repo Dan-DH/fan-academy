@@ -5,7 +5,7 @@ import { colyseusService } from "../../colyseus/colyseusService";
 
 export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
-    if (context.activeGame) {
+    if (context.activeGameId) {
       context.game.events.emit('messageToGameScene', {
         x: 300,
         y: 350,
@@ -25,7 +25,7 @@ export const createNewGame = async (context: UIScene, faction: EFaction, gameMod
       gameMode
     });
 
-    if (context.activeGame) {
+    if (context.activeGameId) {
       context.game.events.emit('messageToGameScene', {
         x: 700,
         y: 350,

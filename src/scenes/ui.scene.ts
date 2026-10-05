@@ -1,6 +1,7 @@
 import { createGameList } from "./gameSceneUtils/gameList";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
+import { IGame } from "../interfaces/gameInterface";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
@@ -12,7 +13,8 @@ export default class UIScene extends Phaser.Scene {
 
   // Used to highlight the active game in the game list
   activeGameImage: Phaser.GameObjects.Image | undefined;
-  activeGame: string | undefined;
+  activeGameId: string | undefined;
+  activeGame: IGame | undefined;
 
   // There is limit of 50 active games per player. Games currently playing, searching for players and open challenges all count towards the limit
   activeGamesAmountLimit = 50;
@@ -27,6 +29,7 @@ export default class UIScene extends Phaser.Scene {
     this.gameListContainer = undefined;
     this.gameScene = undefined;
     this.activeGameImage = undefined;
+    this.activeGameId = undefined;
     this.activeGame = undefined;
   }
 

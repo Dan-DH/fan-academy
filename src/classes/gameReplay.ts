@@ -1,4 +1,4 @@
-import { EActionType } from "../enums/gameEnums";
+import { EActionType, EGameSceneMode } from "../enums/gameEnums";
 import { IGame, IGameState, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import UIScene from "../scenes/ui.scene";
@@ -17,15 +17,13 @@ export class GameReplay {
   isFirstPlayer: boolean;
   isPlayerTurn: boolean;
 
-  actionNumberTextBox!: Phaser.GameObjects.Text;
-
-  // replayToggleButton!: Phaser.GameObjects.Image;,
-  // nextTurnButton!: Phaser.GameObjects.Image;
-  // lastTurnButton!: Phaser.GameObjects.Image;
-  // previousTurnButton!: Phaser.GameObjects.Image;
-  // firstTurnButton!: Phaser.GameObjects.Image;
-  // nextActionButton!: Phaser.GameObjects.Image;
-  // previousActionButton!: Phaser.GameObjects.Image;
+  replayToggleButton!: Phaser.GameObjects.Image;
+  nextTurnButton!: Phaser.GameObjects.Image;
+  lastTurnButton!: Phaser.GameObjects.Image;
+  previousTurnButton!: Phaser.GameObjects.Image;
+  firstTurnButton!: Phaser.GameObjects.Image;
+  nextActionButton!: Phaser.GameObjects.Image;
+  previousActionButton!: Phaser.GameObjects.Image;
 
   constructor(context: UIScene, gameScene: GameScene) {
     this.context = context;
@@ -34,128 +32,89 @@ export class GameReplay {
     this.turnHistory = this.gameScene.registry.get('FullGameReplay');
     this.isFirstPlayer = this.gameScene.firstPlayer === context.userId;
     this.isPlayerTurn = this.isFirstPlayer;
-    // this.gameScene.skipAnimations = false;
-    // this.addUiElements();
-    // this.replayAllTurns();
+    this.addUiElements();
   }
 
-  // restartSceneOnTurn(turnNumber: number, actionNumber: number): void {
-  //   this.context.scene.stop('GameScene');
+  restartSceneOnTurn(turnNumber: number, currentTurnAction: number): void {
+    this.isPaused = true;
+    this.context.scene.stop('GameScene');
 
-  //   this.context.scene.launch('GameScene', {
-  //     userId: this.context.userId,
-  //     currentGame: this.gameData,
-  //     startTurnState: this.gameData.startState,
-  //     gameSceneMode: EGameSceneMode.GAME_REPLAY
-  //   });
+    this.context.scene.launch('GameScene', {
+      userId: this.context.userId,
+      currentGame: this.context.activeGame,
+      startTurnState: this.turnHistory[Math.min(turnNumber, this.turnHistory.length - 1)][0], // does turnhistory include
+      turnNumber,
+      currentTurnAction,
+      gameSceneMode: EGameSceneMode.GAME_REPLAY
+    });
 
-  //   this.gameScene = this.context.scene.get('GameScene') as GameScene;
+    this. gameScene.events.once(Phaser.Scenes.Events.CREATE, () => {
+      this.gameScene = this.context.scene.get('GameScene') as GameScene;
+      this.addUiElements();
+    });
+  }
 
-  //   this. gameScene.events.once(Phaser.Scenes.Events.CREATE, () => this.addUiElements());
-  // }
+  // TODO: is paused, change play icon or color
+  togglePause(): void {
+    this.isPaused = !this.isPaused;
+    if (!this.isPaused) this.replayAllTurns(); // FIXME: bug if we pause first then go to a specific turn
+  }
 
-  // togglePause(): void {
-  //   this.isPaused = !this.isPaused;
-  //   // TODO: is paused, change play icon or color
-  //   if (!this.isPaused) this.replayAllTurns(); // FIXME: bug if we pause first then go to a specific turn
-  // }
+  goToPreviousTurn(): void {
+    this.restartSceneOnTurn(Math.max(this.gameScene.turnNumber! - 1, 1), 1);
+  }
 
-  // goToPreviousTurn(): void {
-  //   if (!this.isPaused) this.togglePause();
+  goToNextTurn(): void {
+    this.restartSceneOnTurn(Math.min(this.gameScene.turnNumber! + 1, this.turnHistory.length), 1);
+  }
 
-  //   console.log('turnNumber previous turn', this.turnNumber);
-  //   console.log('actionNumber previous turn', this.actionNumber);
-  //   if (this.turnNumber - 1 <= 1) {
-  //     this.goToFirst();
-  //     return;
-  //   }
+  goToLast(): void {
+    this.restartSceneOnTurn(this.turnHistory.length, 1);
+  }
 
-  //   this.turnNumber -= 1;
-  //   this.actionNumber = 0;
+  goToFirst(): void {
+    this.restartSceneOnTurn(1, 1);
+  }
 
-  //   this.restartSceneOnTurn(this.turnNumber, this.actionNumber);
-  // }
+  addUiElements(): void {
+    this.replayToggleButton = this.gameScene.add.image(900, 660, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
-  // goToNextTurn(): void {
-  //   if (!this.isPaused) this.togglePause();
-  //   if (this.turnNumber >= this.turnHistory.length - 1) {
-  //     this.goToLast();
-  //     return;
-  //   }
+    const replayButtonX = this.replayToggleButton.x;
+    const replayButtonY = this.replayToggleButton.y;
+    const separationX = 65;
 
-  //   this.turnNumber += 1;
-  //   this.actionNumber = 0;
-  //   this.restartSceneOnTurn(this.turnNumber, this.actionNumber);
-  // }
+    this.previousTurnButton = this.gameScene.add.image(replayButtonX - separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
+    this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'fastForwardButton').setScale(0.7).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
 
-  // goToLast(): void {
-  //   if (!this.isPaused) this.togglePause();
-  //   this.turnNumber = this.turnHistory.length - 1 ;
-  //   this.actionNumber = 0;
-  //   this.restartSceneOnTurn(this.turnNumber, this.actionNumber);
-  // }
+    this.nextTurnButton = this.gameScene.add.image(replayButtonX + separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'fastForwardButton').setScale(0.7).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
-  // goToFirst(): void {
-  //   if (!this.isPaused) this.togglePause();
-  //   this.turnNumber = 1;
-  //   this.actionNumber = 0;
-  //   this.restartSceneOnTurn(0, this.actionNumber);
-  // }
+    this.replayToggleButton.on('pointerdown', () => {
+      // context.sound.play(EUiSounds.BUTTON_GENERIC);
+      console.log('replayToggleButton clicked');
+      this.togglePause();
+    });
 
-  // addUiElements(): void {
-  //   this.actionNumberTextBox = this.gameScene.add.text(this.gameScene.turnNumberTextBox!.x, this.gameScene.turnNumberTextBox!.y + 30, `Action ${ this.actionNumber + 1 }`, {
-  //     fontFamily: 'proLight',
-  //     fontSize: 30,
-  //     color: '#ffffff'
-  //   });
-
-  //   this.replayToggleButton = this.gameScene.add.image(900, 660, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-
-  //   const replayButtonX = this.replayToggleButton.x;
-  //   const replayButtonY = this.replayToggleButton.y;
-  //   const separationX = 65;
-
-  //   this.previousTurnButton = this.gameScene.add.image(replayButtonX - separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
-  //   this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
-
-  //   this.nextTurnButton = this.gameScene.add.image(replayButtonX + separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-  //   this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.6).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-
-  //   this.replayToggleButton.on('pointerdown', () => {
-  //     // context.sound.play(EUiSounds.BUTTON_GENERIC);
-  //     console.log('replayToggleButton clicked');
-  //     this.togglePause();
-  //   });
-
-  //   this.firstTurnButton.on('pointerdown', () => {
-  //     // context.sound.play(EUiSounds.BUTTON_GENERIC);
-  //     console.log('firstTurnButton clicked');
-  //     this.goToFirst();
-  //   });
-  //   this.previousTurnButton.on('pointerdown', () => {
-  //     // context.sound.play(EUiSounds.BUTTON_GENERIC);
-  //     console.log('previousTurnButton clicked');
-  //     this.goToPreviousTurn();
-  //   });
-  //   this.nextTurnButton.on('pointerdown', () => {
-  //     // context.sound.play(EUiSounds.BUTTON_GENERIC);
-  //     console.log('nextTurnButton clicked');
-  //     this.goToNextTurn();
-  //   });
-  //   this.lastTurnButton.on('pointerdown', () => {
-  //     // context.sound.play(EUiSounds.BUTTON_GENERIC);
-  //     console.log('lastTurnButton clicked');
-  //     this.goToLast();
-  //   });
-  // }
-
-  restartGameSceneAfterReplayMap(): void {
-    // this.gameScene.skipAnimations = false; // FIXME: not needed when restarting the scene
-    // this.gameScene.sys.setVisible(true);
-
-    // this.gameScene.events.once(Phaser.Scenes.Events.CREATE, () => this.replayAllTurns());
-    // this.gameScene.events.once(Phaser.Scenes.Events.CREATE, () => this.addUiElements());
-    // this.replayAllTurns();
+    this.firstTurnButton.on('pointerdown', () => {
+      // context.sound.play(EUiSounds.BUTTON_GENERIC);
+      console.log('firstTurnButton clicked');
+      this.goToFirst();
+    });
+    this.previousTurnButton.on('pointerdown', () => {
+      // context.sound.play(EUiSounds.BUTTON_GENERIC);
+      console.log('previousTurnButton clicked');
+      this.goToPreviousTurn();
+    });
+    this.nextTurnButton.on('pointerdown', () => {
+      // context.sound.play(EUiSounds.BUTTON_GENERIC);
+      console.log('nextTurnButton clicked');
+      this.goToNextTurn();
+    });
+    this.lastTurnButton.on('pointerdown', () => {
+      // context.sound.play(EUiSounds.BUTTON_GENERIC);
+      console.log('lastTurnButton clicked');
+      this.goToLast();
+    });
   }
 
   async replayAllTurns() {

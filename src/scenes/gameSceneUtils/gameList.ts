@@ -136,20 +136,22 @@ export function createGameList() {
       // Make the game accessible -only for games already playing
       if (game.status === EGameStatus.PLAYING || game.status === EGameStatus.FINISHED) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (uiScene.activeGame === game._id) highlightGameButton();
+        if (uiScene.activeGameId === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           highlightGameButton();
           // uiScene.sound.play(EUiSounds.BUTTON_GENERIC);
-          if (uiScene.activeGame) {
-            uiScene.activeGame = undefined;
+          if (uiScene.activeGameId) {
+            uiScene.activeGameId = undefined;
             uiScene.scene.stop('GameScene');
           }
 
-          uiScene.activeGame = game._id;
+          uiScene.activeGameId = game._id;
 
           if (game.status === EGameStatus.FINISHED) await colyseusService.sendGetTurnHistoryMessage(game._id);
+
+          uiScene.activeGame = game;
 
           uiScene.scene.launch('GameScene', {
             userId: uiScene.userId,
@@ -186,15 +188,15 @@ export function createGameList() {
 
       if (game.status === EGameStatus.CHALLENGE && listChallengeReceivedArray.find(gameReceived => gameReceived._id === game._id )) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (uiScene.activeGame === game._id) highlightGameButton();
+        if (uiScene.activeGameId === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           // uiScene.sound.play(EUiSounds.GAME_DELETE);
           highlightGameButton();
 
-          if (uiScene.activeGame) {
-            uiScene.activeGame = undefined;
+          if (uiScene.activeGameId) {
+            uiScene.activeGameId = undefined;
             uiScene.scene.stop('GameScene');
           }
 
@@ -219,8 +221,8 @@ export function createGameList() {
   const newGameButton = uiScene.add.image(-15, lastListItemY, 'gameAtlas', 'newGameButton').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
-    if (uiScene.activeGame) {
-      uiScene.activeGame = undefined;
+    if (uiScene.activeGameId) {
+      uiScene.activeGameId = undefined;
       uiScene.scene.stop('GameScene');
     }
 

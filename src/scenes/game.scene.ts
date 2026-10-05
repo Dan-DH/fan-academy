@@ -180,15 +180,17 @@ export default class GameScene extends Phaser.Scene {
     if (this.activePlayer !== this.userId) this.turnButton.buttonImage.setVisible(false);
 
     // Clicking skips replay
-    this.blockingLayer = this.add.rectangle(910, 0, 1040, 1650, 0x000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.isReplay);
+    if (this.gameSceneMode !== EGameSceneMode.GAME_REPLAY) {
+      this.blockingLayer = this.add.rectangle(910, 0, 1040, 1650, 0x000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.isReplay);
 
-    this.blockingLayer.on('pointerdown', () => {
-      this.scene.restart({
-        userId: this.userId,
-        currentGame: this.currentGame,
-        gameSceneMode: EGameSceneMode.GAME
+      this.blockingLayer.on('pointerdown', () => {
+        this.scene.restart({
+          userId: this.userId,
+          currentGame: this.currentGame,
+          gameSceneMode: EGameSceneMode.GAME
+        });
       });
-    });
+    }
 
     this.replayButton = replayButton(this);
 
