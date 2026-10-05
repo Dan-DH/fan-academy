@@ -24,6 +24,7 @@ export class GameReplay {
   firstTurnButton!: Phaser.GameObjects.Image;
   nextActionButton!: Phaser.GameObjects.Image;
   previousActionButton!: Phaser.GameObjects.Image;
+  handSwitchButton!: Phaser.GameObjects.Image;
 
   constructor(context: UIScene, gameScene: GameScene) {
     this.context = context;
@@ -84,10 +85,10 @@ export class GameReplay {
     const separationX = 65;
 
     this.previousTurnButton = this.gameScene.add.image(replayButtonX - separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
-    this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'fastForwardButton').setScale(0.7).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
+    this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'gameAtlas', 'UI_FFButton-hd').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
 
     this.nextTurnButton = this.gameScene.add.image(replayButtonX + separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-    this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'fastForwardButton').setScale(0.7).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'gameAtlas', 'UI_FFButton-hd').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
     this.replayToggleButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
@@ -114,6 +115,15 @@ export class GameReplay {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
       console.log('lastTurnButton clicked');
       this.goToLast();
+    });
+
+    this.handSwitchButton = this.gameScene.add.image(1200, 720, 'gameAtlas', 'UI_RefreshButton-hd').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.handSwitchButton.on('pointerdown', () => {
+      this.gameScene.hand!.isVisible = !this.gameScene.hand!.isVisible;
+      this.gameScene.hand!.hand.forEach(u => u.setVisible(!u.visible));
+
+      this.gameScene.opponentHand!.isVisible = !this.gameScene.hand!.isVisible;
+      this.gameScene.opponentHand!.hand.forEach(u => u.setVisible(!u.visible));
     });
   }
 

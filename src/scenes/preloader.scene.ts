@@ -1,7 +1,7 @@
 import { ETiles } from "../enums/gameEnums";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@cc4a03e';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@f20be39';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -66,10 +66,6 @@ export default class PreloaderScene extends Phaser.Scene {
     // game scene
     this.load.image('gameBoard', `${CDN_PATH}/images/maps/game_board.webp`);
     this.load.html('chatComponent', 'html/chat.html');
-
-    // FIXME: add to atlas
-    this.load.image('fastForwardButton', 'UI_FFButton-hd.png');
-    this.load.image('refreshButton', 'UI_ResfreshButton-hd.png');
 
     // sounds
     // this.load.audio('buttonFailedSound', `${CDN_PATH}/audio/ui/buttonFailed.mp3`);

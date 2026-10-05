@@ -6,9 +6,11 @@ import { Item } from "./factions/item";
 
 export class Hand {
   hand: (Hero | Item)[];
+  isVisible = true;
 
-  constructor(handData: (IHeroBE | IItemBE)[]) {
+  constructor(handData: (IHeroBE | IItemBE)[], isVisible?: boolean) {
     this.hand = handData?.map(unit => this.renderUnit(unit)) ?? [];
+    if (isVisible) this.isVisible = isVisible;
   }
 
   getHandSize(): number {
@@ -43,7 +45,7 @@ export class Hand {
         const unitData = units.shift();
         if (unitData) {
           unitData.boardPosition = element;
-          const newUnit = this.renderUnit(unitData).setVisible(isPlayerHand); // added boolean to hide opponent hand units during replays
+          const newUnit = this.renderUnit(unitData).setVisible(this.isVisible);
           this.hand.push(newUnit);
         }
       }
