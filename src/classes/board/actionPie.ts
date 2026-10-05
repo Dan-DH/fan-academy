@@ -59,7 +59,7 @@ export class ActionPie extends Phaser.GameObjects.Container {
     this.removeInteractive();
   }
 
-  popAnimation(image: Phaser.GameObjects.Image, show = false) {
+  private popAnimation(image: Phaser.GameObjects.Image, show = false) {
     if (!image) return;
 
     const originalIndex = this.getIndex(image); // Save original order

@@ -79,7 +79,8 @@ export default class GameScene extends Phaser.Scene {
     currentGame: IGame,
     gameSceneMode: EGameSceneMode,
     skipAnimations: boolean,
-    startTurnState?: IGameState
+    startTurnState?: IGameState,
+    turnNumber?: number // FIXME: not present in the turn state...
   }) {
     this.chatComponent = undefined;
     this.longPressStart = undefined;
@@ -87,6 +88,7 @@ export default class GameScene extends Phaser.Scene {
     this.activeUnit = undefined;
     this.startTurnState = undefined;
 
+    this.turnNumber = data.turnNumber ?? undefined;
     this.gameOver = data.currentGame.gameOver ?? undefined;
     this.startTurnState = data.startTurnState;
     this.currentGame = data.currentGame;
@@ -116,10 +118,13 @@ export default class GameScene extends Phaser.Scene {
     if (!this.startTurnState) {
       if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
         this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
+        this.turnNumber = this.clonedGame!.turnNumber - 1;
       } else if(this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
         this.startTurnState = structuredClone(this.clonedGame!.startState!);
+        this.turnNumber = 1;
       } else {
         this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+        this.turnNumber = this.clonedGame!.turnNumber;
       }
     }
 
@@ -129,7 +134,6 @@ export default class GameScene extends Phaser.Scene {
     this.activePlayer = this.clonedGame!.activePlayer;
     this.firstPlayer = this.clonedGame!.firstPlayer!;
     this.isPlayerOne = this.clonedGame!.players[0].userData._id === this.userId;
-    this.turnNumber = this.clonedGame!.turnNumber;
     this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
 
     // Game map
@@ -303,7 +307,7 @@ export default class GameScene extends Phaser.Scene {
     // If a unit was currently selected, de-select it
     if (this.activeUnit) deselectUnit(this);
 
-    this.actionPie!.resetActionPie();
+    this.actionPie?.resetActionPie();
     this.drawUnits();
     await this.removeKOUnits();
     this.door!.updateBannerText();
@@ -364,7 +368,7 @@ export default class GameScene extends Phaser.Scene {
     this.addActionToState(actionType, activePosition, targetPosition);
 
     // Remove a slice from the action pie
-    this.actionPie!.hideActionSlice(this.currentTurnAction!++);
+    this.actionPie?.hideActionSlice(this.currentTurnAction!++);
 
     // Deselect unit and clear highlights
     if (this.activeUnit) deselectUnit(this);
