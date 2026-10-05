@@ -13,9 +13,6 @@ export class GameReplay {
   gameScene: GameScene;
   gameData: IGame;
   turnHistory: IGameState[][];
-
-  turnNumber = 1;
-  actionNumber = 1;
   isPaused = false;
   isFirstPlayer: boolean;
   isPlayerTurn: boolean;
@@ -162,7 +159,7 @@ export class GameReplay {
   }
 
   async replayAllTurns() {
-    for (let i = this.turnNumber; i <= this.turnHistory.length - 1; i++) {
+    for (let i = this.gameScene.turnNumber!; i <= this.turnHistory.length - 1; i++) {
       console.log('TURN NUMBER', i, this.turnHistory[i]);
 
       this.gameScene.turnNumberTextBox?.setText(`TURN ${i}`);
@@ -179,10 +176,10 @@ export class GameReplay {
     const hand = this.isPlayerTurn ? this.gameScene.hand! : this.gameScene.opponentHand!;
     const deck = this.isPlayerTurn ? this.gameScene.deck! : this.gameScene.opponentDeck!;
 
-    for (let i = this.actionNumber; i <= turn.length - 1; i++) {
+    for (let i = this.gameScene.currentTurnAction!; i <= turn.length - 1; i++) {
       const turnAction = turn[i];
 
-      console.log('turn: ', this.turnNumber, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.action?.action, turnAction.action?.actorPosition, turnAction.action?.targetPosition);
+      console.log('turn: ', this.gameScene.currentTurnAction, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.action?.action, turnAction.action?.actorPosition, turnAction.action?.targetPosition);
 
       if (!turnAction.action?.action) continue;
 
@@ -190,6 +187,10 @@ export class GameReplay {
 
       if (this.isPaused) return;
     }
+
+    this.gameScene.turnNumber!++;
+    this.gameScene.actionPie?.resetActionPie();
+    this.gameScene.currentTurnAction = 1;
   }
 
   async replayAction(turnAction: IGameState, hand: Hand, deck: Deck, _actionNumber: number): Promise<void> {

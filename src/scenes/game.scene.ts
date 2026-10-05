@@ -80,7 +80,8 @@ export default class GameScene extends Phaser.Scene {
     gameSceneMode: EGameSceneMode,
     skipAnimations: boolean,
     startTurnState?: IGameState,
-    turnNumber?: number // FIXME: not present in the turn state...
+    turnNumber?: number, // FIXME: not present in the turn state...
+    currentTurnAction?: number
   }) {
     this.chatComponent = undefined;
     this.longPressStart = undefined;
@@ -89,6 +90,8 @@ export default class GameScene extends Phaser.Scene {
     this.startTurnState = undefined;
 
     this.turnNumber = data.turnNumber ?? undefined;
+    this.currentTurnAction = data.currentTurnAction ?? 1;
+
     this.gameOver = data.currentGame.gameOver ?? undefined;
     this.startTurnState = data.startTurnState;
     this.currentGame = data.currentGame;
@@ -134,7 +137,6 @@ export default class GameScene extends Phaser.Scene {
     this.activePlayer = this.clonedGame!.activePlayer;
     this.firstPlayer = this.clonedGame!.firstPlayer!;
     this.isPlayerOne = this.clonedGame!.players[0].userData._id === this.userId;
-    this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
 
     // Game map
     const gameMap = this.add.image(0, 0, 'gameBoard').setOrigin(0).setInteractive();

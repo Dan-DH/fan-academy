@@ -29,8 +29,8 @@ export class ActionPie extends Phaser.GameObjects.Container {
     this.actionArrow = context.add.image(-35, 0, 'gameAtlas', 'actionArrow').setOrigin(0.5).setRotation(-0.1).setName('actionArrow').setVisible(false).setScale(1.2);
 
     if (context.turnNumber === 1 && context.activePlayer === context.userId) {
-      this.actionPie1.setVisible(false);
-      this.actionPie2.setVisible(false);
+      this.actionPie4.setVisible(false);
+      this.actionPie5.setVisible(false);
     }
 
     this.add([this.actionCircle, this.actionPie1, this.actionPie2, this.actionPie3, this.actionPie4, this.actionPie5, this.actionArrow]);
@@ -39,13 +39,12 @@ export class ActionPie extends Phaser.GameObjects.Container {
   }
 
   resetActionPie() {
-    if (this.context.turnNumber !== 1) {
-      this.actionPie1.setVisible(true);
-      this.popAnimation(this.actionPie1, true);
+    this.actionPie1.setVisible(true);
+    this.popAnimation(this.actionPie1, true);
 
-      this.actionPie2.setVisible(true);
-      this.popAnimation(this.actionPie2, true);
-    }
+    this.actionPie2.setVisible(true);
+    this.popAnimation(this.actionPie2, true);
+
     this.actionPie3.setVisible(true);
     this.popAnimation(this.actionPie3, true);
 
