@@ -173,7 +173,6 @@ export function createGameList() {
             uiScene.scene.launch('GameScene', {
               userId: uiScene.userId,
               currentGame: game,
-              startTurnState: game.startState,
               gameSceneMode: EGameSceneMode.GAME_REPLAY,
               skipAnimations: false
             });

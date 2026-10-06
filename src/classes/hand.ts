@@ -31,7 +31,7 @@ export class Hand {
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 
-  addToHand(units: (IHeroBE | IItemBE)[], isPlayerHand = true): void {
+  addToHand(units: (IHeroBE | IItemBE)[]): void {
     const defaultPositions = [45, 46, 47, 48, 49, 50];
 
     let previousIndex = -1;

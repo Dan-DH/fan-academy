@@ -30,7 +30,7 @@ export class Door extends Phaser.GameObjects.Container {
       fontFamily: "proLight",
       fontSize: 30,
       color: '#000000'
-    }).setOrigin(0.5).setVisible(false);
+    }).setOrigin(0.5).setVisible(false); // TODO: check to see which one is visible
 
     this.add([this.doorClosed, this.doorOpen, this.doorBanner, this.bannerText, this.opponentBannerText]);
 

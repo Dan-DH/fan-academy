@@ -11,15 +11,14 @@ export class Deck {
   }
 
   getDeck() {
-    return this.deck;
+    return [...this.deck];
   }
 
   removeFromDeck(amount: number): (IHeroBE | IItemBE)[] {
     return this.deck.splice(0, amount);
   }
 
-  addToDeck(unit: IHeroBE | IItemBE): (IHeroBE | IItemBE)[] {
+  addToDeck(unit: IHeroBE | IItemBE) {
     this.deck.push(unit);
-    return this.deck;
   }
 }

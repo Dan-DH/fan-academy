@@ -26,10 +26,9 @@ export class MapGameReplay {
   }
 
   async mapFullReplay(): Promise<void> {
-    const startTime = Date.now();
     this.gameScene.skipAnimations = true;
     this.gameScene.sys.setVisible(false);
-    this.fullGameReplay.push([this.gameScene.startTurnState!]);
+    this.fullGameReplay.push([structuredClone(this.gameScene.startTurnState!)]);
 
     for (let i = 0; i <= this.turnHistory.length - 1; i++) {
       this.isPlayerTurn = i % 2 === 0 === this.isFirstPlayer;
@@ -37,15 +36,12 @@ export class MapGameReplay {
     }
 
     this.gameScene.registry.set('FullGameReplay', this.fullGameReplay);
-    console.log('Replay done in :', Date.now() - startTime);
     this.gameScene.scene.stop();
   }
 
   async replayAllTurns() {
     for (let i = 0; i <= this.turnHistory.length - 1; i++) {
       console.log('TURN', i);
-
-      this.gameScene.turnNumberTextBox?.setText(`TURN ${i}`);
 
       this.isPlayerTurn = i % 2 === 0 === this.isFirstPlayer;
 
@@ -64,8 +60,8 @@ export class MapGameReplay {
       await this.replayAction(turnAction, hand, deck);
 
       if (i === turn.actions.length - 1) {
-        const previousAction = this.fullGameReplay[this.fullGameReplay.length - 1];
-        this.gameScene.currentTurn?.unshift(previousAction[previousAction.length - 1]);
+        const previousTurn = this.fullGameReplay[this.fullGameReplay.length - 1];
+        this.gameScene.currentTurn?.unshift(previousTurn[previousTurn.length - 1]);
         this.fullGameReplay.push(this.gameScene.currentTurn!);
         this.gameScene.currentTurn = [];
       }
@@ -156,19 +152,22 @@ export class MapGameReplay {
   replayDraw(hand: Hand, deck: Deck) {
     const drawAmount = 6 - hand!.getHandSize();
     if (deck!.getDeckSize() === 0 || drawAmount === 0) return;
-    this.gameScene.door!.openDoor();
     const drawnUnits = deck!.removeFromDeck(drawAmount);
-    hand!.addToHand(drawnUnits, this.isPlayerTurn);
-    if (this.isPlayerTurn) this.gameScene.door?.updateBannerText(); // FIXME: door always opens for some reason
+    hand!.addToHand(drawnUnits);
 
     const { player, opponent } = getPlayersKey(this.gameScene);
 
     const playerState: IPlayerState = {
-      ...this.gameScene[player]!,
+      playerId: this.gameScene[player]!.playerId,
       hand: this.gameScene.hand!.exportHandData(),
       deck: this.gameScene.deck!.getDeck()
     };
-    const opponentState = this.gameScene[opponent];
+
+    const opponentState: IPlayerState = {
+      playerId: this.gameScene[opponent]!.playerId,
+      hand: this.gameScene.opponentHand!.exportHandData(),
+      deck: this.gameScene.opponentDeck!.getDeck()
+    };
 
     this.gameScene.currentTurn!.push({
       player1: this.gameScene.isPlayerOne ? playerState : opponentState!,
@@ -176,7 +175,6 @@ export class MapGameReplay {
       action: {
         actionClass: EActionClass.AUTO,
         action: EActionType.DRAW
-
       },
       boardState: this.gameScene.board!.getBoardState()
     });

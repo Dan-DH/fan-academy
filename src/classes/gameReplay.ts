@@ -45,7 +45,8 @@ export class GameReplay {
       currentGame: this.context.activeGame,
       startTurnState: this.turnHistory[turnNumber][0],
       turnNumber,
-      gameSceneMode: EGameSceneMode.GAME_REPLAY
+      gameSceneMode: EGameSceneMode.GAME_REPLAY,
+      isPlayerHandVisible: this.gameScene.hand!.isVisible
     });
 
     this.gameScene.events.once(Phaser.Scenes.Events.CREATE, () => {
@@ -275,7 +276,7 @@ export class GameReplay {
 
     const drawnUnits = deck!.removeFromDeck(drawAmount);
 
-    hand!.addToHand(drawnUnits, this.isPlayerTurn);
+    hand!.addToHand(drawnUnits);
 
     this.gameScene.door?.updateBannerText();
 

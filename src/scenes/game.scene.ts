@@ -64,6 +64,7 @@ export default class GameScene extends Phaser.Scene {
   firstPlayer: string | undefined; // only used for replays
   playerData: IUserData[] | undefined;
   isPlayerOne: boolean | undefined;
+  isPlayerHandVisible: boolean | undefined;
   activeUnit: Hero | Item | undefined;
 
   longPressStart: number | undefined;
@@ -81,22 +82,20 @@ export default class GameScene extends Phaser.Scene {
     skipAnimations: boolean,
     startTurnState?: IGameState,
     turnNumber?: number,
-    currentTurnAction?: number
+    currentTurnAction?: number,
+    isPlayerHandVisible?: boolean
   }) {
     this.chatComponent = undefined;
     this.longPressStart = undefined;
     this.visibleUnitCard = undefined;
     this.activeUnit = undefined;
-    this.startTurnState = undefined;
-    this.hand = undefined;
-    this.opponentHand = undefined;
-    this.deck = undefined;
-    this.opponentDeck = undefined;
+    this.currentTurn = undefined;
 
+    this.isPlayerHandVisible = data.isPlayerHandVisible ?? true;
     this.turnNumber = data.turnNumber ?? 1;
     this.currentTurnAction = data.currentTurnAction ?? 1;
     this.gameOver = data.currentGame.gameOver ?? undefined;
-    this.startTurnState = data.startTurnState;
+    this.startTurnState = data.startTurnState ?? undefined;
     this.currentGame = data.currentGame;
     this.userId = data.userId;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
@@ -122,22 +121,17 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (!this.startTurnState) {
-      console.log('this shoudnt log');
       if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
         this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
         this.turnNumber = this.clonedGame!.turnNumber - 1;
       } else if(this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
         this.startTurnState = structuredClone(this.clonedGame!.startState!);
-        this.turnNumber = 1;
-      } else {
+      }
+      else {
         this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
         this.turnNumber = this.clonedGame!.turnNumber;
       }
     }
-
-    this.player1 = this.startTurnState.player1;
-    this.player2 = this.startTurnState.player2!;
-
     this.activePlayer = this.clonedGame!.activePlayer;
     this.firstPlayer = this.clonedGame!.firstPlayer!;
     this.isPlayerOne = this.clonedGame!.players[0].userData._id === this.userId;
@@ -149,19 +143,21 @@ export default class GameScene extends Phaser.Scene {
     // Item rack
     this.add.image(0, 0, 'gameAtlas', 'itemRack').setOrigin(0.5).setPosition(900, 736).setScale(1.125);
 
-    this.board = new Board(this, this.startTurnState.boardState, this.clonedGame!.map);
+    this.board = new Board(this, this.startTurnState!.boardState, this.clonedGame!.map);
 
     this.playerData = this.clonedGame!.players.map(player => { return player.userData; });
     this.banner = new Banner(this, this.board, this.playerData);
 
-    const { player1, player2 } = this.startTurnState;
-    const activePlayer = this.isPlayerOne ? player1 : player2!;
-    const opponent = this.isPlayerOne ? player2! : player1;
+    this.player1 = this.startTurnState!.player1;
+    this.player2 = this.startTurnState!.player2!;
+
+    const activePlayer = this.isPlayerOne ? this.player1 : this.player2!;
+    const opponent = this.isPlayerOne ? this.player2! : this.player1;
     this.deck = new Deck(activePlayer.deck);
     this.hand = new Hand(activePlayer.hand);
     this.opponentDeck = new Deck(opponent.deck);
     this.opponentHand = new Hand(opponent.hand);
-    this.opponentHand.disableOpponentHand();
+    if (this.isPlayerHandVisible) { this.opponentHand.disableOpponentHand(); } else { this.hand.disableOpponentHand();}
 
     this.actionPie = new ActionPie(this);
     this.turnButton = new TurnButton(this);
@@ -235,7 +231,6 @@ export default class GameScene extends Phaser.Scene {
 
   drawUnits() {
     // this.sound.play(EGameSounds.DRAW);
-
     const drawAmount = 6 - this.hand!.getHandSize();
     if (this.deck!.getDeckSize() === 0 || drawAmount === 0) return;
 
@@ -249,11 +244,16 @@ export default class GameScene extends Phaser.Scene {
     const { player, opponent } = getPlayersKey(this);
 
     const playerState: IPlayerState = {
-      ...this[player]!,
+      playerId: this[player]!.playerId,
       hand: this.hand!.exportHandData(),
       deck: this.deck!.getDeck()
     };
-    const opponentState = this[opponent];
+
+    const opponentState: IPlayerState = {
+      playerId: this[opponent]!.playerId,
+      hand: this.opponentHand!.exportHandData(),
+      deck: this.opponentDeck!.getDeck()
+    };
 
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
@@ -261,7 +261,6 @@ export default class GameScene extends Phaser.Scene {
       action: {
         actionClass: EActionClass.AUTO,
         action: EActionType.DRAW
-
       },
       boardState: this.board!.getBoardState()
     });
@@ -390,17 +389,16 @@ export default class GameScene extends Phaser.Scene {
     const actionClass = getActionClass(action);
 
     const playerState: IPlayerState = {
-      ...this[player]!,
+      playerId: this[player]!.playerId,
       hand: this.hand!.exportHandData(),
       deck: this.deck!.getDeck()
     };
 
     const opponentState: IPlayerState = {
-      ...this[opponent]!,
+      playerId: this[opponent]!.playerId,
       hand: this.opponentHand!.exportHandData(),
       deck: this.opponentDeck!.getDeck()
     };
-
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
       player2: !this.isPlayerOne ? playerState : opponentState!,
