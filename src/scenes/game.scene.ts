@@ -88,6 +88,10 @@ export default class GameScene extends Phaser.Scene {
     this.visibleUnitCard = undefined;
     this.activeUnit = undefined;
     this.startTurnState = undefined;
+    this.hand = undefined;
+    this.opponentHand = undefined;
+    this.deck = undefined;
+    this.opponentDeck = undefined;
 
     this.turnNumber = data.turnNumber ?? 1;
     this.currentTurnAction = data.currentTurnAction ?? 1;
@@ -391,7 +395,11 @@ export default class GameScene extends Phaser.Scene {
       deck: this.deck!.getDeck()
     };
 
-    const opponentState = this[opponent];
+    const opponentState: IPlayerState = {
+      ...this[opponent]!,
+      hand: this.opponentHand!.exportHandData(),
+      deck: this.opponentDeck!.getDeck()
+    };
 
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
