@@ -174,7 +174,6 @@ export function createGameList() {
               userId: uiScene.userId,
               currentGame: game,
               startTurnState: game.startState,
-              turnNumber: 1,
               gameSceneMode: EGameSceneMode.GAME_REPLAY,
               skipAnimations: false
             });

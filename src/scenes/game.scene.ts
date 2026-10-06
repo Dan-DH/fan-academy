@@ -37,6 +37,7 @@ export default class GameScene extends Phaser.Scene {
   clonedGame: IGame | undefined;
   startTurnState: IGameState | undefined;
   currentTurnAction: number | undefined;
+  turnNumber: number | undefined;
 
   // gamecontroller
   banner: Banner | undefined;
@@ -63,7 +64,6 @@ export default class GameScene extends Phaser.Scene {
   firstPlayer: string | undefined; // only used for replays
   playerData: IUserData[] | undefined;
   isPlayerOne: boolean | undefined;
-  turnNumber: number | undefined;
   activeUnit: Hero | Item | undefined;
 
   longPressStart: number | undefined;
@@ -80,7 +80,7 @@ export default class GameScene extends Phaser.Scene {
     gameSceneMode: EGameSceneMode,
     skipAnimations: boolean,
     startTurnState?: IGameState,
-    turnNumber?: number, // FIXME: not present in the turn state...
+    turnNumber?: number,
     currentTurnAction?: number
   }) {
     this.chatComponent = undefined;
@@ -89,9 +89,8 @@ export default class GameScene extends Phaser.Scene {
     this.activeUnit = undefined;
     this.startTurnState = undefined;
 
-    this.turnNumber = data.turnNumber ?? undefined;
+    this.turnNumber = data.turnNumber ?? 1;
     this.currentTurnAction = data.currentTurnAction ?? 1;
-
     this.gameOver = data.currentGame.gameOver ?? undefined;
     this.startTurnState = data.startTurnState;
     this.currentGame = data.currentGame;
@@ -119,6 +118,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (!this.startTurnState) {
+      console.log('this shoudnt log');
       if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
         this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
         this.turnNumber = this.clonedGame!.turnNumber - 1;

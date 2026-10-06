@@ -67,5 +67,6 @@ export class Hand {
 
   disableOpponentHand(): void {
     this.hand.forEach(u => u.setVisible(false).setInteractive(false));
+    this.isVisible = false;
   }
 }

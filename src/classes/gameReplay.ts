@@ -36,45 +36,49 @@ export class GameReplay {
     this.addUiElements();
   }
 
-  restartSceneOnTurn(turnNumber: number, currentTurnAction: number): void {
+  restartSceneOnTurn(turnNumber: number): void {
     this.isPaused = true;
-    this.context.scene.stop('GameScene');
 
+    this.context.scene.stop('GameScene');
     this.context.scene.launch('GameScene', {
       userId: this.context.userId,
       currentGame: this.context.activeGame,
-      startTurnState: this.turnHistory[Math.min(turnNumber, this.turnHistory.length - 1)][0], // does turnhistory include
+      startTurnState: this.turnHistory[turnNumber][0],
       turnNumber,
-      currentTurnAction,
       gameSceneMode: EGameSceneMode.GAME_REPLAY
     });
 
-    this. gameScene.events.once(Phaser.Scenes.Events.CREATE, () => {
+    this.gameScene.events.once(Phaser.Scenes.Events.CREATE, () => {
       this.gameScene = this.context.scene.get('GameScene') as GameScene;
       this.addUiElements();
+      this.replayToggleButton.setTint(0x808080);
     });
   }
 
-  // TODO: is paused, change play icon or color
   togglePause(): void {
     this.isPaused = !this.isPaused;
-    if (!this.isPaused) this.replayAllTurns(); // FIXME: bug if we pause first then go to a specific turn
+    if (this.isPaused){
+      this.replayToggleButton.setTint(0x808080);
+    } else {
+      this.replayToggleButton.clearTint();
+      this.replayAllTurns();
+    }
   }
 
   goToPreviousTurn(): void {
-    this.restartSceneOnTurn(Math.max(this.gameScene.turnNumber! - 1, 1), 1);
+    this.restartSceneOnTurn(Math.max(this.gameScene.turnNumber! - 1, 1));
   }
 
   goToNextTurn(): void {
-    this.restartSceneOnTurn(Math.min(this.gameScene.turnNumber! + 1, this.turnHistory.length), 1);
+    this.restartSceneOnTurn(Math.min(this.gameScene.turnNumber! + 1, this.turnHistory.length - 1));
   }
 
   goToLast(): void {
-    this.restartSceneOnTurn(this.turnHistory.length, 1);
+    this.restartSceneOnTurn(this.turnHistory.length - 1);
   }
 
   goToFirst(): void {
-    this.restartSceneOnTurn(1, 1);
+    this.restartSceneOnTurn(1);
   }
 
   addUiElements(): void {
@@ -85,45 +89,58 @@ export class GameReplay {
     const separationX = 65;
 
     this.previousTurnButton = this.gameScene.add.image(replayButtonX - separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
-    this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'gameAtlas', 'UI_FFButton-hd').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
+    this.firstTurnButton = this.gameScene.add.image(replayButtonX - separationX * 2, replayButtonY, 'gameAtlas', 'UI_FFButton-hd').setScale(1.3).setInteractive({
+      pixelPerfect: true,
+      useHandCursor: true
+    }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY).setFlipX(true);
 
     this.nextTurnButton = this.gameScene.add.image(replayButtonX + separationX, replayButtonY, 'gameAtlas', 'replayButton').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
-    this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'gameAtlas', 'UI_FFButton-hd').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
+    this.lastTurnButton = this.gameScene.add.image(replayButtonX + separationX * 2, replayButtonY, 'gameAtlas', 'UI_FFButton-hd').setScale(1.3).setInteractive({
+      pixelPerfect: true,
+      useHandCursor: true
+    }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
 
     this.replayToggleButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('replayToggleButton clicked');
+      this.replayToggleButton.setScale(this.replayToggleButton.scale * 0.8);
+    });
+    this.replayToggleButton.on('pointerup', () => {
+      this.replayToggleButton.setScale(this.replayToggleButton.scale * 1.25);
       this.togglePause();
     });
-
     this.firstTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('firstTurnButton clicked');
       this.goToFirst();
     });
     this.previousTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('previousTurnButton clicked');
       this.goToPreviousTurn();
     });
     this.nextTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('nextTurnButton clicked');
       this.goToNextTurn();
     });
     this.lastTurnButton.on('pointerdown', () => {
       // context.sound.play(EUiSounds.BUTTON_GENERIC);
-      console.log('lastTurnButton clicked');
       this.goToLast();
     });
 
     this.handSwitchButton = this.gameScene.add.image(1200, 720, 'gameAtlas', 'UI_RefreshButton-hd').setScale(1.3).setInteractive({ useHandCursor: true }).setVisible(this.gameScene.gameSceneMode === EGameSceneMode.GAME_REPLAY);
     this.handSwitchButton.on('pointerdown', () => {
+      this.handSwitchButton.setScale(this.handSwitchButton.scale * 0.8);
+    });
+    this.handSwitchButton.on('pointerup', () => {
+      this.handSwitchButton.setScale(this.handSwitchButton.scale * 1.25);
+
+      // TODO: turn hand into containers and make the whole visible or not
       this.gameScene.hand!.isVisible = !this.gameScene.hand!.isVisible;
       this.gameScene.hand!.hand.forEach(u => u.setVisible(!u.visible));
 
-      this.gameScene.opponentHand!.isVisible = !this.gameScene.hand!.isVisible;
+      this.gameScene.opponentHand!.isVisible = !this.gameScene.opponentHand!.isVisible;
       this.gameScene.opponentHand!.hand.forEach(u => u.setVisible(!u.visible));
+
+      this.gameScene.door!.bannerText.visible = !this.gameScene.door?.bannerText.visible;
+      this.gameScene.door!.opponentBannerText.visible = !this.gameScene.door?.opponentBannerText.visible;
     });
   }
 
@@ -145,10 +162,11 @@ export class GameReplay {
     const hand = this.isPlayerTurn ? this.gameScene.hand! : this.gameScene.opponentHand!;
     const deck = this.isPlayerTurn ? this.gameScene.deck! : this.gameScene.opponentDeck!;
 
+    console.log('current turn action', this.gameScene.currentTurnAction, 'turn length', turn.length);
     for (let i = this.gameScene.currentTurnAction!; i <= turn.length - 1; i++) {
       const turnAction = turn[i];
 
-      console.log('turn: ', this.gameScene.currentTurnAction, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.action?.action, turnAction.action?.actorPosition, turnAction.action?.targetPosition);
+      console.log('turn: ', this.gameScene.turnNumber, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.action?.action, turnAction.action?.actorPosition, turnAction.action?.targetPosition);
 
       if (!turnAction.action?.action) continue;
 
@@ -192,23 +210,16 @@ export class GameReplay {
   }
 
   replaySpawn(action: ITurnAction, hand: Hand): void {
-    console.log('hand', hand);
     const hero = hand.getHand().find(unit => unit.stats.boardPosition === action.actorPosition) as Hero;
     const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
-
-    console.log('hero', hero);
-
     hero.spawn(tile);
   };
 
   replayMove(action: ITurnAction): void {
     const hero = this.gameScene.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
-
     const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
-
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
-
     hero.move(hero.getTile(), tile);
   };
 
@@ -255,20 +266,19 @@ export class GameReplay {
 
   replayDraw(hand: Hand, deck: Deck) {
     // this.sound.play(EGameSounds.DRAW);
+    this.handSwitchButton.disableInteractive();
 
-    console.log('handSize pre-draw', hand.getHandSize(), hand);
     const drawAmount = 6 - hand!.getHandSize();
     if (deck!.getDeckSize() === 0 || drawAmount === 0) return;
 
     this.gameScene.door!.openDoor();
 
     const drawnUnits = deck!.removeFromDeck(drawAmount);
-    console.log('drawnUnits', drawnUnits);
 
     hand!.addToHand(drawnUnits, this.isPlayerTurn);
 
-    console.log('handAfterDrawing', hand);
+    this.gameScene.door?.updateBannerText();
 
-    if (this.isPlayerTurn) this.gameScene.door?.updateBannerText();
+    this.handSwitchButton.setInteractive();
   }
 }
