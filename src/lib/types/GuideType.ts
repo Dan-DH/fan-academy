@@ -69,6 +69,7 @@ export type GameStatusInfo = GameStatusGuide;
 export interface AdvancedTacticGuide {
   title: string;
   icon: string;
+  badge?: string;
   summary: string;
   details: string;
 }

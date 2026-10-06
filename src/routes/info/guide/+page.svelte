@@ -29,15 +29,15 @@
   } from './components';
   import type { GuideTabId } from './components/GuideNav.svelte';
 
-  let selectedFactionId = $state<string>('all');
+  let selectedFactionId = $state<string>('council');
   let searchQuery = $state<string>('');
-  let activeTab = $state<GuideTabId>('all');
+  let activeTab = $state<GuideTabId>('about');
   const isSearching = $derived(searchQuery.trim().length > 0);
 
   const filteredFactions = $derived(() => {
     let list: FactionGuide[] = factionsList;
 
-    if (selectedFactionId !== 'all') {
+    if (selectedFactionId && selectedFactionId !== 'all') {
       list = list.filter((f) => f.id === selectedFactionId);
     }
 
@@ -104,7 +104,8 @@
       (t) =>
         t.title.toLowerCase().includes(query) ||
         t.summary.toLowerCase().includes(query) ||
-        t.details.toLowerCase().includes(query)
+        t.details.toLowerCase().includes(query) ||
+        (t.badge && t.badge.toLowerCase().includes(query))
     );
   });
 
@@ -131,34 +132,20 @@
     <strong class="text-orange-300">Dwarves</strong>.
   </SecondaryTitle>
 
-  <!-- Search Bar -->
-  <div class="w-full max-w-md mt-2 relative">
-    <input
-      type="search"
-      bind:value={searchQuery}
-      placeholder="Search units, abilities, tiles, or items..."
-      class="input input-bordered input-warning w-full bg-stone-950/80 text-white placeholder-stone-400 pl-11 pr-4 py-3 rounded-xl border border-amber-500/50 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
-    />
-    <span
-      class="icon-[material-symbols--search] absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 text-xl pointer-events-none"
-    ></span>
-    {#if searchQuery}
-      <button
-        onclick={() => (searchQuery = '')}
-        class="btn btn-ghost btn-xs btn-circle absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white"
-        aria-label="Clear search"
-      >
-        ✕
-      </button>
-    {/if}
-  </div>
+  <!-- Search & Navigation Filter Section inside Main Banner -->
+  <GuideNav
+    {searchQuery}
+    {activeTab}
+    onSearchChange={(q) => (searchQuery = q)}
+    onTabChange={(tab) => {
+      activeTab = tab;
+      if (searchQuery) searchQuery = '';
+    }}
+  />
 </MainBanner>
 
-<!-- Section Tabs Navigation -->
-<GuideNav {activeTab} onTabChange={(tab) => (activeTab = tab)} />
-
 <!-- SECTION 1: ABOUT & REVIVAL -->
-{#if isSearching || activeTab === 'all' || activeTab === 'about'}
+{#if isSearching || activeTab === 'about'}
   <section id="about" class="scroll-mt-24 flex flex-col gap-6">
     <SectionHeader
       icon="icon-[material-symbols--menu-book-outline]"
@@ -196,7 +183,7 @@
 {/if}
 
 <!-- SECTION 2: LOBBY & MENU GUIDE -->
-{#if isSearching || activeTab === 'all' || activeTab === 'lobby'}
+{#if isSearching || activeTab === 'lobby'}
   <section id="lobby" class="scroll-mt-24 flex flex-col gap-6">
     <SectionHeader
       icon="icon-[material-symbols--dashboard-outline]"
@@ -265,7 +252,7 @@
 {/if}
 
 <!-- SECTION 3: CORE GAMEPLAY & 5 AP ENGINE -->
-{#if isSearching || activeTab === 'all' || activeTab === 'mechanics'}
+{#if isSearching || activeTab === 'mechanics'}
   <section id="mechanics" class="scroll-mt-24 flex flex-col gap-6">
     <SectionHeader
       icon="icon-[material-symbols--auto-awesome-outline]"
@@ -346,7 +333,7 @@
 {/if}
 
 <!-- SECTION 4: BATTLEFIELD & MAP TILES -->
-{#if isSearching || activeTab === 'all' || activeTab === 'tiles'}
+{#if isSearching || activeTab === 'tiles'}
   <section id="tiles" class="scroll-mt-24 flex flex-col gap-6">
     <SectionHeader
       icon="icon-[material-symbols--grid-view-outline]"
@@ -364,7 +351,7 @@
 {/if}
 
 <!-- SECTION 5: ADVANCED COMBAT TACTICS -->
-{#if isSearching || activeTab === 'all' || activeTab === 'tactics'}
+{#if isSearching || activeTab === 'tactics'}
   <section id="tactics" class="scroll-mt-24 flex flex-col gap-6">
     <SectionHeader
       icon="icon-[akar-icons--double-sword]"
@@ -373,7 +360,7 @@
     />
 
     <!-- Tactics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each filteredTactics() as tactic (tactic.title)}
         <TacticCard {tactic} />
       {/each}
@@ -382,7 +369,7 @@
 {/if}
 
 <!-- SECTION 6: FACTION CODEX -->
-{#if isSearching || activeTab === 'all' || activeTab === 'factions'}
+{#if isSearching || activeTab === 'factions'}
   <section id="factions" class="scroll-mt-24 flex flex-col gap-8">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-amber-500/30 pb-4 gap-4">
       <div class="flex items-center gap-3">

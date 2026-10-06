@@ -107,7 +107,7 @@ export default class MainMenuScene extends Phaser.Scene {
       font: '70px proHeavy',
       callback: () => {
         // this.sound.play(EUiSounds.BUTTON_GENERIC);
-        window.open('https://discord.gg/pkfwDvKyxX');
+        window.open('https://discord.gg/yp45DkUeX');
       }
     });
 

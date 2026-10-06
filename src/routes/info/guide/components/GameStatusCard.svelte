@@ -5,7 +5,7 @@
 </script>
 
 <article
-  class="bg-stone-900/90 border border-stone-800 hover:border-amber-500/50 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between transition-all group"
+  class="bg-stone-900/90 border border-stone-800 hover:border-amber-500/50 rounded-2xl overflow-hidden shadow-sm flex flex-col transition-all group"
 >
   <!-- Status Card Header Bar -->
   <div class="px-5 py-3.5 bg-base-300/80 border-b border-amber-200/20 flex items-center gap-2.5">
@@ -16,7 +16,7 @@
   </div>
 
   <!-- Status Body -->
-  <div class="p-5">
+  <div class="p-5 flex-1 flex flex-col justify-start">
     <p class="text-xs sm:text-sm text-stone-300 leading-relaxed">
       {statusItem.description}
     </p>

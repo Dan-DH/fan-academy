@@ -23,43 +23,40 @@
       currentPage = page;
     }
   }
-
-  function handlePerPageChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    perPage = Number(target.value);
-    currentPage = 1;
-  }
 </script>
 
 <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-400">
   <div class="flex items-center gap-3 shrink-0 whitespace-nowrap">
     <span class="font-mono text-stone-300 shrink-0 whitespace-nowrap">
-      {startItem}–{endItem} of {playersListLength}
+      Showing {startItem}–{endItem} of {playersListLength}
     </span>
 
-    <div class="relative flex items-center group">
-      <select
-        class="appearance-none bg-stone-900 border border-stone-800 text-stone-300 group-hover:text-white focus:border-amber-400 rounded-lg cursor-pointer text-xs py-1 pl-2.5 pr-6 focus:outline-none"
-        value={perPage}
-        onchange={handlePerPageChange}
-        aria-label="Players per page"
-      >
-        {#each perPageItems as count}
-          <option value={count}>
-            {count > 1000 ? "All" : count}
-          </option>
-        {/each}
-      </select>
-      <span
-        class="icon-[material-symbols--keyboard-arrow-down] pointer-events-none absolute right-1.5 text-stone-400 text-sm group-hover:text-amber-400 transition-colors"
-      ></span>
+    <div class="flex items-center gap-1.5">
+      <span class="text-stone-400 text-xs font-medium">Show:</span>
+      <div class="relative flex items-center group">
+        <select
+          bind:value={perPage}
+          onchange={() => (currentPage = 1)}
+          class="appearance-none bg-stone-900 border border-stone-800 text-stone-200 group-hover:text-white focus:border-amber-400 rounded-lg cursor-pointer text-xs py-1 pl-2.5 pr-6 focus:outline-none transition-colors"
+          aria-label="Players per page"
+        >
+          {#each perPageItems as count}
+            <option value={count} class="bg-stone-900 text-white font-medium">
+              {count > 1000 ? "All" : count}
+            </option>
+          {/each}
+        </select>
+        <span
+          class="icon-[material-symbols--keyboard-arrow-down] pointer-events-none absolute right-1.5 text-stone-400 text-sm group-hover:text-amber-400 transition-colors"
+        ></span>
+      </div>
     </div>
   </div>
 
   {#if totalPages > 1}
     <div class="join shrink-0">
       <button
-        class="join-item btn btn-xs btn-ghost text-stone-400 hover:text-white disabled:opacity-30"
+        class="join-item btn btn-xs btn-ghost text-stone-400 hover:text-white disabled:opacity-30 cursor-pointer"
         disabled={currentPage <= 1}
         onclick={() => setPage(currentPage - 1)}
         aria-label="Previous page"
@@ -74,7 +71,7 @@
           </button>
         {:else}
           <button
-            class="join-item btn btn-xs transition-all {currentPage === page
+            class="join-item btn btn-xs transition-all cursor-pointer {currentPage === page
               ? 'bg-amber-500 text-stone-950 font-bold hover:bg-amber-400'
               : 'btn-ghost text-stone-400 hover:text-white'}"
             onclick={() => setPage(page)}
@@ -85,7 +82,7 @@
       {/each}
 
       <button
-        class="join-item btn btn-xs btn-ghost text-stone-400 hover:text-white disabled:opacity-30"
+        class="join-item btn btn-xs btn-ghost text-stone-400 hover:text-white disabled:opacity-30 cursor-pointer"
         disabled={currentPage >= totalPages}
         onclick={() => setPage(currentPage + 1)}
         aria-label="Next page"

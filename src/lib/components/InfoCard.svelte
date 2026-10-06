@@ -21,9 +21,9 @@
 <article
   class="card bg-stone-900/90 border border-amber-500/20 rounded-2xl overflow-hidden shadow-md flex flex-col justify-between {className}"
 >
-  <div class="flex flex-col flex-1">
+  <div class="flex flex-col flex-1 min-h-0">
     {#if title || icon || headerRight}
-      <div class="px-5 py-3.5 bg-base-300/80 border-b border-amber-200/20 flex items-center justify-between gap-2.5">
+      <div class="px-5 py-3.5 bg-base-300/80 border-b border-amber-200/20 flex items-center justify-between gap-2.5 shrink-0">
         <div class="flex items-center gap-2.5 min-w-0">
           {#if icon}
             <span class="{icon} text-xl text-amber-400 shrink-0"></span>
@@ -38,7 +38,7 @@
       </div>
     {/if}
 
-    <div class="p-5 space-y-3 flex-1 flex flex-col">
+    <div class="p-5 space-y-3 flex-1 flex flex-col min-h-0 overflow-hidden">
       {#if children}
         {@render children()}
       {/if}
@@ -46,12 +46,14 @@
   </div>
 
   {#if footer}
-    <div class="px-5 py-3 border-t border-stone-800 text-xs text-stone-400 bg-stone-950/50">
-      {#if typeof footer === 'string'}
+    {#if typeof footer === 'string'}
+      <div class="px-5 py-3 border-t border-stone-800 text-xs text-stone-400 bg-stone-950/50 shrink-0">
         {footer}
-      {:else}
+      </div>
+    {:else}
+      <div class="border-t border-amber-500/20 w-full overflow-hidden mt-auto shrink-0">
         {@render footer()}
-      {/if}
-    </div>
+      </div>
+    {/if}
   {/if}
 </article>

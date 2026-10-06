@@ -17,6 +17,6 @@
   } = $props();
 </script>
 
-<InfoCard {title} {icon} {footer} class="{className}">
+<InfoCard {title} {icon} {footer} class={className}>
   {@render children?.()}
 </InfoCard>

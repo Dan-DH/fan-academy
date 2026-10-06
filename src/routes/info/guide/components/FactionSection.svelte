@@ -55,11 +55,11 @@
     </div>
 
     <!-- Faction Splash Art -->
-    <div class="relative w-full max-w-xs sm:max-w-sm rounded-2xl overflow-hidden border border-white/20 shadow-2xl shrink-0 group">
+    <div class="relative w-full max-w-xs sm:max-w-sm aspect-2/1 rounded-2xl overflow-hidden border border-white/20 shadow-2xl shrink-0 bg-stone-950 group">
       <img
         src={faction.splashImage}
         alt="{faction.name} Splash"
-        class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+        class="w-full h-full block object-cover group-hover:scale-105 transition-transform duration-500"
         onerror={handleImageError}
       />
       <div class="image-fallback hidden w-full h-44 bg-stone-900 flex items-center justify-center text-stone-500">

@@ -9,8 +9,8 @@
 >
   <div>
     <!-- Tile Card Header Bar -->
-    <div class="px-5 py-3.5 bg-base-300/80 border-b border-amber-200/20 flex items-center gap-3">
-        <span class="{tile.iconName} text-xl"></span>
+    <div class="px-5 py-3.5 bg-base-300/80 border-b border-amber-200/20 flex items-center gap-2.5">
+      <span class="{tile.iconName} text-amber-400 text-xl shrink-0"></span>
       <h3 class="font-bold text-white text-base">
         {tile.name}
       </h3>
