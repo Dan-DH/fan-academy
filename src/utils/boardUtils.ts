@@ -64,7 +64,7 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
     // TODO: missing sound bite
   };
 
-  if (![ETiles.BASIC, !ETiles.SPAWN].includes(tile.tileType)) hero.visuals.playSpecialTileAnimation(tile.tileType);
+  if (![ETiles.BASIC, ETiles.SPAWN, ETiles.TELEPORTER].includes(tile.tileType)) hero.visuals.playSpecialTileAnimation(tile.tileType);
 
   hero.unitCard.updateCardData(hero);
 }
