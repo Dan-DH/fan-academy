@@ -74,7 +74,7 @@
   const isValid = $derived(Object.keys(errors).length === 0);
 
   const signupMutation = useSignupMutation(() => {
-    goto('/');
+    goto('/dashboard');
   });
 
   function handleSubmit(e: SubmitEvent) {

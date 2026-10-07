@@ -1,17 +1,14 @@
-import { AuthLoginUser } from "$lib/types/authType"
+import { getUserProfileApi } from './user';
+import { auth } from '$lib/store/auth.svelte';
+import type { IUser } from '$lib/interfaces/User';
 
-const BASE_URL = import.meta.env.BASE_URL;
-export const getCurrentUser = async () => {
-    const response = await fetch(`${BASE_URL}profile`,{
-        method: "GET"
-    })
-    return response;
-}
+export * from './auth';
+export * from './user';
 
-export const loginUser = async (userForm: AuthLoginUser) => {
-    const response = await fetch(`${BASE_URL}login`,{
-        method: "POST",
-        body: JSON.stringify(userForm)
-    })
-    return response;
-}
+export const getCurrentUser = async (token?: string): Promise<IUser | null> => {
+	const activeToken = token ?? auth.token;
+	if (!activeToken) {
+		return null;
+	}
+	return getUserProfileApi(activeToken);
+};

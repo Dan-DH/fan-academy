@@ -43,7 +43,7 @@
   const isValid = $derived(Object.keys(errors).length === 0);
 
   const loginMutation = useLoginMutation(() => {
-    goto('/');
+    goto('/dashboard');
   });
 
   function handleSubmit(e: SubmitEvent) {
