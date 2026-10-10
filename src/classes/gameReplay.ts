@@ -2,8 +2,6 @@ import { EActionType, EGameSceneMode } from "../enums/gameEnums";
 import { IGame, IGameState, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import UIScene from "../scenes/ui.scene";
-import { mapHeroToBE } from "../utils/mapHeroToBE";
-import { mapItemToBE } from "../utils/mapItemToBE";
 import { textAnimationSizeIncrease } from "../utils/textAnimations";
 import { Deck } from "./board/deck";
 import { Pulverizer } from "./factions/dwarves/items";
@@ -257,7 +255,9 @@ export class GameReplay {
     }
   }
 
-  async replayShuffle(actorPosition: number, hand: Hand): Promise<void> {
+  replayShuffle(actorPosition: number, hand: Hand): void {
+    this.gameScene.afterAction(EActionType.SHUFFLE, actorPosition, 51);
+
     const shuffleText = this.gameScene.add.text(700, 350, 'ITEM SHUFFLED', {
       fontFamily: "proLight",
       fontSize: 50,
@@ -265,7 +265,7 @@ export class GameReplay {
     }).setDepth(999);
     // this.context.sound.play(EGameSounds.SHUFFLE);
 
-    await textAnimationSizeIncrease(shuffleText, 1.3);
+    textAnimationSizeIncrease(shuffleText, 1.3);
 
     const unitToShuffle = hand.getHandElementByBoardPosition(actorPosition);
     if (!unitToShuffle) {
@@ -273,7 +273,6 @@ export class GameReplay {
       return;
     }
     unitToShuffle.shuffleInDeck();
-    this.gameScene.afterAction(EActionType.SHUFFLE, actorPosition, 51);
 
     this.gameScene.door!.updateBannerText();
   }

@@ -80,7 +80,7 @@ export class MapGameReplay {
       [EActionType.BUFF]: () => this.replayUnitAction(turnAction),
       [EActionType.TELEPORT]: () => this.replayUnitAction(turnAction),
       [EActionType.SPAWN_PHANTOM]: () => this.replayUnitAction(turnAction),
-      [EActionType.SHUFFLE]: ()=> this.replayShuffle(turnAction.actorPosition!, hand, deck),
+      [EActionType.SHUFFLE]: ()=> this.replayShuffle(turnAction.actorPosition!, hand),
       [EActionType.USE]: () => this.replayUse(turnAction, hand),
       [EActionType.DRAW]: () => this.replayDraw(hand, deck),
       [EActionType.REMOVE_UNITS]: () => this.gameScene.removeKOUnits(),
@@ -138,7 +138,7 @@ export class MapGameReplay {
     }
   }
 
-  replayShuffle(actorPosition: number, hand: Hand, deck: Deck): void {
+  replayShuffle(actorPosition: number, hand: Hand): void {
     const unitToShuffle = hand.getHandElementByBoardPosition(actorPosition!);
     if (!unitToShuffle) {
       console.error('replayShuffle() no hand element for boardPosition ' + actorPosition);
