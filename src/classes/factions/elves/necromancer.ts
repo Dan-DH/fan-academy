@@ -51,7 +51,11 @@ export class Necromancer extends DarkElf {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK);
 
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDone = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this 
+      });
       if (damageDone) this.lifeSteal(damageDone);
       this.removeAttackModifiers();
     }

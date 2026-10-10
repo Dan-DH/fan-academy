@@ -28,7 +28,11 @@ export class Knight extends Council {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.KNIGHT_ATTACK_BIG);
       // if (!this.stats.superCharge)this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this 
+      });
 
       if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pushEnemy(this, target);
 

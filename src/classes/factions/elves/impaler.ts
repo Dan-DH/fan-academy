@@ -34,7 +34,11 @@ export class Impaler extends DarkElf {
         // if (distance === 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
         // if (distance !== 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK);
       }
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDone = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this 
+      });
 
       if (damageDone) this.lifeSteal(damageDone);
 

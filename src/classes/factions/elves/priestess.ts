@@ -31,7 +31,11 @@ export class Priestess extends DarkElf {
       // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
 
       const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDone = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this 
+      });
       if (damageDone) this.lifeSteal(damageDone);
 
       // Apply a 50% debuff to the target's next attack or heal

@@ -34,7 +34,11 @@ export class Gunner extends Dwarf {
       target.removeFromGame();
     } else {
       // this.scene.sound.play(EGameSounds.GUNNER_ATTACK);
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
       this.removeAttackModifiers();
     }
   }
@@ -44,14 +48,23 @@ export class Gunner extends Dwarf {
     // this.context.time.delayedCall(100, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
     // this.context.time.delayedCall(200, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
 
-    const splashedUnits = this.context.board!.getGunnerSplashTargets(this, target);
+    target.getsDamaged({
+      damage: this.getTotalPower(0.6667),
+      attackType: EAttackType.PHYSICAL,
+      attacker: this
+    });
 
+    const splashedUnits = this.context.board!.getGunnerSplashTargets(this, target);
     splashedUnits?.forEach(unit =>  {
-      unit.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this, 0.6667);
+      unit.getsDamaged({
+        damage: this.getTotalPower(0.6667),
+        attackType: EAttackType.PHYSICAL,
+        attacker: this,
+        splashDamage: 0.6667 
+      });
       if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
     });
 
-    target.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this);
     this.removeAttackModifiers();
   }
 

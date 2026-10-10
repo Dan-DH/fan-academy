@@ -51,28 +51,34 @@ export class Pulverizer extends Item {
   directHitOnHero(hero: Hero): void {
     const directHitDamage = 600;
 
-    // FIXME: number used as boolean
-    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, 1);
+    hero.getsDamaged({
+      damage: directHitDamage,
+      attackType: EAttackType.PHYSICAL,
+      attacker: this,
+      directPulverizerHit: true
+    });
   }
 
   directHitOnCrystal(crystal: Crystal): void {
     const directHitDamage = 600;
     const splashDamage = roundToFive(600 * 0.33);
 
+    crystal.getsDamaged({
+      damage: directHitDamage,
+      attackType: EAttackType.PHYSICAL,
+      attacker: this
+    });
+
     const enemyUnits = getAOETiles(this, crystal.stats.boardPosition);
     enemyUnits.forEach(u => {
-      if (u instanceof Hero) {
-        u!.getsDamaged(splashDamage, EAttackType.PHYSICAL, this);
-        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
-        return;
-      }
-
-      if (u instanceof Crystal) {
-        if (u.stats.boardPosition === crystal.stats.boardPosition) {
-          u.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
-        } else {
-          u.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, 0.33);
-        }
+      if (u.stats.boardPosition !== crystal.stats.boardPosition) {
+        u!.getsDamaged({
+          damage: splashDamage,
+          attackType: EAttackType.PHYSICAL,
+          attacker: this,
+          splashDamage: 0.33
+        });
+        if (u instanceof Hero && u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
       }
     });
   }

@@ -64,19 +64,21 @@ export class SoulHarvest extends Item {
 
     const enemyUnits = getAOETiles(this, targetTile.boardPosition);
     enemyUnits.forEach(u => {
-      if (u instanceof Crystal) {
-        u.getsDamaged(damage, EAttackType.MAGICAL, this);
-        return;
-      }
+      const damageInflicted =  u.getsDamaged({
+        damage,
+        attackType: EAttackType.MAGICAL,
+        attacker: this,
+        avoidKOs: true
+      });
 
-      if (u instanceof Hero) {
-        if (u.stats.isKO) return;
-
-        totalDamageInflicted += u.getsDamaged(damage, EAttackType.MAGICAL, this);
-
-        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
-      }
+      if (u instanceof Hero) totalDamageInflicted += damageInflicted;
     });
+
+    enemyUnits.forEach(u => {
+      if (u instanceof Hero) {
+        u.checkIfShouldBeKO();
+        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
+      }});
 
     // Get total amount of friendly units in the map, including KO'd ones
     const friendlyUnits = this.context.board!.units.filter(u => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo) as Hero[];

@@ -32,7 +32,11 @@ export class Annihilator extends Dwarf {
       // this.scene.sound.play(EGameSounds.ANNIHILATOR_ATTACK);
 
       const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
 
       if (!isTargetShielded && target.active) {
         target.status.add(StatusEffects.ANNIHILATOR_DEBUFF);
@@ -45,7 +49,12 @@ export class Annihilator extends Dwarf {
 
       if (adjacentFriendlyUnits.length) {
         adjacentFriendlyUnits.forEach(unit =>{
-          unit.getsDamaged(this.getTotalPower(0.2), this.stats.attackType, this, 0.2);
+          unit.getsDamaged({
+            damage: this.getTotalPower(0.2),
+            attackType: this.stats.attackType,
+            attacker: this,
+            splashDamage: 0.2
+          });
           if (unit instanceof Hero && !unit.stats.isKO) this.context.board!.pushEnemy(target, unit, 360);
           if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
         });

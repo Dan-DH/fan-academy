@@ -34,7 +34,11 @@ export class Grenadier extends Dwarf {
     ) {
       target.removeFromGame();
     } else {
-      target.getsDamaged(this.getTotalPower(0.5), this.stats.attackType, this);
+      target.getsDamaged({
+        damage: this.getTotalPower(0.5),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
       this.removeAttackModifiers();
     }
   }
@@ -43,11 +47,19 @@ export class Grenadier extends Dwarf {
     const enemyUnits = getAOETiles(this, target.stats.boardPosition);
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK);
 
+    target.getsDamaged({
+      damage: this.getTotalPower(),
+      attackType: EAttackType.MAGICAL,
+      attacker: this
+    });
+
     enemyUnits.forEach(u => {
-      if (u.stats.boardPosition === target.stats.boardPosition) {
-        u.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
-      } else {
-        u.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this);
+      if (u.stats.boardPosition !== target.stats.boardPosition) {
+        u.getsDamaged({
+          damage: this.getTotalPower(0.5),
+          attackType: EAttackType.MAGICAL,
+          attacker: this 
+        });
         if (u instanceof Hero && u.stats.isKO && u.stats.unitType === EHeroes.PHANTOM) u.removeFromGame();
       }
     });

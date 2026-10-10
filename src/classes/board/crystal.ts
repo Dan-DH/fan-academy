@@ -56,11 +56,18 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.visuals.engineerShieldImage.setVisible(false);
   }
 
-  getsDamaged(damage: number, attackType: EAttackType, _unit: Hero | Item, splashDamage?: number): void {
+  getsDamaged(params: {
+    damage: number,
+    attackType: EAttackType,
+    attacker: Hero | Item,
+    splashDamage?: number,
+  }): number {
+    const { damage, attackType, splashDamage } = params;
+
     if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
       this.context.board!.updateEngineerOnShieldLost(this.stats.unitId!);
       this.removeEngineerShield();
-      return;
+      return 0;
     }
 
     let assaultBoostDamage = 0;
@@ -106,6 +113,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     if (this.stats.belongsTo === 2) this.context.banner!.playerTwoHpBar.setHealth();
 
     if (this.stats.currentHealth <= 0) this.removeFromGame();
+
+    return damageTaken;
   }
 
   removeFromGame(): void {

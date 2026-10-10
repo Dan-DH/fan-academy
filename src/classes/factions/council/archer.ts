@@ -29,14 +29,22 @@ export class Archer extends Council {
       } else {
         // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
-        target.getsDamaged(this.getTotalPower(0.5), this.stats.attackType, this);
+        target.getsDamaged({
+          damage: this.getTotalPower(0.5),
+          attackType: this.stats.attackType,
+          attacker: this
+        });
         this.removeAttackModifiers();
       }
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.ARCHER_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.ARCHER_ATTACK);
 
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this 
+      });
       this.removeAttackModifiers();
     }
 

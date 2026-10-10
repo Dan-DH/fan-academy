@@ -113,7 +113,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
-  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit?: number): number {
+  getsDamaged(params: {
+    damage: number,
+    attackType: EAttackType,
+    attacker: Hero | Item,
+    directPulverizerHit?: boolean,
+    avoidKOs?: boolean
+  }): number {
+    const { damage, attackType, attacker, directPulverizerHit, avoidKOs } = params;
     if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
       // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
       this.context.board!.updateEngineerOnShieldLost(this.stats.unitId);
@@ -128,15 +135,15 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
 
-    if (unit instanceof Pulverizer) {
-      if (directHit && this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
+    if (attacker instanceof Pulverizer) {
+      if (directPulverizerHit && this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
         this.status.remove(StatusEffects.FACTION_EQUIPMENT);
         this.reduceMaxHealth(this.stats.baseHealth * 0.1);
         this.visuals.factionEquipmentImage.setVisible(false);
         this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
       }
 
-      if (!directHit) {
+      if (!directPulverizerHit) {
         const debuffLevel = (this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
         assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
       }
@@ -146,7 +153,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     this.stats.currentHealth -= totalDamage;
 
-    if (this.stats.currentHealth <= 0) this.getsKnockedDown();
+    if (this.stats.currentHealth <= 0 && !avoidKOs) this.getsKnockedDown();
 
     // Update hp bar
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
@@ -343,6 +350,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.unitCard.updateCardData(this);
 
     return amount;
+  }
+
+  checkIfShouldBeKO(): void {
+    if (this.stats.currentHealth <= 0) this.getsKnockedDown();
   }
 
   getsKnockedDown(): void {

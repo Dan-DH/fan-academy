@@ -5,7 +5,6 @@ import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
-import { Crystal } from "../../board/crystal";
 
 export class DragonScale extends Item {
   constructor(data: IItem) {
@@ -54,17 +53,20 @@ export class Inferno extends Item {
     const enemyUnits = getAOETiles(this, targetTile.boardPosition);
 
     enemyUnits?.forEach(u => {
-      if (u instanceof Crystal) u.getsDamaged(damage, EAttackType.MAGICAL, this);
+      // Inferno removes KO'd enemy units
+      if (u instanceof Hero && u.stats.isKO) u.removeFromGame(true);
 
-      if (u instanceof Hero) {
-        // Inferno removes KO'd enemy units
-        if (u.stats.isKO){
-          u.removeFromGame(true);
-          return;
-        }
+      u.getsDamaged({
+        damage: damage,
+        attackType: EAttackType.MAGICAL,
+        attacker: this,
+        avoidKOs: true
+      });
+    });
 
-        u.getsDamaged(damage, EAttackType.MAGICAL, this);
-
+    enemyUnits?.forEach(u => {
+      if (u instanceof Hero){
+        u.checkIfShouldBeKO();
         if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
       }
     });

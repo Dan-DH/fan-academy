@@ -43,9 +43,23 @@ export class Wizard extends Council {
       if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, this.context.board!, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
 
       // Apply damage to targets
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
-      if (secondTarget) secondTarget.getsDamaged(this.getTotalPower() * 0.75, this.stats.attackType, this, 0.75);
-      if (thirdTarget) thirdTarget.getsDamaged(this.getTotalPower() * 0.56, this.stats.attackType, this, 0.56);
+      target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
+      if (secondTarget) secondTarget.getsDamaged({
+        damage: this.getTotalPower() * 0.75,
+        attackType: this.stats.attackType,
+        attacker: this,
+        splashDamage: 0.75 
+      });
+      if (thirdTarget) thirdTarget.getsDamaged({
+        damage: this.getTotalPower() * 0.56,
+        attackType: this.stats.attackType,
+        attacker: this,
+        splashDamage: 0.56 
+      });
 
       if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
       if (secondTarget && secondTarget instanceof Hero && secondTarget.stats.isKO && secondTarget.stats.unitType === EHeroes.PHANTOM) secondTarget.removeFromGame();
