@@ -273,6 +273,9 @@ export class GameReplay {
       return;
     }
     unitToShuffle.shuffleInDeck();
+    this.gameScene.afterAction(EActionType.SHUFFLE, actorPosition, 51);
+
+    this.gameScene.door!.updateBannerText();
   }
 
   replayDraw(hand: Hand, deck: Deck) {
