@@ -35,15 +35,12 @@ export class MapGameReplay {
       await this.replayTurn(this.turnHistory[i]);
     }
 
-    console.log('full replay', this.fullGameReplay);
     this.gameScene.registry.set('FullGameReplay', this.fullGameReplay);
     this.gameScene.scene.stop();
   }
 
   async replayAllTurns() {
     for (let i = 0; i <= this.turnHistory.length - 1; i++) {
-      console.log('TURN', i);
-
       this.isPlayerTurn = i % 2 === 0 === this.isFirstPlayer;
 
       await this.replayTurn(this.turnHistory[i]);

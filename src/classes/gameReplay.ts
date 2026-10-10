@@ -148,8 +148,6 @@ export class GameReplay {
 
   async replayAllTurns() {
     for (let i = this.gameScene.turnNumber!; i <= this.turnHistory.length - 1; i++) {
-      console.log('TURN NUMBER', i, this.turnHistory[i]);
-
       this.gameScene.turnNumberTextBox?.setText(`TURN ${i}`);
 
       this.isPlayerTurn = i % 2 !== 0 === this.isFirstPlayer;
@@ -164,11 +162,8 @@ export class GameReplay {
     const hand = this.isPlayerTurn ? this.gameScene.hand! : this.gameScene.opponentHand!;
     const deck = this.isPlayerTurn ? this.gameScene.deck! : this.gameScene.opponentDeck!;
 
-    console.log('current turn action', this.gameScene.currentTurnAction, 'turn length', turn.length);
     for (let i = this.gameScene.currentTurnAction!; i <= turn.length - 1; i++) {
       const turnAction = turn[i];
-
-      console.log('turn: ', this.gameScene.turnNumber, ' action number: ', i, 'pTurn: ', this.isPlayerTurn, turnAction.action?.action, turnAction.action?.actorPosition, turnAction.action?.targetPosition);
 
       if (!turnAction.action?.action) continue;
 
@@ -239,7 +234,6 @@ export class GameReplay {
 
   replayUse(action: ITurnAction, hand: Hand): void {
     const item = hand.getHand().find(item => item.stats.boardPosition === action.actorPosition) as Item;
-    console.log('item is found: ', item.stats.unitId);
     if (!item) throw new Error('Missing item in use action');
 
     if (item.stats.dealsDamage) {
