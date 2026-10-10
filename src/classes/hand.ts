@@ -25,6 +25,11 @@ export class Hand {
     return this.hand.find(u => u.stats.unitId === unitId);
   }
 
+  // FIXME: hydrate this
+  getHandElementByBoardPosition(boardPosition: number): Hero | Item | undefined {
+    return this.hand.find(u => u.stats.boardPosition === boardPosition);
+  }
+
   renderUnit(unit: IHeroBE | IItemBE): Hero | Item {
     if (unit.class === EClass.HERO) return createNewHero(unit as IHeroBE);
     if (unit.class === EClass.ITEM) return createNewItem(unit as IItemBE);

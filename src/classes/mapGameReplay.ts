@@ -35,6 +35,7 @@ export class MapGameReplay {
       await this.replayTurn(this.turnHistory[i]);
     }
 
+    console.log('full replay', this.fullGameReplay);
     this.gameScene.registry.set('FullGameReplay', this.fullGameReplay);
     this.gameScene.scene.stop();
   }
@@ -79,12 +80,12 @@ export class MapGameReplay {
       [EActionType.BUFF]: () => this.replayUnitAction(turnAction),
       [EActionType.TELEPORT]: () => this.replayUnitAction(turnAction),
       [EActionType.SPAWN_PHANTOM]: () => this.replayUnitAction(turnAction),
-      [EActionType.SHUFFLE]: ()=> this.replayShuffle(),
+      [EActionType.SHUFFLE]: ()=> this.replayShuffle(turnAction.actorPosition!, hand, deck),
       [EActionType.USE]: () => this.replayUse(turnAction, hand),
       [EActionType.DRAW]: () => this.replayDraw(hand, deck),
       [EActionType.REMOVE_UNITS]: () => this.gameScene.removeKOUnits(),
-      [EActionType.PASS]: () => console.log('Implement pass?'),
-      [EActionType.CONCEDE]: () => console.log('Implement concede?')
+      [EActionType.PASS]: () => console.log('User passed'),
+      [EActionType.CONCEDE]: () => console.log('User conceded')
     };
 
     replayActionMap[actionTaken]();
@@ -137,16 +138,15 @@ export class MapGameReplay {
     }
   }
 
-  replayShuffle(): void {
-    // FIXME:
-    // const shuffleText = this.context.add.text(600, 350, 'OPPONENT SWAPPED AN ITEM!', {
-    //   fontFamily: "proLight",
-    //   fontSize: 50,
-    //   color: '#fffb00'
-    // }).setDepth(999);
-    // // this.context.sound.play(EGameSounds.SHUFFLE);
+  replayShuffle(actorPosition: number, hand: Hand, deck: Deck): void {
+    const unitToShuffle = hand.getHandElementByBoardPosition(actorPosition!);
+    if (!unitToShuffle) {
+      console.error('replayShuffle() no hand element for boardPosition ' + actorPosition);
+      return;
+    }
+    unitToShuffle.shuffleInDeck();
 
-    // await textAnimationSizeIncrease(shuffleText, 1.3);
+    this.replayAddToState(EActionType.SHUFFLE, EActionClass.USER, actorPosition, 51);
   }
 
   replayDraw(hand: Hand, deck: Deck) {
@@ -155,6 +155,10 @@ export class MapGameReplay {
     const drawnUnits = deck!.removeFromDeck(drawAmount);
     hand!.addToHand(drawnUnits);
 
+    this.replayAddToState(EActionType.DRAW, EActionClass.AUTO);
+  }
+
+  replayAddToState(action: EActionType, actionClass: EActionClass, actorPosition?: number, targetPosition?: number): void {
     const { player, opponent } = getPlayersKey(this.gameScene);
 
     const playerState: IPlayerState = {
@@ -173,8 +177,10 @@ export class MapGameReplay {
       player1: this.gameScene.isPlayerOne ? playerState : opponentState!,
       player2: !this.gameScene.isPlayerOne ? playerState : opponentState!,
       action: {
-        actionClass: EActionClass.AUTO,
-        action: EActionType.DRAW
+        actionClass,
+        action,
+        actorPosition,
+        targetPosition
       },
       boardState: this.gameScene.board!.getBoardState()
     });

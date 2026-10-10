@@ -2,6 +2,9 @@ import { EActionType, EGameSceneMode } from "../enums/gameEnums";
 import { IGame, IGameState, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import UIScene from "../scenes/ui.scene";
+import { mapHeroToBE } from "../utils/mapHeroToBE";
+import { mapItemToBE } from "../utils/mapItemToBE";
+import { textAnimationSizeIncrease } from "../utils/textAnimations";
 import { Deck } from "./board/deck";
 import { Pulverizer } from "./factions/dwarves/items";
 import { Hero } from "./factions/hero";
@@ -194,7 +197,7 @@ export class GameReplay {
       [EActionType.BUFF]: () => this.replayUnitAction(turnAction.action!),
       [EActionType.TELEPORT]: () => this.replayUnitAction(turnAction.action!),
       [EActionType.SPAWN_PHANTOM]: () => this.replayUnitAction(turnAction.action!),
-      [EActionType.SHUFFLE]: ()=> this.replayShuffle(),
+      [EActionType.SHUFFLE]: ()=> this.replayShuffle(turnAction.action!.actorPosition!, hand),
       [EActionType.USE]: () => this.replayUse(turnAction.action!, hand),
       [EActionType.DRAW]: () => this.replayDraw(hand, deck),
       [EActionType.REMOVE_UNITS]: () => this.gameScene.removeKOUnits(),
@@ -254,15 +257,22 @@ export class GameReplay {
     }
   }
 
-  replayShuffle(): void {
-    // const shuffleText = this.context.add.text(600, 350, 'OPPONENT SWAPPED AN ITEM!', {
-    //   fontFamily: "proLight",
-    //   fontSize: 50,
-    //   color: '#fffb00'
-    // }).setDepth(999);
-    // // this.context.sound.play(EGameSounds.SHUFFLE);
+  async replayShuffle(actorPosition: number, hand: Hand): Promise<void> {
+    const shuffleText = this.gameScene.add.text(700, 350, 'ITEM SHUFFLED', {
+      fontFamily: "proLight",
+      fontSize: 50,
+      color: '#fffb00'
+    }).setDepth(999);
+    // this.context.sound.play(EGameSounds.SHUFFLE);
 
-    // await textAnimationSizeIncrease(shuffleText, 1.3);
+    await textAnimationSizeIncrease(shuffleText, 1.3);
+
+    const unitToShuffle = hand.getHandElementByBoardPosition(actorPosition);
+    if (!unitToShuffle) {
+      console.error('replayShuffle() no hand element for boardPosition ' + actorPosition);
+      return;
+    }
+    unitToShuffle.shuffleInDeck();
   }
 
   replayDraw(hand: Hand, deck: Deck) {
