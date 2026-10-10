@@ -28,6 +28,7 @@ export default class GameScene extends Phaser.Scene {
   userId!: string;
   opponentId!: string;
   isReplay = false;
+  skipAnimations = false;
   gameSceneMode: EGameSceneMode | undefined;
 
   chatComponent: Phaser.GameObjects.DOMElement | undefined;
@@ -36,12 +37,15 @@ export default class GameScene extends Phaser.Scene {
   clonedGame: IGame | undefined;
   startTurnState: IGameState | undefined;
   currentTurnAction: number | undefined;
+  turnNumber: number | undefined;
 
   // gamecontroller
   banner: Banner | undefined;
   board: Board | undefined;
   hand: Hand | undefined;
+  opponentHand: Hand | undefined;
   deck: Deck | undefined;
+  opponentDeck: Deck | undefined;
   actionPie: ActionPie | undefined;
   door: Door | undefined;
   turnButton: TurnButton | undefined;
@@ -60,7 +64,7 @@ export default class GameScene extends Phaser.Scene {
   firstPlayer: string | undefined; // only used for replays
   playerData: IUserData[] | undefined;
   isPlayerOne: boolean | undefined;
-  turnNumber: number | undefined;
+  isPlayerHandVisible: boolean | undefined;
   activeUnit: Hero | Item | undefined;
 
   longPressStart: number | undefined;
@@ -75,19 +79,30 @@ export default class GameScene extends Phaser.Scene {
     userId: string,
     currentGame: IGame,
     gameSceneMode: EGameSceneMode,
+    skipAnimations: boolean,
+    startTurnState?: IGameState,
+    turnNumber?: number,
+    currentTurnAction?: number,
+    isPlayerHandVisible?: boolean
   }) {
     this.chatComponent = undefined;
     this.longPressStart = undefined;
     this.visibleUnitCard = undefined;
     this.activeUnit = undefined;
-    this.startTurnState = undefined;
+    this.currentTurn = undefined;
 
+    this.isPlayerHandVisible = data.isPlayerHandVisible ?? true;
+    this.turnNumber = data.turnNumber ?? 1;
+    this.currentTurnAction = data.currentTurnAction ?? 1;
+    this.gameOver = data.currentGame.gameOver ?? undefined;
+    this.startTurnState = data.startTurnState ?? undefined;
     this.currentGame = data.currentGame;
     this.userId = data.userId;
     const opponent = data.currentGame.players.find((p: IPlayerData) => data.userId !== p.userData._id);
     this.opponentId = opponent!.userData._id;
     this.gameSceneMode = data.gameSceneMode;
-    this.isReplay = data.gameSceneMode === EGameSceneMode.TURN_REPLAY;
+    this.isReplay = data.gameSceneMode === EGameSceneMode.TURN_REPLAY || data.gameSceneMode === EGameSceneMode.GAME_REPLAY;
+    this.skipAnimations = data.skipAnimations ?? false;
 
     const networkStatus = navigator.onLine ? 'online' : 'offline';
     this.registry.set('networkStatus', networkStatus);
@@ -105,20 +120,21 @@ export default class GameScene extends Phaser.Scene {
       this.gameOverScreen =  new GameOverScreen(this);
     }
 
-    if (this.isReplay) {
-      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
-    } else {
-      this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+    if (!this.startTurnState) {
+      if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) {
+        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[0]);
+        this.turnNumber = this.clonedGame!.turnNumber - 1;
+      } else if(this.gameSceneMode === EGameSceneMode.GAME_REPLAY) {
+        this.startTurnState = structuredClone(this.clonedGame!.startState!);
+      }
+      else {
+        this.startTurnState = structuredClone(this.clonedGame!.previousTurn[this.clonedGame!.previousTurn.length - 1]);
+        this.turnNumber = this.clonedGame!.turnNumber;
+      }
     }
-
-    this.player1 = this.startTurnState.player1;
-    this.player2 = this.startTurnState.player2!;
-
     this.activePlayer = this.clonedGame!.activePlayer;
     this.firstPlayer = this.clonedGame!.firstPlayer!;
     this.isPlayerOne = this.clonedGame!.players[0].userData._id === this.userId;
-    this.turnNumber = this.clonedGame!.turnNumber;
-    this.currentTurnAction = this.turnNumber === 1 ? 3 : 1;
 
     // Game map
     const gameMap = this.add.image(0, 0, 'gameBoard').setOrigin(0).setInteractive();
@@ -127,15 +143,21 @@ export default class GameScene extends Phaser.Scene {
     // Item rack
     this.add.image(0, 0, 'gameAtlas', 'itemRack').setOrigin(0.5).setPosition(900, 736).setScale(1.125);
 
-    this.board = new Board(this, this.startTurnState.boardState, this.clonedGame!.map);
+    this.board = new Board(this, this.startTurnState!.boardState, this.clonedGame!.map);
 
     this.playerData = this.clonedGame!.players.map(player => { return player.userData; });
     this.banner = new Banner(this, this.board, this.playerData);
 
-    const { player1, player2 } = this.startTurnState;
-    const activePlayer = this.isPlayerOne ? player1 : player2!;
+    this.player1 = this.startTurnState!.player1;
+    this.player2 = this.startTurnState!.player2!;
+
+    const activePlayer = this.isPlayerOne ? this.player1 : this.player2!;
+    const opponent = this.isPlayerOne ? this.player2! : this.player1;
     this.deck = new Deck(activePlayer.deck);
     this.hand = new Hand(activePlayer.hand);
+    this.opponentDeck = new Deck(opponent.deck);
+    this.opponentHand = new Hand(opponent.hand);
+    if (this.isPlayerHandVisible) { this.opponentHand.disableOpponentHand(); } else { this.hand.disableOpponentHand();}
 
     this.actionPie = new ActionPie(this);
     this.turnButton = new TurnButton(this);
@@ -158,15 +180,17 @@ export default class GameScene extends Phaser.Scene {
     if (this.activePlayer !== this.userId) this.turnButton.buttonImage.setVisible(false);
 
     // Clicking skips replay
-    this.blockingLayer = this.add.rectangle(910, 0, 1040, 1650, 0x000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.isReplay);
+    if (this.gameSceneMode !== EGameSceneMode.GAME_REPLAY) {
+      this.blockingLayer = this.add.rectangle(910, 0, 1040, 1650, 0x000, 0.3).setOrigin(0.5).setInteractive().setDepth(999).setVisible(this.isReplay);
 
-    this.blockingLayer.on('pointerdown', () => {
-      this.scene.restart({
-        userId: this.userId,
-        currentGame: this.currentGame,
-        gameSceneMode: EGameSceneMode.GAME
+      this.blockingLayer.on('pointerdown', () => {
+        this.scene.restart({
+          userId: this.userId,
+          currentGame: this.currentGame,
+          gameSceneMode: EGameSceneMode.GAME
+        });
       });
-    });
+    }
 
     this.replayButton = replayButton(this);
 
@@ -184,7 +208,7 @@ export default class GameScene extends Phaser.Scene {
     const userPreferences = this.registry.get('userPreferences');
     if (userPreferences.chat) this.chatComponent = createChatComponent(this);
 
-    if (this.isReplay) new TurnReplay(this);
+    if (this.gameSceneMode === EGameSceneMode.TURN_REPLAY) new TurnReplay(this);
   }
 
   addConcedeButton(context: GameScene): Phaser.GameObjects.Image {
@@ -207,7 +231,6 @@ export default class GameScene extends Phaser.Scene {
 
   drawUnits() {
     // this.sound.play(EGameSounds.DRAW);
-
     const drawAmount = 6 - this.hand!.getHandSize();
     if (this.deck!.getDeckSize() === 0 || drawAmount === 0) return;
 
@@ -221,18 +244,23 @@ export default class GameScene extends Phaser.Scene {
     const { player, opponent } = getPlayersKey(this);
 
     const playerState: IPlayerState = {
-      ...this[player]!,
+      playerId: this[player]!.playerId,
       hand: this.hand!.exportHandData(),
       deck: this.deck!.getDeck()
     };
-    const opponentState = this[opponent];
+
+    const opponentState: IPlayerState = {
+      playerId: this[opponent]!.playerId,
+      hand: this.opponentHand!.exportHandData(),
+      deck: this.opponentDeck!.getDeck()
+    };
+
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
       player2: !this.isPlayerOne ? playerState : opponentState!,
       action: {
         actionClass: EActionClass.AUTO,
         action: EActionType.DRAW
-
       },
       boardState: this.board!.getBoardState()
     });
@@ -277,8 +305,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   hasActionsLeft(): boolean {
-    if (this.turnNumber === 1 && this.currentTurnAction! < 4) return true;
-    if (this.currentTurnAction! < 6) return true;
+    if (this.turnNumber === 1 && this.currentTurnAction! < 3) return true;
+    if (this.turnNumber !== 1 && this.currentTurnAction! < 6) return true;
     return false;
   }
 
@@ -286,7 +314,7 @@ export default class GameScene extends Phaser.Scene {
     // If a unit was currently selected, de-select it
     if (this.activeUnit) deselectUnit(this);
 
-    this.actionPie!.resetActionPie();
+    this.actionPie?.resetActionPie();
     this.drawUnits();
     await this.removeKOUnits();
     this.door!.updateBannerText();
@@ -341,31 +369,36 @@ export default class GameScene extends Phaser.Scene {
   }
 
   afterAction(actionType: EActionType, activePosition: number, targetPosition?: number): void {
-    if (this.isReplay) return;
+    // if (this.isReplay) return; // FIXME: only for turnReplay?
 
     // Add action to current state
     this.addActionToState(actionType, activePosition, targetPosition);
 
     // Remove a slice from the action pie
-    this.actionPie!.hideActionSlice(this.currentTurnAction!++);
+    this.actionPie?.hideActionSlice(this.currentTurnAction!++);
 
     // Deselect unit and clear highlights
     if (this.activeUnit) deselectUnit(this);
   }
 
   addActionToState(action: EActionType, actorPosition?: number, targetPosition?: number): void {
+    // if (this.isReplay) return; // FIXME: only for turnReplay?
+
     const { player, opponent } = getPlayersKey(this);
 
     const actionClass = getActionClass(action);
 
     const playerState: IPlayerState = {
-      ...this[player]!,
+      playerId: this[player]!.playerId,
       hand: this.hand!.exportHandData(),
       deck: this.deck!.getDeck()
     };
 
-    const opponentState = this[opponent];
-    // Add action to current turn state
+    const opponentState: IPlayerState = {
+      playerId: this[opponent]!.playerId,
+      hand: this.opponentHand!.exportHandData(),
+      deck: this.opponentDeck!.getDeck()
+    };
     this.currentTurn!.push({
       player1: this.isPlayerOne ? playerState : opponentState!,
       player2: !this.isPlayerOne ? playerState : opponentState!,

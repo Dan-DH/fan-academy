@@ -1,7 +1,7 @@
 import { ETiles } from "../enums/gameEnums";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@cc4a03e';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@f20be39';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {

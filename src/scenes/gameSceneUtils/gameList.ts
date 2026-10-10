@@ -1,11 +1,14 @@
+import { MapGameReplay } from "../../classes/mapGameReplay";
+import { GameReplay } from "../../classes/gameReplay";
 import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { colyseusService } from "../../colyseus/colyseusService";
 import { EChallengePopup, EGameModes, EGameSceneMode, EGameStatus } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
-import { factionEnumToEmblem } from "../../utils/gameUtils";
+import { factionEnumToEmblem, waitUntilSceneCreated } from "../../utils/gameUtils";
 import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
+import GameScene from "../game.scene";
 import UIScene from "../ui.scene";
 
 export function createGameList() {
@@ -133,38 +136,65 @@ export function createGameList() {
       // Make the game accessible -only for games already playing
       if (game.status === EGameStatus.PLAYING || game.status === EGameStatus.FINISHED) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (uiScene.activeGame === game._id) highlightGameButton();
+        if (uiScene.activeGameId === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           highlightGameButton();
           // uiScene.sound.play(EUiSounds.BUTTON_GENERIC);
-          if (uiScene.activeGame) {
-            uiScene.activeGame = undefined;
+          if (uiScene.activeGameId) {
+            uiScene.activeGameId = undefined;
             uiScene.scene.stop('GameScene');
           }
 
-          uiScene.activeGame = game._id;
+          uiScene.activeGameId = game._id;
+
+          if (game.status === EGameStatus.FINISHED) await colyseusService.sendGetTurnHistoryMessage(game._id);
+
+          uiScene.activeGame = game;
 
           uiScene.scene.launch('GameScene', {
             userId: uiScene.userId,
             currentGame: game,
-            gameSceneMode: EGameSceneMode.TURN_REPLAY
+            gameSceneMode: game.status === EGameStatus.PLAYING ? EGameSceneMode.TURN_REPLAY : EGameSceneMode.GAME_REPLAY,
+            skipAnimations: game.status === EGameStatus.PLAYING ? false : true
           });
+
+          if (game.status === EGameStatus.FINISHED) {
+            const gameSceneForMapping = await waitUntilSceneCreated(uiScene, 'GameScene') as GameScene;
+            const mapReplay = new MapGameReplay(uiScene, gameSceneForMapping);
+            await mapReplay.mapFullReplay();
+
+            await new Promise<void>((resolve) => {
+              gameSceneForMapping.events.once(Phaser.Scenes.Events.SHUTDOWN, resolve);
+              uiScene.scene.stop('GameScene');
+            });
+
+            uiScene.scene.launch('GameScene', {
+              userId: uiScene.userId,
+              currentGame: game,
+              gameSceneMode: EGameSceneMode.GAME_REPLAY,
+              skipAnimations: false
+            });
+
+            const gameSceneForReplay = await waitUntilSceneCreated(uiScene, 'GameScene') as GameScene;
+            const replay = new GameReplay(uiScene, gameSceneForReplay);
+            await replay.replayAllTurns();
+          }
         });
       }
 
       if (game.status === EGameStatus.CHALLENGE && listChallengeReceivedArray.find(gameReceived => gameReceived._id === game._id )) {
         gameListButtonImage.setInteractive({ useHandCursor: true });
-        if (uiScene.activeGame === game._id) highlightGameButton();
+        if (uiScene.activeGameId === game._id) highlightGameButton();
         gameListButtonImage.on('pointerup', async () => {
           if (pointerMoved) return; // skip tap if user was swiping
 
           // uiScene.sound.play(EUiSounds.GAME_DELETE);
           highlightGameButton();
 
-          if (uiScene.activeGame) {
-            uiScene.activeGame = undefined;
+          if (uiScene.activeGameId) {
+            uiScene.activeGameId = undefined;
             uiScene.scene.stop('GameScene');
           }
 
@@ -189,8 +219,8 @@ export function createGameList() {
   const newGameButton = uiScene.add.image(-15, lastListItemY, 'gameAtlas', 'newGameButton').setScale(1.83).setOrigin(0).setInteractive({ useHandCursor: true });
 
   newGameButton.on('pointerdown', async () => {
-    if (uiScene.activeGame) {
-      uiScene.activeGame = undefined;
+    if (uiScene.activeGameId) {
+      uiScene.activeGameId = undefined;
       uiScene.scene.stop('GameScene');
     }
 

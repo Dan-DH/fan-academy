@@ -97,9 +97,18 @@ export abstract class Item extends Phaser.GameObjects.Container {
     // Remove animations
     this.scene.tweens.killTweensOf(this);
 
-    this.context.hand!.removeFromHand(this.stats.unitId);
+    if (this.inPlayerHand()) {
+      this.context.hand!.removeFromHand(this.stats.unitId);
+    } else {
+      this.context.opponentHand!.removeFromHand(this.stats.unitId);
+    }
 
     this.destroy(true);
+  }
+
+  private inPlayerHand(): boolean {
+    const pDeck = this.context.hand!.getHandElement(this.stats.unitId);
+    return !!pDeck;
   }
 
   abstract use(target: any): void;

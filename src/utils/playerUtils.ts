@@ -1,6 +1,5 @@
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { IPlayerState } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 
 export function getPlayersKey(context: GameScene): {
@@ -14,10 +13,6 @@ export function getPlayersKey(context: GameScene): {
     player: 'player2',
     opponent: 'player1'
   };
-}
-
-export function getCurrentPlayer(context: GameScene): IPlayerState {
-  return context.isPlayerOne! ? context.player1! : context.player2!;
 }
 
 export function isValidPassword(password: string): boolean {

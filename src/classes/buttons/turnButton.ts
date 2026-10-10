@@ -26,7 +26,7 @@ export class TurnButton {
   }
 
   async handleSendingTurn(): Promise<void> {
-    if (this.context.currentTurnAction!  < 5 ) this.context.addActionToState(EActionType.PASS);
+    if (this.context.hasActionsLeft()) this.context.addActionToState(EActionType.PASS);
 
     const status = this.context.registry.get('networkStatus');
     if (status === 'online') {

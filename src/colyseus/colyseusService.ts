@@ -1,7 +1,7 @@
 import { Client, Room } from "@colyseus/sdk";
 import { fanAcademy } from "../main";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
-import { IChatMessage, IGame, IGameOver, IGameState } from "../interfaces/gameInterface";
+import { IChatMessage, IGame, IGameOver, IGameState, ITurnHistoryElement } from "../interfaces/gameInterface";
 import UIScene from "../scenes/ui.scene";
 import { EFaction, EGameModes, EGameSceneMode, EGameStatus } from "../enums/gameEnums";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
@@ -76,7 +76,7 @@ class ColyseusService {
         const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
         createGameList();
 
-        if (message.gameId === uiScene.activeGame) {
+        if (message.gameId === uiScene.activeGameId) {
           uiScene.scene.get('GameScene').scene.restart({
             userId: uiScene.userId,
             currentGame: game,
@@ -118,7 +118,7 @@ class ColyseusService {
         uiScene.activeGamesAmount--;
         createGameList();
 
-        if (message.gameId === uiScene.activeGame) {
+        if (message.gameId === uiScene.activeGameId) {
           uiScene.scene.get('GameScene').scene.restart({
             userId: uiScene.userId,
             currentGame: game
@@ -154,7 +154,7 @@ class ColyseusService {
           const isInArrayIndex = gameList!.findIndex(game => game._id === gameId);
           if (isInArrayIndex !== -1) {
             const game = gameList?.splice(isInArrayIndex, 1);
-            if (game?.length && uiScene.activeGame === game[0]._id) uiScene.scene.get('GameScene').scene.stop();
+            if (game?.length && uiScene.activeGameId === game[0]._id) uiScene.scene.get('GameScene').scene.stop();
           }
           uiScene.activeGamesAmount--;
         });
@@ -173,13 +173,31 @@ class ColyseusService {
       if (gameToUpdate) gameToUpdate.chatLogs.messages.push(chatMessage.message);
 
       const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
-      if (uiScene.scene.isActive() && uiScene.activeGame === chatMessage.roomId) renderChatMessage(chatMessage.message);
+      if (uiScene.scene.isActive() && uiScene.activeGameId === chatMessage.roomId) renderChatMessage(chatMessage.message);
     });
   }
 
   //
   // SENDING MESSAGES
   //
+  async sendGetTurnHistoryMessage(gameId: string): Promise<void> {
+    const turnHistoryMessage: {
+      _id: string,
+      startState: IGameState,
+      turnHistory: ITurnHistoryElement[]
+    } = await this.lobby!.request('getTurnHistoryMessage', { gameId });
+
+    const gameList = fanAcademy.registry.get('gameList') as IGame[];
+    if (!gameList) console.error('turnHistoryReceived - No context.gameList found');
+    // Phaser updates the registry automatically since we are setting the whole array
+    const gameToUpdate = gameList.find(g => g._id === turnHistoryMessage._id);
+    if (gameToUpdate) {
+      gameToUpdate.turnHistory = turnHistoryMessage.turnHistory;
+      gameToUpdate.startState = turnHistoryMessage.startState;
+    }
+    console.log('TurnHistory successfully fetched');
+  }
+
   sendDeletedGameMessage(gameId: string, userId: string): void {
     this.lobby!.send('gameDeletedMessage', {
       gameId,
