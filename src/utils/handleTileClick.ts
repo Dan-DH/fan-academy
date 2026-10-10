@@ -9,9 +9,21 @@ import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleTileClick(tile: Tile, context: GameScene): void {
   tile.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
-    if (context.clonedGame!.status === EGameStatus.FINISHED || context.board!.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
-
     visibleUnitCardCheck(context);
+
+    if (context.board!.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
+
+    if (context.clonedGame!.status === EGameStatus.FINISHED) {
+      const isSpecial = tile.tileType !== ETiles.BASIC && tile.tileType !== ETiles.CRYSTAL;
+      if (isSpecial) {
+        tile.setDepth(1001);
+        if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);
+        context.visibleUnitCard = tile;
+        event.stopPropagation();
+      }
+      return;
+    }
+
     context.longPressStart = context.time.now;
 
     // Handle right click: show card if empty special tile

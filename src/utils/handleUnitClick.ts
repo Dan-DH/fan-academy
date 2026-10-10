@@ -12,8 +12,15 @@ import { Pulverizer } from "../classes/factions/dwarves/items";
 
 export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
-    if (context.clonedGame!.status === EGameStatus.FINISHED) return;
     visibleUnitCardCheck(context);
+
+    if (context.clonedGame!.status === EGameStatus.FINISHED) {
+      unit.setDepth(1001);
+      adjustUnitCardPositionAndMakeVisible(unit);
+      context.visibleUnitCard = unit;
+      event.stopPropagation();
+      return;
+    }
 
     if (pointer.button === 2) {
       unit.setDepth(1001);
