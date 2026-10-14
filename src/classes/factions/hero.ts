@@ -12,7 +12,7 @@ import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
 import { getDamagedAnimation, removePriestessDebuffTween, unitMoveAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
-import { enterSpecialTileCheck, exitSpecialTileCheck, removeSpecialTile } from "../../utils/boardUtils";
+import { enterSpecialTileCheck, removeSpecialTile } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
 import { fanAcademy } from "../../main";
 import { StatusEffects, StatusTracker } from "../../utils/statuses";
@@ -358,7 +358,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   getsKnockedDown(): void {
     // if (this.stats.unitType !== EHeroes.PHANTOM) selectDeathSound(this.scene, this.stats.unitType);
-    removeSpecialTile(this, this.getTile());
+    removeSpecialTile(this);
 
     if (this.stats.shieldingAlly) {
       this.context.board!.removeEngineerShield(this.stats.shieldingAlly);
@@ -442,7 +442,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const startTile = this.context.board!.getTileFromBoardPosition(this.stats.boardPosition);
     if (!startTile) return;
-    exitSpecialTileCheck(this, startTile);
+    removeSpecialTile(this);
 
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
 

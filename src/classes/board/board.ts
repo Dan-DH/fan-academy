@@ -682,28 +682,24 @@ export class Board {
     return !!this.units.find(u => u.stats.boardPosition === boardPosition && u.stats.belongsTo !== belongsTo);
   }
 
-  async pushEnemy(attacker: Hero | Crystal, target: Hero, angle = 0): Promise<void> {
-    const attackerTile = this.getTileFromBoardPosition(attacker.stats.boardPosition);
-    const targetTile = this.getTileFromBoardPosition(target.stats.boardPosition);
-    if (!attackerTile || !targetTile) {
-      console.error('pushEnemy() no attacker or target board position');
-      return;
-    }
-
-    const newPosition = this.getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, true);
+  async pushEnemy(attackerParams: {
+    row: number,
+    col: number
+  }, target: Hero, angle = 0): Promise<boolean> {
+    const newPosition = this.getNewPositionAfterForce(attackerParams.row, attackerParams.col, target.stats.row, target.stats.col, true);
 
     // If the tile is beyond the boundaries of the map, ignore
     const isWrongRow = newPosition.row < 0 || newPosition.row > 4;
     const isWrongCol = newPosition.col < 0 || newPosition.col > 8;
-    if (isWrongRow || isWrongCol) return;
+    if (isWrongRow || isWrongCol) return false;
 
     const targetNewTile = this.getTileFromCoordinates(newPosition.row, newPosition.col);
 
-    if (!targetNewTile) return;
-    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
+    if (!targetNewTile) return false;
+    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return false;
+    if (targetNewTile.tileType == ETiles.SPAWN && attackerParams instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return false;
 
-    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
+    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile);
 
     await unitMoveAnimation({
       move: EUnitMoveType.FORCED_MOVE,
@@ -713,8 +709,10 @@ export class Board {
     });
 
     target.updatePosition(targetNewTile);
+    return true;
   }
 
+  // TODO: mirror pushEnemy? Might not need this method at all
   async pullEnemy(attacker: Hero, target: Hero): Promise<void> {
     const attackerTile = this.getTileFromBoardPosition(attacker.stats.boardPosition);
     const targetTile = this.getTileFromBoardPosition(target.stats.boardPosition);
@@ -731,7 +729,7 @@ export class Board {
     if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
     if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && this.canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
 
-    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile, targetTile);
+    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile);
 
     await unitMoveAnimation({
       move: EUnitMoveType.FORCED_MOVE,

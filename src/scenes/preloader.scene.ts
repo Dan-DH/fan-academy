@@ -1,7 +1,7 @@
 import { ETiles } from "../enums/gameEnums";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@f20be39';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@bc68743';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -28,8 +28,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   loadAtlases() {
-    this.load.atlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.webp`, `${CDN_PATH}/atlas/gameTexture.json`);
-    // this.load.atlas('gameAtlas', `/gameTexture.webp`, `/gameTexture.json`);
+    // this.load.multiatlas('gameAtlas', `/atlas/gameTexture.json`, '/atlas'); // FIXME:
+    this.load.multiatlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.json`, '/atlas');
     // Floating text fonts
     this.load.atlas(
       'greenFont',

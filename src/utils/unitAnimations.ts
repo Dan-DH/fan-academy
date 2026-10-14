@@ -317,3 +317,24 @@ export function pulverizerAnimation(image: Phaser.GameObjects.Image, targetY: nu
     }
   });
 }
+
+export function typhoonAnimation(image: Phaser.GameObjects.Image, col: number): void {
+  const scene = image.scene;
+  const leftWave = scene.add.image(image.x - 30, image.y, 'gameAtlas', 'Typhoon_Wave2-hd').setScale(2.5).setDepth(100).setFlipX(true);
+  const rightTravelDistance = (9 - col + 1) * 50;
+  const leftTravelDistance = (0 + col + 1) * 50;
+
+  scene.tweens.add({
+    targets: image,
+    x: image.x + rightTravelDistance,
+    duration: Math.max(rightTravelDistance, leftTravelDistance, 500),
+    onComplete: () => { image.destroy(true); }
+  });
+
+  scene.tweens.add({
+    targets: leftWave,
+    x: leftWave.x - leftTravelDistance,
+    duration: Math.max(rightTravelDistance, leftTravelDistance, 500),
+    onComplete: () => { leftWave.destroy(true); }
+  });
+};

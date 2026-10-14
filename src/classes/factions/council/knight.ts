@@ -31,10 +31,13 @@ export class Knight extends Council {
       target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
 
-      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pushEnemy(this, target);
+      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pushEnemy({
+        row: this.stats.row,
+        col: this.stats.col 
+      }, target);
 
       this.removeAttackModifiers();
     }

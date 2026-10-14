@@ -46,7 +46,7 @@ export class Ninja extends Council {
       target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
       this.removeAttackModifiers();
     }
@@ -64,10 +64,10 @@ export class Ninja extends Council {
     sizeReduceTween(this.visuals.smokeAnimationImage!, 500, this.visuals.smokeAnimationImage.scale);
     sizeReduceTween(target.visuals.smokeAnimationImage!, 500, this.visuals.smokeAnimationImage.scale);
 
-    moveSpecialTileCheck(target, targetDestination, unitDestination);
+    moveSpecialTileCheck(target, targetDestination);
     target.updatePosition(targetDestination);
 
-    moveSpecialTileCheck(this, unitDestination, targetDestination);
+    moveSpecialTileCheck(this, unitDestination);
     this.updatePosition(unitDestination);
 
     this.context.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);

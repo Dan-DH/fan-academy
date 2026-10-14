@@ -69,7 +69,12 @@ export enum EItems {
 
   // Dwarves
   DWARVEN_BREW = 'dwarvenBrew',
-  PULVERIZER = 'pulverizer'
+  PULVERIZER = 'pulverizer',
+
+  // Tribe
+  TYPHOON = 'Warhorn-hd',
+  SPIKE = 'SpikeArmor-hd',
+  MEAT = 'Meat-hd'
 }
 
 export enum EClass {

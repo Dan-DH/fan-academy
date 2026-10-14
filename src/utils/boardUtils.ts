@@ -28,16 +28,12 @@ export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
   return tile.tileType === ETiles.SPAWN && (context.isPlayerOne ? tile.col > 5 : tile.col < 5);
 }
 
-export function exitSpecialTileCheck(hero: Hero, tile: Tile): void {
-  removeSpecialTile(hero, tile);
-}
-
 export function enterSpecialTileCheck(hero: Hero, tile: Tile): void {
   specialTileCheck(hero, tile);
 }
 
-export function moveSpecialTileCheck(hero: Hero, endTile: Tile, startTile: Tile): void {
-  exitSpecialTileCheck(hero, startTile);
+export function moveSpecialTileCheck(hero: Hero, endTile: Tile): void {
+  removeSpecialTile(hero);
   enterSpecialTileCheck(hero, endTile);
 }
 
@@ -69,15 +65,8 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
   hero.unitCard.updateCardData(hero);
 }
 
-export function removeSpecialTile(hero: Hero, tile: Tile): void {
-  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
-    hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE);
-  }
-  if (tile.tileType === ETiles.POWER) hero.status.remove(StatusEffects.POWER_TILE);
-  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.status.remove(StatusEffects.MAGICAL_RESISTANCE_TILE);
-  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.status.remove(StatusEffects.PHYSICAL_RESISTANCE_TILE);
-  if (tile.tileType === ETiles.SPEED) hero.status.remove(StatusEffects.SPEED_TILE);
+export function removeSpecialTile(hero: Hero): void {
+  hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE, StatusEffects.POWER_TILE, StatusEffects.MAGICAL_RESISTANCE_TILE, StatusEffects.PHYSICAL_RESISTANCE_TILE, StatusEffects.SPEED_TILE);
 
   hero.visuals.stopSpecialTileAnimation();
   hero.unitCard.updateCardData(hero);

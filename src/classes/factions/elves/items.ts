@@ -6,7 +6,6 @@ import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { roundToFive } from "../../../utils/gameUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
-import { Crystal } from "../../board/crystal";
 import { StatusEffects } from "../../../utils/statuses";
 
 export class SoulStone extends Item {
