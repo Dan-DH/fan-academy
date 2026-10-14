@@ -129,7 +129,7 @@ export function addHyperlinks(context: Phaser.Scene, container: Phaser.GameObjec
     {
       title: 'Dwarves',
       y: 13550
-    }
+    } // FIXME: add tribe
   ];
 
   indexElem.forEach((elem, index) => {

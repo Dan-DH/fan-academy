@@ -2,11 +2,11 @@ import { EChallengePopup, EFaction } from "../../enums/gameEnums";
 import { IUserFactions, IUserStats } from "../../interfaces/userInterface";
 import LeaderboardScene from "../leaderboard.scene";
 import { truncateText } from "../../utils/textAnimations";
-import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
 import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
 import { mapFactionEnumsToLowerCase } from "./getLeaderboardData";
 import { factionEnumToEmblem } from "../../utils/gameUtils";
+import { NewGamePopup } from "../../classes/popups/newGamePopup";
 
 export class FactionLeaderboard extends Phaser.GameObjects.Container {
   header: Phaser.GameObjects.Container;
@@ -57,7 +57,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
 
     this.header = context.add.container(startingCoords.x, startingCoords.y);
 
-    const factionImage = context.add.image(950, 25, 'gameAtlas', factionEnumToEmblem(faction)).setScale(0.8);
+    const factionImage = context.add.image(950, 25, 'gameAtlas', factionEnumToEmblem(faction)).setScale(faction === EFaction.TRIBE ? 0.7 : 0.8); // FIXME:
     const usernameText = context.add.text(100, 0, 'Username', bigStyle);
     const factionRating = context.add.text(420, 0, `Rating`, bigStyle);
     const totalWins = context.add.text(600, 0, `Wins`, bigStyle);
@@ -81,7 +81,7 @@ export class FactionLeaderboard extends Phaser.GameObjects.Container {
       challengeIcon.on('pointerdown', () => {
         // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
-        new ChallengePopup({
+        new NewGamePopup({
           context,
           username: player.username,
           challengeType: EChallengePopup.SEND,

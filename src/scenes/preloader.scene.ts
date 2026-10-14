@@ -28,8 +28,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   loadAtlases() {
-    // this.load.multiatlas('gameAtlas', `/atlas/gameTexture.json`, '/atlas'); // FIXME:
-    this.load.multiatlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.json`, '/atlas');
+    // this.load.multiatlas('gameAtlas', `/atlas/gameTexture.json`, '/atlas');
+    this.load.multiatlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.json`, `${CDN_PATH}/atlas`);
     // Floating text fonts
     this.load.atlas(
       'greenFont',

@@ -269,7 +269,8 @@ export enum EGameSounds {
 
 export enum EGameModes {
   RANKED = 'ranked',
-  CASUAL = 'casual'
+  CASUAL = 'casual',
+  BRAWL = 'brawl'
 }
 
 export enum EBoardUnit {
@@ -281,6 +282,12 @@ export enum EGameSceneMode {
   GAME = 'game',
   TURN_REPLAY = 'turnReplay',
   GAME_REPLAY = 'gameReplay'
+}
+
+export enum ETurnTimer {
+  DAILY = 'daily',
+  THREE_DAYS = 'threeDays',
+  WEEKLY = 'weekly'
 }
 
 export enum EUnitMoveType {

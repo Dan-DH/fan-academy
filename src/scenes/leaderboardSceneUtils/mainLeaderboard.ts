@@ -2,9 +2,9 @@ import { EChallengePopup } from "../../enums/gameEnums";
 import { IUserStats } from "../../interfaces/userInterface";
 import LeaderboardScene from "../leaderboard.scene";
 import { truncateText } from "../../utils/textAnimations";
-import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
+import { NewGamePopup } from "../../classes/popups/newGamePopup";
 
 export class MainLeaderboard extends Phaser.GameObjects.Container {
   header: Phaser.GameObjects.Container;
@@ -78,7 +78,7 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
       challengeIcon.on('pointerdown', () => {
         // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
-        new ChallengePopup({
+        new NewGamePopup({
           context,
           username: player.username,
           challengeType: EChallengePopup.SEND,

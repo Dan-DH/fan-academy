@@ -2,6 +2,8 @@ import { createGameList } from "./gameSceneUtils/gameList";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
 import { IGame } from "../interfaces/gameInterface";
+import { EChallengePopup } from "../enums/gameEnums";
+import { NewGamePopup } from "../classes/popups/newGamePopup";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
@@ -48,6 +50,11 @@ export default class UIScene extends Phaser.Scene {
 
     // Background game screen
     this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2);
+
+    new NewGamePopup({
+      context: this,
+      challengeType: EChallengePopup.OPEN
+    }).setVisible(true);
   }
 
   onShutdown() {

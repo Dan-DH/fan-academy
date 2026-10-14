@@ -3,7 +3,7 @@ import { fanAcademy } from "../main";
 import { createGameList } from "../scenes/gameSceneUtils/gameList";
 import { IChatMessage, IGame, IGameOver, IGameState, ITurnHistoryElement } from "../interfaces/gameInterface";
 import UIScene from "../scenes/ui.scene";
-import { EFaction, EGameModes, EGameSceneMode, EGameStatus } from "../enums/gameEnums";
+import { EFaction, EGameModes, EGameSceneMode, EGameStatus, ETurnTimer } from "../enums/gameEnums";
 import { renderChatMessage } from "../scenes/gameSceneUtils/chatComponent";
 
 class ColyseusService {
@@ -224,7 +224,8 @@ class ColyseusService {
   sendCreateGameMessage(messageObject: {
     userId: string,
     faction: EFaction,
-    gameMode: EGameModes
+    gameMode: EGameModes,
+    turnTimer: ETurnTimer
   }) {
     this.lobby!.send('createGame', messageObject);
   };

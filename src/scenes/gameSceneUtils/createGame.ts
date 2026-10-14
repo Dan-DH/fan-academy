@@ -1,9 +1,9 @@
-import { EFaction, EGameModes } from "../../enums/gameEnums";
+import { EFaction, EGameModes, ETurnTimer } from "../../enums/gameEnums";
 import UIScene from "../ui.scene";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
 import { colyseusService } from "../../colyseus/colyseusService";
 
-export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes) => {
+export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes, turnTimer: ETurnTimer) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
     if (context.activeGameId) {
       context.game.events.emit('messageToGameScene', {
@@ -22,7 +22,8 @@ export const createNewGame = async (context: UIScene, faction: EFaction, gameMod
     colyseusService.sendCreateGameMessage({
       userId: context.userId,
       faction,
-      gameMode
+      gameMode,
+      turnTimer
     });
 
     if (context.activeGameId) {

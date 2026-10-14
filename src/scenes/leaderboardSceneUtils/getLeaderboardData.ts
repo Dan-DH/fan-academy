@@ -22,7 +22,8 @@ export function mapFactionEnumsToLowerCase(faction: EFaction): string {
   const factionMap = {
     [EFaction.COUNCIL]: 'council',
     [EFaction.DARK_ELVES]: 'elves',
-    [EFaction.DWARVES]: 'dwarves'
+    [EFaction.DWARVES]: 'dwarves',
+    [EFaction.TRIBE]: 'tribe'
   };
 
   return factionMap[faction];

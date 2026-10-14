@@ -24,6 +24,7 @@ export default class LeaderboardScene extends Phaser.Scene {
     const councilLeaderboardButton = this.add.image(1260, 740, 'gameAtlas', 'councilEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
     const elvesLeaderboardButton = this.add.image(1320, 740, 'gameAtlas', 'elvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
     const dwarvesLeaderboardButton = this.add.image(1380, 740, 'gameAtlas', 'dwarvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    // FIXME: add tribe
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();

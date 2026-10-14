@@ -1,7 +1,7 @@
 import { Crystal } from "../classes/board/crystal";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EActionType, EActionClass, EClass, EWinConditions } from "../enums/gameEnums";
+import { EActionType, EActionClass, EClass, EWinConditions, EFaction } from "../enums/gameEnums";
 import { IHero, IItem, ICrystal } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 
@@ -84,11 +84,13 @@ export function generateFourDigitId(): number {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
+// FIXME: make it so it returns emblem and scale
 export function factionEnumToEmblem(faction: string): string {
   const factionMap: Record<string, string> = {
     council: 'councilEmblem',
     elves: 'elvesEmblem',
-    dwarves: 'dwarvesEmblem'
+    dwarves: 'dwarvesEmblem',
+    tribe: 'OR-Emblem-hd'
   };
 
   return factionMap[faction] ?? 'unknownFaction';
@@ -106,3 +108,5 @@ export function waitUntilSceneCreated(currentScene: Phaser.Scene, targetSceneKey
     });
   });
 }
+
+export const factionArray = [EFaction.COUNCIL, EFaction.DARK_ELVES, EFaction.DWARVES, EFaction.TRIBE];

@@ -1,8 +1,7 @@
 import { MapGameReplay } from "../../classes/mapGameReplay";
 import { GameReplay } from "../../classes/gameReplay";
-import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { colyseusService } from "../../colyseus/colyseusService";
-import { EChallengePopup, EGameModes, EGameSceneMode, EGameStatus } from "../../enums/gameEnums";
+import { EChallengePopup, EFaction, EGameModes, EGameSceneMode, EGameStatus } from "../../enums/gameEnums";
 import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
 import { factionEnumToEmblem, waitUntilSceneCreated } from "../../utils/gameUtils";
@@ -10,6 +9,8 @@ import { truncateText } from "../../utils/textAnimations";
 import { timeAgo } from "../../utils/timeAgo";
 import GameScene from "../game.scene";
 import UIScene from "../ui.scene";
+import { NewGamePopup } from "../../classes/popups/newGamePopup";
+import { ChallengeAcceptPopup } from "../../classes/popups/challengeAcceptPopup";
 
 export function createGameList() {
   const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
@@ -74,7 +75,10 @@ export function createGameList() {
       lastListItemY += (index === 0 ? textListHeight : gameListButtonHeight) + gameListButtonSpacing;
 
       const gameListButtonImage = uiScene.add.image(-7, lastListItemY, 'gameAtlas', 'gameListPremade').setOrigin(0).setScale(1.80).setTint(0xBBBBBB);
-      const playerFactionIcon = player.faction ? {
+      const playerFactionIcon = player.faction === EFaction.TRIBE ? {
+        faction: EFaction.TRIBE,
+        scale: 0.8
+      } : player.faction ? {
         faction: player.faction,
         scale: 1
       } : {
@@ -105,7 +109,7 @@ export function createGameList() {
 
       if (opponent) {
         const opponentFaction = factionEnumToEmblem(opponent.faction);
-        opponentFactionImage = uiScene.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', opponentFaction).setScale(opponentFaction === 'unknown_faction' ? 1.3 : 1);
+        opponentFactionImage = uiScene.add.image(510, lastListItemY + gameListButtonHeight / 2, 'gameAtlas', opponentFaction).setScale(opponent.faction === EFaction.TRIBE ? 0.8 : opponentFaction === 'unknown_faction' ? 1.3 : 1);
         opponentProfilePicture = uiScene.add.image(630, lastListItemY + gameListButtonHeight / 2 + 3, 'gameAtlas', opponent.userData.picture).setFlipX(true).setScale(1.5); //.setDisplaySize(256 * 0.4, 256 * 0.4);
         opponentNameText = setOpponentNameText(opponent.userData.username);
       } else {
@@ -198,12 +202,7 @@ export function createGameList() {
             uiScene.scene.stop('GameScene');
           }
 
-          new ChallengePopup({
-            context: uiScene,
-            opponentId: opponent!.userData._id,
-            challengeType: EChallengePopup.ACCEPT,
-            gameId: game._id
-          });
+          new ChallengeAcceptPopup(uiScene, game._id);
         });
       }
 
@@ -224,7 +223,7 @@ export function createGameList() {
       uiScene.scene.stop('GameScene');
     }
 
-    new ChallengePopup({
+    new NewGamePopup({
       context: uiScene,
       challengeType: EChallengePopup.OPEN
     });

@@ -421,7 +421,8 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   async isPlayerLoggedIn(): Promise<void> {
-    if (this.registry.get('userId')) {
+    this.userId = this.registry.get('userId');
+    if (this.userId) {
       console.log('User already authenticated, skipping gameList fetch');
       return;
     }
