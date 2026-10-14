@@ -25,7 +25,8 @@ export enum EWinConditions {
 export enum EFaction {
   COUNCIL = 'council',
   DARK_ELVES = 'elves',
-  DWARVES = 'dwarves'
+  DWARVES = 'dwarves',
+  TRIBE = 'tribe'
 }
 
 export enum EActionType {
@@ -103,7 +104,14 @@ export enum EHeroes {
   GUNNER = 'gunner',
   ENGINEER = 'engineer',
   GRENADIER = 'grenadier',
-  ANNIHILATOR = 'annihilator'
+  ANNIHILATOR = 'annihilator',
+
+  // Tribe
+  WARRIOR = 'warrior',
+  WITCH = 'witch',
+  AXE_THROWER = 'axeThrower',
+  SHAMAN = 'shaman',
+  CHIEFTAIN = 'chieftain'
 
 }
 
