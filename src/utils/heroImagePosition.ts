@@ -397,6 +397,127 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
         charImageX: x,
         charImageY: y - 15
       }
+    },
+    // Tribe
+    [EHeroes.WARRIOR]: {
+      1: {
+        charImageX: x,
+        charImageY: y
+      },
+      2: {
+        charImageX: x,
+        charImageY: y
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y
+        },
+        2: {
+          charImageX: x,
+          charImageY: y
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.AXE_THROWER]: {
+      1: {
+        charImageX: x,
+        charImageY: y
+      },
+      2: {
+        charImageX: x,
+        charImageY: y
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y
+        },
+        2: {
+          charImageX: x,
+          charImageY: y
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.WITCH]: {
+      1: {
+        charImageX: x,
+        charImageY: y
+      },
+      2: {
+        charImageX: x,
+        charImageY: y
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y
+        },
+        2: {
+          charImageX: x,
+          charImageY: y
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.SHAMAN]: {
+      1: {
+        charImageX: x,
+        charImageY: y
+      },
+      2: {
+        charImageX: x,
+        charImageY: y
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y
+        },
+        2: {
+          charImageX: x,
+          charImageY: y
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
+    },
+    [EHeroes.CHIEFTAIN]: {
+      1: {
+        charImageX: x,
+        charImageY: y
+      },
+      2: {
+        charImageX: x,
+        charImageY: y
+      },
+      KO: {
+        1: {
+          charImageX: x,
+          charImageY: y
+        },
+        2: {
+          charImageX: x,
+          charImageY: y
+        }
+      },
+      hand: {
+        charImageX: x,
+        charImageY: y - 15
+      }
     }
   };
 

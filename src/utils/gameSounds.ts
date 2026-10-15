@@ -15,7 +15,12 @@ export function selectItemSound(_scene: Phaser.Scene, item: EItems): void {
     [EItems.SOUL_HARVEST]: EGameSounds.AOE_SPELL_SELECT,
 
     [EItems.DWARVEN_BREW]: EGameSounds.DWARVEN_BREW_SELECT,
-    [EItems.PULVERIZER]: EGameSounds.PULVERIZER_SELECT
+    [EItems.PULVERIZER]: EGameSounds.PULVERIZER_SELECT,
+
+    [EItems.MEAT]: EGameSounds.PULVERIZER_SELECT, // FIXME:
+    [EItems.SPIKE]: EGameSounds.PULVERIZER_SELECT,
+    [EItems.TYPHOON]: EGameSounds.PULVERIZER_SELECT
+
   };
 
   const soundToPlay = itemMap[item];
@@ -43,7 +48,13 @@ export function selectDeathSound(_scene: Phaser.Scene, hero: EHeroes): void {
     [EHeroes.GUNNER]: EGameSounds.HERO_DEATH,
     [EHeroes.ENGINEER]: EGameSounds.HERO_DEATH,
     [EHeroes.GRENADIER]: EGameSounds.HERO_DEATH,
-    [EHeroes.ANNIHILATOR]: EGameSounds.HERO_DEATH
+    [EHeroes.ANNIHILATOR]: EGameSounds.HERO_DEATH,
+
+    [EHeroes.WARRIOR]: EGameSounds.HERO_DEATH,
+    [EHeroes.AXE_THROWER]: EGameSounds.HERO_DEATH,
+    [EHeroes.SHAMAN]: EGameSounds.HERO_DEATH,
+    [EHeroes.WITCH]: EGameSounds.HERO_DEATH,
+    [EHeroes.CHIEFTAIN]: EGameSounds.HERO_DEATH
   };
 
   const soundToPlay = heroMap[hero];

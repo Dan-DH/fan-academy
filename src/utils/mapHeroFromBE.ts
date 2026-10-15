@@ -237,6 +237,71 @@ export function mapUnitBaseStats(unitType: EHeroes): IHeroBaseStats {
       baseMagicalDamageResistance: 0,
       canHeal: false,
       canBuff: false
+    },
+    [EHeroes.WARRIOR]: {
+      baseHealth: 800,
+      movement: 2,
+      attackType: EAttackType.PHYSICAL,
+      attackRange: 1,
+      healingRange: 0,
+      buffRange: 0,
+      basePower: 200,
+      basePhysicalDamageResistance: 20,
+      baseMagicalDamageResistance: 0,
+      canHeal: false,
+      canBuff: false
+    },
+    [EHeroes.AXE_THROWER]: {
+      baseHealth: 800,
+      movement: 2,
+      attackType: EAttackType.PHYSICAL,
+      attackRange: 2,
+      healingRange: 0,
+      buffRange: 0,
+      basePower: 200,
+      basePhysicalDamageResistance: 0,
+      baseMagicalDamageResistance: 0,
+      canHeal: false,
+      canBuff: false
+    },
+    [EHeroes.WITCH]: {
+      baseHealth: 800,
+      movement: 2,
+      attackType: EAttackType.MAGICAL,
+      attackRange: 3,
+      healingRange: 0,
+      buffRange: 0,
+      basePower: 200,
+      basePhysicalDamageResistance: 0,
+      baseMagicalDamageResistance: 0,
+      canHeal: false,
+      canBuff: false
+    },
+    [EHeroes.SHAMAN]: {
+      baseHealth: 800,
+      movement: 2,
+      attackType: EAttackType.MAGICAL,
+      attackRange: 2,
+      healingRange: 2,
+      buffRange: 0,
+      basePower: 200,
+      basePhysicalDamageResistance: 0,
+      baseMagicalDamageResistance: 10,
+      canHeal: true,
+      canBuff: false
+    },
+    [EHeroes.CHIEFTAIN]: {
+      baseHealth: 1000,
+      movement: 2,
+      attackType: EAttackType.PHYSICAL,
+      attackRange: 1,
+      healingRange: 0,
+      buffRange: 0,
+      basePower: 200,
+      basePhysicalDamageResistance: 0,
+      baseMagicalDamageResistance: 0,
+      canHeal: false,
+      canBuff: false
     }
   };
 

@@ -24,6 +24,7 @@ import { EItems, EHeroes } from "../enums/gameEnums";
 import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import { mapItemFromBE } from "./mapItemFromBE";
 import { mapHeroFromBE } from "./mapHeroFromBE";
+import { Typhoon } from "../classes/factions/tribe/items";
 
 export function createNewItem(itemData: IItemBE): Item {
   const itemTypes: Record<EItems, () => Item> = {
@@ -40,7 +41,11 @@ export function createNewItem(itemData: IItemBE): Item {
     [EItems.SOUL_STONE]: () => new SoulStone(mapItemFromBE(itemData)),
 
     [EItems.DWARVEN_BREW]: () => new DwarvenBrew(mapItemFromBE(itemData)),
-    [EItems.PULVERIZER]: () => new Pulverizer(mapItemFromBE(itemData))
+    [EItems.PULVERIZER]: () => new Pulverizer(mapItemFromBE(itemData)),
+
+    [EItems.TYPHOON]: () => new Typhoon(mapItemFromBE(itemData)),
+    [EItems.MEAT]: () => new Pulverizer(mapItemFromBE(itemData)), // FIXME:
+    [EItems.SPIKE]: () => new Pulverizer(mapItemFromBE(itemData)) // FIXME:
   };
 
   const createItem = itemTypes[itemData.itemType];
@@ -67,7 +72,13 @@ export function createNewHero(heroData: IHeroBE): Hero {
     [EHeroes.ENGINEER]: () => new Engineer(mapHeroFromBE(heroData)),
     [EHeroes.GUNNER]: () => new Gunner(mapHeroFromBE(heroData)),
     [EHeroes.GRENADIER]: () => new Grenadier(mapHeroFromBE(heroData)),
-    [EHeroes.ANNIHILATOR]: () => new Annihilator(mapHeroFromBE(heroData))
+    [EHeroes.ANNIHILATOR]: () => new Annihilator(mapHeroFromBE(heroData)),
+
+    [EHeroes.WARRIOR]: () => new Paladin(mapHeroFromBE(heroData)), // FIXME:
+    [EHeroes.AXE_THROWER]: () => new Engineer(mapHeroFromBE(heroData)),
+    [EHeroes.WITCH]: () => new Gunner(mapHeroFromBE(heroData)),
+    [EHeroes.SHAMAN]: () => new Grenadier(mapHeroFromBE(heroData)),
+    [EHeroes.CHIEFTAIN]: () => new Annihilator(mapHeroFromBE(heroData))
   };
 
   const createHero = heroTypes[heroData.unitType];
