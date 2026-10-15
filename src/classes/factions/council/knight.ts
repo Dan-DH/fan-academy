@@ -3,8 +3,8 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Knight extends Council {
   constructor(data: IHero) {
@@ -17,11 +17,7 @@ export class Knight extends Council {
     turnIfBehind(this.context, this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.KNIGHT_ATTACK);
       target.removeFromGame();
     } else {
@@ -36,13 +32,13 @@ export class Knight extends Council {
 
       if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pushEnemy({
         row: this.stats.row,
-        col: this.stats.col 
+        col: this.stats.col
       }, target);
 
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

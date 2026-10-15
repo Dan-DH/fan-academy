@@ -1,9 +1,10 @@
 import { Crystal } from "../classes/board/crystal";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EActionType, EActionClass, EClass, EWinConditions, EFaction } from "../enums/gameEnums";
+import { EActionType, EActionClass, EClass, EWinConditions, EFaction, EHeroes } from "../enums/gameEnums";
 import { IHero, IItem, ICrystal } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
+import { isEnemySpawn } from "./boardUtils";
 
 export function isHero(unit: IHero | IItem): boolean {
   return unit.class === "hero";
@@ -107,6 +108,14 @@ export function waitUntilSceneCreated(currentScene: Phaser.Scene, targetSceneKey
       resolve(targetScene);
     });
   });
+}
+
+export function isPhantomAndKO(target?: Hero | Crystal): boolean {
+  return target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM;
+}
+
+export function isKoUnitOnEnemySpawn(target: Hero | Crystal): boolean {
+  return target instanceof Hero && target.stats.isKO && isEnemySpawn(target.context, target.getTile());
 }
 
 export const factionArray = [EFaction.COUNCIL, EFaction.DARK_ELVES, EFaction.DWARVES, EFaction.TRIBE];

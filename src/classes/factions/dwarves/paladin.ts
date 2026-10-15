@@ -1,6 +1,6 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { isEnemySpawn } from "../../../utils/boardUtils";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Hero } from "../hero";
@@ -17,22 +17,18 @@ export class Paladin extends Dwarf {
     // this.scene.sound.play(EGameSounds.PALADIN_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
       target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

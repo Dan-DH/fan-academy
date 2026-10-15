@@ -1,10 +1,11 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Archer extends Council {
   constructor(data: IHero) {
@@ -18,13 +19,8 @@ export class Archer extends Council {
 
     if (distance === 1) {
       // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-      if (
-        target instanceof Hero &&
-        target.stats.isKO &&
-        isEnemySpawn(this.context, target.getTile())
-      ) {
+      if (isKoUnitOnEnemySpawn(target)) {
         // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
-
         target.removeFromGame();
       } else {
         // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
@@ -43,12 +39,12 @@ export class Archer extends Council {
       target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

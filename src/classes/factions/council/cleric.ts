@@ -1,10 +1,11 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget } from "../../../utils/boardUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Cleric extends Council {
   constructor(data: IHero) {
@@ -18,12 +19,7 @@ export class Cleric extends Council {
 
     const distance = getDistanceToTarget(this, target);
 
-    if (
-      distance === 1 &&
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
       target.removeFromGame();
     } else {
@@ -32,12 +28,12 @@ export class Cleric extends Council {
       target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

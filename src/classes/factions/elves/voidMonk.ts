@@ -1,10 +1,9 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
-import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
+import { isOnBoard, canBeAttacked, isPhantomAndKO, isKoUnitOnEnemySpawn } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class VoidMonk extends DarkElf {
@@ -22,11 +21,7 @@ export class VoidMonk extends DarkElf {
     // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.VOIDMONK_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
       const board = this.context.board!;
@@ -74,10 +69,10 @@ export class VoidMonk extends DarkElf {
     }
 
     splashedEnemies.forEach(enemy => {
-      if (enemy instanceof Hero && enemy.stats.unitType === EHeroes.PHANTOM && enemy.stats.isKO) enemy.removeFromGame();
+      if (isPhantomAndKO(enemy)) enemy.removeFromGame();
     });
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

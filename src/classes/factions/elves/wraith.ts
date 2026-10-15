@@ -1,9 +1,10 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Wraith extends DarkElf {
   constructor(data: IHero) {
@@ -16,7 +17,7 @@ export class Wraith extends DarkElf {
 
     if (target instanceof Hero && target.stats.isKO) {
       // this.scene.sound.play(EGameSounds.WRAITH_CONSUME);
-      target.removeFromGame(true);
+      target.removeFromGame();
 
       if (this.stats.unitsConsumed! < 3) {
         this.stats.basePower += 50;
@@ -31,7 +32,7 @@ export class Wraith extends DarkElf {
       const damageDone = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
 
       if (damageDone) this.lifeSteal(damageDone);
@@ -39,7 +40,7 @@ export class Wraith extends DarkElf {
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

@@ -3,9 +3,10 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Impaler extends DarkElf {
   constructor(data: IHero) {
@@ -19,12 +20,7 @@ export class Impaler extends DarkElf {
     const distance = getDistanceToTarget(this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      distance === 1 &&
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
@@ -37,7 +33,7 @@ export class Impaler extends DarkElf {
       const damageDone = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
 
       if (damageDone) this.lifeSteal(damageDone);
@@ -46,9 +42,7 @@ export class Impaler extends DarkElf {
     }
 
     if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pullEnemy(this, target);
-
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

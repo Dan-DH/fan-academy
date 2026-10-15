@@ -1,10 +1,11 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Crystal } from "../../board/crystal";
-import { enterSpecialTileCheck, isEnemySpawn } from "../../../utils/boardUtils";
+import { enterSpecialTileCheck } from "../../../utils/boardUtils";
 import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
 import { Tile } from "../../board/tile";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
@@ -28,23 +29,19 @@ export class Phantom extends Hero {
     // this.scene.sound.play(EGameSounds.WRAITH_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
       target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
 
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

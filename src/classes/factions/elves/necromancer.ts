@@ -6,7 +6,7 @@ import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Phantom } from "./phantom";
 import { mapUnitBaseStats } from "../../../utils/mapHeroFromBE";
-import { generateFourDigitId } from "../../../utils/gameUtils";
+import { generateFourDigitId, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Necromancer extends DarkElf {
   constructor(data: IHero) {
@@ -54,13 +54,13 @@ export class Necromancer extends DarkElf {
       const damageDone = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
-        attacker: this 
+        attacker: this
       });
       if (damageDone) this.lifeSteal(damageDone);
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 

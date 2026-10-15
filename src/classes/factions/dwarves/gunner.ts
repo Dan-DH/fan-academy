@@ -1,6 +1,7 @@
-import { EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
+import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Hero } from "../hero";
@@ -23,13 +24,13 @@ export class Gunner extends Dwarf {
       this.multiTargetAttack(target);
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   singleTargetAttack(target: Hero | Crystal): void {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())) {
+    if (isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK_MELEE);
       target.removeFromGame();
     } else {
@@ -60,9 +61,9 @@ export class Gunner extends Dwarf {
         damage: this.getTotalPower(0.6667),
         attackType: EAttackType.PHYSICAL,
         attacker: this,
-        splashDamage: 0.6667 
+        splashDamage: 0.6667
       });
-      if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
+      if (isPhantomAndKO(unit)) unit.removeFromGame();
     });
 
     this.removeAttackModifiers();

@@ -1,6 +1,6 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { isEnemySpawn } from "../../../utils/boardUtils";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Hero } from "../hero";
@@ -16,11 +16,7 @@ export class Warrior extends Tribe {
     turnIfBehind(this.context, this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
       target.removeFromGame();
     } else {
@@ -34,7 +30,7 @@ export class Warrior extends Tribe {
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
+    if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
@@ -46,5 +42,5 @@ export class Warrior extends Tribe {
 
   heal(_target: Hero): void {};
   teleport(_target: Hero): void {};
-  shieldAlly(_target: Hero | Crystal): void {}
+  shieldAlly(_target: Hero | Crystal): void {};
 }

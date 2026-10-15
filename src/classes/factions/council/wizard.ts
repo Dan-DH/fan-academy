@@ -1,12 +1,12 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 
 import { Hero } from "../hero";
 import { Council } from "./council";
 import { Board } from "../../board/board";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
-import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
+import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { isOnBoard, canBeAttacked, isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
 export class Wizard extends Council {
@@ -22,12 +22,7 @@ export class Wizard extends Council {
     const distance = getDistanceToTarget(this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      distance === 1 &&
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.WIZARD_ATTACK);
       target.removeFromGame();
     } else {
@@ -52,18 +47,18 @@ export class Wizard extends Council {
         damage: this.getTotalPower() * 0.75,
         attackType: this.stats.attackType,
         attacker: this,
-        splashDamage: 0.75 
+        splashDamage: 0.75
       });
       if (thirdTarget) thirdTarget.getsDamaged({
         damage: this.getTotalPower() * 0.56,
         attackType: this.stats.attackType,
         attacker: this,
-        splashDamage: 0.56 
+        splashDamage: 0.56
       });
 
-      if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-      if (secondTarget && secondTarget instanceof Hero && secondTarget.stats.isKO && secondTarget.stats.unitType === EHeroes.PHANTOM) secondTarget.removeFromGame();
-      if (thirdTarget && thirdTarget instanceof Hero && thirdTarget.stats.isKO && thirdTarget.stats.unitType === EHeroes.PHANTOM) thirdTarget.removeFromGame();
+      if (isPhantomAndKO(target)) target.removeFromGame();
+      if (secondTarget && isPhantomAndKO(secondTarget)) secondTarget.removeFromGame();
+      if (thirdTarget && isPhantomAndKO(thirdTarget)) thirdTarget.removeFromGame();
 
       this.removeAttackModifiers();
     }
