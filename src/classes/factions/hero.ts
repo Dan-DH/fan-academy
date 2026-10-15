@@ -112,22 +112,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setScale(scale);
   }
 
-  // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
-  getsDamaged(params: {
+  calculateReceivedDamage(params: {
     damage: number,
     attackType: EAttackType,
     attacker: Hero | Item,
     directPulverizerHit?: boolean,
-    avoidKOs?: boolean
   }): number {
-    const { damage, attackType, attacker, directPulverizerHit, avoidKOs } = params;
-    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
-      // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
-      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId);
-      this.removeEngineerShield();
-      return 0;
-    }
-
+    const { damage, attackType, attacker, directPulverizerHit } = params;
     getDamagedAnimation(this);
 
     // Calculate damage after applying resistances
@@ -135,21 +126,38 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
 
-    if (attacker instanceof Pulverizer) {
-      if (directPulverizerHit && this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
-        this.status.remove(StatusEffects.FACTION_EQUIPMENT);
-        this.reduceMaxHealth(this.stats.baseHealth * 0.1);
-        this.visuals.factionEquipmentImage.setVisible(false);
-        this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
-      }
-
-      if (!directPulverizerHit) {
-        const debuffLevel = (this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
-        assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
-      }
+    if (attacker instanceof Pulverizer && !directPulverizerHit) {
+      const debuffLevel = (this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
+      assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
     }
 
-    const totalDamage = roundToFive(totalAttackDamage + assaultTileDamage);
+    return roundToFive(totalAttackDamage + assaultTileDamage);
+  }
+
+  // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
+  getsDamaged(params: {
+    damage: number,
+    attackType: EAttackType,
+    attacker: Hero | Item,
+    directPulverizerHit?: boolean,
+    avoidKOs?: boolean
+    oneShot?: boolean
+  }): number {
+    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
+      // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
+      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId);
+      this.removeEngineerShield();
+      return 0;
+    }
+
+    const { oneShot, avoidKOs, attackType, attacker, directPulverizerHit } = params;
+
+    let totalDamage = 0;
+    if (oneShot) {
+      totalDamage = this.stats.currentHealth;
+    } else {
+      totalDamage = this.calculateReceivedDamage(params);
+    }
 
     this.stats.currentHealth -= totalDamage;
 
@@ -160,6 +168,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // Show damage numbers
     if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
+
+    if (attacker instanceof Pulverizer && directPulverizerHit && this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
+      this.status.remove(StatusEffects.FACTION_EQUIPMENT);
+      this.reduceMaxHealth(this.stats.baseHealth * 0.1);
+      this.visuals.factionEquipmentImage.setVisible(false);
+      this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    }
 
     // Remove 1-hit buffs and debuffs
     if (attackType === EAttackType.PHYSICAL) {
@@ -575,5 +590,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.stopSuperChargeAnimation();
 
     this.unitCard.updateCardData(this);
+  }
+
+  getCurrentHealthPercent(): number {
+    return this.stats.currentHealth / this.stats.maxHealth;
   }
 }

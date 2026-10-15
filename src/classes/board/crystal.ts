@@ -217,4 +217,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     if (atLeastOneFriendlyCrystalLeft) return false;
     return true;
   }
+
+  getCurrentHealthPercent(): number {
+    return this.stats.currentHealth / this.stats.maxHealth;
+  }
 }
