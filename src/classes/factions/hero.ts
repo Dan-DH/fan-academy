@@ -595,4 +595,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   getCurrentHealthPercent(): number {
     return this.stats.currentHealth / this.stats.maxHealth;
   }
+
+  getExtraHealthPercent(): number {
+    return this.stats.maxHealth / this.stats.baseHealth - 1;
+  }
 }
