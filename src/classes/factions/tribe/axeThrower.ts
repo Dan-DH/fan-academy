@@ -27,8 +27,7 @@ export class AxeThrower extends Tribe {
       target.getsDamaged({
         damage,
         attackType: this.stats.attackType,
-        attacker: this,
-        oneShot: this.triggersExtraDamage(target)
+        attacker: this
       });
       this.removeAttackModifiers();
     }
