@@ -22,6 +22,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   priestessDebuffImage: Phaser.GameObjects.Image;
   specialTileAnimationSprite: Phaser.GameObjects.Sprite;
   superChargeAnimationSprite: Phaser.GameObjects.Sprite;
+  meatAnimationSprite: Phaser.GameObjects.Sprite;
   annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
   reviveAnimationSprite: Phaser.GameObjects.Sprite;
   smokeAnimationImage: Phaser.GameObjects.Image;
@@ -101,6 +102,15 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       });
     }
 
+    this.meatAnimationSprite = context.add.sprite(0, -25, 'gameAtlas', '').setScale(1.1).setVisible(false);
+    if (status.has(StatusEffects.MEAT)) {
+      this.meatAnimationSprite.play({
+        key: 'meatAnim',
+        showOnStart: true,
+        hideOnComplete: true
+      });
+    }
+
     this.reviveAnimationSprite = context.add.sprite(0, -20, 'gameAtlas', '').setScale(1.2).setVisible(false);
 
     this.add([
@@ -168,6 +178,18 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
   stopSuperChargeAnimation() {
     this.superChargeAnimationSprite.anims.complete();
+  }
+
+  playMeatAnimation() {
+    this.meatAnimationSprite.play({
+      key: 'meatAnim',
+      showOnStart: true,
+      hideOnComplete: true
+    });
+  }
+
+  stopMeatAnimation() {
+    this.meatAnimationSprite.anims.complete();
   }
 
   playAnnihilatorDebuffAnimation() {

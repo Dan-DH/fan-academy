@@ -589,6 +589,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.status.remove(StatusEffects.SUPER_CHARGE);
     this.visuals.stopSuperChargeAnimation();
 
+    this.status.remove(StatusEffects.MEAT);
+    this.visuals.stopMeatAnimation();
+
     this.unitCard.updateCardData(this);
   }
 
@@ -598,5 +601,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   getExtraHealthPercent(): number {
     return this.stats.maxHealth / this.stats.baseHealth - 1;
+  }
+
+  consumeMeat(): void {
+    this.getsHealed(700);
+    this.status.add(StatusEffects.MEAT);
+    this.visuals.playMeatAnimation();
   }
 }

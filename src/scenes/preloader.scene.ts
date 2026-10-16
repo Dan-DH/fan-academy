@@ -1,7 +1,7 @@
 import { ETiles } from "../enums/gameEnums";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@bc68743';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@0e58beb';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -82,6 +82,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.createSingleCrystalDebuffAnimation();
     this.createDoubleCrystalDebuffAnimation();
     this.createSuperChargeAnimation();
+    this.createSingleCrystalDebuffAnimation();
   }
 
   createReviveAnimation(): void {
@@ -115,6 +116,19 @@ export default class PreloaderScene extends Phaser.Scene {
       key: 'superChargeAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
         prefix: 'superChargeAnim_',
+        start: 1,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
+  };
+
+  createMeatAnimation(): void {
+    this.anims.create({
+      key: 'meatAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'Meat_',
         start: 1,
         end: 3
       }),
