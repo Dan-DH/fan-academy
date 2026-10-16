@@ -34,6 +34,9 @@ export class Typhoon extends Item {
         this.handlePushing(scene, [u] as Hero[], targetTile.col, goingRight);
       }
     });
+
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+    this.removeFromGame();
   }
 
   private handlePushing(scene: GameScene, enemyUnits: Hero[], col: number, goingRight: boolean): void {
