@@ -17,6 +17,7 @@ import { Pulverizer } from "./dwarves/items";
 import { fanAcademy } from "../../main";
 import { StatusEffects, StatusTracker } from "../../utils/statuses";
 import { mapHeroToBE } from "../../utils/mapHeroToBE";
+import { Tribe } from "./tribe/tribe";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   context: GameScene;
@@ -195,7 +196,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura ? this.stats.paladinAura * 0.05 + 1 : 1; // Check for  units in hand. Otherwise getTotalPower returns NaN
-    return roundToFive((this.stats.basePower + unitsConsumedBonus + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
+    const bloodlustBuff = this.status.has(StatusEffects.BLOODLUST) ? 1.5 : 1;
+    return roundToFive((this.stats.basePower + unitsConsumedBonus + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura * bloodlustBuff);
   }
 
   getPhysicalDamageResistance(): number {
@@ -422,8 +424,15 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return !!pDeck;
   }
 
+  getsStompedOrDestroyed(): void {
+    this.context.board?.units.forEach(u => {
+      if (u instanceof Tribe && u.stats.belongsTo === this.stats.belongsTo && !u.stats.isKO) u.addBloodlust();
+    });
+    this.removeFromGame();
+  }
+
   removeFromGame(board = true): void {
-    // Remove animations
+    // Remove animations.
     this.scene.tweens.killTweensOf(this);
     this.scene.tweens.killTweensOf(this.visuals);
 
@@ -472,7 +481,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const heroToStomp = this.context.board!.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
     if (heroToStomp) {
       // this.scene.sound.play(EGameSounds.HERO_STOMP);
-      heroToStomp?.removeFromGame(true);
+      heroToStomp?.getsStompedOrDestroyed();
     }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
@@ -592,6 +601,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.status.remove(StatusEffects.MEAT);
     this.visuals.stopMeatAnimation();
 
+    this.context.board?.units.forEach(u => {
+      if (u instanceof Tribe && u.stats.belongsTo === this.stats.belongsTo && u.status.has(StatusEffects.BLOODLUST)) u.removeBloodlust();
+    });
+
     this.unitCard.updateCardData(this);
   }
 
@@ -605,7 +618,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   consumeMeat(): void {
     this.getsHealed(700);
-    this.status.add(StatusEffects.MEAT);
+    this.status.add(StatusEffects.MEAT); // FIXME: add meat to getTotalPower()
+    this.unitCard.updateCardData(this);
     this.visuals.playMeatAnimation();
   }
 

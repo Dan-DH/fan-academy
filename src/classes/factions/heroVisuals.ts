@@ -134,10 +134,22 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     ]);
   }
 
-  updateCharacterImage(data: IHero): string {
+  updateTribeImage(data: IHero): string {
     if (data.unitType === EHeroes.PHANTOM) return 'phantom_1';
 
-    if (data.isKO) return `${data.unitType}_9`;
+    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.FACTION_EQUIPMENT, StatusEffects.RUNE_METAL)) return `${data.unitType}_8`;
+    if (this.status.hasAll(StatusEffects.FACTION_EQUIPMENT, StatusEffects.RUNE_METAL)) return `${data.unitType}_7`;
+    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.FACTION_EQUIPMENT)) return `${data.unitType}_6`;
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT)) return `${data.unitType}_5`; // Spike Armor
+    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.RUNE_METAL)) return `${data.unitType}_4`;
+    if (this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_3`;
+    if (this.status.has(StatusEffects.BLOODLUST)) return `${data.unitType}_2`;
+
+    return `${data.unitType}_1`;
+  }
+
+  updateStandardImage(data: IHero): string {
+    if (data.unitType === EHeroes.PHANTOM) return 'phantom_1';
 
     if (this.status.has(StatusEffects.RUNE_METAL) && this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.status.has(StatusEffects.SHINING_HELM)) return `${data.unitType}_8`;
     if (this.status.hasAll(StatusEffects.RUNE_METAL, StatusEffects.SHINING_HELM)) return `${data.unitType}_7`;
@@ -148,6 +160,12 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_2`;
 
     return `${data.unitType}_1`;
+  }
+
+  updateCharacterImage(data: IHero): string {
+    if (data.isKO) return `${data.unitType}_9`;
+    if (data.faction === EFaction.TRIBE) return this.updateTribeImage(data);
+    return this.updateStandardImage(data);
   }
 
   playSpecialTileAnimation(tileType: ETiles) {

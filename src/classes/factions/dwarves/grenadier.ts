@@ -33,7 +33,7 @@ export class Grenadier extends Dwarf {
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK_MELEE);
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (isKoUnitOnEnemySpawn(target)) {
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(0.5),

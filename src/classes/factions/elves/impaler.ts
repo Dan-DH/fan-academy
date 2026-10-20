@@ -22,7 +22,7 @@ export class Impaler extends DarkElf {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       if (this.status.has(StatusEffects.SUPER_CHARGE)) {
         // this.scene.sound.play(EGameSounds.IMPALER_ATTACK_BIG);

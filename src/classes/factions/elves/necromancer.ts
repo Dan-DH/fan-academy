@@ -59,7 +59,7 @@ export class Necromancer extends DarkElf {
       ...mapUnitBaseStats(EHeroes.PHANTOM)
     }, true, tile);
 
-    target.removeFromGame(true);
+    target.getsStompedOrDestroyed();
 
     this.context.board!.units.push(phantom);
 

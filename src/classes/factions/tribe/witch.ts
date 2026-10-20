@@ -28,7 +28,7 @@ export class Witch extends Tribe {
       this.removeAttackModifiers();
     }
 
-    if (isPhantomAndKO(target)) target.removeFromGame();
+    if (target && isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
@@ -50,7 +50,7 @@ export class Witch extends Tribe {
     // get adjacent enemy units
     // loop and do damage
     this.removeAttackModifiers();
-    target.removeFromGame();
+    target.getsStompedOrDestroyed();
   }
 
   heal(_target: Hero): void {};

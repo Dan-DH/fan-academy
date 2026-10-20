@@ -21,7 +21,7 @@ export class Cleric extends Council {
 
     if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);

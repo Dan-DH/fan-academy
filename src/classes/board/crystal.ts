@@ -117,6 +117,10 @@ export class Crystal extends Phaser.GameObjects.Container {
     return damageTaken;
   }
 
+  getsStompedOrDestroyed(): void {
+    this.removeFromGame();
+  }
+
   removeFromGame(): void {
     // this.scene.sound.play(EGameSounds.CRYSTAL_DESTROY);
 

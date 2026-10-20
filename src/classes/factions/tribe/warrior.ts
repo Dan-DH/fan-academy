@@ -18,7 +18,7 @@ export class Warrior extends Tribe {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
       target.getsDamaged({

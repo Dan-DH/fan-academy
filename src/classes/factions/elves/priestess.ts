@@ -22,7 +22,7 @@ export class Priestess extends DarkElf {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
 

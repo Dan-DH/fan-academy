@@ -24,7 +24,7 @@ export class VoidMonk extends DarkElf {
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (isKoUnitOnEnemySpawn(target)) {
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       const board = this.context.board!;
 

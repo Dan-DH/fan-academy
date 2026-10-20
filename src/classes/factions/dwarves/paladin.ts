@@ -19,7 +19,7 @@ export class Paladin extends Dwarf {
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (isKoUnitOnEnemySpawn(target)) {
-      target.removeFromGame();
+      target.getsStompedOrDestroyed();
     } else {
       const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),

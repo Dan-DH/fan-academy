@@ -9,6 +9,18 @@ export abstract class Tribe extends Hero {
     super(data);
   }
 
+  addBloodlust(): void {
+    this.status.add(StatusEffects.BLOODLUST);
+    this.visuals.updateCharacterImage(this.stats);
+    this.unitCard.updateCardPower(this);
+  }
+
+  removeBloodlust(): void {
+    this.status.remove(StatusEffects.BLOODLUST);
+    this.visuals.updateCharacterImage(this.stats);
+    this.unitCard.updateCardPower(this);
+  }
+
   equipFactionEquipment(handPosition: number): void {
     // this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE); // FIXME:
 
