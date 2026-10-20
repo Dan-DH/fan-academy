@@ -22,6 +22,7 @@ import { mapCrystalFromBE } from "../../utils/mapCrystalFromBE";
 import { fanAcademy } from "../../main";
 import { mapCrystalToBE } from "../../utils/mapCrystalToBE";
 import { mapHeroToBE } from "../../utils/mapHeroToBE";
+import { Chieftain } from "../factions/tribe/chieftain";
 
 export class Board {
   tileSize: number = 90;
@@ -119,6 +120,10 @@ export class Board {
 
   highlightEnemyTargets(hero: Hero): void {
     const unitsInRange: (Hero | Crystal)[] = this.getUnitsInRange(hero, ERange.ATTACK);
+    if (hero instanceof Chieftain) {
+      const chargeTargets = this.getChargeTargets(hero);
+      if (chargeTargets.length) unitsInRange.push(...chargeTargets);
+    }
     if (!unitsInRange.length) return;
 
     const enemyLOSCheck: (Hero | Crystal)[] = [];
@@ -299,6 +304,34 @@ export class Board {
     });
 
     return [...inRangeUnits];
+  }
+
+  getChargeTargets(hero: Hero): (Hero | Crystal)[] {
+    const minCol = 0;
+    const maxCol = 8;
+    const result: (Hero | Crystal)[] = [];
+
+    const targetFound = (i: number, towardsRightSide: boolean): boolean => {
+      const matchingUnit = this.units.find(u => u.stats.belongsTo !== hero.stats.belongsTo && u.stats.row === hero.stats.row && u.stats.col === i);
+      if (matchingUnit) {
+        const offset = towardsRightSide ? 1 : -1;
+        if (this.isAdjacent(hero, matchingUnit)) return true;
+        const adjacentTileOccupied = this.units.find(u => u.stats.boardPosition === matchingUnit.stats.boardPosition + offset);
+        if (!adjacentTileOccupied) result.push(matchingUnit);
+        return true;
+      }
+      return false;
+    };
+
+    for (let i = hero.stats.col - 1; i >= minCol; i--) {
+      if (targetFound(i, true)) break;
+    }
+
+    for (let i = hero.stats.col + 1; i <= maxCol; i++) {
+      if (targetFound(i, false)) break;
+    }
+
+    return result;
   }
 
   get3x3AreaOfEffectTiles(boardPosition: number): Tile[] {
@@ -682,11 +715,22 @@ export class Board {
     return !!this.units.find(u => u.stats.boardPosition === boardPosition && u.stats.belongsTo !== belongsTo);
   }
 
-  async pushEnemy(attackerParams: {
-    row: number,
-    col: number
-  }, target: Hero, angle = 0): Promise<boolean> {
-    const newPosition = this.getNewPositionAfterForce(attackerParams.row, attackerParams.col, target.stats.row, target.stats.col, true);
+  // FIXME: check that works for both pull and pull (and check spawn interactions)
+  // Remove pull method if not needed
+  async displaceUnit(params: {
+    attackerCoords: {
+      row: number,
+      col: number
+    },
+    target: Hero,
+    angle?: number,
+    isPush?: boolean
+  }): Promise<boolean> {
+    const { attackerCoords, target } = params;
+    const angle = params.angle ?? 0;
+    const isPush = params.isPush ?? true;
+
+    const newPosition = this.getNewPositionAfterForce(attackerCoords.row, attackerCoords.col, target.stats.row, target.stats.col, isPush);
 
     // If the tile is beyond the boundaries of the map, ignore
     const isWrongRow = newPosition.row < 0 || newPosition.row > 4;
@@ -697,7 +741,7 @@ export class Board {
 
     if (!targetNewTile) return false;
     if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return false;
-    if (targetNewTile.tileType == ETiles.SPAWN && attackerParams instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return false;
+    if (targetNewTile.tileType == ETiles.SPAWN && target instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return false;
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile);
 
@@ -710,35 +754,6 @@ export class Board {
 
     target.updatePosition(targetNewTile);
     return true;
-  }
-
-  // TODO: mirror pushEnemy? Might not need this method at all
-  async pullEnemy(attacker: Hero, target: Hero): Promise<void> {
-    const attackerTile = this.getTileFromBoardPosition(attacker.stats.boardPosition);
-    const targetTile = this.getTileFromBoardPosition(target.stats.boardPosition);
-    if (!attackerTile || !targetTile) {
-      console.error('pullEnemy() no attacker or target board position');
-      return;
-    }
-
-    const newPosition = this.getNewPositionAfterForce(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col, false);
-
-    const targetNewTile = this.getTileFromCoordinates(newPosition.row, newPosition.col);
-
-    if (!targetNewTile) return;
-    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
-    if (targetNewTile.tileType == ETiles.SPAWN && attacker instanceof Hero && this.canBeMovedIntoSpawn(targetNewTile, attacker) && !target.stats.isKO) return;
-
-    if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile);
-
-    await unitMoveAnimation({
-      move: EUnitMoveType.FORCED_MOVE,
-      hero: target,
-      targetTile: targetNewTile,
-      angle: 0
-    });
-
-    target.updatePosition(targetNewTile);
   }
 
   canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {

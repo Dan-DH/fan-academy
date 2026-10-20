@@ -31,10 +31,13 @@ export class Knight extends Council {
         attacker: this
       });
 
-      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.pushEnemy({
-        row: this.stats.row,
-        col: this.stats.col
-      }, target);
+      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.displaceUnit({
+        attackerCoords: {
+          row: this.stats.row,
+          col: this.stats.col
+        },
+        target
+      });
 
       this.removeAttackModifiers();
       if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);

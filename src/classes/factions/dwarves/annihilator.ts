@@ -53,10 +53,14 @@ export class Annihilator extends Dwarf {
           });
 
           if (unit instanceof Hero) {
-            if (!unit.stats.isKO) this.context.board!.pushEnemy({
-              row: target.stats.row,
-              col: target.stats.col
-            }, unit, 360);
+            if (!unit.stats.isKO) this.context.board!.displaceUnit({
+              attackerCoords: {
+                row: target.stats.row,
+                col: target.stats.col
+              },
+              target: unit,
+              angle: 360
+            });
             if (unit.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
             if (isPhantomAndKO(unit)) unit.removeFromGame();
           }});

@@ -59,7 +59,14 @@ export class Typhoon extends Item {
         col: u.stats.col + offset
       };
 
-      if (scene.board?.pushEnemy(pushTarget, u as Hero, 0)) scene.board?.pushEnemy(pushTarget, u as Hero, 0);
+      // FIXME: always returns true since it's an async function without await
+      if (scene.board?.displaceUnit({
+        attackerCoords: pushTarget,
+        target: u as Hero
+      })) scene.board!.displaceUnit({
+        attackerCoords: pushTarget,
+        target: u as Hero
+      });
     });
   }
 }

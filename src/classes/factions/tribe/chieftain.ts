@@ -1,0 +1,152 @@
+import { EActionType } from "../../../enums/gameEnums";
+import { IHero } from "../../../interfaces/gameInterface";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { StatusEffects } from "../../../utils/statuses";
+import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { Crystal } from "../../board/crystal";
+import { Hero } from "../hero";
+import { Tribe } from "./tribe";
+
+export class Chieftain extends Tribe {
+  constructor(data: IHero) {
+    super(data);
+  }
+
+  attack(target: Hero | Crystal): void {
+    attackAnimation(this);
+    turnIfBehind(this.context, this, target);
+    const distance = getDistanceToTarget(this, target);
+
+    let damageDealt = 0;
+    // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
+    if (distance === 1) {
+      if (isKoUnitOnEnemySpawn(target)) {
+        target.getsStompedOrDestroyed();
+      } else {
+        damageDealt += this.whirlwind(target);
+        this.removeAttackModifiers();
+      }
+    } else {
+      damageDealt += this.charge(target);
+    }
+
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+  }
+
+  whirlwind(target: Hero | Crystal): number {
+    // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
+    // TODO: spinning animation
+    let totalDamageReflected = 0;
+
+    const damageDealt = target.getsDamaged({
+      damage: this.getTotalPower(),
+      attackType: this.stats.attackType,
+      attacker: this
+    });
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+
+    const adjacentUnits = this.context.board!.getAliveAdjacentFriendlyUnitsOnBoard(target);
+    adjacentUnits.forEach(u => {
+      const damageDealt = u.getsDamaged({
+        damage: this.getTotalPower(0.66),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
+
+      if (u instanceof Hero) totalDamageReflected += damageDealt;
+    });
+
+    this.pullUnitsCloser();
+
+    this.removeAttackModifiers();
+    return totalDamageReflected;
+  }
+
+  charge(target: Hero | Crystal): number {
+    // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
+    this.removeAttackModifiers();
+
+    // TODO: charge animation and unit displacement
+    return target.getsDamaged({
+      damage: this.getTotalPower(),
+      attackType: this.stats.attackType,
+      attacker: this
+    });
+  }
+
+  private pullUnitsCloser(): void {
+    const board = this.context.board!;
+    const thisRow = this.stats.row;
+    const thisCol = this.stats.col;
+
+    // Diagonal check
+    const diagonalRows = [-1,  1];
+    diagonalRows.forEach(r => {
+      const colArray = [-1, 1];
+      colArray.forEach(c => {
+        const isOccupied = board.units.find(u => u.stats.row === thisRow + r && u.stats.col === thisCol + c);
+        if (isOccupied) return;
+
+        const newRow = thisRow + (r < 0 ? -2 : 2);
+        const newCol = thisCol + (c < 0 ? -2 : 2);
+        const unitToMove = board.units.find((u): u is Hero => u instanceof Hero && u.stats.belongsTo !== this.stats.belongsTo && u.stats.row === newRow && u.stats.col === newCol);
+        if (unitToMove) board.displaceUnit({
+          attackerCoords: {
+            row: this.stats.row,
+            col: this.stats.col
+          },
+          target: unitToMove,
+          isPush: false
+        });
+      });
+    });
+
+    // Orthogonal check
+    const myArrayCols = [ -2, 2 ];
+    const myArrayRows = [ -2,  2];
+    myArrayCols.forEach(c => {
+      const row = [1, 0, -1];
+      for (let i = 0; i <= row.length - 1; i++) {
+        const r = row[i];
+        const matchingUnit = board.units.find((u): u is Hero => u instanceof Hero && u.stats.belongsTo !== this.stats.belongsTo && u.stats.row === thisRow + r && u.stats.col === thisCol + c);
+        if (matchingUnit) {
+          board.displaceUnit({
+            attackerCoords: {
+              row: thisRow,
+              col: thisCol
+            },
+            target: matchingUnit,
+            isPush: false
+          });
+          break;
+        }
+      }
+    });
+
+    myArrayRows.forEach(r => {
+      const col = [-1, 0, 1];
+      for (let i = 0; i <= col.length - 1; i++) {
+        const c = col[i];
+        const matchingUnit = board.units.find((u): u is Hero => u instanceof Hero && u.stats.belongsTo !== this.stats.belongsTo && u.stats.col === thisCol + c && u.stats.row === thisRow + r);
+        if (matchingUnit) {
+          board.displaceUnit({
+            attackerCoords: {
+              row: this.stats.row,
+              col: this.stats.col
+            },
+            target: matchingUnit,
+            isPush: false
+          });
+          break;
+        }
+      }
+    });
+  }
+
+  heal(_target: Hero): void {}
+  teleport(_target: Hero): void {};
+  shieldAlly(_target: Hero | Crystal): void {};
+}
