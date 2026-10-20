@@ -29,15 +29,9 @@ export class Wizard extends Council {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK);
 
-      // Get directions for finding out the next targets
       const attackDirection = this.context.board!.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
 
-      // Collect all targets
-      const secondTarget = this.getNextTarget(target, attackDirection, this.context.board!, false);
-      let thirdTarget: Hero | Crystal | undefined;
-      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, this.context.board!, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
-
-      // Apply damage to targets
+      // First target
       const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
@@ -45,6 +39,9 @@ export class Wizard extends Council {
       });
       if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       if (isPhantomAndKO(target)) target.removeFromGame();
+
+      // Second target
+      const secondTarget = this.getNextTarget(target, attackDirection, this.context.board!, false);
       if (secondTarget) {
         const damageDealt = secondTarget.getsDamaged({
           damage: this.getTotalPower() * 0.75,
@@ -55,6 +52,10 @@ export class Wizard extends Council {
         if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(secondTarget, damageDealt);
         if (isPhantomAndKO(secondTarget)) secondTarget.removeFromGame();
       }
+
+      // Third target
+      let thirdTarget: Hero | Crystal | undefined;
+      if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, this.context.board!, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
       if (thirdTarget) {
         const damageDealt = thirdTarget.getsDamaged({
           damage: this.getTotalPower() * 0.56,
