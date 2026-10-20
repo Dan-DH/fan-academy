@@ -197,7 +197,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
     const paladinAura = this.stats.paladinAura ? this.stats.paladinAura * 0.05 + 1 : 1; // Check for  units in hand. Otherwise getTotalPower returns NaN
     const bloodlustBuff = this.status.has(StatusEffects.BLOODLUST) ? 1.5 : 1;
-    return roundToFive((this.stats.basePower + unitsConsumedBonus + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura * bloodlustBuff);
+    const meatBuff = this.status.has(StatusEffects.MEAT) ? 2.75 : 1;
+    return roundToFive((this.stats.basePower + unitsConsumedBonus + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura * bloodlustBuff * meatBuff);
   }
 
   getPhysicalDamageResistance(): number {
@@ -618,7 +619,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   consumeMeat(): void {
     this.getsHealed(700);
-    this.status.add(StatusEffects.MEAT); // FIXME: add meat to getTotalPower()
+    this.status.add(StatusEffects.MEAT);
     this.unitCard.updateCardData(this);
     this.visuals.playMeatAnimation();
   }
