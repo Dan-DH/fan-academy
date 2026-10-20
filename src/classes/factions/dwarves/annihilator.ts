@@ -2,8 +2,8 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Crystal } from "../../board/crystal";
 import { Dwarf } from "./dwarves";
 import { Hero } from "../hero";
-import { EActionType, EHeroes } from "../../../enums/gameEnums";
-import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { EActionType } from "../../../enums/gameEnums";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
@@ -15,7 +15,6 @@ export class Annihilator extends Dwarf {
 
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
-
     turnIfBehind(this.context, this, target);
 
     const distance = getDistanceToTarget(this, target);
@@ -26,13 +25,14 @@ export class Annihilator extends Dwarf {
       target.removeFromGame();
     } else {
       // this.scene.sound.play(EGameSounds.ANNIHILATOR_ATTACK);
-
+      let totalDamageReflected = 0;
       const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
+      if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
 
       if (!isTargetShielded && target.active) {
         target.status.add(StatusEffects.ANNIHILATOR_DEBUFF);
@@ -45,21 +45,30 @@ export class Annihilator extends Dwarf {
 
       if (adjacentFriendlyUnits.length) {
         adjacentFriendlyUnits.forEach(unit =>{
-          unit.getsDamaged({
+          const damageDealt = unit.getsDamaged({
             damage: this.getTotalPower(0.2),
             attackType: this.stats.attackType,
             attacker: this,
             splashDamage: 0.2
           });
-          if (unit instanceof Hero && !unit.stats.isKO) this.context.board!.pushEnemy({
-            row: target.stats.row,
-            col: target.stats.col
-          }, unit, 360);
-          if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
-        });
+
+          if (unit instanceof Hero) {
+            if (!unit.stats.isKO) this.context.board!.pushEnemy({
+              row: target.stats.row,
+              col: target.stats.col
+            }, unit, 360);
+            if (unit.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+            if (isPhantomAndKO(unit)) unit.removeFromGame();
+          }});
       }
 
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) {
+        this.getsDamaged({
+          damage: totalDamageReflected,
+          attackType: this.stats.attackType
+        });
+      }
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

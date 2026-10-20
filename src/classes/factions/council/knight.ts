@@ -5,6 +5,7 @@ import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Knight extends Council {
   constructor(data: IHero) {
@@ -24,7 +25,7 @@ export class Knight extends Council {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.KNIGHT_ATTACK_BIG);
       // if (!this.stats.superCharge)this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
@@ -36,6 +37,7 @@ export class Knight extends Council {
       }, target);
 
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

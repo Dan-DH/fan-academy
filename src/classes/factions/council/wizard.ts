@@ -5,7 +5,7 @@ import { Hero } from "../hero";
 import { Council } from "./council";
 import { Board } from "../../board/board";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isOnBoard, canBeAttacked, isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 
@@ -38,27 +38,33 @@ export class Wizard extends Council {
       if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, attackDirection, this.context.board!, true, [target.stats.boardPosition, secondTarget.stats.boardPosition]);
 
       // Apply damage to targets
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (secondTarget) secondTarget.getsDamaged({
-        damage: this.getTotalPower() * 0.75,
-        attackType: this.stats.attackType,
-        attacker: this,
-        splashDamage: 0.75
-      });
-      if (thirdTarget) thirdTarget.getsDamaged({
-        damage: this.getTotalPower() * 0.56,
-        attackType: this.stats.attackType,
-        attacker: this,
-        splashDamage: 0.56
-      });
-
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       if (isPhantomAndKO(target)) target.removeFromGame();
-      if (secondTarget && isPhantomAndKO(secondTarget)) secondTarget.removeFromGame();
-      if (thirdTarget && isPhantomAndKO(thirdTarget)) thirdTarget.removeFromGame();
+      if (secondTarget) {
+        const damageDealt = secondTarget.getsDamaged({
+          damage: this.getTotalPower() * 0.75,
+          attackType: this.stats.attackType,
+          attacker: this,
+          splashDamage: 0.75
+        });
+        if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(secondTarget, damageDealt);
+        if (isPhantomAndKO(secondTarget)) secondTarget.removeFromGame();
+      }
+      if (thirdTarget) {
+        const damageDealt = thirdTarget.getsDamaged({
+          damage: this.getTotalPower() * 0.56,
+          attackType: this.stats.attackType,
+          attacker: this,
+          splashDamage: 0.56
+        });
+        if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(thirdTarget, damageDealt);
+        if (isPhantomAndKO(thirdTarget)) thirdTarget.removeFromGame();
+      }
 
       this.removeAttackModifiers();
     }

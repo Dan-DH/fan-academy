@@ -7,6 +7,7 @@ import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Phantom } from "./phantom";
 import { mapUnitBaseStats } from "../../../utils/mapHeroFromBE";
 import { generateFourDigitId, isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Necromancer extends DarkElf {
   constructor(data: IHero) {
@@ -23,12 +24,13 @@ export class Necromancer extends DarkElf {
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK);
-      const damageDone = target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (damageDone) this.lifeSteal(damageDone);
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       this.removeAttackModifiers();
     }
 

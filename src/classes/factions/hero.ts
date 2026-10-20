@@ -1,5 +1,5 @@
 import { EActionType, EAttackType, EFaction, EHeroes, EItems, EUnitMoveType } from "../../enums/gameEnums";
-import { Coordinates, IHero, IHeroBE } from "../../interfaces/gameInterface";
+import { Coordinates, IDamageParams, IHero, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
 import { handleUnitClick } from "../../utils/handleUnitClick";
@@ -112,20 +112,18 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setScale(scale);
   }
 
-  calculateReceivedDamage(params: {
-    damage: number,
-    attackType: EAttackType,
-    attacker: Hero | Item,
-    directPulverizerHit?: boolean,
-  }): number {
-    const { damage, attackType, attacker, directPulverizerHit } = params;
+  calculateReceivedDamage(params: IDamageParams): number {
+    const { damage, attackType, attacker, directPulverizerHit, reflectedDamage } = params;
     getDamagedAnimation(this);
 
     // Calculate damage after applying resistances
-    const totalAttackDamage = this.getLifeLost(damage, attackType);
+    const totalAttackDamage = this.getLifeLost(damage, attackType, reflectedDamage);
+
+    // If damage is coming from Spike Armor
+    if (reflectedDamage) return roundToFive(totalAttackDamage);
+
     // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
     let assaultTileDamage = 0;
-
     if (attacker instanceof Pulverizer && !directPulverizerHit) {
       const debuffLevel = (this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
       assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
@@ -135,14 +133,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
-  getsDamaged(params: {
-    damage: number,
-    attackType: EAttackType,
-    attacker: Hero | Item,
-    directPulverizerHit?: boolean,
-    avoidKOs?: boolean
-    oneShot?: boolean
-  }): number {
+  getsDamaged(params: IDamageParams): number {
     if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
       // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
       this.context.board!.updateEngineerOnShieldLost(this.stats.unitId);
@@ -254,13 +245,22 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.magicalDamageResistance = total;
   }
 
-  getLifeLost(damage: number, attackType: EAttackType) {
+  getLifeLost(damage: number, attackType: EAttackType, reflectedDamage: boolean | undefined) {
     const resistance = {
       [EAttackType.MAGICAL]: this.getMagicalDamageResistance(),
       [EAttackType.PHYSICAL]: this.getPhysicalDamageResistance()
     };
 
-    const totalDamage = damage - damage * resistance[attackType] / 100;
+    let totalDamage = damage - damage * resistance[attackType] / 100;
+
+    if (reflectedDamage && this.stats.currentHealth - totalDamage < 100) {
+      if (this.stats.currentHealth <= 100) {
+        return 0;
+      } else {
+        return totalDamage = this.stats.currentHealth - 100;
+      }
+    }
+
     return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
   }
 
@@ -607,5 +607,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.getsHealed(700);
     this.status.add(StatusEffects.MEAT);
     this.visuals.playMeatAnimation();
+  }
+
+  checkForDamageReflected(target: Hero | Crystal | undefined, damage: number): void {
+    if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE) && damage > 0 ) this.getsDamaged({
+      damage,
+      attackType: this.stats.attackType
+    });
   }
 }

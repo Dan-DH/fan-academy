@@ -1,5 +1,6 @@
 import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
@@ -20,12 +21,13 @@ export class Paladin extends Dwarf {
     if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

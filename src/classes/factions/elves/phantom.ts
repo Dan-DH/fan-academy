@@ -2,7 +2,7 @@ import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Crystal } from "../../board/crystal";
-import { enterSpecialTileCheck } from "../../../utils/boardUtils";
+import { enterSpecialTileCheck, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
 import { Tile } from "../../board/tile";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
@@ -32,12 +32,12 @@ export class Phantom extends Hero {
     if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
-
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       this.removeAttackModifiers();
     }
 

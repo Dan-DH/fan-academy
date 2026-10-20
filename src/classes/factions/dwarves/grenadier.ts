@@ -1,7 +1,8 @@
 import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { getAOETiles, getDistanceToTarget } from "../../../utils/boardUtils";
+import { getAOETiles, getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Hero } from "../hero";
@@ -34,12 +35,13 @@ export class Grenadier extends Dwarf {
     if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(0.5),
         attackType: this.stats.attackType,
         attacker: this
       });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
     }
   }
 
@@ -47,23 +49,30 @@ export class Grenadier extends Dwarf {
     const enemyUnits = getAOETiles(this, target.stats.boardPosition);
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK);
 
-    target.getsDamaged({
+    let totalDamageReflected = 0;
+    const damageDealt = target.getsDamaged({
       damage: this.getTotalPower(),
       attackType: EAttackType.MAGICAL,
       attacker: this
     });
+    if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
 
     enemyUnits.forEach(u => {
       if (u.stats.boardPosition !== target.stats.boardPosition) {
-        u.getsDamaged({
+        const damageDealt = u.getsDamaged({
           damage: this.getTotalPower(0.5),
           attackType: EAttackType.MAGICAL,
           attacker: this
         });
         if (isPhantomAndKO(u)) u.removeFromGame();
+        if (u.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
       }
     });
 
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) this.getsDamaged({
+      damage: totalDamageReflected,
+      attackType: this.stats.attackType
+    });
     this.removeAttackModifiers();
   }
 

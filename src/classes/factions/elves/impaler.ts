@@ -3,7 +3,7 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
@@ -30,14 +30,14 @@ export class Impaler extends DarkElf {
         // if (distance === 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK_MELEE);
         // if (distance !== 1) this.scene.sound.play(EGameSounds.IMPALER_ATTACK);
       }
-      const damageDone = target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
 
-      if (damageDone) this.lifeSteal(damageDone);
-
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       this.removeAttackModifiers();
     }
 

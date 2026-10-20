@@ -8,6 +8,8 @@ import GameScene from "../scenes/game.scene";
 import { getGridDistance } from "./gameUtils";
 import { StatusEffects } from "./statuses";
 
+export const SPIKE_ARMOR_HP_THRESHOLD = 100;
+
 export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (Hero | Crystal)[] {
   const board = aoeAttack.context.board!;
   if (!board) throw new Error('Inferno use() board not found');

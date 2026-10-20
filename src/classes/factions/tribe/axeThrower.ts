@@ -1,6 +1,6 @@
 import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
@@ -24,12 +24,13 @@ export class AxeThrower extends Tribe {
     } else {
       // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
       const damage = this.getTotalPower() + (this.triggersExtraDamage(target) ? 200 : 0);
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage,
         attackType: this.stats.attackType,
         attacker: this
       });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

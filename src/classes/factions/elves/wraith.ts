@@ -5,6 +5,7 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Wraith extends DarkElf {
   constructor(data: IHero) {
@@ -29,14 +30,14 @@ export class Wraith extends DarkElf {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.WRAITH_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WRAITH_ATTACK);
 
-      const damageDone = target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
 
-      if (damageDone) this.lifeSteal(damageDone);
-
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       this.removeAttackModifiers();
     }
 

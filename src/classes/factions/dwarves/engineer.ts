@@ -5,6 +5,7 @@ import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/u
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Engineer extends Dwarf {
   constructor(data: IHero) {
@@ -20,13 +21,14 @@ export class Engineer extends Dwarf {
     if (isKoUnitOnEnemySpawn(target)) {
       target.removeFromGame();
     } else {
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
 
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

@@ -3,7 +3,7 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { addPriestessDebuffTween, attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
@@ -27,12 +27,11 @@ export class Priestess extends DarkElf {
       // this.scene.sound.play(EGameSounds.PRIESTESS_ATTACK);
 
       const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
-      const damageDone = target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (damageDone) this.lifeSteal(damageDone);
 
       // Apply a 50% debuff to the target's next attack or heal
       if (target instanceof Hero && !isTargetShielded) {
@@ -41,6 +40,8 @@ export class Priestess extends DarkElf {
         target.unitCard.updateCardData(target);
       }
 
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
       this.removeAttackModifiers();
     }
 

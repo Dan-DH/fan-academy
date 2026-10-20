@@ -5,6 +5,8 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { isOnBoard, canBeAttacked, isPhantomAndKO, isKoUnitOnEnemySpawn } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class VoidMonk extends DarkElf {
   constructor(data: IHero) {
@@ -34,21 +36,23 @@ export class VoidMonk extends DarkElf {
       if (!offsetTiles.length) throw new Error(`voidMonk attack() No offsetTiles: ${this.stats.boardPosition}, ${target.stats.boardPosition}`);
 
       for (const offset of offsetTiles) {
-        const tileBP = target.stats.boardPosition + offset;
-        if (!isOnBoard(tileBP)) continue;
+        const tileBoardPosition = target.stats.boardPosition + offset;
+        if (!isOnBoard(tileBoardPosition)) continue;
 
-        const matchedEnemy = board.units.find(u => u.stats.boardPosition === tileBP && u.stats.belongsTo !== this.stats.belongsTo);
+        const matchedEnemy = board.units.find(u => u.stats.boardPosition === tileBoardPosition && u.stats.belongsTo !== this.stats.belongsTo);
         if (matchedEnemy && canBeAttacked(this, matchedEnemy)) splashedEnemies.push(matchedEnemy);
       };
 
       // Apply damage to targets
-      let damageDone = 0;
+      let damageDealt = 0;
+      let  totalDamageReflected = 0;
       const unitDamage = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (unitDamage) damageDone += unitDamage;
+      if (unitDamage) damageDealt += unitDamage;
+      if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += unitDamage;
 
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
@@ -59,18 +63,19 @@ export class VoidMonk extends DarkElf {
             attacker: this,
             splashDamage: 0.666
           });
-          if (unitDamage) damageDone += unitDamage;
+          if (unitDamage) damageDealt += unitDamage;
+          if (enemy.status.has(StatusEffects.SPIKE)) totalDamageReflected += unitDamage;
+          if (isPhantomAndKO(enemy)) enemy.removeFromGame();
         });
       }
 
-      if (damageDone) this.lifeSteal(damageDone);
-
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) this.getsDamaged({
+        damage: totalDamageReflected,
+        attackType: this.stats.attackType
+      });
       this.removeAttackModifiers();
     }
-
-    splashedEnemies.forEach(enemy => {
-      if (isPhantomAndKO(enemy)) enemy.removeFromGame();
-    });
 
     if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);

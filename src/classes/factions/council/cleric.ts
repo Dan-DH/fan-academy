@@ -3,7 +3,7 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
@@ -25,12 +25,13 @@ export class Cleric extends Council {
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
-      target.getsDamaged({
+      const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

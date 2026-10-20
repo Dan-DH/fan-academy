@@ -1,5 +1,6 @@
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
+import { Item } from "../classes/factions/item";
 import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EUnitMoveType, EWinConditions } from "../enums/gameEnums";
 
 export interface IGameOver {
@@ -234,3 +235,13 @@ export type TMoveParams =
     targetTile: Tile;
     angle: number
   };
+
+export interface IDamageParams {
+  damage: number,
+  attackType: EAttackType,
+  attacker?: Hero | Item,
+  directPulverizerHit?: boolean,
+  avoidKOs?: boolean,
+  oneShot?: boolean,
+  reflectedDamage?: boolean
+}
