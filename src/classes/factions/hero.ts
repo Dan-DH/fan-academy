@@ -93,7 +93,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.row = tile.row;
     this.stats.col = tile.col;
     this.setDepth(this.stats.row + 10);
-    // this.visuals.characterImage.setScale(1.2); // FIXME: is this needed?
     this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
     this.unitCard.updateCardData(this);
@@ -161,8 +160,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Show damage numbers
     if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
 
-    if (attacker instanceof Pulverizer && directPulverizerHit && this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
-      this.status.remove(StatusEffects.FACTION_EQUIPMENT);
+    if (attacker instanceof Pulverizer && directPulverizerHit && this.status.hasAny(StatusEffects.FACTION_EQUIPMENT, StatusEffects.SPIKE_ARMOR)) {
+      this.status.remove(StatusEffects.FACTION_EQUIPMENT, StatusEffects.SPIKE_ARMOR);
       this.reduceMaxHealth(this.stats.baseHealth * 0.1);
       this.visuals.factionEquipmentImage.setVisible(false);
       this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
@@ -550,7 +549,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       [EItems.RUNE_METAL]: this.status.has(StatusEffects.RUNE_METAL),
       [EItems.SHINING_HELM]: this.status.has(StatusEffects.SHINING_HELM),
       [EItems.SUPERCHARGE]: this.status.has(StatusEffects.SUPER_CHARGE),
-      [EItems.DWARVEN_BREW]: this.status.has(StatusEffects.DWARVEN_BREW)
+      [EItems.DWARVEN_BREW]: this.status.has(StatusEffects.DWARVEN_BREW),
+      [EItems.SPIKE_ARMOR]: this.status.has(StatusEffects.SPIKE_ARMOR)
     };
 
     return !!map[item.stats.itemType];
@@ -625,7 +625,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   checkForDamageReflected(target: Hero | Crystal | undefined, damage: number): void {
-    if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE) && damage > 0 ) this.getsDamaged({
+    if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE_ARMOR) && damage > 0 ) this.getsDamaged({
       damage,
       attackType: this.stats.attackType
     });

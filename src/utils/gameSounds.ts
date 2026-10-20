@@ -18,7 +18,7 @@ export function selectItemSound(_scene: Phaser.Scene, item: EItems): void {
     [EItems.PULVERIZER]: EGameSounds.PULVERIZER_SELECT,
 
     [EItems.MEAT]: EGameSounds.PULVERIZER_SELECT, // FIXME:
-    [EItems.SPIKE]: EGameSounds.PULVERIZER_SELECT,
+    [EItems.SPIKE_ARMOR]: EGameSounds.PULVERIZER_SELECT,
     [EItems.TYPHOON]: EGameSounds.PULVERIZER_SELECT
 
   };

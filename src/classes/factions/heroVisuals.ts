@@ -48,11 +48,8 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     this.shiningHelmImage = context.add.image(-28, 25, 'gameAtlas', 'shiningHelm').setOrigin(0.5).setScale(0.5).setName('shiningHelm');
     if (!status.has(StatusEffects.SHINING_HELM)) this.shiningHelmImage.setVisible(false);
 
-    if (data.faction === EFaction.COUNCIL || data.faction === EFaction.DWARVES) {
-      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'dragonScale').setOrigin(0.5).setScale(0.5).setName('dragonScale');
-    } else {
-      this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', 'soulStone').setOrigin(0.5).setScale(0.5).setName('soulStone');
-    }
+    const equipmentKey = this.getFactionEquipmentKey(data.faction);
+    this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', equipmentKey).setOrigin(0.5).setScale(0.5).setName(equipmentKey);
     if (!status.has(StatusEffects.FACTION_EQUIPMENT)) this.factionEquipmentImage.setVisible(false);
 
     this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.5).setName('dwarvenBrew');
@@ -137,10 +134,10 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   updateTribeImage(data: IHero): string {
     if (data.unitType === EHeroes.PHANTOM) return 'phantom_1';
 
-    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.FACTION_EQUIPMENT, StatusEffects.RUNE_METAL)) return `${data.unitType}_8`;
-    if (this.status.hasAll(StatusEffects.FACTION_EQUIPMENT, StatusEffects.RUNE_METAL)) return `${data.unitType}_7`;
-    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.FACTION_EQUIPMENT)) return `${data.unitType}_6`;
-    if (this.status.has(StatusEffects.FACTION_EQUIPMENT)) return `${data.unitType}_5`; // Spike Armor
+    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.SPIKE_ARMOR, StatusEffects.RUNE_METAL)) return `${data.unitType}_8`;
+    if (this.status.hasAll(StatusEffects.SPIKE_ARMOR, StatusEffects.RUNE_METAL)) return `${data.unitType}_7`;
+    if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.SPIKE_ARMOR)) return `${data.unitType}_6`;
+    if (this.status.has(StatusEffects.SPIKE_ARMOR)) return `${data.unitType}_5`; // Spike Armor
     if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.RUNE_METAL)) return `${data.unitType}_4`;
     if (this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_3`;
     if (this.status.has(StatusEffects.BLOODLUST)) return `${data.unitType}_2`;
@@ -228,5 +225,16 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       showOnStart: true,
       hideOnComplete: true
     });
+  }
+
+  private getFactionEquipmentKey(faction: EFaction): string {
+    const keys = {
+      [EFaction.COUNCIL]: 'dragonScale',
+      [EFaction.DARK_ELVES]: 'souldStone',
+      [EFaction.DWARVES]: 'dragonScale',
+      [EFaction.TRIBE]: 'SpikeArmor-hd'
+    };
+
+    return keys[faction];
   }
 }

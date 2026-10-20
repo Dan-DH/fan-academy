@@ -56,7 +56,7 @@ export class Gunner extends Dwarf {
       attackType: EAttackType.PHYSICAL,
       attacker: this
     });
-    if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
 
     const splashedUnits = this.context.board!.getGunnerSplashTargets(this, target);
     splashedUnits?.forEach(unit =>  {
@@ -67,7 +67,7 @@ export class Gunner extends Dwarf {
         splashDamage: 0.6667
       });
       if (isPhantomAndKO(unit)) unit.removeFromGame();
-      if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
     });
 
     if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) this.getsDamaged({

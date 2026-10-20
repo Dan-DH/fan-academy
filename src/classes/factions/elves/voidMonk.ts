@@ -52,7 +52,7 @@ export class VoidMonk extends DarkElf {
         attacker: this
       });
       if (unitDamage) damageDealt += unitDamage;
-      if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += unitDamage;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += unitDamage;
 
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
@@ -64,7 +64,7 @@ export class VoidMonk extends DarkElf {
             splashDamage: 0.666
           });
           if (unitDamage) damageDealt += unitDamage;
-          if (enemy.status.has(StatusEffects.SPIKE)) totalDamageReflected += unitDamage;
+          if (enemy.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += unitDamage;
           if (isPhantomAndKO(enemy)) enemy.removeFromGame();
         });
       }

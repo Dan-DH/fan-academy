@@ -74,7 +74,7 @@ export enum EItems {
 
   // Tribe
   TYPHOON = 'Warhorn-hd',
-  SPIKE = 'SpikeArmor-hd',
+  SPIKE_ARMOR = 'SpikeArmor-hd',
   MEAT = 'Meat-hd'
 }
 

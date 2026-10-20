@@ -32,7 +32,7 @@ export class Annihilator extends Dwarf {
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
 
       if (!isTargetShielded && target.active) {
         target.status.add(StatusEffects.ANNIHILATOR_DEBUFF);
@@ -57,7 +57,7 @@ export class Annihilator extends Dwarf {
               row: target.stats.row,
               col: target.stats.col
             }, unit, 360);
-            if (unit.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+            if (unit.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
             if (isPhantomAndKO(unit)) unit.removeFromGame();
           }});
       }

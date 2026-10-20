@@ -27,7 +27,7 @@ export abstract class Tribe extends Hero {
     const spikeImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', 'Meat-hd').setOrigin(0.5).setDepth(100);
     useAnimation(spikeImg);
 
-    this.status.add(StatusEffects.FACTION_EQUIPMENT);
+    this.status.add(StatusEffects.SPIKE_ARMOR);
     this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 

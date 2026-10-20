@@ -6,6 +6,17 @@ import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Item } from "../item";
 
+export class SpikeArmor extends Item{
+  constructor(data: IItem) {
+    super(data);
+  }
+
+  use(target: Hero): void {
+    target.equipFactionEquipment(this.stats.boardPosition);
+    this.removeFromGame();
+  }
+}
+
 export class Typhoon extends Item {
   constructor(data: IItem) {
     super(data);

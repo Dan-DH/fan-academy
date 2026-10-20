@@ -178,7 +178,7 @@ export function getCardText(unit: EHeroes | EItems): {
       cardType: ECardType.CONSUMABLE,
       cardText: "Heals an ally for 700 HP and increases next attack by 175%."
     },
-    [EItems.SPIKE]: {
+    [EItems.SPIKE_ARMOR]: {
       cardName: 'Spike armor',
       cardType: ECardType.EQUIPMENT,
       cardText: "Reflects 33% of damage taken back to the attacker and increases max health by 10%."

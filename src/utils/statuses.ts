@@ -20,7 +20,7 @@ export const StatusEffects = {
   ANNIHILATOR_DEBUFF: 1 << 13,
   ENGINEER_SHIELD: 1 << 14,
   // Tribe
-  SPIKE: 1 << 15,
+  SPIKE_ARMOR: 1 << 15,
   MEAT: 1 << 16,
   BLOODLUST: 1 << 17
   // SNIPER_KNEELING: 1 << 18,
@@ -38,15 +38,11 @@ export class StatusTracker {
   }
 
   add(...effects: number[]) {
-    for (const effect of effects) {
-      this.status |= effect;
-    }
+    for (const effect of effects) this.status |= effect;
   }
 
   remove(...effects: number[]) {
-    for (const effect of effects) {
-      this.status &= ~effect;
-    }
+    for (const effect of effects) this.status &= ~effect;
   }
 
   toggle(effect: number) {
@@ -55,6 +51,11 @@ export class StatusTracker {
 
   has(effect: number) {
     return (this.status & effect) !== 0;
+  }
+
+  hasAny(...effects: number[]) {
+    for (const effect of effects) if (this.has(effect)) return true;
+    return false;
   }
 
   hasAll(...effects: number[]) {

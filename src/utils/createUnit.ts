@@ -24,7 +24,7 @@ import { EItems, EHeroes } from "../enums/gameEnums";
 import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import { mapItemFromBE } from "./mapItemFromBE";
 import { mapHeroFromBE } from "./mapHeroFromBE";
-import { Typhoon } from "../classes/factions/tribe/items";
+import { Meat, SpikeArmor, Typhoon } from "../classes/factions/tribe/items";
 
 export function createNewItem(itemData: IItemBE): Item {
   const itemTypes: Record<EItems, () => Item> = {
@@ -44,8 +44,8 @@ export function createNewItem(itemData: IItemBE): Item {
     [EItems.PULVERIZER]: () => new Pulverizer(mapItemFromBE(itemData)),
 
     [EItems.TYPHOON]: () => new Typhoon(mapItemFromBE(itemData)),
-    [EItems.MEAT]: () => new Pulverizer(mapItemFromBE(itemData)), // FIXME:
-    [EItems.SPIKE]: () => new Pulverizer(mapItemFromBE(itemData)) // FIXME:
+    [EItems.MEAT]: () => new Meat(mapItemFromBE(itemData)),
+    [EItems.SPIKE_ARMOR]: () => new SpikeArmor(mapItemFromBE(itemData))
   };
 
   const createItem = itemTypes[itemData.itemType];

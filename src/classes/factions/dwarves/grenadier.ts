@@ -55,7 +55,7 @@ export class Grenadier extends Dwarf {
       attackType: EAttackType.MAGICAL,
       attacker: this
     });
-    if (target.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
 
     enemyUnits.forEach(u => {
       if (u.stats.boardPosition !== target.stats.boardPosition) {
@@ -65,7 +65,7 @@ export class Grenadier extends Dwarf {
           attacker: this
         });
         if (isPhantomAndKO(u)) u.removeFromGame();
-        if (u.status.has(StatusEffects.SPIKE)) totalDamageReflected += damageDealt;
+        if (u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
       }
     });
 
