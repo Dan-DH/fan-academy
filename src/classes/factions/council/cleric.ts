@@ -14,9 +14,7 @@ export class Cleric extends Council {
 
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
-
     turnIfBehind(this.context, this, target);
-
     const distance = getDistanceToTarget(this, target);
 
     if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
