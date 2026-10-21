@@ -3,7 +3,7 @@ import { Crystal } from "../../board/crystal";
 import { Dwarf } from "./dwarves";
 import { Hero } from "../hero";
 import { EActionType } from "../../../enums/gameEnums";
-import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_DEFLECT_PERCENT, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
@@ -25,14 +25,14 @@ export class Annihilator extends Dwarf {
       target.getsStompedOrDestroyed();
     } else {
       // this.scene.sound.play(EGameSounds.ANNIHILATOR_ATTACK);
-      let totalDamageReflected = 0;
+      let totalDamageToReflect = 0;
       const isTargetShielded = target.status.has(StatusEffects.ENGINEER_SHIELD);
       const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
       if (!isTargetShielded && target.active) {
         target.status.add(StatusEffects.ANNIHILATOR_DEBUFF);
@@ -61,15 +61,15 @@ export class Annihilator extends Dwarf {
               target: unit,
               angle: 360
             });
-            if (unit.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+            if (unit.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
             if (isPhantomAndKO(unit)) unit.removeFromGame();
           }});
       }
 
       this.removeAttackModifiers();
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) {
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) {
         this.getsDamaged({
-          damage: totalDamageReflected,
+          damage: totalDamageToReflect * SPIKE_ARMOR_DEFLECT_PERCENT,
           attackType: this.stats.attackType
         });
       }

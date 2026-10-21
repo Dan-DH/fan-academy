@@ -27,7 +27,7 @@ export class Witch extends Tribe {
         attacker: this
       });
       this.removeAttackModifiers();
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
 
     if (target && isPhantomAndKO(target)) target.removeFromGame();

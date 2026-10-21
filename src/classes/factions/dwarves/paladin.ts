@@ -27,7 +27,7 @@ export class Paladin extends Dwarf {
         attacker: this
       });
       this.removeAttackModifiers();
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

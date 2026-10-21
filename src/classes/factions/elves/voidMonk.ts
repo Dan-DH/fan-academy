@@ -45,14 +45,14 @@ export class VoidMonk extends DarkElf {
 
       // Apply damage to targets
       let damageDealt = 0;
-      let  totalDamageReflected = 0;
+      let  totalDamageToReflect = 0;
       const unitDamage = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
       if (unitDamage) damageDealt += unitDamage;
-      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += unitDamage;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += unitDamage;
 
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
@@ -64,14 +64,14 @@ export class VoidMonk extends DarkElf {
             splashDamage: 0.666
           });
           if (unitDamage) damageDealt += unitDamage;
-          if (enemy.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += unitDamage;
+          if (enemy.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += unitDamage;
           if (isPhantomAndKO(enemy)) enemy.removeFromGame();
         });
       }
 
       if (damageDealt) this.lifeSteal(damageDealt);
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) this.getsDamaged({
-        damage: totalDamageReflected,
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.getsDamaged({
+        damage: totalDamageToReflect * 0.33,
         attackType: this.stats.attackType
       });
       this.removeAttackModifiers();

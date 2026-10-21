@@ -37,7 +37,7 @@ export class Phantom extends Hero {
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }
 

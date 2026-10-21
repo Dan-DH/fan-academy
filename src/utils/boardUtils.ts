@@ -9,6 +9,7 @@ import { getGridDistance } from "./gameUtils";
 import { StatusEffects } from "./statuses";
 
 export const SPIKE_ARMOR_HP_THRESHOLD = 100;
+export const SPIKE_ARMOR_DEFLECT_PERCENT = 0.33;
 
 export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (Hero | Crystal)[] {
   const board = aoeAttack.context.board!;

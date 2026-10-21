@@ -30,7 +30,7 @@ export class Necromancer extends DarkElf {
         attacker: this
       });
       if (damageDealt) this.lifeSteal(damageDealt);
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }
 

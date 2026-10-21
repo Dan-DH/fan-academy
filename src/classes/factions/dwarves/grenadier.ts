@@ -1,6 +1,6 @@
 import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { getAOETiles, getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { getAOETiles, getDistanceToTarget, SPIKE_ARMOR_DEFLECT_PERCENT, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
@@ -41,7 +41,7 @@ export class Grenadier extends Dwarf {
         attacker: this
       });
       this.removeAttackModifiers();
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
   }
 
@@ -49,13 +49,13 @@ export class Grenadier extends Dwarf {
     const enemyUnits = getAOETiles(this, target.stats.boardPosition);
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK);
 
-    let totalDamageReflected = 0;
+    let totalDamageToReflect = 0;
     const damageDealt = target.getsDamaged({
       damage: this.getTotalPower(),
       attackType: EAttackType.MAGICAL,
       attacker: this
     });
-    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
     enemyUnits.forEach(u => {
       if (u.stats.boardPosition !== target.stats.boardPosition) {
@@ -65,12 +65,12 @@ export class Grenadier extends Dwarf {
           attacker: this
         });
         if (isPhantomAndKO(u)) u.removeFromGame();
-        if (u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+        if (u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
       }
     });
 
-    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) this.getsDamaged({
-      damage: totalDamageReflected,
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.getsDamaged({
+      damage: totalDamageToReflect * SPIKE_ARMOR_DEFLECT_PERCENT,
       attackType: this.stats.attackType
     });
     this.removeAttackModifiers();

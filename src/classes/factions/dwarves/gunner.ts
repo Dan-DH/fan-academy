@@ -1,6 +1,6 @@
 import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_DEFLECT_PERCENT, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
@@ -42,7 +42,7 @@ export class Gunner extends Dwarf {
         attacker: this
       });
       this.removeAttackModifiers();
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
   }
 
@@ -50,13 +50,13 @@ export class Gunner extends Dwarf {
     // this.scene.sound.play(EGameSounds.GUNNER_ATTACK);
     // this.context.time.delayedCall(100, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
     // this.context.time.delayedCall(200, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
-    let totalDamageReflected = 0;
+    let totalDamageToReflect = 0;
     const damageDealt = target.getsDamaged({
       damage: this.getTotalPower(0.6667),
       attackType: EAttackType.PHYSICAL,
       attacker: this
     });
-    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
     const splashedUnits = this.context.board!.getGunnerSplashTargets(this, target);
     splashedUnits?.forEach(unit =>  {
@@ -67,11 +67,11 @@ export class Gunner extends Dwarf {
         splashDamage: 0.6667
       });
       if (isPhantomAndKO(unit)) unit.removeFromGame();
-      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
     });
 
-    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageReflected > 0) this.getsDamaged({
-      damage: totalDamageReflected,
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.getsDamaged({
+      damage: totalDamageToReflect * SPIKE_ARMOR_DEFLECT_PERCENT,
       attackType: this.stats.attackType
     });
     this.removeAttackModifiers();

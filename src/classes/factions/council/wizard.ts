@@ -37,7 +37,7 @@ export class Wizard extends Council {
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       if (isPhantomAndKO(target)) target.removeFromGame();
 
       // Second target
@@ -49,7 +49,7 @@ export class Wizard extends Council {
           attacker: this,
           splashDamage: 0.75
         });
-        if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(secondTarget, damageDealt);
+        if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(secondTarget, damageDealt);
         if (isPhantomAndKO(secondTarget)) secondTarget.removeFromGame();
       }
 
@@ -63,7 +63,7 @@ export class Wizard extends Council {
           attacker: this,
           splashDamage: 0.56
         });
-        if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(thirdTarget, damageDealt);
+        if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(thirdTarget, damageDealt);
         if (isPhantomAndKO(thirdTarget)) thirdTarget.removeFromGame();
       }
 

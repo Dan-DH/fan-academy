@@ -624,9 +624,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.playMeatAnimation();
   }
 
-  checkForDamageReflected(target: Hero | Crystal | undefined, damage: number): void {
+  checkForDamageToReflect(target: Hero | Crystal | undefined, damage: number): void {
     if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE_ARMOR) && damage > 0 ) this.getsDamaged({
-      damage,
+      damage: damage * 0.33,
       attackType: this.stats.attackType
     });
   }

@@ -18,20 +18,20 @@ export class Chieftain extends Tribe {
     turnIfBehind(this.context, this, target);
     const distance = getDistanceToTarget(this, target);
 
-    let damageDealt = 0;
+    let damageToReflect = 0;
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (distance === 1) {
       if (isKoUnitOnEnemySpawn(target)) {
         target.getsStompedOrDestroyed();
       } else {
-        damageDealt += this.whirlwind(target);
+        damageToReflect += this.whirlwind(target);
         this.removeAttackModifiers();
       }
     } else {
-      damageDealt += this.charge(target);
+      damageToReflect += this.charge(target);
     }
 
-    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageReflected(target, damageDealt);
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageToReflect);
     if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
@@ -39,14 +39,14 @@ export class Chieftain extends Tribe {
   whirlwind(target: Hero | Crystal): number {
     // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
     // TODO: spinning animation
-    let totalDamageReflected = 0;
+    let totalDamageToReflect = 0;
 
     const damageDealt = target.getsDamaged({
       damage: this.getTotalPower(),
       attackType: this.stats.attackType,
       attacker: this
     });
-    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageReflected += damageDealt;
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
     const adjacentUnits = this.context.board!.getAliveAdjacentFriendlyUnitsOnBoard(target);
     adjacentUnits.forEach(u => {
@@ -56,13 +56,13 @@ export class Chieftain extends Tribe {
         attacker: this
       });
 
-      if (u instanceof Hero) totalDamageReflected += damageDealt;
+      if (u instanceof Hero && u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
     });
 
     this.pullUnitsCloser();
 
     this.removeAttackModifiers();
-    return totalDamageReflected;
+    return totalDamageToReflect;
   }
 
   charge(target: Hero | Crystal): number {
