@@ -426,7 +426,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   getsStompedOrDestroyed(): void {
     this.context.board?.units.forEach(u => {
-      if (u instanceof Tribe && u.stats.belongsTo === this.stats.belongsTo && !u.stats.isKO) u.addBloodlust();
+      if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && !u.stats.isKO) (u as Tribe).addBloodlust();
     });
     this.removeFromGame();
   }
@@ -603,7 +603,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.stopMeatAnimation();
 
     this.context.board?.units.forEach(u => {
-      if (u instanceof Tribe && u.stats.belongsTo === this.stats.belongsTo && u.status.has(StatusEffects.BLOODLUST)) u.removeBloodlust();
+      if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && u.status.has(StatusEffects.BLOODLUST)) (u as Tribe).removeBloodlust();
     });
 
     this.unitCard.updateCardData(this);
