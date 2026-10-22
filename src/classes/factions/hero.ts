@@ -461,11 +461,10 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.engineerShieldImage.setVisible(false);
   }
 
-  async move(currentTile: Tile, targetTile: Tile): Promise<void> {
-    const tilesMoved = getGridDistance(currentTile.row, currentTile.col, targetTile.row, targetTile.col);
+  async move(targetTile: Tile): Promise<void> {
+    const startingBoardPosition = this.stats.boardPosition;
+    const tilesMoved = getGridDistance(this.stats.row, this.stats.col, targetTile.row, targetTile.col);
 
-    const startTile = this.context.board!.getTileFromBoardPosition(this.stats.boardPosition);
-    if (!startTile) return;
     removeSpecialTile(this);
 
     this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
@@ -490,7 +489,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // startTile.removeHero();
     this.unitCard.updateCardData(this);
-    this.context.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.MOVE, startingBoardPosition, targetTile.boardPosition);
   }
 
   spawn(tile: Tile): void {

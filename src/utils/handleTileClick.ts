@@ -46,7 +46,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
 
     // If unit is on the board and the tile clicked on is in range, move the unit
     if (activeUnit.stats.boardPosition < 45 && tile.isHighlighted && activeUnit instanceof Hero) {
-      activeUnit.move(activeUnit.getTile(), tile);
+      activeUnit.move(tile);
       // this.scene.sound.play(EGameSounds.HERO_MOVE);
     }
 

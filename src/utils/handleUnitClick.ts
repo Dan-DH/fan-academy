@@ -124,13 +124,13 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
           necromancerStompCheck &&
           (withinStompingRange || unitTile.isHighlighted)
         ) {
-          activeUnit.move(activeUnit.getTile(), unitTile);
+          activeUnit.move(unitTile);
           return;
         }
         if (
           unit.stats.isKO && unitTile.tileType === ETiles.TELEPORTER && activeUnitTile?.tileType === ETiles.TELEPORTER
         ) {
-          activeUnit.move(activeUnit.getTile(), unitTile);
+          activeUnit.move(unitTile);
           return;
         }
       }
@@ -207,7 +207,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
             [EHeroes.NECROMANCER, EHeroes.WITCH].includes(activeUnit.stats.unitType) &&
             (withinStompingRange || unitTile.isHighlighted)
           ) {
-            activeUnit.move(activeUnit.getTile(), unit.getTile());
+            activeUnit.move(unit.getTile());
             return;
           }
         }

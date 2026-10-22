@@ -103,7 +103,7 @@ export class MapGameReplay {
 
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
-    hero.move(hero.getTile(), tile);
+    hero.move(tile);
   };
 
   replayUnitAction(action: ITurnHistoryAction): void {

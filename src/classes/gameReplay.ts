@@ -217,7 +217,7 @@ export class GameReplay {
     const hero = this.gameScene.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
     const tile = this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
-    hero.move(hero.getTile(), tile);
+    hero.move(tile);
   };
 
   replayUnitAction(action: ITurnAction): void {
