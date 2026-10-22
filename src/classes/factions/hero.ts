@@ -45,7 +45,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }).setVisible(false);
 
     this.healthBar = new HealthBar(context, data, -38, -75);
-    if (this.stats.boardPosition >= 45) this.healthBar.setVisible(false);
+    if (this.stats.boardPosition >= 45 || this.stats.isKO) this.healthBar.setVisible(false);
 
     this.visuals = new HeroVisuals(context, data, this.status);
 
