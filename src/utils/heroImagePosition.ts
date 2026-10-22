@@ -450,11 +450,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.WITCH]: {
       1: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 7
       },
       2: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 7
       },
       KO: {
         1: {
@@ -474,11 +474,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.SHAMAN]: {
       1: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 5
       },
       2: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 5
       },
       KO: {
         1: {
@@ -498,11 +498,11 @@ export function positionHeroImage(unitType: EHeroes, belongsToP1: boolean, inHan
     [EHeroes.CHIEFTAIN]: {
       1: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 13
       },
       2: {
         charImageX: x,
-        charImageY: y
+        charImageY: y - 13
       },
       KO: {
         1: {
