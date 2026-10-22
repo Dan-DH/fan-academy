@@ -142,7 +142,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
     if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.SPIKE_ARMOR, StatusEffects.RUNE_METAL)) return `${data.unitType}_8`;
     if (this.status.hasAll(StatusEffects.SPIKE_ARMOR, StatusEffects.RUNE_METAL)) return `${data.unitType}_7`;
     if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.SPIKE_ARMOR)) return `${data.unitType}_6`;
-    if (this.status.has(StatusEffects.SPIKE_ARMOR)) return `${data.unitType}_5`; // Spike Armor
+    if (this.status.has(StatusEffects.SPIKE_ARMOR)) return `${data.unitType}_5`;
     if (this.status.hasAll(StatusEffects.BLOODLUST, StatusEffects.RUNE_METAL)) return `${data.unitType}_4`;
     if (this.status.has(StatusEffects.RUNE_METAL)) return `${data.unitType}_3`;
     if (this.status.has(StatusEffects.BLOODLUST)) return `${data.unitType}_2`;

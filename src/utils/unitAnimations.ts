@@ -239,6 +239,28 @@ export function removeReticleTween(reticle: Phaser.GameObjects.Image): void {
   }
 }
 
+export function addBloodlustTween(image: Phaser.GameObjects.Image): void {
+  const bloodlustTween = image.scene.tweens.add({
+    targets: image,
+    scaleX: 1.15,
+    scaleY: 1.15,
+    duration: 300,
+    yoyo: true,
+    repeat: -1,
+    ease: 'Sine.easeInOut'
+  });
+  image.setData('bloodlustTween', bloodlustTween);
+}
+
+export function removeBloodlustTween(image: Phaser.GameObjects.Image): void {
+  const bloodlustTween = image.getData('bloodlustTween');
+  if (bloodlustTween) {
+    bloodlustTween.stop();
+    bloodlustTween.remove();
+    image.setData('bloodlustTween', null);
+  }
+}
+
 export function addCirclingTween(reticle: Phaser.GameObjects.Image): Phaser.Tweens.Tween {
   return reticle.scene.tweens.add({
     targets: reticle,

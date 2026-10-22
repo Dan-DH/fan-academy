@@ -1,29 +1,32 @@
 import { EActionType, EItems } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
-import { useAnimation } from "../../../utils/unitAnimations";
+import { addBloodlustTween, removeBloodlustTween, useAnimation } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
 
 export abstract class Tribe extends Hero {
   constructor(data: IHero) {
     super(data);
+
+    if (this.status.has(StatusEffects.BLOODLUST)) addBloodlustTween(this.visuals.characterImage);
   }
 
   addBloodlust(): void {
     this.status.add(StatusEffects.BLOODLUST);
-    this.visuals.updateCharacterImage(this.stats);
+    const charImage = this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    addBloodlustTween(charImage);
     this.unitCard.updateCardPower(this);
   }
 
   removeBloodlust(): void {
     this.status.remove(StatusEffects.BLOODLUST);
-    this.visuals.updateCharacterImage(this.stats);
+    const charImage = this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    removeBloodlustTween(charImage);
     this.unitCard.updateCardPower(this);
   }
 
   equipFactionEquipment(handPosition: number): void {
     // this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE); // FIXME:
-
     const spikeImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', EItems.SPIKE_ARMOR).setOrigin(0.5).setDepth(100);
     useAnimation(spikeImg);
 
