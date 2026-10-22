@@ -25,6 +25,11 @@ import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import { mapItemFromBE } from "./mapItemFromBE";
 import { mapHeroFromBE } from "./mapHeroFromBE";
 import { Meat, SpikeArmor, Typhoon } from "../classes/factions/tribe/items";
+import { Warrior } from "../classes/factions/tribe/warrior";
+import { AxeThrower } from "../classes/factions/tribe/axeThrower";
+import { Witch } from "../classes/factions/tribe/witch";
+import { Shaman } from "../classes/factions/tribe/shaman";
+import { Chieftain } from "../classes/factions/tribe/chieftain";
 
 export function createNewItem(itemData: IItemBE): Item {
   const itemTypes: Record<EItems, () => Item> = {
@@ -74,11 +79,11 @@ export function createNewHero(heroData: IHeroBE): Hero {
     [EHeroes.GRENADIER]: () => new Grenadier(mapHeroFromBE(heroData)),
     [EHeroes.ANNIHILATOR]: () => new Annihilator(mapHeroFromBE(heroData)),
 
-    [EHeroes.WARRIOR]: () => new Paladin(mapHeroFromBE(heroData)), // FIXME:
-    [EHeroes.AXE_THROWER]: () => new Engineer(mapHeroFromBE(heroData)),
-    [EHeroes.WITCH]: () => new Gunner(mapHeroFromBE(heroData)),
-    [EHeroes.SHAMAN]: () => new Grenadier(mapHeroFromBE(heroData)),
-    [EHeroes.CHIEFTAIN]: () => new Annihilator(mapHeroFromBE(heroData))
+    [EHeroes.WARRIOR]: () => new Warrior(mapHeroFromBE(heroData)), // FIXME:
+    [EHeroes.AXE_THROWER]: () => new AxeThrower(mapHeroFromBE(heroData)),
+    [EHeroes.WITCH]: () => new Witch(mapHeroFromBE(heroData)),
+    [EHeroes.SHAMAN]: () => new Shaman(mapHeroFromBE(heroData)),
+    [EHeroes.CHIEFTAIN]: () => new Chieftain(mapHeroFromBE(heroData))
   };
 
   const createHero = heroTypes[heroData.unitType];

@@ -73,9 +73,9 @@ export enum EItems {
   PULVERIZER = 'pulverizer',
 
   // Tribe
-  TYPHOON = 'Warhorn-hd',
-  SPIKE_ARMOR = 'SpikeArmor-hd',
-  MEAT = 'Meat-hd'
+  TYPHOON = 'typhoon',
+  SPIKE_ARMOR = 'spikeArmor',
+  MEAT = 'meat'
 }
 
 export enum EClass {

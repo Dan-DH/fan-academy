@@ -1,4 +1,4 @@
-import { EActionType } from "../../../enums/gameEnums";
+import { EActionType, EItems } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { useAnimation } from "../../../utils/unitAnimations";
@@ -24,7 +24,7 @@ export abstract class Tribe extends Hero {
   equipFactionEquipment(handPosition: number): void {
     // this.scene.sound.play(EGameSounds.DRAGON_SCALE_USE); // FIXME:
 
-    const spikeImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', 'Meat-hd').setOrigin(0.5).setDepth(100);
+    const spikeImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', EItems.SPIKE_ARMOR).setOrigin(0.5).setDepth(100);
     useAnimation(spikeImg);
 
     this.status.add(StatusEffects.SPIKE_ARMOR);

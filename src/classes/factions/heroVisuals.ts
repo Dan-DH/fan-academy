@@ -232,7 +232,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       [EFaction.COUNCIL]: 'dragonScale',
       [EFaction.DARK_ELVES]: 'souldStone',
       [EFaction.DWARVES]: 'dragonScale',
-      [EFaction.TRIBE]: 'SpikeArmor-hd'
+      [EFaction.TRIBE]: 'spikeArmor'
     };
 
     return keys[faction];

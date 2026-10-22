@@ -87,5 +87,24 @@ export const profilePicNames = [
   "healingPotionIcon",
   "dragonScaleIcon",
   "pulverizerIcon",
-  "dwarvenBrewIcon"
+  "dwarvenBrewIcon",
+
+  "axeThrower_v1-hd",
+  "axeThrower_v2-hd",
+  "axeThrower_v3-hd",
+  "axeThrower_v4-hd",
+  "chieftain_v1-hd",
+  "chieftain_v5-hd",
+  "shaman_v1-hd",
+  "shaman_v2-hd",
+  "shaman_v3-hd",
+  "shaman_v4-hd",
+  "warrior_v1-hd",
+  "warrior_v2-hd",
+  "warrior_v3-hd",
+  "witch_v0-hd",
+  "witch_v1-hd",
+  "witch_v2-hd",
+  "witch_v3-hd"
+
 ];
