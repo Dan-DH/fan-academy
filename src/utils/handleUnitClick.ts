@@ -75,7 +75,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
     } else {
       // this.scene.sound.play(EGameSounds.HERO_BOARD_SELECT);
     }
-
+    // selects unit and highlights potential targets
     selectUnit(context, unit);
     return;
   }
@@ -168,8 +168,8 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
 
     // CASE 3.2: Clicking a friendly unit on the board
     if (unit instanceof Hero && isFriendly && unit.stats.boardPosition < 45) {
-      // Necromancer and Wraith can target friendly units if they are knocked down. NOTE: this check should always go before the stomping check
-      if (activeUnit instanceof Hero && [EHeroes.NECROMANCER, EHeroes.WRAITH].includes(activeUnit.stats.unitType) && unit.stats.isKO && attackReticle?.visible) {
+      // Necromancer/Wraith/Witch can target friendly units if they are knocked down. NOTE: this check should always go before the stomping check
+      if (activeUnit instanceof Hero && [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.WITCH].includes(activeUnit.stats.unitType) && unit.stats.isKO && attackReticle?.visible) {
         activeUnit.attack(unit);
         return;
       }
@@ -198,13 +198,13 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
           return;
         }
 
-        // Stomp friendly KO'd units, unless you are a Necromancer
+        // Stomp friendly KO'd units, unless you are a Necromancer/Witch
         if (activeUnit.stats.boardPosition < 45) {
           const tilesInRange = context.board!.getTilesInMoveRange(activeUnit);
           const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
           if (
             unit.stats.isKO &&
-            activeUnit.stats.unitType !== EHeroes.NECROMANCER &&
+            [EHeroes.NECROMANCER, EHeroes.WITCH].includes(activeUnit.stats.unitType) &&
             (withinStompingRange || unitTile.isHighlighted)
           ) {
             activeUnit.move(activeUnit.getTile(), unit.getTile());
