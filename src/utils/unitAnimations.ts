@@ -45,7 +45,8 @@ export async function unitMoveAnimation(params: {
   targetTile: Tile;
   tilesMoved?: number,
   angle?: number,
-  duration?: number
+  duration?: number,
+  isCharge?: boolean
 }): Promise<void> {
   if ((params.hero.scene as GameScene).skipAnimations) return;
   if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
@@ -55,11 +56,12 @@ export async function unitMoveAnimation(params: {
 async function moveAnimation(params: {
   hero: Hero,
   targetTile: Tile,
-  tilesMoved?: number
+  tilesMoved?: number,
+  isCharge?: boolean
 }): Promise<void> {
   const { hero, targetTile, tilesMoved } = params;
 
-  const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType);
+  const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType) || params?.isCharge;
 
   hero.context.input.enabled = false;
   const unitImage = hero.visuals.characterImage;
@@ -118,7 +120,6 @@ async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number)
 
 async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
   // this.scene.sound.play(EGameSounds.MOVE_WALK);
-
   const hopSpeed = 100;
   const moveDuration = Math.min(900, hopSpeed * 2 * tilesMoved);
   const unitImage = hero.visuals.characterImage;
@@ -180,7 +181,7 @@ async function forcedMoveAnimation(params: {
   await animation.call(params.hero.scene, params.hero, params.targetTile);
 };
 
-export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal): void {
+export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal, duration = 500): void {
   const isLookingRight = attacker.stats.belongsTo === 1;
   const attackerImage = attacker.visuals.characterImage;
 
@@ -190,7 +191,7 @@ export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | 
   if (!isLookingRight) attackerImage.setFlipX(false);
   if (isLookingRight)  attackerImage.setFlipX(true);
 
-  context.time.delayedCall(500, () => {
+  context.time.delayedCall(duration, () => {
     attackerImage.setFlipX(!attacker.visuals.characterImage.flipX);
   });
 }

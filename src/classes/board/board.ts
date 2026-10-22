@@ -308,8 +308,8 @@ export class Board {
   }
 
   getChargeTargets(hero: Hero): (Hero | Crystal)[] {
-    const minCol = 0;
-    const maxCol = 8;
+    const minCol = Math.max(hero.stats.col - 4, 0);
+    const maxCol = Math.min(hero.stats.col + 5, 8);
     const result: (Hero | Crystal)[] = [];
 
     const targetFound = (i: number, towardsRightSide: boolean): boolean => {

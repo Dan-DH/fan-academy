@@ -5,6 +5,7 @@ import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
+import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Tribe } from "./tribe";
 
@@ -13,22 +14,24 @@ export class Chieftain extends Tribe {
     super(data);
   }
 
-  attack(target: Hero | Crystal): void {
+  async attack(target: Hero | Crystal): Promise<void> {
     attackAnimation(this);
-    turnIfBehind(this.context, this, target);
     const distance = getDistanceToTarget(this, target);
 
     let damageToReflect = 0;
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (distance === 1) {
       if (isKoUnitOnEnemySpawn(target)) {
+        turnIfBehind(this.context, this, target);
         target.getsStompedOrDestroyed();
       } else {
-        damageToReflect += this.whirlwind(target);
+        turnIfBehind(this.context, this, target);
+        damageToReflect += await this.whirlwind(target);
         this.removeAttackModifiers();
       }
     } else {
-      damageToReflect += this.charge(target);
+      damageToReflect += await this.charge(target);
+      this.removeAttackModifiers();
     }
 
     if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageToReflect);
@@ -36,7 +39,7 @@ export class Chieftain extends Tribe {
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  whirlwind(target: Hero | Crystal): number {
+  async whirlwind(target: Hero | Crystal): Promise<number> {
     // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
     // TODO: spinning animation
     let totalDamageToReflect = 0;
@@ -61,13 +64,13 @@ export class Chieftain extends Tribe {
 
     this.pullUnitsCloser();
 
-    this.removeAttackModifiers();
     return totalDamageToReflect;
   }
 
-  charge(target: Hero | Crystal): number {
+  async charge(target: Hero | Crystal): Promise<number> {
     // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
-    this.removeAttackModifiers();
+    await this.move(this.getLandingTile(target), true);
+    turnIfBehind(this.context, this, target);
 
     // TODO: charge animation and unit displacement
     return target.getsDamaged({
@@ -75,6 +78,11 @@ export class Chieftain extends Tribe {
       attackType: this.stats.attackType,
       attacker: this
     });
+  }
+
+  private getLandingTile(target: Hero | Crystal): Tile {
+    const landingBoardPosition = target.stats.boardPosition + (target.stats.col > this.stats.col ? -1 : 1);
+    return this.context.board!.getTileFromBoardPosition(landingBoardPosition);
   }
 
   private pullUnitsCloser(): void {

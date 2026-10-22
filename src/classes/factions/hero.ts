@@ -461,7 +461,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.engineerShieldImage.setVisible(false);
   }
 
-  async move(targetTile: Tile): Promise<void> {
+  async move(targetTile: Tile, isCharge = false): Promise<void> {
     const startingBoardPosition = this.stats.boardPosition;
     const tilesMoved = getGridDistance(this.stats.row, this.stats.col, targetTile.row, targetTile.col);
 
@@ -473,7 +473,8 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       move: EUnitMoveType.MOVE,
       hero: this,
       targetTile,
-      tilesMoved
+      tilesMoved,
+      isCharge
     });
 
     // Stomp KO'd units
