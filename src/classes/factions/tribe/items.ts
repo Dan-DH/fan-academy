@@ -34,11 +34,9 @@ export class Typhoon extends Item {
     if (!enemyUnits) return;
 
     if (targetTile.col !== 0) {
-      console.log('PULLING FROM LEFT SIDE');
       for (let i = 0; i < targetTile.col; i++) await this.handlePushing(scene, enemyUnits as Hero[], i, false);
     }
     if (targetTile.col !== 8) {
-      console.log('PULLING FROM RIGHT SIDE');
       for (let i = 8; i > targetTile.col; i--) await this.handlePushing(scene, enemyUnits as Hero[], i, true);
     }
 
@@ -48,7 +46,6 @@ export class Typhoon extends Item {
         if (targetTile.col === 8 && isPlayerOne) goingRight = false;
         if (targetTile.col === 0 && !isPlayerOne) goingRight = true;
 
-        console.log('PULLING FROM TARGET COLUMN');
         this.handlePushing(scene, [u] as Hero[], targetTile.col, goingRight);
       }
     });
