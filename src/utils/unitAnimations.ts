@@ -4,7 +4,6 @@ import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { EHeroes, EUnitMoveType } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
-import { TMoveParams } from "../interfaces/gameInterface";
 
 export function flashActingUnit(hero: Hero): void {
   hero.visuals.characterImage.setTint(0x3399ff);
@@ -40,7 +39,14 @@ export function getDamagedAnimation(hero: Hero): void {
   });
 }
 
-export async function unitMoveAnimation(params: TMoveParams): Promise<void> {
+export async function unitMoveAnimation(params: {
+  move: EUnitMoveType;
+  hero: Hero;
+  targetTile: Tile;
+  tilesMoved?: number,
+  angle?: number,
+  duration?: number
+}): Promise<void> {
   if ((params.hero.scene as GameScene).skipAnimations) return;
   if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
   if (params.move === EUnitMoveType.FORCED_MOVE) await forcedMoveAnimation(params);
@@ -49,7 +55,7 @@ export async function unitMoveAnimation(params: TMoveParams): Promise<void> {
 async function moveAnimation(params: {
   hero: Hero,
   targetTile: Tile,
-  tilesMoved: number
+  tilesMoved?: number
 }): Promise<void> {
   const { hero, targetTile, tilesMoved } = params;
 
@@ -66,9 +72,9 @@ async function moveAnimation(params: {
   }
 
   if (isFlying) {
-    await flyingAnimation(hero, targetTile, tilesMoved);
+    await flyingAnimation(hero, targetTile, tilesMoved!);
   } else {
-    await hoppingAnimation(hero, targetTile, tilesMoved);
+    await hoppingAnimation(hero, targetTile, tilesMoved!);
   }
 
   hero.context.input.enabled = true;
@@ -150,7 +156,7 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
 async function forcedMoveAnimation(params: {
   hero: Hero,
   targetTile: Tile,
-  angle: number
+  angle?: number,
 }): Promise<void> {
   params.hero.scene.input.enabled = false;
 

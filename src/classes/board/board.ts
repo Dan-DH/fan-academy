@@ -717,18 +717,15 @@ export class Board {
   }
 
   // FIXME: check that works for both pull and pull (and check spawn interactions)
-  // Remove pull method if not needed
-  async displaceUnit(params: {
+  async calculateDisplaceUnit(params: {
     attackerCoords: {
       row: number,
       col: number
     },
     target: Hero,
-    angle?: number,
-    isPush?: boolean
+    isPush?: boolean,
   }): Promise<boolean> {
     const { attackerCoords, target } = params;
-    const angle = params.angle ?? 0;
     const isPush = params.isPush ?? true;
 
     const newPosition = this.getNewPositionAfterForce(attackerCoords.row, attackerCoords.col, target.stats.row, target.stats.col, isPush);
@@ -746,16 +743,27 @@ export class Board {
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile);
 
-    await unitMoveAnimation({
-      move: EUnitMoveType.FORCED_MOVE,
-      hero: target,
-      targetTile: targetNewTile,
-      angle
-    });
-
     target.updatePosition(targetNewTile);
     return true;
   }
+
+  async displaceUnit(params: {
+    attackerCoords: {
+      row: number,
+      col: number
+    },
+    target: Hero,
+    angle?: number,
+    isPush?: boolean,
+  }): Promise<void> {
+    const moved = await this.calculateDisplaceUnit(params);
+    if (moved) await unitMoveAnimation({
+      move: EUnitMoveType.FORCED_MOVE,
+      hero: params.target,
+      targetTile: params.target.getTile(),
+      angle: 0
+    });
+  };
 
   canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {
     const spawnBelongsTo = tile.col < 5 ? 1 : 2;

@@ -1,7 +1,7 @@
-import { EActionType } from "../../../enums/gameEnums";
+import { EActionType, EUnitMoveType } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { typhoonAnimation } from "../../../utils/unitAnimations";
+import { typhoonAnimation, unitMoveAnimation } from "../../../utils/unitAnimations";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Item } from "../item";
@@ -22,7 +22,7 @@ export class Typhoon extends Item {
     super(data);
   }
 
-  use(targetTile: Tile): void {
+  async use(targetTile: Tile): Promise<void> {
     const scene = targetTile.scene as GameScene;
     const typhoonImage = this.scene.add.image(targetTile.x + 15, 400, 'gameAtlas', 'Typhoon_Wave2-hd').setScale(2.5).setDepth(100);
     typhoonAnimation(typhoonImage, targetTile.col);
@@ -33,8 +33,14 @@ export class Typhoon extends Item {
     const enemyUnits = scene.board?.units.filter((u): u is Hero => u.stats.belongsTo !== belongsTo && u instanceof Hero);
     if (!enemyUnits) return;
 
-    if (targetTile.col !== 0) for (let i = 0; i < targetTile.col; i++) this.handlePushing(scene, enemyUnits as Hero[], i, false);
-    if (targetTile.col !== 8) for (let i = 8; i > targetTile.col; i--) this.handlePushing(scene, enemyUnits as Hero[], i, true);
+    if (targetTile.col !== 0) {
+      console.log('PULLING FROM LEFT SIDE');
+      for (let i = 0; i < targetTile.col; i++) await this.handlePushing(scene, enemyUnits as Hero[], i, false);
+    }
+    if (targetTile.col !== 8) {
+      console.log('PULLING FROM RIGHT SIDE');
+      for (let i = 8; i > targetTile.col; i--) await this.handlePushing(scene, enemyUnits as Hero[], i, true);
+    }
 
     enemyUnits.forEach(u => {
       if (u.stats.col === targetTile.col) {
@@ -42,6 +48,7 @@ export class Typhoon extends Item {
         if (targetTile.col === 8 && isPlayerOne) goingRight = false;
         if (targetTile.col === 0 && !isPlayerOne) goingRight = true;
 
+        console.log('PULLING FROM TARGET COLUMN');
         this.handlePushing(scene, [u] as Hero[], targetTile.col, goingRight);
       }
     });
@@ -50,24 +57,34 @@ export class Typhoon extends Item {
     this.removeFromGame();
   }
 
-  private handlePushing(scene: GameScene, enemyUnits: Hero[], col: number, goingRight: boolean): void {
+  private async handlePushing(scene: GameScene, enemyUnits: Hero[], col: number, goingRight: boolean): Promise<void> {
     const matchingUnits = enemyUnits.filter(u => u.stats.col === col);
     const offset = goingRight ? -1 : 1;
-    matchingUnits.forEach(u => {
+    for (const u of matchingUnits) {
       const pushTarget = {
         row: u.stats.row,
         col: u.stats.col + offset
       };
 
-      // FIXME: always returns true since it's an async function without await
-      if (scene.board?.displaceUnit({
-        attackerCoords: pushTarget,
-        target: u as Hero
-      })) scene.board!.displaceUnit({
+      const moved = await scene.board?.calculateDisplaceUnit({
         attackerCoords: pushTarget,
         target: u as Hero
       });
-    });
+
+      if (moved) {
+        await scene.board?.calculateDisplaceUnit({
+          attackerCoords: pushTarget,
+          target: u as Hero
+        });
+
+        unitMoveAnimation({
+          move: EUnitMoveType.FORCED_MOVE,
+          hero: u,
+          targetTile: u.getTile(),
+          angle: 0
+        });
+      }
+    };
   }
 }
 
