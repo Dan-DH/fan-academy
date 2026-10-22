@@ -617,11 +617,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return this.stats.maxHealth / this.stats.baseHealth - 1;
   }
 
-  consumeMeat(): void {
+  consumeMeat(handPosition: number): void {
+    this.visuals.playMeatAnimation();
     this.getsHealed(700);
     this.status.add(StatusEffects.MEAT);
     this.unitCard.updateCardData(this);
-    this.visuals.playMeatAnimation();
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   checkForDamageToReflect(target: Hero | Crystal | undefined, damage: number): void {

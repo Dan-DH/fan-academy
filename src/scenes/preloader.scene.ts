@@ -77,11 +77,13 @@ export default class PreloaderScene extends Phaser.Scene {
   // animations
   createSpriteAnimations(): void {
     this.createReviveAnimation();
+    this.creatCorpseExplosionAnimation();
     this.createSpecialTileAnimations();
     this.createAnnihilatorDebuffAnimation();
     this.createSingleCrystalDebuffAnimation();
     this.createDoubleCrystalDebuffAnimation();
     this.createSuperChargeAnimation();
+    this.createMeatAnimation();
     this.createSingleCrystalDebuffAnimation();
   }
 
@@ -90,6 +92,19 @@ export default class PreloaderScene extends Phaser.Scene {
       key: 'reviveAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
         prefix: 'reviveAnim_',
+        start: 1,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+  }
+
+  creatCorpseExplosionAnimation(): void {
+    this.anims.create({
+      key: 'corpseExpAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'CorpseExplosion_hd_',
         start: 1,
         end: 3
       }),
@@ -128,7 +143,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.anims.create({
       key: 'meatAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
-        prefix: 'Meat_',
+        prefix: 'meatAnim_',
         start: 1,
         end: 3
       }),

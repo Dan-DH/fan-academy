@@ -1,7 +1,7 @@
-import { EActionType, EItems } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
 import GameScene from "../../../scenes/game.scene";
-import { typhoonAnimation, useAnimation } from "../../../utils/unitAnimations";
+import { typhoonAnimation } from "../../../utils/unitAnimations";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Item } from "../item";
@@ -78,12 +78,7 @@ export class Meat extends Item {
 
   use(target: Hero): void {
     // this.scene.sound.play(EGameSounds.POTION_USE);
-    const meatImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', EItems.MEAT).setDepth(100);
-    useAnimation(meatImage);
-
-    target.consumeMeat();
-
-    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    target.consumeMeat(this.stats.boardPosition);
     this.removeFromGame();
   }
 }

@@ -34,7 +34,7 @@ export class Witch extends Tribe {
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  private explodeCorpse(target: Hero): void {
+  private async explodeCorpse(target: Hero): Promise<void> {
     // get extra health
     const explosionDamagePercentIncrease = Math.max(target.getExtraHealthPercent(), 0);
     const board = this.context.board!;
@@ -49,8 +49,7 @@ export class Witch extends Tribe {
       }
     });
 
-    // get adjacent enemy units
-    // loop and do damage
+    await target.visuals.playCorpseExplosionAnimation();
     this.removeAttackModifiers();
     target.getsStompedOrDestroyed();
   }

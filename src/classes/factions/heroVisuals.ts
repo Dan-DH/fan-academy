@@ -26,6 +26,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   annihilatorDebuffAnimationSprite: Phaser.GameObjects.Sprite;
   reviveAnimationSprite: Phaser.GameObjects.Sprite;
   smokeAnimationImage: Phaser.GameObjects.Image;
+  corpseExplosionSprite: Phaser.GameObjects.Sprite;
 
   status: StatusTracker;
 
@@ -110,10 +111,13 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.reviveAnimationSprite = context.add.sprite(0, -20, 'gameAtlas', '').setScale(1.2).setVisible(false);
 
+    this.corpseExplosionSprite = context.add.sprite(0, -25, 'gameAtlas', 'CorpseExplosion_hd_1').setScale(1.3).setVisible(false);
+
     this.add([
       this.paladinAuraImage,
       this.priestessDebuffImage,
       this.superChargeAnimationSprite,
+      this.meatAnimationSprite,
       this.reviveAnimationSprite,
       this.characterImage,
       this.specialTileAnimationSprite,
@@ -126,6 +130,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       this.engineerShieldImage,
       this.annihilatorDebuffAnimationSprite,
       this.dwarvenBrewImage,
+      this.corpseExplosionSprite,
       ...this.smokeAnimationImage ? [this.smokeAnimationImage] : [],
       this.blockedLOS
     ]);
@@ -224,6 +229,21 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
       key: 'reviveAnim',
       showOnStart: true,
       hideOnComplete: true
+    });
+  }
+
+  async playCorpseExplosionAnimation() {
+    await new Promise<void>((resolve) => {
+      this.corpseExplosionSprite.once('animationcomplete', () => {
+        console.log('before resolved');
+        resolve();
+      });
+
+      this.corpseExplosionSprite.play({
+        key: 'corpseExpAnim',
+        showOnStart: true,
+        hideOnComplete: true
+      });
     });
   }
 
