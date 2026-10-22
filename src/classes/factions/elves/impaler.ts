@@ -13,7 +13,7 @@ export class Impaler extends DarkElf {
     super(data);
   }
 
-  async attack(target: Hero | Crystal): Promise<void> {
+  attack(target: Hero | Crystal): void {
     attackAnimation(this);
     turnIfBehind(this.context, this, target); // Ensure turnIfBehind is imported/defined
 

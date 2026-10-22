@@ -50,7 +50,10 @@ export async function unitMoveAnimation(params: {
 }): Promise<void> {
   if ((params.hero.scene as GameScene).skipAnimations) return;
   if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
-  if (params.move === EUnitMoveType.FORCED_MOVE) await forcedMoveAnimation(params);
+  if (params.move === EUnitMoveType.FORCED_MOVE) {
+    await forcedMoveAnimation(params);
+    params.hero.updatePosition(params.targetTile);
+  }
 };
 
 async function moveAnimation(params: {
@@ -148,7 +151,6 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
       ease: 'Sine.easeOut',
       onStop: () => {
         unitImage.y = unitBaseY;
-        // unitImage.setScale(1);
       }
     });
   });
@@ -158,27 +160,29 @@ async function forcedMoveAnimation(params: {
   hero: Hero,
   targetTile: Tile,
   angle?: number,
+  duration?: number,
 }): Promise<void> {
   params.hero.scene.input.enabled = false;
 
-  const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
-    return new Promise((resolve) => {
-      hero.scene.tweens.add({
-        targets: hero,
-        x: targetTile.x,
-        y: targetTile.y,
-        angle: params.angle ?? 0,
-        duration: 200,
-        ease: 'Linear',
-        onComplete: () => {
-          hero.scene.input.enabled = true;
-          resolve();
-        }
-      });
+  // const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
+  console.log('angle', params.angle);
+  return new Promise((resolve) => {
+    params.hero.scene.tweens.add({
+      targets: params.hero,
+      x: params.targetTile.x,
+      y: params.targetTile.y,
+      angle: params.angle ?? 0,
+      duration: params.duration ?? 200,
+      ease: 'Linear',
+      onComplete: () => {
+        params.hero.scene.input.enabled = true;
+        resolve();
+      }
     });
-  };
+  });
+  // };
 
-  await animation.call(params.hero.scene, params.hero, params.targetTile);
+  // await animation.call(params.hero.scene, params.hero, params.targetTile);
 };
 
 export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal, duration = 500): void {
@@ -260,6 +264,17 @@ export function removeBloodlustTween(image: Phaser.GameObjects.Image): void {
     bloodlustTween.remove();
     image.setData('bloodlustTween', null);
   }
+}
+
+export function addWhirlwindTween(image: Phaser.GameObjects.Image): void {
+  image.scene.tweens.add({
+    targets: image,
+    scaleX: -1,
+    duration: 25,
+    yoyo: true,
+    repeat: 2,
+    ease: 'Linear'
+  });
 }
 
 export function addCirclingTween(reticle: Phaser.GameObjects.Image): Phaser.Tweens.Tween {

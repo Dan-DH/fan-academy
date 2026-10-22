@@ -12,7 +12,7 @@ export class Knight extends Council {
     super(data);
   }
 
-  async attack(target: Hero | Crystal): Promise<void> {
+  attack(target: Hero | Crystal): void {
     attackAnimation(this);
 
     turnIfBehind(this.context, this, target);

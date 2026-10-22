@@ -3,7 +3,7 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { StatusEffects } from "../../../utils/statuses";
-import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { addWhirlwindTween, attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
 import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
@@ -39,9 +39,9 @@ export class Chieftain extends Tribe {
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  async whirlwind(target: Hero | Crystal): Promise<number> {
+  whirlwind(target: Hero | Crystal): number {
     // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
-    // TODO: spinning animation
+    addWhirlwindTween(this.visuals.characterImage);
     let totalDamageToReflect = 0;
 
     const damageDealt = target.getsDamaged({
@@ -67,12 +67,11 @@ export class Chieftain extends Tribe {
     return totalDamageToReflect;
   }
 
-  async charge(target: Hero | Crystal): Promise<number> {
+  charge(target: Hero | Crystal): number {
     // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
-    await this.move(this.getLandingTile(target), true);
+    this.move(this.getLandingTile(target), true);
     turnIfBehind(this.context, this, target);
 
-    // TODO: charge animation and unit displacement
     return target.getsDamaged({
       damage: this.getTotalPower(),
       attackType: this.stats.attackType,
@@ -92,30 +91,32 @@ export class Chieftain extends Tribe {
 
     // Diagonal check
     const diagonalRows = [-1,  1];
-    diagonalRows.forEach(r => {
+    for (const r of diagonalRows) {
       const colArray = [-1, 1];
-      colArray.forEach(c => {
+      for (const c of colArray) {
         const isOccupied = board.units.find(u => u.stats.row === thisRow + r && u.stats.col === thisCol + c);
         if (isOccupied) return;
 
         const newRow = thisRow + (r < 0 ? -2 : 2);
         const newCol = thisCol + (c < 0 ? -2 : 2);
         const unitToMove = board.units.find((u): u is Hero => u instanceof Hero && u.stats.belongsTo !== this.stats.belongsTo && u.stats.row === newRow && u.stats.col === newCol);
-        if (unitToMove) board.displaceUnit({
-          attackerCoords: {
-            row: this.stats.row,
-            col: this.stats.col
-          },
-          target: unitToMove,
-          isPush: false
-        });
-      });
-    });
+        if (unitToMove) {
+          board.displaceUnit({
+            attackerCoords: {
+              row: this.stats.row,
+              col: this.stats.col
+            },
+            target: unitToMove,
+            isPush: false
+          });
+        }
+      };
+    };
 
     // Orthogonal check
     const myArrayCols = [ -2, 2 ];
     const myArrayRows = [ -2,  2];
-    myArrayCols.forEach(c => {
+    for (const c of myArrayCols) {
       const row = [1, 0, -1];
       for (let i = 0; i <= row.length - 1; i++) {
         const r = row[i];
@@ -132,9 +133,9 @@ export class Chieftain extends Tribe {
           break;
         }
       }
-    });
+    };
 
-    myArrayRows.forEach(r => {
+    for (const r of myArrayRows) {
       const col = [-1, 0, 1];
       for (let i = 0; i <= col.length - 1; i++) {
         const c = col[i];
@@ -151,7 +152,7 @@ export class Chieftain extends Tribe {
           break;
         }
       }
-    });
+    };
   }
 
   heal(_target: Hero): void {}

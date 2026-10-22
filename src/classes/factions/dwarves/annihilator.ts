@@ -44,7 +44,7 @@ export class Annihilator extends Dwarf {
       const adjacentFriendlyUnits = this.context.board!.getAliveAdjacentFriendlyUnitsOnBoard(target);
 
       if (adjacentFriendlyUnits.length) {
-        adjacentFriendlyUnits.forEach(unit =>{
+        for (const unit of adjacentFriendlyUnits) {
           const damageDealt = unit.getsDamaged({
             damage: this.getTotalPower(0.2),
             attackType: this.stats.attackType,
@@ -59,11 +59,12 @@ export class Annihilator extends Dwarf {
                 col: target.stats.col
               },
               target: unit,
-              angle: 360
+              angle: 360,
+              duration: 300
             });
             if (unit.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
             if (isPhantomAndKO(unit)) unit.removeFromGame();
-          }});
+          }};
       }
 
       this.removeAttackModifiers();

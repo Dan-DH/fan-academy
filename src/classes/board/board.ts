@@ -716,7 +716,6 @@ export class Board {
     return !!this.units.find(u => u.stats.boardPosition === boardPosition && u.stats.belongsTo !== belongsTo);
   }
 
-  // FIXME: check that works for both pull and pull (and check spawn interactions)
   async calculateDisplaceUnit(params: {
     attackerCoords: {
       row: number,
@@ -724,7 +723,7 @@ export class Board {
     },
     target: Hero,
     isPush?: boolean,
-  }): Promise<boolean> {
+  }): Promise<Tile | undefined> {
     const { attackerCoords, target } = params;
     const isPush = params.isPush ?? true;
 
@@ -733,18 +732,17 @@ export class Board {
     // If the tile is beyond the boundaries of the map, ignore
     const isWrongRow = newPosition.row < 0 || newPosition.row > 4;
     const isWrongCol = newPosition.col < 0 || newPosition.col > 8;
-    if (isWrongRow || isWrongCol) return false;
+    if (isWrongRow || isWrongCol) return;
 
     const targetNewTile = this.getTileFromCoordinates(newPosition.row, newPosition.col);
 
-    if (!targetNewTile) return false;
-    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return false;
-    if (targetNewTile.tileType == ETiles.SPAWN && target instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return false;
+    if (!targetNewTile) return;
+    if (this.isTileOccupiedIncludingKOs(targetNewTile.boardPosition)) return;
+    if (targetNewTile.tileType == ETiles.SPAWN && target instanceof Hero && !this.canBeMovedIntoSpawn(targetNewTile, target) && !target.stats.isKO) return;
 
     if (!target.stats.isKO) moveSpecialTileCheck(target, targetNewTile);
 
-    target.updatePosition(targetNewTile);
-    return true;
+    return targetNewTile;
   }
 
   async displaceUnit(params: {
@@ -755,13 +753,15 @@ export class Board {
     target: Hero,
     angle?: number,
     isPush?: boolean,
+    duration?: number
   }): Promise<void> {
-    const moved = await this.calculateDisplaceUnit(params);
-    if (moved) await unitMoveAnimation({
+    const newTile = await this.calculateDisplaceUnit(params);
+    if (newTile) await unitMoveAnimation({
       move: EUnitMoveType.FORCED_MOVE,
       hero: params.target,
-      targetTile: params.target.getTile(),
-      angle: 0
+      targetTile: newTile,
+      angle: params.angle ?? 0,
+      duration: params.duration
     });
   };
 
