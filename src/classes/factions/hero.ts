@@ -425,7 +425,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   getsStompedOrDestroyed(actor: Hero | Item): void {
-    if (actor.stats.belongsTo === this.stats.belongsTo) {
+    if (actor.stats.belongsTo !== this.stats.belongsTo) {
       this.removedByEnemy();
     } else {
       this.removeFromGame();
