@@ -250,7 +250,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   private getFactionEquipmentKey(faction: EFaction): string {
     const keys = {
       [EFaction.COUNCIL]: 'dragonScale',
-      [EFaction.DARK_ELVES]: 'souldStone',
+      [EFaction.DARK_ELVES]: 'soulStone',
       [EFaction.DWARVES]: 'dragonScale',
       [EFaction.TRIBE]: 'spikeArmor'
     };
