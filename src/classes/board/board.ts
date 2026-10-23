@@ -23,6 +23,7 @@ import { fanAcademy } from "../../main";
 import { mapCrystalToBE } from "../../utils/mapCrystalToBE";
 import { mapHeroToBE } from "../../utils/mapHeroToBE";
 import { Chieftain } from "../factions/tribe/chieftain";
+import { Shaman } from "../factions/tribe/shaman";
 
 export class Board {
   tileSize: number = 90;
@@ -168,22 +169,22 @@ export class Board {
 
     const unitsInHealingRange: (Hero | Crystal)[] = hero.stats.canHeal ? this.getUnitsInRange(hero, ERange.HEAL) : [];
     const unitsInBuffRange: (Hero | Crystal)[] = hero.stats.canBuff ? this.getUnitsInRange(hero, ERange.BUFF) : [];
-    const totalUnitsInRange: (Hero | Crystal)[] = unitsInHealingRange.concat(unitsInBuffRange);
+    const totalUnitsInRange: (Hero | Crystal)[] = [...unitsInHealingRange, ...unitsInBuffRange].filter(u => u.stats.belongsTo === hero.stats.belongsTo);
 
     if (!totalUnitsInRange.length) return;
 
     totalUnitsInRange.forEach(u => {
-      const maxHealth = u.stats.maxHealth;
-      const currentHealth = u.stats.currentHealth;
-
-      if (u instanceof Hero && hero.stats.canHeal && u.stats.belongsTo === hero.stats.belongsTo && currentHealth! < maxHealth!) {
-        addReticleTween(u.visuals.healReticle);
-      }
-      // Will need to update this logic for any future buffs by other units
-      if (hero.stats.canBuff && u.stats.belongsTo === hero.stats.belongsTo && !u.status.has(StatusEffects.ENGINEER_SHIELD)) {
+      // BEWARE: Will need to update this logic for any future buffs by other units
+      if (hero.stats.canBuff && !u.status.has(StatusEffects.ENGINEER_SHIELD)) {
         if (u instanceof Crystal) addReticleTween(u.visuals.healReticle);
         if (u instanceof Hero && !u.stats.isKO) addReticleTween(u.visuals.healReticle);
+        return;
       }
+
+      const isHurt = u .stats.currentHealth < u.stats.maxHealth;
+      const shamanHealRangeCheck = hero instanceof Shaman && u instanceof Hero && hero.checkForValidShamanHealingPath(u);
+
+      if (u instanceof Hero && (isHurt || shamanHealRangeCheck)) addReticleTween(u.visuals.healReticle);
     });
   }
 
@@ -573,7 +574,7 @@ export class Board {
     });
   };
 
-  // Check if a unit that can interact with a corpse (With, Necro) should stomp an enemit unit instead
+  // Checks if a unit that can interact with a corpse (With, Necro) should stomp an enemit unit instead
   corpseInteractionStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
     if (![EHeroes.NECROMANCER, EHeroes.WITCH].includes(activeUnit.stats.unitType)) return true; // stomp
 

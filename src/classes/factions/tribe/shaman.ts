@@ -1,9 +1,8 @@
 import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
-import { isKoUnitOnEnemySpawn, isOnBoard, isPhantomAndKO } from "../../../utils/gameUtils";
+import { getGridDistance, isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
-import { Board } from "../../board/board";
 import { Crystal } from "../../board/crystal";
 import { Hero } from "../hero";
 import { Tribe } from "./tribe";
@@ -37,110 +36,76 @@ export class Shaman extends Tribe {
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  heal(target: Hero): void {
+  async heal(target: Hero): Promise<void> {
     flashActingUnit(this);
     turnIfBehind(this.context, this, target);
-    const healDirection = this.context.board!.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
-
     // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL);
     // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.HEAL_EXTRA);
 
     // First target
-    this.applyHealing(target, 2, 0.5);
+    await this.applyHealing(target, 2, 0.5);
     // Second target
-    const secondTarget = this.getNextTarget(target, healDirection, this.context.board!, false);
-    if (secondTarget) this.applyHealing(secondTarget, 1, 0.25);
+    const secondTarget = this.getNextTarget(target);
+    if (secondTarget) await this.applyHealing(secondTarget, 1, 0.25);
 
     let thirdTarget: Hero | undefined = undefined;
-    if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, healDirection, this.context.board!, true);
-    if (thirdTarget) this.applyHealing(thirdTarget, 0.5, 0.125);
+    if (secondTarget) thirdTarget = this.getNextTarget(secondTarget);
+    if (thirdTarget) await this.applyHealing(thirdTarget, 0.5, 0.125);
 
     this.removeAttackModifiers();
 
     this.context.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
   };
 
-  private applyHealing(unit: Hero, healingModifier: number, reviveModifier: number): void {
+  private async applyHealing(unit: Hero, healingModifier: number, reviveModifier: number): Promise<void> {
+    await new Promise(resolve => this.context.time.delayedCall(100, resolve));
     const healingAmount = this.getTotalHealing(unit.stats.isKO ? reviveModifier : healingModifier);
     unit.getsHealed(healingAmount);
   }
 
-  private getNextTarget(target: Hero | Crystal, attackDirection: number, board: Board, isLastTarget: boolean): Hero | undefined {
-    const positionsToIgnore = [this.stats.boardPosition];
-    const adjacentFriendlies = this.getAdjacentFriendlyUnits(target.stats.boardPosition, positionsToIgnore);
+  getNextTarget(target: Hero): Hero | undefined {
+    const board = this.context.board!;
+    const healDirection = board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
+    const unitsToRate = board.units.filter((u): u is Hero => {
+      if (u instanceof Crystal || u.stats.belongsTo !== this.stats.belongsTo || u === this) return false; // BEWARE: this won't work if u references a different instance of the Hero, but it shouldn't be the case.
+
+      const distance = getGridDistance(target.stats.row, target.stats.col, u.stats.row, u.stats.col);
+
+      return distance > 0 && distance <= 2;
+    });
 
     let maxScore = -1;
-    let bestTarget: Hero | Crystal | undefined;
-
-    for (const unit of adjacentFriendlies) {
-      const friendlyTileDirection = board.getAttackDirection(target.stats.boardPosition, unit.stats.boardPosition);
-
+    let bestTarget = undefined;
+    unitsToRate?.forEach(u => {
       let score = 0;
 
       /**
        *  An unit gets points for:
        *    -being KO or hurt (max priority)
        *    -being orthogonally adjacent to the target
-       *    -being in the orthogonal direction of the heal
-       *    -being in the diagonal direction of the heal
-       *    -having an adjacent friendly unit that's KO or hurt (high priority)
+       *    -being in the general direction of the heal
        *  */
-      if (unit.stats.isKO) {
+      if (u.stats.isKO) {
         score += 50;
-      } else if (unit.stats.currentHealth < unit.stats.maxHealth) {
+      } else if (u.stats.currentHealth < u.stats.maxHealth) {
         score += 30;
       }
-      if ([1, 3, 5, 7].includes(friendlyTileDirection)) score += 3;
-      if (friendlyTileDirection === attackDirection) score += 3;
-      if (this.getGeneralDirections(attackDirection).includes(friendlyTileDirection)) score += 2.5;
 
-      if (!isLastTarget) {
-        const enemyHasAdjacentFriendlies = this.getAdjacentFriendlyUnits(unit.stats.boardPosition, [...positionsToIgnore, unit.stats.boardPosition]);
-        const adjacentKO = enemyHasAdjacentFriendlies.find(u => u.stats.isKO);
-        if (adjacentKO) {
-          score += 20;
-        } else {
-          const adjacentHurt = enemyHasAdjacentFriendlies.find(u => u.stats.currentHealth < u.stats.maxHealth);
-          if (adjacentHurt) score += 10;
-        }
+      if (board.isOrthogonalAdjacent(target, u)) maxScore += 10;
 
-        if (score > maxScore) {
-          maxScore = score;
-          bestTarget = unit;
-        }
-      }}
+      const directionFromTargetToUnit = board.getAttackDirection(target.stats.boardPosition, u.stats.boardPosition);
 
-    if (!bestTarget) {
-      console.log("getNextTarget() No suitable adjacent target found.");
-      return undefined;
-    }
+      if (this.getGeneralDirections(healDirection).includes(directionFromTargetToUnit)) maxScore += 5;
 
-    return board.units.find((u): u is Hero => u.stats.boardPosition === bestTarget?.stats.boardPosition);
-  }
-
-  getAdjacentFriendlyUnits(boardPosition: number, ignorePosition: number[] = []): Hero[] {
-    const adjacentOffsets = [-10, -9, -8, -1, +1, +8, +9, +10];
-    const leftOffset = [-10, -1, +8];
-    const rightOffset = [+10, +1, -8];
-    const adjacentEnemyHeroes: Hero[] = [];
-    const boardWidth = 9;
-
-    const isOnLeftEdge = boardPosition % boardWidth === 0;
-    const isOnRightEdge = (boardPosition + 1) % boardWidth === 0;
-
-    for (const offset of adjacentOffsets) {
-      if (isOnLeftEdge && leftOffset.includes(offset) ||
-          isOnRightEdge && rightOffset.includes(offset)) continue;
-
-      const tilePosition = boardPosition + offset;
-
-      if (isOnBoard(tilePosition) && !ignorePosition.includes(tilePosition)) {
-        const matchedUnit = this.context.board!.units.find((u): u is Hero => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo && u.stats.boardPosition === tilePosition);
-        if (matchedUnit) adjacentEnemyHeroes.push(matchedUnit);
+      // console.log('UNIT', u.stats.unitId, score);
+      if (score > maxScore) {
+        maxScore = score;
+        bestTarget = u;
       }
-    }
-    return adjacentEnemyHeroes;
-  }
+    });
+
+    return bestTarget;
+  };
 
   private getGeneralDirections(direction: number): number[] {
     switch (direction) {
@@ -155,6 +120,16 @@ export class Shaman extends Tribe {
       default: return [];
     }
   }
+
+  checkForValidShamanHealingPath(target: Hero): boolean {
+    const secondTarget = this.getNextTarget(target);
+    let thirdTarget = undefined;
+    if (secondTarget) thirdTarget = this.getNextTarget(secondTarget);
+
+    if (!secondTarget && !thirdTarget) return false;
+    if (secondTarget?.isFullHP() && thirdTarget?.isFullHP()) return false;
+    return true;
+  };
 
   teleport(_target: Hero): void {};
   shieldAlly(_target: Hero | Crystal): void {};
