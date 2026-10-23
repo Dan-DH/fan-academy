@@ -568,13 +568,13 @@ export class Board {
     });
   };
 
-  // Check if a Necromancer should stomp an enemit unit or create a phantom
-  necromancerStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
-    if (activeUnit.stats.unitType !== EHeroes.NECROMANCER) return true; // not a necro, so stomp
+  // Check if a unit that can interact with a corpse (With, Necro) should stomp an enemit unit instead
+  corpseInteractionStompCheck(activeUnit: Hero, koUnit: Hero, withinAttackingRange: boolean, withinStompingRange: boolean): boolean {
+    if (![EHeroes.NECROMANCER, EHeroes.WITCH].includes(activeUnit.stats.unitType)) return true; // stomp
 
-    if (koUnit.visuals.blockedLOS.visible) return true; // stomp if LOS is blocked for phantom creation
+    if (koUnit.visuals.blockedLOS.visible) return true; // stomp if LOS is blocked for corpse interaction
 
-    if (!withinAttackingRange && withinStompingRange) return true; // if standing on a speed tile he can stomp further than he can attack
+    if (!withinAttackingRange && withinStompingRange) return true; // if standing on a speed tile units can stomp further than they zcan attack
 
     return false;
   }

@@ -117,11 +117,11 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
         const unitsInAttackingRange = context.board!.getUnitsInRange(activeUnit, ERange.ATTACK);
         const withinStompingRange = tilesInMovingRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
         const withinAttackingRange = unitsInAttackingRange.find(unit => unit.stats.boardPosition === unit.stats.boardPosition);
-        const necromancerStompCheck = context.board!.necromancerStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
+        const corpseInteractionStompCheck = context.board!.corpseInteractionStompCheck(activeUnit, unit, !!withinAttackingRange, !!withinStompingRange);
 
         if (
           unit.stats.isKO &&
-          necromancerStompCheck &&
+          corpseInteractionStompCheck &&
           (withinStompingRange || unitTile.isHighlighted)
         ) {
           activeUnit.move(unitTile);
@@ -204,7 +204,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
           const withinStompingRange = tilesInRange.find(tile => tile.boardPosition === unit.stats.boardPosition);
           if (
             unit.stats.isKO &&
-            [EHeroes.NECROMANCER, EHeroes.WITCH].includes(activeUnit.stats.unitType) &&
+            // ![EHeroes.NECROMANCER, EHeroes.WITCH].includes(activeUnit.stats.unitType) &&
             (withinStompingRange || unitTile.isHighlighted)
           ) {
             activeUnit.move(unit.getTile());

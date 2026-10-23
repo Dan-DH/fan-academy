@@ -467,7 +467,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     removeSpecialTile(this);
 
-    this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
+    this.setDepth(targetTile.row + 20); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
 
     await unitMoveAnimation({
       move: EUnitMoveType.MOVE,
