@@ -51,7 +51,7 @@ export class Chieftain extends Tribe {
     });
     if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
-    const adjacentUnits = this.context.board!.getAliveAdjacentFriendlyUnitsOnBoard(target);
+    const adjacentUnits = this.context.board!.getAliveAdjacentUnitsOnBoard(this, false, [target]);
     adjacentUnits.forEach(u => {
       const damageDealt = u.getsDamaged({
         damage: this.getTotalPower(0.66),

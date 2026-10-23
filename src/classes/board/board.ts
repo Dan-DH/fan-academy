@@ -509,9 +509,14 @@ export class Board {
     return row === 1 && col === 0 || row === 0 && col === 1;
   }
 
-  getAliveAdjacentFriendlyUnitsOnBoard(target: Hero | Crystal): (Hero | Crystal)[] {
+  getAliveAdjacentUnitsOnBoard(target: Hero | Crystal, getFriendlies = true, unitsToAvoid?: (Hero | Crystal)[]): (Hero | Crystal)[] {
     return this.units.filter(u => {
-      if (target.stats.belongsTo === u.stats.belongsTo && this.isAdjacent(target, u)) {
+      if (unitsToAvoid?.some(unit => unit.stats.boardPosition === u.stats.boardPosition)) return false;
+      if (target.stats.boardPosition === u.stats.boardPosition) return false;
+      const isSameTeam = target.stats.belongsTo === u.stats.belongsTo;
+      if (getFriendlies !== isSameTeam) return false;
+
+      if (this.isAdjacent(target, u)) {
         if (u instanceof Crystal) return true;
         if (u instanceof Hero && !u.stats.isKO) return true;
       }

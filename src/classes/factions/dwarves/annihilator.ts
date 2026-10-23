@@ -41,7 +41,7 @@ export class Annihilator extends Dwarf {
         if (target instanceof Crystal) target.unitCard.updateCardData(target);
       }
 
-      const adjacentFriendlyUnits = this.context.board!.getAliveAdjacentFriendlyUnitsOnBoard(target);
+      const adjacentFriendlyUnits = this.context.board!.getAliveAdjacentUnitsOnBoard(target);
 
       if (adjacentFriendlyUnits.length) {
         for (const unit of adjacentFriendlyUnits) {
