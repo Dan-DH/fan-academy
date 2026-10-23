@@ -23,7 +23,7 @@ export class Chieftain extends Tribe {
     if (distance === 1) {
       if (isKoUnitOnEnemySpawn(target)) {
         turnIfBehind(this.context, this, target);
-        target.getsStompedOrDestroyed();
+        target.getsStompedOrDestroyed(this);
       } else {
         turnIfBehind(this.context, this, target);
         damageToReflect += await this.whirlwind(target);

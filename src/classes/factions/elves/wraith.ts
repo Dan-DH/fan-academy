@@ -18,7 +18,7 @@ export class Wraith extends DarkElf {
 
     if (target instanceof Hero && target.stats.isKO) {
       // this.scene.sound.play(EGameSounds.WRAITH_CONSUME);
-      target.getsStompedOrDestroyed();
+      target.getsStompedOrDestroyed(this);
 
       if (this.stats.unitsConsumed! < 3) {
         this.stats.basePower += 50;

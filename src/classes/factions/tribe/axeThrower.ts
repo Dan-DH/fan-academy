@@ -20,7 +20,7 @@ export class AxeThrower extends Tribe {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE); // FIXME: add audio bits
-      target.getsStompedOrDestroyed();
+      target.getsStompedOrDestroyed(this);
     } else {
       // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
       const damage = this.getTotalPower() + (this.triggersExtraDamage(target) ? 200 : 0);

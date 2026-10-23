@@ -19,7 +19,7 @@ export class Engineer extends Dwarf {
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (isKoUnitOnEnemySpawn(target)) {
-      target.getsStompedOrDestroyed();
+      target.getsStompedOrDestroyed(this);
     } else {
       const damageDealt = target.getsDamaged({
         damage: this.getTotalPower(),

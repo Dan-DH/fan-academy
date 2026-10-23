@@ -54,7 +54,7 @@ export class Inferno extends Item {
 
     enemyUnits?.forEach(u => {
       // Inferno removes KO'd enemy units
-      if (u instanceof Hero && u.stats.isKO) u.getsStompedOrDestroyed();
+      if (u instanceof Hero && u.stats.isKO) u.getsStompedOrDestroyed(this);
 
       u.getsDamaged({
         damage: damage,

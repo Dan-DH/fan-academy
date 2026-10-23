@@ -51,7 +51,7 @@ export class Witch extends Tribe {
 
     await target.visuals.playCorpseExplosionAnimation();
     this.removeAttackModifiers();
-    target.getsStompedOrDestroyed();
+    target.getsStompedOrDestroyed(this);
   }
 
   heal(_target: Hero): void {};

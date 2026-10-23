@@ -29,7 +29,7 @@ export class Ninja extends Council {
       // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
       if (isKoUnitOnEnemySpawn(target)) {
         // this.scene.sound.play(EGameSounds.NINJA_ATTACK);
-        target.getsStompedOrDestroyed();
+        target.getsStompedOrDestroyed(this);
       } else {
         ninjaAttackSound();
         damageDealt = target.getsDamaged({

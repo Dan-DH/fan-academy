@@ -22,7 +22,7 @@ export class Archer extends Council {
       // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
       if (isKoUnitOnEnemySpawn(target)) {
         // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
-        target.getsStompedOrDestroyed();
+        target.getsStompedOrDestroyed(this);
       } else {
         // this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 

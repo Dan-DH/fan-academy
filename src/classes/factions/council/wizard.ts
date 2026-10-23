@@ -24,7 +24,7 @@ export class Wizard extends Council {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
     if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.WIZARD_ATTACK);
-      target.getsStompedOrDestroyed();
+      target.getsStompedOrDestroyed(this);
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WIZARD_ATTACK);

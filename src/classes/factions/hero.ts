@@ -424,7 +424,15 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     return !!pDeck;
   }
 
-  getsStompedOrDestroyed(): void {
+  getsStompedOrDestroyed(actor: Hero | Item): void {
+    if (actor.stats.belongsTo === this.stats.belongsTo) {
+      this.removedByEnemy();
+    } else {
+      this.removeFromGame();
+    }
+  }
+
+  private removedByEnemy(): void {
     this.context.board?.units.forEach(u => {
       if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && !u.stats.isKO) (u as Tribe).addBloodlust();
     });
@@ -481,7 +489,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const heroToStomp = this.context.board!.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
     if (heroToStomp) {
       // this.scene.sound.play(EGameSounds.HERO_STOMP);
-      heroToStomp?.getsStompedOrDestroyed();
+      heroToStomp?.getsStompedOrDestroyed(this);
     }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
@@ -497,8 +505,14 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const startingPosition = this.stats.boardPosition;
 
     // Stomp KO'd units and enemy phantoms
-    const matchingUnit = this.context.board!.units.find(u => u instanceof Hero && u.stats.boardPosition === tile.boardPosition && (u.stats.isKO || u.stats.unitType === EHeroes.PHANTOM));
-    if (matchingUnit) matchingUnit.removeFromGame(true);
+    const matchingUnit = this.context.board!.units.find((u): u is Hero => u instanceof Hero && u.stats.boardPosition === tile.boardPosition && (u.stats.isKO || u.stats.unitType === EHeroes.PHANTOM));
+    if (matchingUnit) {
+      if (matchingUnit.stats.unitType === EHeroes.PHANTOM) {
+        matchingUnit.removeFromGame(true);
+      } else {
+        matchingUnit.getsStompedOrDestroyed(this);
+      }
+    }
 
     if (this.inPlayerHand()) {
       this.context.hand!.removeFromHand(this.stats.unitId);
