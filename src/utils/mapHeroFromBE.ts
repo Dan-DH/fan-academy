@@ -109,7 +109,7 @@ export function mapUnitBaseStats(unitType: EHeroes): IHeroBaseStats {
       canBuff: false
     },
     [EHeroes.IMPALER]: {
-      baseHealth: 800,
+      baseHealth: 825, // buffed from 800
       movement: 2,
       attackType: EAttackType.PHYSICAL,
       attackRange: 2,
