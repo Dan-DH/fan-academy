@@ -39,7 +39,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     }
 
     // Only the active player can click on tiles, and only if they still have actions available
-    if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
+    if (context.activePlayer !== context.userId || !context.hasActionsLeft()) return;
 
     const activeUnit = context.activeUnit;
     if (!activeUnit) return;

@@ -53,7 +53,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
   context.longPressStart = context.time.now;
 
   // Only the active player can click on tiles, and only if they still have actions available
-  if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
+  if (context.activePlayer !== context.userId || !context.hasActionsLeft()) return;
 
   const activeUnit = context.activeUnit;
   const activeUnitTile = activeUnit && activeUnit instanceof Hero && activeUnit.stats.boardPosition < 45 ? activeUnit.getTile() : undefined;
