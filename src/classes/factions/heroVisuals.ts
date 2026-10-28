@@ -51,7 +51,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     const equipmentKey = this.getFactionEquipmentKey(data.faction);
     this.factionEquipmentImage = context.add.image(5, 25, 'gameAtlas', equipmentKey).setOrigin(0.5).setScale(0.5).setName(equipmentKey);
-    if (!status.has(StatusEffects.FACTION_EQUIPMENT)) this.factionEquipmentImage.setVisible(false);
+    if (!status.hasAny(StatusEffects.FACTION_EQUIPMENT, StatusEffects.SPIKE_ARMOR)) this.factionEquipmentImage.setVisible(false);
 
     this.dwarvenBrewImage = context.add.image(-25, -35, 'gameAtlas', 'dwarvenBrew').setOrigin(0.5).setScale(0.5).setName('dwarvenBrew');
     if (!status.has(StatusEffects.DWARVEN_BREW)) this.dwarvenBrewImage.setVisible(false);
