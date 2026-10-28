@@ -1,6 +1,6 @@
 import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import { getDistanceToTarget, SPIKE_ARMOR_DEFLECT_PERCENT, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
@@ -70,10 +70,7 @@ export class Gunner extends Dwarf {
       if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
     });
 
-    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.getsDamaged({
-      damage: totalDamageToReflect * SPIKE_ARMOR_DEFLECT_PERCENT,
-      attackType: this.stats.attackType
-    });
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
     this.removeAttackModifiers();
   }
 

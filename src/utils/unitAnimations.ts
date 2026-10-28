@@ -165,7 +165,6 @@ async function forcedMoveAnimation(params: {
   params.hero.scene.input.enabled = false;
 
   // const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
-  console.log('angle', params.angle);
   return new Promise((resolve) => {
     params.hero.scene.tweens.add({
       targets: params.hero,

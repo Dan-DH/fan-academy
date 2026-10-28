@@ -12,7 +12,7 @@ import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
 import { getDamagedAnimation, removePriestessDebuffTween, unitMoveAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
-import { enterSpecialTileCheck, removeSpecialTile } from "../../utils/boardUtils";
+import { enterSpecialTileCheck, removeSpecialTile, SPIKE_ARMOR_DEFLECT_PERCENT } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
 import { fanAcademy } from "../../main";
 import { StatusEffects, StatusTracker } from "../../utils/statuses";
@@ -640,8 +640,12 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   checkForDamageToReflect(target: Hero | Crystal | undefined, damage: number): void {
-    if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE_ARMOR) && damage > 0 ) this.getsDamaged({
-      damage: damage * 0.33,
+    if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE_ARMOR) && damage > 0 ) this.applySpikeArmorDamage(damage);
+  }
+
+  applySpikeArmorDamage(damage: number): void {
+    this.getsDamaged({
+      damage: damage * SPIKE_ARMOR_DEFLECT_PERCENT,
       attackType: this.stats.attackType
     });
   }

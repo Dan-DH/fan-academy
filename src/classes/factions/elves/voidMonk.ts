@@ -70,10 +70,7 @@ export class VoidMonk extends DarkElf {
       }
 
       if (damageDealt) this.lifeSteal(damageDealt);
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.getsDamaged({
-        damage: totalDamageToReflect * 0.33,
-        attackType: this.stats.attackType
-      });
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
       this.removeAttackModifiers();
     }
 

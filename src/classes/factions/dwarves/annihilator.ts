@@ -3,7 +3,7 @@ import { Crystal } from "../../board/crystal";
 import { Dwarf } from "./dwarves";
 import { Hero } from "../hero";
 import { EActionType } from "../../../enums/gameEnums";
-import { getDistanceToTarget, SPIKE_ARMOR_DEFLECT_PERCENT, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
 import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
@@ -68,12 +68,7 @@ export class Annihilator extends Dwarf {
       }
 
       this.removeAttackModifiers();
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) {
-        this.getsDamaged({
-          damage: totalDamageToReflect * SPIKE_ARMOR_DEFLECT_PERCENT,
-          attackType: this.stats.attackType
-        });
-      }
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
     }
 
     if (isPhantomAndKO(target)) target.removeFromGame();

@@ -14,7 +14,7 @@ export class Chieftain extends Tribe {
     super(data);
   }
 
-  async attack(target: Hero | Crystal): Promise<void> {
+  attack(target: Hero | Crystal): void {
     attackAnimation(this);
     const distance = getDistanceToTarget(this, target);
 
@@ -26,15 +26,15 @@ export class Chieftain extends Tribe {
         target.getsStompedOrDestroyed(this);
       } else {
         turnIfBehind(this.context, this, target);
-        damageToReflect += await this.whirlwind(target);
+        damageToReflect += this.whirlwind(target);
         this.removeAttackModifiers();
       }
     } else {
-      damageToReflect += await this.charge(target);
+      damageToReflect += this.charge(target);
       this.removeAttackModifiers();
     }
 
-    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageToReflect);
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && damageToReflect > 0) this.applySpikeArmorDamage(damageToReflect);
     if (isPhantomAndKO(target)) target.removeFromGame();
     this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
@@ -58,7 +58,6 @@ export class Chieftain extends Tribe {
         attackType: this.stats.attackType,
         attacker: this
       });
-
       if (u instanceof Hero && u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
     });
 
@@ -72,11 +71,13 @@ export class Chieftain extends Tribe {
     this.move(this.getLandingTile(target), true);
     turnIfBehind(this.context, this, target);
 
-    return target.getsDamaged({
+    const damageDealt = target.getsDamaged({
       damage: this.getTotalPower(),
       attackType: this.stats.attackType,
       attacker: this
     });
+
+    return target.status.has(StatusEffects.SPIKE_ARMOR) ? damageDealt : 0;
   }
 
   private getLandingTile(target: Hero | Crystal): Tile {
