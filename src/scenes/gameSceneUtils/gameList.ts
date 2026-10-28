@@ -6,7 +6,7 @@ import { IGame, IPlayerData } from "../../interfaces/gameInterface";
 import { fanAcademy } from "../../main";
 import { factionEnumToEmblem, waitUntilSceneCreated } from "../../utils/gameUtils";
 import { truncateText } from "../../utils/textAnimations";
-import { timeAgo } from "../../utils/timeAgo";
+import { getGameListTimerText, getTimeLeft } from "../../utils/timeAgo";
 import GameScene from "../game.scene";
 import UIScene from "../ui.scene";
 import { NewGamePopup } from "../../classes/popups/newGamePopup";
@@ -22,23 +22,7 @@ export function createGameList() {
 
   if (uiScene.gameListContainer) uiScene.gameListContainer.destroy(true);
 
-  const listPlayerTurnArray: IGame[] = [];
-  const listOpponentTurnArray: IGame[] = [];
-  const listSearchingArray: IGame[] = [];
-  const listChallengeSentArray: IGame[] = [];
-  const listChallengeReceivedArray: IGame[] = [];
-  const listFinishedArray: IGame[] = [];
-
-  gameList.forEach((game: IGame )=> {
-    if (game.status === EGameStatus.SEARCHING) listSearchingArray.push(game);
-    if (game.status === EGameStatus.PLAYING && game.activePlayer === uiScene.userId) listPlayerTurnArray.push(game);
-    if (game.status === EGameStatus.PLAYING && game.activePlayer !== uiScene.userId) listOpponentTurnArray.push(game);
-    if (game.status === EGameStatus.CHALLENGE) {
-      if (game.players[0].userData._id === uiScene.userId) listChallengeSentArray.push(game);
-      if (game.players[1].userData._id === uiScene.userId) listChallengeReceivedArray.push(game);
-    }
-    if (game.status === EGameStatus.FINISHED) listFinishedArray.push(game);
-  });
+  const { listPlayerTurnArray, listOpponentTurnArray, listSearchingArray, listChallengeSentArray, listChallengeReceivedArray, listFinishedArray } = orderGameLists(gameList, uiScene.userId);
 
   // Update game limit
   uiScene.activeGamesAmount = listPlayerTurnArray.length + listOpponentTurnArray.length + listSearchingArray.length + listChallengeReceivedArray.length + listChallengeSentArray.length;
@@ -86,7 +70,7 @@ export function createGameList() {
         scale: 1.3
       };
 
-      const lastPlayedText = uiScene.add.text(20, lastListItemY + 100, timeAgo(game.lastPlayedAt), {
+      const lastPlayedText = uiScene.add.text(20, lastListItemY + 100, game.status === EGameStatus.PLAYING ? getGameListTimerText(game.timeLeft) : '', {
         fontFamily: "proLight",
         fontSize: 38,
         color: '#ffffff'
@@ -331,4 +315,39 @@ export function createGameList() {
     dragStartOffset = 0;
     pointerMoved = false;
   });
+}
+
+function orderGameLists(gameList: IGame[], userId: string) {
+  const listPlayerTurnArray: IGame[] = [];
+  const listOpponentTurnArray: IGame[] = [];
+  const listSearchingArray: IGame[] = [];
+  const listChallengeSentArray: IGame[] = [];
+  const listChallengeReceivedArray: IGame[] = [];
+  const listFinishedArray: IGame[] = [];
+
+  gameList.forEach((game: IGame )=> {
+    if (game.status === EGameStatus.FINISHED) {
+      listFinishedArray.push(game);
+      return;
+    }
+
+    game.timeLeft = getTimeLeft(game.lastPlayedAt, game.turnTimer);
+
+    if (game.status === EGameStatus.SEARCHING)listSearchingArray.push(game);
+    if (game.status === EGameStatus.PLAYING && game.activePlayer === userId) listPlayerTurnArray.push(game);
+    if (game.status === EGameStatus.PLAYING && game.activePlayer !== userId) listOpponentTurnArray.push(game);
+    if (game.status === EGameStatus.CHALLENGE) {
+      if (game.players[0].userData._id === userId) listChallengeSentArray.push(game);
+      if (game.players[1].userData._id === userId) listChallengeReceivedArray.push(game);
+    }
+  });
+
+  return {
+    listPlayerTurnArray: listPlayerTurnArray.sort((a, b) => a.timeLeft - b.timeLeft),
+    listOpponentTurnArray: listOpponentTurnArray.sort((a, b) => a.timeLeft - b.timeLeft),
+    listSearchingArray: listSearchingArray.sort((a, b) => a.timeLeft - b.timeLeft),
+    listChallengeSentArray: listChallengeSentArray.sort((a, b) => a.timeLeft - b.timeLeft),
+    listChallengeReceivedArray: listChallengeReceivedArray.sort((a, b) => a.timeLeft - b.timeLeft),
+    listFinishedArray: listFinishedArray.sort((a, b) => a.timeLeft - b.timeLeft)
+  };
 }

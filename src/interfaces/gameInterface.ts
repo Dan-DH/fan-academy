@@ -1,6 +1,6 @@
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
+import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, ETurnTimer, EWinConditions } from "../enums/gameEnums";
 
 export interface IGameOver {
   winCondition: EWinConditions,
@@ -211,7 +211,9 @@ export interface IGame {
   firstPlayer?: string;
   activePlayer: string;
   chatLogs: IChat;
-  gameMode: EGameModes
+  gameMode: EGameModes;
+  turnTimer: ETurnTimer;
+  timeLeft: number;
 }
 
 export interface ISpecialTile {
