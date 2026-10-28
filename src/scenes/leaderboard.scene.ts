@@ -20,11 +20,11 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     const leaderboardData = await getLeaderboardData();
 
-    const mainLeaderboardButton = this.add.image(1200, 740, 'gameAtlas', 'leaderButton').setScale(0.7).setInteractive({ useHandCursor: true });
-    const councilLeaderboardButton = this.add.image(1260, 740, 'gameAtlas', 'councilEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
-    const elvesLeaderboardButton = this.add.image(1320, 740, 'gameAtlas', 'elvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
-    const dwarvesLeaderboardButton = this.add.image(1380, 740, 'gameAtlas', 'dwarvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
-    // FIXME: add tribe
+    const mainLeaderboardButton = this.add.image(1150, 740, 'gameAtlas', 'leaderButton').setScale(0.7).setInteractive({ useHandCursor: true });
+    const councilLeaderboardButton = this.add.image(1210, 740, 'gameAtlas', 'councilEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const elvesLeaderboardButton = this.add.image(1270, 740, 'gameAtlas', 'elvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const dwarvesLeaderboardButton = this.add.image(1330, 740, 'gameAtlas', 'dwarvesEmblem').setScale(0.5).setInteractive({ useHandCursor: true });
+    const tribeLeaderboardButton = this.add.image(1390, 740, 'gameAtlas', 'OR-Emblem-hd').setScale(0.4).setInteractive({ useHandCursor: true });
 
     mainLeaderboardButton.on('pointerdown', async () => {
       if (this.leaderBoard) this.leaderBoard.destroy();
@@ -48,6 +48,12 @@ export default class LeaderboardScene extends Phaser.Scene {
       if (this.leaderBoard) this.leaderBoard.destroy();
       // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
       this.leaderBoard = new FactionLeaderboard(this, EFaction.DWARVES, leaderboardData.dwarvesBoard);
+    });
+
+    tribeLeaderboardButton.on('pointerdown', async () => {
+      if (this.leaderBoard) this.leaderBoard.destroy();
+      // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
+      this.leaderBoard = new FactionLeaderboard(this, EFaction.TRIBE, leaderboardData.tribeBoard);
     });
 
     if (leaderboardData) this.leaderBoard = new MainLeaderboard(this, leaderboardData.mainBoard);

@@ -7,14 +7,16 @@ export async function getLeaderboardData() {
   const councilBoard = await getLeaderBoardQuery(ELeaderboardEnum.COUNCIL);
   const elvesBoard = await getLeaderBoardQuery(ELeaderboardEnum.ELVES);
   const dwarvesBoard = await getLeaderBoardQuery(ELeaderboardEnum.DWARVES);
+  const tribeBoard = await getLeaderBoardQuery(ELeaderboardEnum.TRIBE);
 
-  if (!mainBoard || !councilBoard || !elvesBoard || !dwarvesBoard) throw new Error(`getLeaderboardData() -> Data not found`);
+  if (!mainBoard || !councilBoard || !elvesBoard || !dwarvesBoard || !tribeBoard) throw new Error(`getLeaderboardData() -> Data not found`);
 
   return {
     mainBoard,
     councilBoard,
     elvesBoard,
-    dwarvesBoard
+    dwarvesBoard,
+    tribeBoard
   };
 }
 
