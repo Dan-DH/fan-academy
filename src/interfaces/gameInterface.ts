@@ -228,5 +228,6 @@ export interface IDamageParams {
   directPulverizerHit?: boolean,
   avoidKOs?: boolean,
   oneShot?: boolean,
-  reflectedDamage?: boolean
+  reflectedDamage?: boolean,
+  splashDamage?: number
 }

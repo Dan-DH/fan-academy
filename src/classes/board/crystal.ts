@@ -1,12 +1,11 @@
 import { EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
-import { Coordinates, ICrystal } from "../../interfaces/gameInterface";
+import { Coordinates, ICrystal, IDamageParams } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
 import { CrystalCard } from "../cards/crystalCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "../factions/healthBar";
 import { Hero } from "../factions/hero";
-import { Item } from "../factions/item";
 import { Tile } from "./tile";
 import { CrystalVisuals } from "./crystalVisuals";
 import { handleCrystalClick } from "../../utils/handleCrystalClick";
@@ -56,19 +55,8 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.visuals.engineerShieldImage.setVisible(false);
   }
 
-  getsDamaged(params: {
-    damage: number,
-    attackType: EAttackType,
-    attacker: Hero | Item,
-    splashDamage?: number,
-  }): number {
+  calculateReceivedDamage(params: IDamageParams): number {
     const { damage, attackType, splashDamage } = params;
-
-    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
-      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId!);
-      this.removeEngineerShield();
-      return 0;
-    }
 
     let assaultBoostDamage = 0;
 
@@ -87,8 +75,26 @@ export class Crystal extends Phaser.GameObjects.Container {
     if (splashDamage) assaultBoostDamage *= splashDamage;
 
     const totalDamage = roundToFive(this.getLifeLost(damage, assaultBoostDamage, attackType));
-    const damageTaken = totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
-    this.stats.currentHealth -= damageTaken;
+    return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
+  }
+
+  getsDamaged(params: IDamageParams): number {
+    const { attackType, oneShot } = params;
+
+    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
+      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId!);
+      this.removeEngineerShield();
+      return 0;
+    }
+
+    let totalDamage = 0;
+    if (oneShot) {
+      totalDamage = this.stats.currentHealth;
+    } else {
+      totalDamage = this.calculateReceivedDamage(params);
+    }
+
+    this.stats.currentHealth -= totalDamage;
 
     if (this.stats.currentHealth <= this.stats.maxHealth / 2) {
       this.visuals.crystalImage.setTexture('gameAtlas', 'crystalDamaged');
@@ -104,7 +110,7 @@ export class Crystal extends Phaser.GameObjects.Container {
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
 
     // Show damage numbers
-    if (damageTaken > 0) new FloatingText(this.context, this.x, this.y - 50, damageTaken.toString());
+    if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
 
     this.unitCard.updateCardData(this);
 
@@ -114,7 +120,7 @@ export class Crystal extends Phaser.GameObjects.Container {
 
     if (this.stats.currentHealth <= 0) this.removeFromGame();
 
-    return damageTaken;
+    return totalDamage;
   }
 
   getsStompedOrDestroyed(): void {
