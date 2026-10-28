@@ -1,4 +1,4 @@
-import { EAttackType, EWinConditions, EFaction, EHeroes } from "../../enums/gameEnums";
+import { EAttackType, EWinConditions, EFaction, EHeroes, EGameModes } from "../../enums/gameEnums";
 import { Coordinates, ICrystal, IDamageParams } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { roundToFive } from "../../utils/gameUtils";
@@ -79,6 +79,8 @@ export class Crystal extends Phaser.GameObjects.Container {
   }
 
   getsDamaged(params: IDamageParams): number {
+    if (this.context.currentGame?.gameMode === EGameModes.BRAWL) return 0;
+
     const { attackType, oneShot } = params;
 
     if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {

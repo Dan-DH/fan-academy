@@ -199,7 +199,7 @@ export default class GameScene extends Phaser.Scene {
     // Add a generic gameobject pointer event to make it easier to hide a unit info card
     this.input.on('gameobjectdown', () => visibleUnitCardCheck(this));
 
-    this.turnNumberTextBox = this.add.text(850, 110, `TURN ${ this.turnNumber }`, {
+    this.turnNumberTextBox = this.add.text(800, 110, `TURN ${ this.turnNumber } - ${ this.currentGame?.gameMode.toLocaleUpperCase()}`, {
       fontFamily: 'proHeavy',
       fontSize: 35,
       color: '#ffffff'

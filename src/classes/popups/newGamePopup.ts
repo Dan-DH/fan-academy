@@ -118,7 +118,8 @@ export class NewGamePopup extends Phaser.GameObjects.Container {
 
     const buttonCallback = async (faction: EFaction) => {
       const rankedGame = (this.rankedButton.node.querySelector('input') as HTMLInputElement).checked;
-      const gameMode = rankedGame ? EGameModes.RANKED : EGameModes.CASUAL;
+      const brawlGame = (this.brawlButton.node.querySelector('input') as HTMLInputElement).checked;
+      const gameMode = rankedGame ? EGameModes.RANKED : brawlGame ? EGameModes.BRAWL : EGameModes.CASUAL;
 
       const daily = (this.dailyTurn.node.querySelector('input') as HTMLInputElement).checked;
       const threeDay = (this.threeDayTurn.node.querySelector('input') as HTMLInputElement).checked;
