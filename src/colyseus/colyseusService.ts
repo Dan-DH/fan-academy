@@ -225,7 +225,8 @@ class ColyseusService {
     userId: string,
     faction: EFaction,
     gameMode: EGameModes,
-    turnTimer: ETurnTimer
+    turnTimer: ETurnTimer,
+    opponents: string[]
   }) {
     this.lobby!.send('createGame', messageObject);
   };
