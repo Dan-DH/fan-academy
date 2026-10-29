@@ -1,4 +1,4 @@
-import { fanAcademyText, heroAcademyText, disclaimerText, playText, profileText, leaderboardText, gameText, mechanicsText, countilText, councilItemsText, elvesText, elvesItemsText, dwarvesText, dwarvesItemsText } from "./aboutText";
+import { fanAcademyText, heroAcademyText, disclaimerText, playText, profileText, leaderboardText, gameText, mechanicsText, countilText, councilItemsText, elvesText, elvesItemsText, dwarvesText, dwarvesItemsText, tribeText, tribeItemsText } from "./aboutText";
 
 export function addTextContainer(context: Phaser.Scene): Phaser.GameObjects.Container {
   const aboutContainer = new Phaser.GameObjects.Container(context, 420, 25);
@@ -19,81 +19,91 @@ export function addTextContainer(context: Phaser.Scene): Phaser.GameObjects.Cont
     fontSize: 50
   }));
 
-  aboutContainer.add(context.add.text(0, 300, 'What is Fan Academy?', {
+  aboutContainer.add(context.add.text(0, 360, 'What is Fan Academy?', {
     ...fontOptions,
     fontSize: 50
   }));
-  aboutContainer.add(context.add.text(0, 360, fanAcademyText, fontOptions));
+  aboutContainer.add(context.add.text(0, 420, fanAcademyText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 620, 'What is Hero Academy?', {
+  aboutContainer.add(context.add.text(0, 680, 'What is Hero Academy?', {
     ...fontOptions,
     fontSize: 50
   }));
-  aboutContainer.add(context.add.text(0, 680, heroAcademyText, fontOptions));
+  aboutContainer.add(context.add.text(0, 740, heroAcademyText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 870, 'Disclaimer for third-party assets', {
+  aboutContainer.add(context.add.text(0, 930, 'Disclaimer for third-party assets', {
     ...fontOptions,
     fontSize: 50
   }));
-  aboutContainer.add(context.add.text(0, 930, disclaimerText, fontOptions));
+  aboutContainer.add(context.add.text(0, 990, disclaimerText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 1110, 'Menu guide', {
+  aboutContainer.add(context.add.text(0, 1170, 'Menu guide', {
     ...fontOptions,
     fontSize: 50
   }));
 
-  aboutContainer.add(context.add.text(0, 2130, playText, fontOptions));
+  aboutContainer.add(context.add.text(0, 2190, playText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 4180, profileText, fontOptions));
+  aboutContainer.add(context.add.text(0, 4240, profileText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 5080, leaderboardText, fontOptions));
+  aboutContainer.add(context.add.text(0, 5140, leaderboardText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 5330, 'Game guide', {
+  aboutContainer.add(context.add.text(0, 5390, 'Game guide', {
     ...fontOptions,
     fontSize: 60
   }));
 
-  aboutContainer.add(context.add.text(0, 5400, gameText, fontOptions));
+  aboutContainer.add(context.add.text(0, 5460, gameText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 5650, 'General mechanics', {
+  aboutContainer.add(context.add.text(0, 5710, 'General mechanics', {
     ...fontOptions,
     fontSize: 50
   }));
-  aboutContainer.add(context.add.text(0, 5710, mechanicsText, fontOptions));
+  aboutContainer.add(context.add.text(0, 5770, mechanicsText, fontOptions));
 
-  aboutContainer.add(context.add.text(0, 8740, 'Factions', {
+  aboutContainer.add(context.add.text(0, 8800, 'Factions', {
     ...fontOptions,
     fontSize: 60
   }));
-  aboutContainer.add(context.add.image(450, 8970, 'councilAbout'));
-  aboutContainer.add(context.add.text(0, 9120, countilText, {
+  aboutContainer.add(context.add.image(450, 9030, 'councilAbout'));
+  aboutContainer.add(context.add.text(0, 9180, countilText, {
     ...fontOptions,
     wordWrap: {
       width: 700,
       useAdvancedWrap: true
     }
   }));
-  aboutContainer.add(context.add.text(0, 10310, councilItemsText, fontOptions));
+  aboutContainer.add(context.add.text(0, 10370, councilItemsText, fontOptions));
 
-  aboutContainer.add(context.add.image(450, 11030, 'elvesAbout'));
-  aboutContainer.add(context.add.text(0, 11190, elvesText, {
+  aboutContainer.add(context.add.image(450, 11090, 'elvesAbout'));
+  aboutContainer.add(context.add.text(0, 11250, elvesText, {
     ...fontOptions,
     wordWrap: {
       width: 750,
       useAdvancedWrap: true
     }
   }));
-  aboutContainer.add(context.add.text(0, 12850, elvesItemsText, fontOptions));
+  aboutContainer.add(context.add.text(0, 12910, elvesItemsText, fontOptions));
 
-  aboutContainer.add(context.add.image(450, 13780, 'dwarvesAbout'));
-  aboutContainer.add(context.add.text(0, 13930, dwarvesText, {
+  aboutContainer.add(context.add.image(450, 13840, 'dwarvesAbout'));
+  aboutContainer.add(context.add.text(0, 13990, dwarvesText, {
     ...fontOptions,
     wordWrap: {
       width: 750,
       useAdvancedWrap: true
     }
   }));
-  aboutContainer.add(context.add.text(0, 15560, dwarvesItemsText, fontOptions));
+  aboutContainer.add(context.add.text(0, 15610, dwarvesItemsText, fontOptions));
+
+  aboutContainer.add(context.add.image(450, 16550, 'tribeAbout'));
+  aboutContainer.add(context.add.text(0, 16700, tribeText, {
+    ...fontOptions,
+    wordWrap: {
+      width: 750,
+      useAdvancedWrap: true
+    }
+  }));
+  aboutContainer.add(context.add.text(0, 18420, tribeItemsText, fontOptions));
 
   return aboutContainer;
 }
@@ -112,24 +122,28 @@ export function addHyperlinks(context: Phaser.Scene, container: Phaser.GameObjec
   const indexElem = [
     {
       title: 'Menu guide',
-      y: 1030
+      y: 1150
     },
     {
       title: 'Game guide',
-      y: 5240
+      y: 5360
     },
     {
       title: 'Council',
-      y: 8740
+      y: 8800
     },
     {
       title: 'Dark Elves',
-      y: 10850
+      y: 10910
     },
     {
       title: 'Dwarves',
-      y: 13550
-    } // FIXME: add tribe
+      y: 13620
+    },
+    {
+      title: 'The Tribe',
+      y: 16400
+    }
   ];
 
   indexElem.forEach((elem, index) => {
@@ -141,15 +155,15 @@ export function addHyperlinks(context: Phaser.Scene, container: Phaser.GameObjec
   const mainMenuElem = [
     {
       title: 'Play!',
-      y: 1210
+      y: 1270
     },
     {
       title: 'Profile',
-      y: 3200
+      y: 3270
     },
     {
       title: 'Leaderboard',
-      y: 4620
+      y: 4690
     }
   ];
 
@@ -183,33 +197,39 @@ export function addLink(context: Phaser.Scene, elem: {
 
 export function addPictures(context: Phaser.Scene, container: Phaser.GameObjects.Container): void {
   // UI
-  container.add(context.add.image(87, 1350, 'aboutPlayButton').setScale(0.5));
-  container.add(context.add.image(490, 1750, 'aboutPlayPage').setScale(0.7));
+  container.add(context.add.image(87, 1410, 'aboutPlayButton').setScale(0.5));
+  container.add(context.add.image(490, 1810, 'aboutPlayPage').setScale(0.7));
 
-  container.add(context.add.image(170, 3340, 'aboutProfileButton'));
-  container.add(context.add.image(490, 3770, 'aboutProfilePage'));
+  container.add(context.add.image(170, 3400, 'aboutProfileButton'));
+  container.add(context.add.image(490, 3830, 'aboutProfilePage'));
 
-  container.add(context.add.image(170, 4760, 'aboutLeaderboardButton'));
-  container.add(context.add.image(490, 4930, 'aboutLeaderboardPage'));
+  container.add(context.add.image(170, 4820, 'aboutLeaderboardButton'));
+  container.add(context.add.image(490, 4990, 'aboutLeaderboardPage'));
 
   // Factions
   const pictureX = 840;
-  container.add(context.add.image(pictureX, 9210, 'knightAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 9440, 'archerAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 9640, 'wizardAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 9925, 'clericAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 10150, 'ninjaAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 9270, 'knightAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 9500, 'archerAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 9700, 'wizardAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 9985, 'clericAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 10210, 'ninjaAbout').setScale(1.5));
 
-  container.add(context.add.image(pictureX, 11290, 'voidmonkAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 11540, 'impalerAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 11760, 'necromancerAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 12010, 'priestessAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 12310, 'wraithAbout').setScale(1.5));
-  container.add(context.add.image(pictureX, 12660, 'phantomAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 11350, 'voidmonkAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 11600, 'impalerAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 11820, 'necromancerAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 12070, 'priestessAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 12370, 'wraithAbout').setScale(1.5));
+  container.add(context.add.image(pictureX, 12720, 'phantomAbout').setScale(1.5));
 
-  container.add(context.add.image(pictureX, 14030, 'paladinAbout').setScale(1));
-  container.add(context.add.image(pictureX, 14410, 'grenadierAbout').setScale(1));
-  container.add(context.add.image(pictureX, 14670, 'gunnerAbout').setScale(1));
-  container.add(context.add.image(pictureX, 14990, 'engineerAbout').setScale(1));
-  container.add(context.add.image(pictureX, 15330, 'annihilatorAbout').setScale(1));
+  container.add(context.add.image(pictureX, 14090, 'paladinAbout').setScale(1));
+  container.add(context.add.image(pictureX, 14470, 'grenadierAbout').setScale(1));
+  container.add(context.add.image(pictureX, 14730, 'gunnerAbout').setScale(1));
+  container.add(context.add.image(pictureX, 15050, 'engineerAbout').setScale(1));
+  container.add(context.add.image(pictureX, 15390, 'annihilatorAbout').setScale(1));
+
+  container.add(context.add.image(pictureX, 16800, 'warriorAbout').setScale(1));
+  container.add(context.add.image(pictureX, 17040, 'axeThrowerAbout').setScale(1));
+  container.add(context.add.image(pictureX, 17300, 'witchAbout').setScale(1));
+  container.add(context.add.image(pictureX, 17600, 'shamanAbout').setScale(1));
+  container.add(context.add.image(pictureX, 18000, 'chieftainAbout').setScale(1));
 }

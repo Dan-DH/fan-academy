@@ -24,6 +24,13 @@ export function loadAboutUI(context: AboutScene): void {
   context.load.image('grenadierAbout', `${CDN_PATH}/images/aboutImages/Grenadier_tile.webp`);
   context.load.image('annihilatorAbout', `${CDN_PATH}/images/aboutImages/Annihilator_tile.webp`);
 
+  context.load.image('tribeAbout', `${CDN_PATH}/images/aboutImages/Tribe_SplashScreen.webp`);
+  context.load.image('warriorAbout', `${CDN_PATH}/images/aboutImages/Orc-RaceStats_Warrior-hd.webp`);
+  context.load.image('axeThrowerAbout', `${CDN_PATH}/images/aboutImages/Orc-RaceStats_Axethrower-hd.webp`);
+  context.load.image('witchAbout', `${CDN_PATH}/images/aboutImages/Orc-RaceStats_Witch-hd.webp`);
+  context.load.image('shamanAbout', `${CDN_PATH}/images/aboutImages/Orc-RaceStats_Shaman-hd.webp`);
+  context.load.image('chieftainAbout', `${CDN_PATH}/images/aboutImages/Orc-RaceStats_Chieftain-hd.webp`);
+
   context.load.image('arrowAbout', `${CDN_PATH}/images/aboutImages/AvatarArrow-hd.webp`);
 
   context.load.image('aboutPlayButton', `${CDN_PATH}/images/aboutImages/play_button.webp`);

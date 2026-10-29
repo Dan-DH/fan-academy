@@ -253,3 +253,50 @@ Consumables:
 
 Faction Passive:
 +20% benefit to special tiles. Attack gives +120, Defense/Magic Defense gives +24%, Assault gives +360. Speed gives +3 move.`;
+
+export const tribeText = `Warrior (3):
+800 HP
+20% P resist
+200 attack (P), range 1
+Infinite damage (auto-KO) if target is at or below 50% HP (25% crystal).
+Move 2
+
+Axe Thrower (3):
+800 HP
+200 attack (P), range 2
++200 damage after multiplicative bonuses, but before resistance, if target is above 50% HP (25% crystal).
+Move 2
+
+Witch (3):
+800 HP
+200 attack (M), range 3
+Can use 1 AP to explode any KO’d unit in range 3, doing 50% damage (M) AoE around target. Range 3. Damage is increased proportionally by any HP upgrades the target has over its starting HP.
+Move 2
+
+Shaman (3):
+800 HP
+10% M resist
+200 attack (M), range 2
+Heals for 200% attack, revives for 50% attack, range 2
+Heal/revival can chain twice if each target is in range 2 of the previous (see Appendix for details). First jump is 50% effective, second is 25% effective.
+Can target full-HP units as long as at least one jump is to a damaged unit. Will never chain to caster.
+Move 2
+
+Chieftain (2):
+1000 HP
+200 attack (P). 2 attacks, Whirlwind (range 1) and Charge (range 4)
+Whirlwind: Target takes 100%, AoE around Chieftain for 66%. Enemies 2 squares away from Chieftain (orthogonally, diagonally, or a knight’s move away) are pulled in by one square (see Appendix) . Pulled units take no damage, but are now in AoE range for next Whirlwind.
+Charge: targets enemy unit or crystal, directly left or right only within range 4 and subject to LOS. Chieftain moves to square immediately in front of target (must be free), and deals 100% damage to target. No Whirlwind AoE or pull.
+Move 2`;
+
+export const tribeItemsText = `Upgrades:
+-Runemetal (3): +50% attack
+-Spike Armor (4): +10% HP, deals 33% of any damage taken (as the same damage type) back to the attacking unit or crystal. Reflected damage cannot take attacker below 100 HP.
+
+Consumables:
+-Meat (4): Targets one friendly. Heals for 700 and gives 275% attack power for one attack/heal.
+
+-Typhoon (3): Targets a column. All enemy units/corpses get knocked 2 spaces away from the targeted column. Units in the targeted column are knocked back towards the enemy start, unless they’re in the back row, in which case they get knocked forward. Crystals and friendly units block movement.
+
+Racial Passive:
+When a friendly unit is stomped/destroyed by an enemy, all friendly units in play that are not KO’d gain Bloodlust (+50% attack power). Buff fades when any unit with Bloodlust attacks or heals.`;
