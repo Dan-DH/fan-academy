@@ -79,7 +79,7 @@ export function createNewHero(heroData: IHeroBE): Hero {
     [EHeroes.GRENADIER]: () => new Grenadier(mapHeroFromBE(heroData)),
     [EHeroes.ANNIHILATOR]: () => new Annihilator(mapHeroFromBE(heroData)),
 
-    [EHeroes.WARRIOR]: () => new Warrior(mapHeroFromBE(heroData)), // FIXME:
+    [EHeroes.WARRIOR]: () => new Warrior(mapHeroFromBE(heroData)),
     [EHeroes.AXE_THROWER]: () => new AxeThrower(mapHeroFromBE(heroData)),
     [EHeroes.WITCH]: () => new Witch(mapHeroFromBE(heroData)),
     [EHeroes.SHAMAN]: () => new Shaman(mapHeroFromBE(heroData)),

@@ -135,10 +135,9 @@ export class NewGamePopup extends Phaser.GameObjects.Container {
       if (challengeType === EChallengePopup.SEND) {
         const result = await newGameChallenge(context.userId, faction, opponentId!, gameMode, turnTimer);
 
-        // FIXME: any error will trigger this
         if (!result) {
           const openGameLimitText = () => {
-            return context.add.text(200, 350, `A player has reached the max amount of open games`, {
+            return context.add.text(200, 350, `Error creating game, please refresh the page`, {
               fontFamily: "proLight",
               fontSize: 60,
               color: '#fffb00'

@@ -235,7 +235,6 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
   async playCorpseExplosionAnimation() {
     await new Promise<void>((resolve) => {
       this.corpseExplosionSprite.once('animationcomplete', () => {
-        console.log('before resolved');
         resolve();
       });
 

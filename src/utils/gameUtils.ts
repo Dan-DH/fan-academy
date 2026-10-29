@@ -85,7 +85,6 @@ export function generateFourDigitId(): number {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
-// FIXME: make it so it returns emblem and scale
 export function factionEnumToEmblem(faction: string): string {
   const factionMap: Record<string, string> = {
     council: 'councilEmblem',

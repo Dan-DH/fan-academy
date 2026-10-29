@@ -302,7 +302,6 @@ export default class MainMenuScene extends Phaser.Scene {
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
           // this.sound.play(EUiSounds.BUTTON_GENERIC);
-          console.log('UserId after sign up:', this.userId);
         } else {
           // this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(signUpError, result.error); // Show server error to user

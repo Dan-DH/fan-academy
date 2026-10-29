@@ -17,7 +17,7 @@ export function selectItemSound(_scene: Phaser.Scene, item: EItems): void {
     [EItems.DWARVEN_BREW]: EGameSounds.DWARVEN_BREW_SELECT,
     [EItems.PULVERIZER]: EGameSounds.PULVERIZER_SELECT,
 
-    [EItems.MEAT]: EGameSounds.PULVERIZER_SELECT, // FIXME:
+    [EItems.MEAT]: EGameSounds.PULVERIZER_SELECT, // FIXME: add tribe sounds
     [EItems.SPIKE_ARMOR]: EGameSounds.PULVERIZER_SELECT,
     [EItems.TYPHOON]: EGameSounds.PULVERIZER_SELECT
 

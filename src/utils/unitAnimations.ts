@@ -143,7 +143,6 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
 
     const hop = unitImage.scene.tweens.add({
       targets: unitImage,
-      // scale: 1.2, // FIXME:l was this needed?
       y: '-=20',
       duration: hopSpeed,
       yoyo: true,

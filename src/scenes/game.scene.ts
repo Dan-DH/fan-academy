@@ -345,7 +345,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   onHeroClicked(hero: Hero) {
-    console.log(`A hero in position ${hero.stats.boardPosition} has been clicked`);
+    // console.log(`A hero in position ${hero.stats.boardPosition} has been clicked`);
     if (hero.stats.boardPosition > 44) this.board!.highlightSpawns(hero.stats.unitType);
 
     if (hero.stats.boardPosition < 45) {
@@ -358,7 +358,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   onItemClicked(item: Item) {
-    console.log(`An item ${item.stats.unitId} has been clicked`);
+    // console.log(`An item ${item.stats.unitId} has been clicked`);
     if (item.stats.dealsDamage && item.stats.itemType === EItems.PULVERIZER) {
       this.board!.highlightAllLivingEnemyTargets(item);
     } else if (item.stats.dealsDamage) {

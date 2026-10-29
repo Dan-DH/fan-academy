@@ -97,7 +97,6 @@ export class Shaman extends Tribe {
 
       if (this.getGeneralDirections(healDirection).includes(directionFromTargetToUnit)) maxScore += 5;
 
-      // console.log('UNIT', u.stats.unitId, score);
       if (score > maxScore) {
         maxScore = score;
         bestTarget = u;

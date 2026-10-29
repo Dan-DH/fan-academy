@@ -194,8 +194,8 @@ export class GameReplay {
       [EActionType.USE]: () => this.replayUse(turnAction.action!, hand),
       [EActionType.DRAW]: () => this.replayDraw(hand, deck),
       [EActionType.REMOVE_UNITS]: () => this.gameScene.removeKOUnits(),
-      [EActionType.PASS]: () => console.log('Implement pass?'),
-      [EActionType.CONCEDE]: () => console.log('Implement concede?')
+      [EActionType.PASS]: () => console.log('User passed'),
+      [EActionType.CONCEDE]: () => console.log('User conceded')
     };
 
     await new Promise<void>(resolve => {

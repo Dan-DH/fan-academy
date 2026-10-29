@@ -25,7 +25,6 @@ export class Hand {
     return this.hand.find(u => u.stats.unitId === unitId);
   }
 
-  // FIXME: hydrate this
   getHandElementByBoardPosition(boardPosition: number): Hero | Item | undefined {
     return this.hand.find(u => u.stats.boardPosition === boardPosition);
   }
@@ -61,7 +60,6 @@ export class Hand {
 
   removeFromHand(unitId: string): void {
     const index = this.hand.findIndex(unit => unit.stats.unitId === unitId);
-    if (index === -1) console.log('missing item in hand', unitId, this.hand);
     if (index !== -1) this.hand.splice(index, 1);
   }
 
