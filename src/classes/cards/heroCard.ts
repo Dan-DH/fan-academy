@@ -43,7 +43,7 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
     // Background, unit image, name and type, and separator
     this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground').setScale(1.7);
-    this.unitPictureImage = context.add.image(-130, -150, 'gameAtlas', `${data.unitType}_v1-hd`).setOrigin(0.5).setScale(1.5);
+    this.unitPictureImage = context.add.image(-130, -150, 'gameAtlas', `${data.unitType}_v1-hd`).setOrigin(0.5).setScale(data.unitType === EHeroes.AXE_THROWER ? 2 : 1.5);
     this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     const { cardText, cardType } = getCardText(data.unitType);

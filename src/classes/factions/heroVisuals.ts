@@ -111,7 +111,7 @@ export class HeroVisuals extends Phaser.GameObjects.Container {
 
     this.reviveAnimationSprite = context.add.sprite(0, -20, 'gameAtlas', '').setScale(1.2).setVisible(false);
 
-    this.corpseExplosionSprite = context.add.sprite(0, -25, 'gameAtlas', 'CorpseExplosion_hd_1').setScale(1.3).setVisible(false);
+    this.corpseExplosionSprite = context.add.sprite(0, -25, 'gameAtlas', 'CorpseExplosion_1').setScale(1.3).setVisible(false);
 
     this.add([
       this.paladinAuraImage,
