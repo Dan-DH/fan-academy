@@ -1,7 +1,7 @@
 import { ETiles } from "../enums/gameEnums";
 import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@6e31903';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@aa4529a';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -28,8 +28,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   loadAtlases() {
-    this.load.multiatlas('gameAtlas', `/atlas/gameTexture.json`, '/atlas');
-    // this.load.multiatlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.json`, `${CDN_PATH}/atlas`);
+    // this.load.multiatlas('gameAtlas', `/atlas/gameTexture.json`, '/atlas');
+    this.load.multiatlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.json`, `${CDN_PATH}/atlas`);
     // Floating text fonts
     this.load.atlas(
       'greenFont',
@@ -58,7 +58,8 @@ export default class PreloaderScene extends Phaser.Scene {
 
     // menu images
     this.load.image('uiBackground', `${CDN_PATH}/ui/game_screen.webp`);
-    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`); // 'main_menu_image.webp' for the original one
+    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_tribe.webp`);
+    // this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`); // 'main_menu_image.webp' for the original one
 
     // ui scene
     this.load.html('disconnectWarning', 'html/disconnectWarning.html');
