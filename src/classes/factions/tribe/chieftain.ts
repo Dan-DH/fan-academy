@@ -96,7 +96,7 @@ export class Chieftain extends Tribe {
       const colArray = [-1, 1];
       for (const c of colArray) {
         const isOccupied = board.units.find(u => u.stats.row === thisRow + r && u.stats.col === thisCol + c);
-        if (isOccupied) return;
+        if (isOccupied) continue;
 
         const newRow = thisRow + (r < 0 ? -2 : 2);
         const newCol = thisCol + (c < 0 ? -2 : 2);
