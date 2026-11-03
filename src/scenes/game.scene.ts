@@ -272,14 +272,20 @@ export default class GameScene extends Phaser.Scene {
 
     this.board!.units.forEach(u => {
       if (u instanceof Hero && u.stats.isKO) {
-        if (u.stats.lastBreath) unitsToRemove.push(u);
-        if (!u.stats.lastBreath) {
+        if (u.stats.lastBreath) {
+          unitsToRemove.push(u);
+        } else {
           u.stats.lastBreath = true;
         }
       }
     });
 
     if (unitsToRemove.length) {
+      if (this.skipAnimations) {
+        unitsToRemove.forEach(u => u.removeFromGame(true));
+        return;
+      }
+
       // this.sound.play(EGameSounds.VANISH);
       const animation = (hero: Hero): Promise<void> => {
         return new Promise((resolve) => {
@@ -301,7 +307,7 @@ export default class GameScene extends Phaser.Scene {
       }));
     }
 
-    this.addActionToState(EActionType.REMOVE_UNITS); // this step needs to happen every turn in order to update the tiles
+    this.addActionToState(EActionType.REMOVE_UNITS);
   }
 
   hasActionsLeft(): boolean {
