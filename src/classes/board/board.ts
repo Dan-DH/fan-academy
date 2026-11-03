@@ -24,6 +24,7 @@ import { mapCrystalToBE } from "../../utils/mapCrystalToBE";
 import { mapHeroToBE } from "../../utils/mapHeroToBE";
 import { Chieftain } from "../factions/tribe/chieftain";
 import { Shaman } from "../factions/tribe/shaman";
+import { Meat } from "../factions/tribe/items";
 
 export class Board {
   tileSize: number = 90;
@@ -222,6 +223,7 @@ export class Board {
       if (item.stats.canHeal && u.stats.isKO) {
         if (item instanceof ManaVial) return;
         if (item instanceof DwarvenBrew) return;
+        if (item instanceof Meat) return;
       }
 
       u.getTile().setHighlight();
