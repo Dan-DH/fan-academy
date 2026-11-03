@@ -105,7 +105,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.anims.create({
       key: 'corpseExpAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
-        prefix: 'CorpseExplosion_hd_',
+        prefix: 'CorpseExplosion_',
         start: 1,
         end: 3
       }),
