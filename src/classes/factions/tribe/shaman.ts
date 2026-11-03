@@ -72,7 +72,7 @@ export class Shaman extends Tribe {
       const distance = getGridDistance(target.stats.row, target.stats.col, u.stats.row, u.stats.col);
 
       return distance > 0 && distance <= 2;
-    });
+    }).sort((a, b) => a.stats.row - b.stats.row);
 
     let maxScore = -1;
     let bestTarget = undefined;
