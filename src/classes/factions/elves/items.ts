@@ -63,7 +63,7 @@ export class SoulHarvest extends Item {
 
     const enemyUnits = getAOETiles(this, targetTile.boardPosition);
     enemyUnits.forEach(u => {
-      const damageInflicted =  u.getsDamaged({
+      const damageInflicted = u.getsDamaged({
         damage,
         attackType: EAttackType.MAGICAL,
         attacker: this,
@@ -73,23 +73,25 @@ export class SoulHarvest extends Item {
       if (u instanceof Hero) totalDamageInflicted += damageInflicted;
     });
 
-    enemyUnits.forEach(u => {
-      if (u instanceof Hero) {
-        u.checkIfShouldBeKO();
-        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
-      }});
+    if (totalDamageInflicted > 0) {
+      enemyUnits.forEach(u => {
+        if (u instanceof Hero) {
+          u.checkIfShouldBeKO();
+          if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
+        }});
 
-    // Get total amount of friendly units in the map, including KO'd ones
-    const friendlyUnits = this.context.board!.units.filter(u => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo) as Hero[];
+      // Get total amount of friendly units in the map, including KO'd ones
+      const friendlyUnits = this.context.board!.units.filter(u => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo) as Hero[];
 
-    // Divide damage dealt by that number + 3, then round to nearest 5. Formula: 1 / (units + 3) * damage
-    const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);
+      // Divide damage dealt by that number + 3, then round to nearest 5. Formula: 1 / (units + 3) * damage
+      const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);
 
-    // Increase max health of all units, including KO'd ones, and revive them
-    friendlyUnits.forEach(unit => {
-      if (unit.stats.isKO) unit.getsRevived();
-      unit.increaseMaxHealth(lifeIncreaseAmount);
-    });
+      // Increase max health of all units, including KO'd ones, and revive them
+      friendlyUnits.forEach(unit => {
+        if (unit.stats.isKO) unit.getsRevived();
+        unit.increaseMaxHealth(lifeIncreaseAmount);
+      });
+    }
 
     this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
     this.removeFromGame();
