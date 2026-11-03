@@ -1,6 +1,6 @@
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EGameModes, ETurnTimer } from "../enums/gameEnums";
+import { EGameModes, EGameStatus, ETurnTimer } from "../enums/gameEnums";
 import { IGame } from "../interfaces/gameInterface";
 import { fanAcademy } from "../main";
 import GameScene from "../scenes/game.scene";
@@ -45,7 +45,7 @@ export function deselectUnit(context: GameScene): void {
 
 export function getAllOpponentIds(mode: EGameModes, timer: ETurnTimer): string[] {
   const gameList = fanAcademy.registry.get('gameList') as IGame[];
-  const playerIds: string[] = gameList.filter(g => g.turnTimer === timer && g.gameMode === mode).flatMap(g => [
+  const playerIds: string[] = gameList.filter(g => g.turnTimer === timer && g.gameMode === mode && g.status !== EGameStatus.FINISHED).flatMap(g => [
     g.players[0].userData._id,
     g.players[1]?.userData._id
   ]);
