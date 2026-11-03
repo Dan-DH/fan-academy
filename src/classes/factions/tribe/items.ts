@@ -63,21 +63,28 @@ export class Typhoon extends Item {
         col: u.stats.col + offset
       };
 
-      const moved = await scene.board?.calculateDisplaceUnit({
+      let targetTile = await scene.board?.calculateDisplaceUnit({
         attackerCoords: pushTarget,
-        target: u as Hero
+        target: u as Hero,
+        isPush: true
       });
 
-      if (moved) {
-        await scene.board?.calculateDisplaceUnit({
+      if (targetTile) {
+        u.stats.col = targetTile.col;
+        u.stats.row = targetTile.row;
+
+        const movedAgain = await scene.board?.calculateDisplaceUnit({
           attackerCoords: pushTarget,
-          target: u as Hero
+          target: u as Hero,
+          isPush: true
         });
+
+        if (movedAgain) targetTile = movedAgain;
 
         unitMoveAnimation({
           move: EUnitMoveType.FORCED_MOVE,
           hero: u,
-          targetTile: u.getTile(),
+          targetTile,
           angle: 0
         });
       }
