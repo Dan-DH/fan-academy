@@ -144,7 +144,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.anims.create({
       key: 'meatAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
-        prefix: 'meatAnim_',
+        prefix: 'Meat_',
         start: 1,
         end: 3
       }),
