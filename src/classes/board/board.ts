@@ -142,8 +142,7 @@ export class Board {
       if (
         u instanceof Crystal && u.stats.belongsTo !== hero.stats.belongsTo ||
         u instanceof Hero && u.stats.belongsTo !== hero.stats.belongsTo && !u.stats.isKO ||
-        [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.WITCH].includes(hero.stats.unitType) &&
-        u instanceof Hero && u.stats.isKO ||
+        [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.WITCH].includes(hero.stats.unitType) && u instanceof Hero && u.stats.isKO ||
         u instanceof Hero && u.stats.isKO && this.isOrthogonalAdjacent(hero, u) && isEnemySpawn(this.context, u.getTile())
       ) {
         enemyLOSCheck.push(u);
@@ -483,13 +482,15 @@ export class Board {
 
         const unit = this.units.find(u => u.stats.row === tileRow && u.stats.col === tileCol);
 
-        if (unit?.stats.boardPosition === target.stats.boardPosition) return true; // don't block self
+        if (unit?.stats.boardPosition === target.stats.boardPosition) {
+          result = true; // don't block self
+          break;
+        }
 
         if (unit) {
           const belongsToPlayerCheck = belongsToPlayer(this.context, unit);
           if (!belongsToPlayerCheck && unit instanceof Crystal) result = false;
           if (!belongsToPlayerCheck && unit instanceof Hero && !unit.stats.isKO) result = false;
-          break;
         }
       };
     }
