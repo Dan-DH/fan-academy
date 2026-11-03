@@ -39,7 +39,7 @@ export class Witch extends Tribe {
     const explosionDamagePercentIncrease = Math.max(target.getExtraHealthPercent(), 0);
     const board = this.context.board!;
     board.units.forEach(u => {
-      if (target.stats.belongsTo === u.stats.belongsTo && board.isAdjacent(target, u)) {
+      if (this.stats.belongsTo !== u.stats.belongsTo && board.isAdjacent(target, u)) {
         u.getsDamaged({
           damage: this.getTotalPower(0.5 + explosionDamagePercentIncrease),
           attackType: EAttackType.MAGICAL,
