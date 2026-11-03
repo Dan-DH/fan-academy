@@ -498,7 +498,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // startTile.removeHero();
     this.unitCard.updateCardData(this);
-    this.context.afterAction(EActionType.MOVE, startingBoardPosition, targetTile.boardPosition);
+    if (!isCharge) this.context.afterAction(EActionType.MOVE, startingBoardPosition, targetTile.boardPosition);
   }
 
   spawn(tile: Tile): void {
