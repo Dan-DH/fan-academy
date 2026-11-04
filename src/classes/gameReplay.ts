@@ -134,7 +134,6 @@ export class GameReplay {
     this.handSwitchButton.on('pointerup', () => {
       this.handSwitchButton.setScale(this.handSwitchButton.scale * 1.25);
 
-      // TODO: turn hand into containers and make the whole visible or not
       this.gameScene.hand!.isVisible = !this.gameScene.hand!.isVisible;
       this.gameScene.hand!.hand.forEach(u => u.setVisible(!u.visible));
 

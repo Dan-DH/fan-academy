@@ -54,6 +54,7 @@ export class MapGameReplay {
     for (let i = 0; i <= turn.actions.length - 1; i++) {
       const turnAction = turn.actions[i];
       if (!turnAction.actionType) continue;
+      if (turnAction.actionType === EActionType.REMOVE_UNITS && i === 0) continue;
 
       await this.replayAction(turnAction, hand, deck);
 
