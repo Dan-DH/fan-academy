@@ -1,6 +1,6 @@
 import { EChallengePopup } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
-import { ChallengePopup } from "../popups/challengePopup";
+import { NewGamePopup } from "../popups/newGamePopup";
 
 export class RematchButton extends Phaser.GameObjects.Container {
   buttonImage: Phaser.GameObjects.Image;
@@ -18,11 +18,11 @@ export class RematchButton extends Phaser.GameObjects.Container {
     }).setOrigin(0.5);
 
     this.buttonImage.on('pointerdown', async () => {
-      new ChallengePopup({
+      new NewGamePopup({
         context,
         opponentId: context.opponentId!,
         challengeType: EChallengePopup.SEND,
-        username: context.gameController!.playerData.find( player => player._id === context.opponentId!)?.username
+        username: context.playerData!.find( player => player._id === context.opponentId!)?.username
       });
       return;
     });

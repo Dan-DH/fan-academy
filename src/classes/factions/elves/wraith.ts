@@ -1,15 +1,15 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Wraith extends DarkElf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -18,28 +18,31 @@ export class Wraith extends DarkElf {
 
     if (target instanceof Hero && target.stats.isKO) {
       // this.scene.sound.play(EGameSounds.WRAITH_CONSUME);
-      target.removeFromGame(true);
+      target.getsStompedOrDestroyed(this);
 
       if (this.stats.unitsConsumed! < 3) {
         this.stats.basePower += 50;
         this.stats.unitsConsumed!++;
         this.increaseMaxHealth(100);
-        this.updateTileData();
         this.unitCard.updateCardData(this);
       }
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.WRAITH_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.WRAITH_ATTACK);
 
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
 
-      if (damageDone) this.lifeSteal(damageDone);
-
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

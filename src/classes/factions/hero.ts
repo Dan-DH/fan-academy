@@ -1,5 +1,5 @@
-import { EActionType, EAttackType, EClass, EFaction, EHeroes, EItems } from "../../enums/gameEnums";
-import { IHero } from "../../interfaces/gameInterface";
+import { EActionType, EAttackType, EFaction, EHeroes, EItems, EUnitMoveType } from "../../enums/gameEnums";
+import { Coordinates, IDamageParams, IHero, IHeroBE } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
 import { positionHeroImage } from "../../utils/heroImagePosition";
 import { handleUnitClick } from "../../utils/handleUnitClick";
@@ -10,25 +10,34 @@ import { HeroCard } from "../cards/heroCard";
 import { FloatingText } from "../effects/floatingText";
 import { HealthBar } from "./healthBar";
 import { roundToFive, checkUnitGameOver, getGridDistance } from "../../utils/gameUtils";
-import { getDamagedAnimation, moveAnimation, removePriestessDebuffTween, useAnimation } from "../../utils/unitAnimations";
+import { getDamagedAnimation, removePriestessDebuffTween, unitMoveAnimation, useAnimation } from "../../utils/unitAnimations";
 import { HeroVisuals } from "./heroVisuals";
-import { enterSpecialTileCheck, exitSpecialTileCheck, removeFromBoard, removeSpecialTile } from "../../utils/boardUtils";
+import { enterSpecialTileCheck, removeSpecialTile, SPIKE_ARMOR_DEFLECT_PERCENT } from "../../utils/boardUtils";
 import { Pulverizer } from "./dwarves/items";
+import { fanAcademy } from "../../main";
+import { StatusEffects, StatusTracker } from "../../utils/statuses";
+import { mapHeroToBE } from "../../utils/mapHeroToBE";
+import { Tribe } from "./tribe/tribe";
 
 export abstract class Hero extends Phaser.GameObjects.Container {
   context: GameScene;
   stats: IHero;
+  status: StatusTracker;
   visuals: HeroVisuals;
   unitCard: HeroCard;
   healthBar: HealthBar;
   isActiveValue = false;
 
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    const { x, y } = context.centerPoints[data.boardPosition];
+  constructor(data: IHero) {
+    const context = fanAcademy.scene.getScene('GameScene') as GameScene;
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
     super(context, x, y);
+
     this.context = context;
+    this.status = new StatusTracker(data.status);
     this.stats = data;
-    this.stats.class = EClass.HERO;
+    this.stats.physicalDamageResistance = this.getPhysicalDamageResistance();
+    this.stats.magicalDamageResistance = this.getMagicalDamageResistance();
 
     this.unitCard = new HeroCard(context, {
       ...data,
@@ -36,9 +45,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }).setVisible(false);
 
     this.healthBar = new HealthBar(context, data, -38, -75);
-    if (this.stats.boardPosition >= 45) this.healthBar.setVisible(false);
+    if (this.stats.boardPosition >= 45 || this.stats.isKO) this.healthBar.setVisible(false);
 
-    this.visuals = new HeroVisuals(context, data, tile);
+    this.visuals = new HeroVisuals(context, data, this.status);
 
     const hitArea = new Phaser.Geom.Rectangle(-35, -50, 75, 85); // centered on (0,0)
 
@@ -78,24 +87,19 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   updatePosition(tile: Tile): void {
-    const { x, y } = this.context.centerPoints[tile.boardPosition];
-    this.x = x;
-    this.y = y;
+    this.x = tile.x;
+    this.y = tile.y;
     this.stats.boardPosition = tile.boardPosition;
     this.stats.row = tile.row;
     this.stats.col = tile.col;
     this.setDepth(this.stats.row + 10);
-    this.visuals.characterImage.setScale(1.2);
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
-    tile.hero = this.exportData();
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
     this.unitCard.updateCardData(this);
   }
 
-  exportData(): IHero {
-    this.getMagicalDamageResistance();
-    this.getPhysicalDamageResistance();
-    return { ...this.stats };
+  exportData(): IHeroBE {
+    return mapHeroToBE(this);
   }
 
   onActivate(): void {
@@ -108,41 +112,47 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.visuals.characterImage.setScale(scale);
   }
 
+  calculateReceivedDamage(params: IDamageParams): number {
+    const { damage, attackType, attacker, directPulverizerHit, reflectedDamage } = params;
+    getDamagedAnimation(this);
+
+    // Calculate damage after applying resistances
+    const totalAttackDamage = this.getLifeLost(damage, attackType, reflectedDamage);
+
+    // If damage is coming from Spike Armor
+    if (reflectedDamage) return roundToFive(totalAttackDamage);
+
+    // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
+    let assaultTileDamage = 0;
+    if (attacker instanceof Pulverizer && !directPulverizerHit) {
+      const debuffLevel = (this.context.board!.units.find(u => u instanceof Crystal && u.stats.belongsTo === this.stats.belongsTo) as Crystal)?.stats.debuffLevel;
+      assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
+    }
+
+    return roundToFive(totalAttackDamage + assaultTileDamage);
+  }
+
   // TODO: refactor direcHit. Shouldn't be used just for the Pulverizer attack. Type number to match Crystal, but used as a boolean
-  getsDamaged(damage: number, attackType: EAttackType, unit: Hero | Item, directHit?: number): number {
-    if (this.stats.engineerShield) {
+  getsDamaged(params: IDamageParams): number {
+    if (this.status.has(StatusEffects.ENGINEER_SHIELD)) {
       // this.scene.sound.play(EGameSounds.ENGINEER_SHIELD_SHATTER);
-      this.context.gameController?.board.updateEngineerOnShieldLost(this.stats.engineerShield);
+      this.context.board!.updateEngineerOnShieldLost(this.stats.unitId);
       this.removeEngineerShield();
       return 0;
     }
 
-    getDamagedAnimation(this);
+    const { oneShot, avoidKOs, attackType, attacker, directPulverizerHit } = params;
 
-    // Calculate damage after applying resistances
-    const totalAttackDamage = this.getLifeLost(damage, attackType);
-    // Check if the damage comes from a Pulverizer's AoE (not affected by resistances)
-    let assaultTileDamage = 0;
-
-    if (unit instanceof Pulverizer) {
-      if (directHit && this.stats.factionEquipment) {
-        this.stats.factionEquipment = false;
-        this.reduceMaxHealth(this.stats.baseHealth * 0.1);
-        this.visuals.factionEquipmentImage.setVisible(false);
-        this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
-      }
-
-      if (!directHit) {
-        const debuffLevel = this.context.gameController?.board.crystals.find(crystal => crystal.stats.belongsTo === this.stats.belongsTo)?.stats.debuffLevel;
-        assaultTileDamage = 300 * (debuffLevel ?? 0) * 0.333;
-      }
+    let totalDamage = 0;
+    if (oneShot) {
+      totalDamage = this.stats.currentHealth;
+    } else {
+      totalDamage = this.calculateReceivedDamage(params);
     }
-
-    const totalDamage = roundToFive(totalAttackDamage + assaultTileDamage);
 
     this.stats.currentHealth -= totalDamage;
 
-    if (this.stats.currentHealth <= 0) this.getsKnockedDown();
+    if (this.stats.currentHealth <= 0 && !avoidKOs) this.getsKnockedDown();
 
     // Update hp bar
     this.healthBar.setHealth(this.stats.maxHealth, this.stats.currentHealth);
@@ -150,28 +160,28 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     // Show damage numbers
     if (totalDamage > 0) new FloatingText(this.context, this.x, this.y - 50, totalDamage.toString());
 
+    if (attacker instanceof Pulverizer && directPulverizerHit && this.status.hasAny(StatusEffects.FACTION_EQUIPMENT, StatusEffects.SPIKE_ARMOR)) {
+      this.status.remove(StatusEffects.FACTION_EQUIPMENT, StatusEffects.SPIKE_ARMOR);
+      this.reduceMaxHealth(this.stats.baseHealth * 0.1);
+      this.visuals.factionEquipmentImage.setVisible(false);
+      this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    }
+
     // Remove 1-hit buffs and debuffs
     if (attackType === EAttackType.PHYSICAL) {
-      this.stats.annihilatorDebuff = false;
+      this.status.remove(StatusEffects.ANNIHILATOR_DEBUFF);
       this.visuals.stopAnnihilatorDebuffAnimation();
     }
-    this.stats.dwarvenBrew = false;
+    this.status.remove(StatusEffects.DWARVEN_BREW);
     this.visuals.dwarvenBrewImage.setVisible(false);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     return totalDamage; // Return damage taken for lifesteal
   }
 
   getTotalPower(rangeModifier = 1): number {
-    /**
-     * Calculation order:
-     * - base attack power
-     * - range modifiers (archer, ninja)
-     * - assault tile bonus
-     * - any other multiplicative modifier (scroll, debuff, runemetal)
-     */
+    const unitsConsumedBonus = this.stats.unitType == EHeroes.WRAITH ? this.stats.unitsConsumed * 50 : 0;
     let attackTileDamage;
     if (this.stats.faction === EFaction.DWARVES) {
       attackTileDamage = this.stats.unitType === EHeroes.ENGINEER ? 140 : 120;
@@ -180,24 +190,25 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     }
 
     if (rangeModifier === 0) rangeModifier = 1;
-    const runeMetalBuff = this.stats.runeMetal ? 1.5 : 1;
-    const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
-    const superCharge = this.stats.superCharge ? 3 : 1;
-    const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
-    const paladinAura = this.stats.paladinAura * 0.05 + 1;
-
-    return roundToFive((this.stats.basePower + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
+    const runeMetalBuff = this.status.has(StatusEffects.RUNE_METAL) ? 1.5 : 1;
+    const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
+    const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
+    const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
+    const paladinAura = this.stats.paladinAura ? this.stats.paladinAura * 0.05 + 1 : 1; // Check for  units in hand. Otherwise getTotalPower returns NaN
+    const bloodlustBuff = this.status.has(StatusEffects.BLOODLUST) ? 1.5 : 1;
+    const meatBuff = this.status.has(StatusEffects.MEAT) ? 2.75 : 1;
+    return roundToFive((this.stats.basePower + unitsConsumedBonus + attackTileBuff) * rangeModifier * superCharge * priestessDebuff * runeMetalBuff * paladinAura * bloodlustBuff * meatBuff);
   }
 
   getPhysicalDamageResistance(): number {
     let total = this.stats.basePhysicalDamageResistance;
 
-    if (this.stats.annihilatorDebuff) total -= 50;
-    if (this.stats.dwarvenBrew) total += 50;
-    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
-    if (this.stats.factionEquipment && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
+    if (this.status.has(StatusEffects.ANNIHILATOR_DEBUFF)) total -= 50;
+    if (this.status.has(StatusEffects.DWARVEN_BREW)) total += 50;
+    if (this.stats.paladinAura! > 0) total += 5 * this.stats.paladinAura!;
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT) && this.stats.faction !== EFaction.DARK_ELVES) total += 20;
 
-    if (this.stats.physicalResistanceTile) {
+    if (this.status.has(StatusEffects.PHYSICAL_RESISTANCE_TILE)) {
       if (this.stats.faction === EFaction.DWARVES) {
         total += this.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
       } else {
@@ -212,11 +223,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   getMagicalDamageResistance(): number {
     let total = this.stats.baseMagicalDamageResistance;
 
-    if (this.stats.dwarvenBrew) total += 50;
-    if (this.stats.paladinAura > 0) total += 5 * this.stats.paladinAura;
-    if (this.stats.shiningHelm) total += 20;
+    if (this.status.has(StatusEffects.DWARVEN_BREW)) total += 50;
+    if (this.stats.paladinAura! > 0) total += 5 * this.stats.paladinAura!;
+    if (this.status.has(StatusEffects.SHINING_HELM)) total += 20;
 
-    if (this.stats.magicalResistanceTile) {
+    if (this.status.has(StatusEffects.MAGICAL_RESISTANCE_TILE)) {
       if (this.stats.faction === EFaction.DWARVES) {
         total += this.stats.unitType === EHeroes.ENGINEER ? 28 : 24;
       } else {
@@ -236,13 +247,22 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.magicalDamageResistance = total;
   }
 
-  getLifeLost(damage: number, attackType: EAttackType) {
+  getLifeLost(damage: number, attackType: EAttackType, reflectedDamage: boolean | undefined) {
     const resistance = {
       [EAttackType.MAGICAL]: this.getMagicalDamageResistance(),
       [EAttackType.PHYSICAL]: this.getPhysicalDamageResistance()
     };
 
-    const totalDamage = damage - damage * resistance[attackType] / 100;
+    let totalDamage = damage - damage * resistance[attackType] / 100;
+
+    if (reflectedDamage && this.stats.currentHealth - totalDamage < 100) {
+      if (this.stats.currentHealth <= 100) {
+        return 0;
+      } else {
+        return totalDamage = this.stats.currentHealth - 100;
+      }
+    }
+
     return totalDamage > this.stats.currentHealth ? this.stats.currentHealth : totalDamage;
   }
 
@@ -254,11 +274,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       attackTileDamage = 100;
     }
 
-    const runeMetalBuff = this.stats.runeMetal ? 1.5 : 1;
-    const attackTileBuff = this.stats.attackTile ? attackTileDamage : 0;
-    const superCharge = this.stats.superCharge ? 3 : 1;
-    const priestessDebuff = this.stats.priestessDebuff ? 0.5 : 1;
-    const paladinAura = this.stats.paladinAura > 0 ? this.stats.paladinAura * 0.05 + 1 : 1;
+    const runeMetalBuff = this.status.has(StatusEffects.RUNE_METAL) ? 1.5 : 1;
+    const attackTileBuff = this.status.has(StatusEffects.POWER_TILE) ? attackTileDamage : 0;
+    const superCharge = this.status.has(StatusEffects.SUPER_CHARGE) ? 3 : 1;
+    const priestessDebuff = this.status.has(StatusEffects.PRIESTESS_DEBUFF) ? 0.5 : 1;
+    const paladinAura = this.stats.paladinAura! > 0 ? this.stats.paladinAura! * 0.05 + 1 : 1;
 
     return roundToFive((this.stats.basePower + attackTileBuff) * unitHealingMult * superCharge * priestessDebuff * runeMetalBuff * paladinAura);
   }
@@ -286,22 +306,22 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (this.stats.isKO) this.getsRevived();
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     return actualHealing;
   }
 
-  private getsRevived(): void {
+  getsRevived(): void {
     this.visuals.playReviveAnimation();
 
     this.stats.isKO = false;
     this.stats.lastBreath = false;
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    this.healthBar.setVisible(true);
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
 
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     enterSpecialTileCheck(this, this.getTile());
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -309,7 +329,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   increaseMaxHealth(amount: number, addText = true): void {
     if (amount <= 0) return;
-    if (this.stats.isKO) this.getsRevived(); // for Soul Harvest
 
     const roundedHealthGain = roundToFive(amount);
     this.stats.maxHealth += roundedHealthGain;
@@ -322,7 +341,6 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (addText) new FloatingText(this.context, this.x, this.y - 50, roundedHealthGain.toString(), true);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
   }
 
   healAndIncreaseHealth(healing: number, increase: number): void {
@@ -347,45 +365,42 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     if (addText) new FloatingText(this.context, this.x, this.y - 90, amount.toString(), false);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     return amount;
   }
 
+  checkIfShouldBeKO(): void {
+    if (this.stats.currentHealth <= 0) this.getsKnockedDown();
+  }
+
   getsKnockedDown(): void {
     // if (this.stats.unitType !== EHeroes.PHANTOM) selectDeathSound(this.scene, this.stats.unitType);
-    removeSpecialTile(this, this.getTile());
+    removeSpecialTile(this);
 
     if (this.stats.shieldingAlly) {
-      this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);
+      this.context.board!.removeEngineerShield(this.stats.shieldingAlly);
       this.stats.shieldingAlly = undefined;
     }
 
     this.stats.currentHealth = 0;
     this.stats.isKO = true;
 
-    this.updateTileData();
-
-    if (this.stats.unitType === EHeroes.PALADIN) this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+    if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
 
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
+    this.healthBar.setVisible(false);
 
     checkUnitGameOver(this);
   }
 
   getTile(): Tile {
-    const tile = this.context?.gameController?.board.getTileFromBoardPosition(this.stats.boardPosition);
+    const tile = this.context?.board!.getTileFromBoardPosition(this.stats.boardPosition);
     if (!tile) throw new Error('getTile() -> No tile found');
 
     return tile;
-  }
-
-  updateTileData(): void {
-    const tile = this.getTile();
-    tile.hero = this.exportData();
   }
 
   shuffleInDeck(): void {
@@ -393,14 +408,39 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     const unitData = this.exportData();
 
-    this.context.gameController!.hand.removeFromHand(this.stats.unitId);
-    this.context.gameController!.deck.addToDeck(unitData);
+    if (this.inPlayerHand()) {
+      this.context.hand!.removeFromHand(this.stats.unitId);
+      this.context.deck!.addToDeck(unitData);
+    } else {
+      this.context.opponentHand!.removeFromHand(this.stats.unitId);
+      this.context.opponentDeck!.addToDeck(unitData);
+    }
 
     this.removeFromGame(false);
   }
 
+  private inPlayerHand(): boolean {
+    const pDeck = this.context.hand!.getHandElement(this.stats.unitId);
+    return !!pDeck;
+  }
+
+  getsStompedOrDestroyed(actor: Hero | Item): void {
+    if (actor.stats.belongsTo !== this.stats.belongsTo) {
+      this.removedByEnemy();
+    } else {
+      this.removeFromGame();
+    }
+  }
+
+  private removedByEnemy(): void {
+    this.context.board?.units.forEach(u => {
+      if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && !u.stats.isKO) (u as Tribe).addBloodlust();
+    });
+    this.removeFromGame();
+  }
+
   removeFromGame(board = true): void {
-    // Remove animations
+    // Remove animations.
     this.scene.tweens.killTweensOf(this);
     this.scene.tweens.killTweensOf(this.visuals);
 
@@ -408,69 +448,86 @@ export abstract class Hero extends Phaser.GameObjects.Container {
       this.scene.tweens.killTweensOf(child);
     });
 
-    if (board) removeFromBoard(this);
+    if (board) {
+      const index = this.context.board!.units.findIndex(unit => unit.stats.unitId === this.stats.unitId);
+      if (index !== -1) { this.context.board!.units.splice(index, 1); }
+
+      checkUnitGameOver(this);
+    }
 
     // Destroy container and children
     this.destroy(true);
   }
 
-  receiveEngineerShield(engineerId: string): void {
-    this.stats.engineerShield = engineerId;
+  receiveEngineerShield(): void {
+    this.status.add(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(true);
-    this.updateTileData();
   }
 
   removeEngineerShield(): void {
-    this.stats.engineerShield = undefined;
+    this.status.remove(StatusEffects.ENGINEER_SHIELD);
     this.visuals.engineerShieldImage.setVisible(false);
-    this.updateTileData();
   }
 
-  async move(currentTile: Tile, targetTile: Tile): Promise<void> {
-    const gameController = this.context.gameController!;
+  async move(targetTile: Tile, isCharge = false): Promise<void> {
+    const startingBoardPosition = this.stats.boardPosition;
+    const tilesMoved = getGridDistance(this.stats.row, this.stats.col, targetTile.row, targetTile.col);
 
-    const tilesMoved = getGridDistance(currentTile.row, currentTile.col, targetTile.row, targetTile.col);
+    removeSpecialTile(this);
 
-    const startTile = gameController.board.getTileFromBoardPosition(this.stats.boardPosition);
-    if (!startTile) return;
-    exitSpecialTileCheck(this, startTile);
+    this.setDepth(targetTile.row + 20); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
 
-    this.setDepth(targetTile.row + 10); // manually setting the depth before the animation for a smoother transition. Will be done again in updatePosition()
-    await moveAnimation(this, targetTile, tilesMoved);
+    await unitMoveAnimation({
+      move: EUnitMoveType.MOVE,
+      hero: this,
+      targetTile,
+      tilesMoved,
+      isCharge
+    });
 
     // Stomp KO'd units
-    if (targetTile.hero && targetTile.hero.isKO) {
-      const hero = gameController.board.units.find(unit => unit.stats.unitId === targetTile.hero?.unitId);
-      if (!hero) console.error('move() Found heroData on targetTile, but no Hero to remove', targetTile);
+    const heroToStomp = this.context.board!.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
+    if (heroToStomp) {
       // this.scene.sound.play(EGameSounds.HERO_STOMP);
-      hero?.removeFromGame(true);
+      heroToStomp?.getsStompedOrDestroyed(this);
     }
 
     // Check if the unit is leaving or entering a special tile and apply any effects
     enterSpecialTileCheck(this, targetTile);
     this.updatePosition(targetTile);
 
-    startTile.removeHero();
+    // startTile.removeHero();
     this.unitCard.updateCardData(this);
-    gameController.afterAction(EActionType.MOVE, startTile.boardPosition, targetTile.boardPosition);
+    if (!isCharge) this.context.afterAction(EActionType.MOVE, startingBoardPosition, targetTile.boardPosition);
   }
 
   spawn(tile: Tile): void {
     const startingPosition = this.stats.boardPosition;
-    const gameController = this.context.gameController!;
 
     // Stomp KO'd units and enemy phantoms
-    if (tile.hero && (tile.hero.isKO || tile.hero.unitType === EHeroes.PHANTOM)) {
-      const hero = gameController.board.units.find(unit => unit.stats.unitId === tile.hero?.unitId);
-      if (!hero) console.error('spawn() Found heroData on tile, but no Hero to remove', tile);
-      // this.scene.sound.play(EGameSounds.HERO_STOMP);
-      hero?.removeFromGame(true);
+    const matchingUnit = this.context.board!.units.find((u): u is Hero => u instanceof Hero && u.stats.boardPosition === tile.boardPosition && (u.stats.isKO || u.stats.unitType === EHeroes.PHANTOM));
+    if (matchingUnit) {
+      if (matchingUnit.stats.unitType === EHeroes.PHANTOM) {
+        matchingUnit.removeFromGame(true);
+      } else {
+        matchingUnit.getsStompedOrDestroyed(this);
+      }
     }
 
-    gameController.hand.removeFromHand(this.stats.unitId);
-    gameController.board.units.push(this);
+    if (this.inPlayerHand()) {
+      this.context.hand!.removeFromHand(this.stats.unitId);
+    } else {
+      this.context.opponentHand!.removeFromHand(this.stats.unitId);
+    }
+    this.context.board!.units.push(this);
+    this.updateUnitAfterSpawn(tile);
 
+    this.context.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
+  }
+
+  updateUnitAfterSpawn(tile: Tile): void {
     // Modify image
+    this.setVisible(true);
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;
@@ -480,24 +537,19 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
     // Update vertical positioning of the info card
     this.unitCard.y = 0;
-    this.stats.paladinAura = this.context.gameController!.board.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
+    this.stats.paladinAura = this.context.board!.searchForAliveAdjacentFriendlyUnit(this, EHeroes.PALADIN);
     // A Wraith can spawn on a special tile. Phantom spawning is handled within its class
     enterSpecialTileCheck(this, tile);
     // Position hero on the board
     this.updatePosition(tile);
-    // Update tile data
-    this.updateTileData();
-
     this.healthBar.setVisible(true);
 
     // this.scene.sound.play(EGameSounds.HERO_SPAWN);
 
     if (this.stats.unitType === EHeroes.PALADIN) {
       this.visuals.paladinAuraImage.setVisible(true);
-      this.context.gameController!.board.updatePaladinAurasAcrossBoard();
+      this.context.board!.updatePaladinAurasAcrossBoard();
     }
-
-    gameController.afterAction(EActionType.SPAWN, startingPosition, tile.boardPosition);
   }
 
   isFullHP(): boolean {
@@ -506,12 +558,13 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   isAlreadyEquipped(item: Item): boolean {
     const map: Partial<Record<EItems, boolean>> = {
-      [EItems.DRAGON_SCALE]: this.stats.factionEquipment,
-      [EItems.SOUL_STONE]: this.stats.factionEquipment,
-      [EItems.RUNE_METAL]: this.stats.runeMetal,
-      [EItems.SHINING_HELM]: this.stats.shiningHelm,
-      [EItems.SUPERCHARGE]: this.stats.superCharge,
-      [EItems.DWARVEN_BREW]: this.stats.dwarvenBrew
+      [EItems.DRAGON_SCALE]: this.status.has(StatusEffects.FACTION_EQUIPMENT),
+      [EItems.SOUL_STONE]: this.status.has(StatusEffects.FACTION_EQUIPMENT),
+      [EItems.RUNE_METAL]: this.status.has(StatusEffects.RUNE_METAL),
+      [EItems.SHINING_HELM]: this.status.has(StatusEffects.SHINING_HELM),
+      [EItems.SUPERCHARGE]: this.status.has(StatusEffects.SUPER_CHARGE),
+      [EItems.DWARVEN_BREW]: this.status.has(StatusEffects.DWARVEN_BREW),
+      [EItems.SPIKE_ARMOR]: this.status.has(StatusEffects.SPIKE_ARMOR)
     };
 
     return !!map[item.stats.itemType];
@@ -521,55 +574,79 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     const helmImage = this.scene.add.image(this.x, this.y, 'gameAtlas', 'shiningHelm').setDepth(100);
     useAnimation(helmImage);
 
-    this.stats.shiningHelm = true;
-
+    this.status.add(StatusEffects.SHINING_HELM);
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
-
     this.visuals.shiningHelmImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   equipRunemetal(handPosition: number): void {
     const helmImage = this.scene.add.image(this.x, this.y, 'gameAtlas', 'runeMetal').setDepth(100);
     useAnimation(helmImage);
 
-    this.stats.runeMetal = true;
-    this.visuals.runeMetalImage.setVisible(true);
-
+    this.status.add(StatusEffects.RUNE_METAL);
     this.visuals.runeMetalImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   equipSuperCharge(handPosition: number): void {
-    this.stats.superCharge = true;
-
-    this.unitCard.updateCardData(this);
-    this.updateTileData();
-
+    this.status.add(StatusEffects.SUPER_CHARGE);
     this.visuals.playSuperChargeAnimation();
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
-  }
-
-  removeAttackModifiers() {
-    this.stats.priestessDebuff = false;
-    removePriestessDebuffTween(this.visuals.priestessDebuffImage);
-    this.stats.superCharge = false;
-    this.visuals.stopSuperChargeAnimation();
-
     this.unitCard.updateCardData(this);
 
-    const tile = this.getTile();
-    tile.hero = this.exportData();
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+  }
+
+  removeAttackModifiers(): void {
+    this.status.remove(StatusEffects.PRIESTESS_DEBUFF);
+    removePriestessDebuffTween(this.visuals.priestessDebuffImage);
+
+    this.status.remove(StatusEffects.SUPER_CHARGE);
+    this.visuals.stopSuperChargeAnimation();
+
+    this.status.remove(StatusEffects.MEAT);
+    this.visuals.stopMeatAnimation();
+
+    this.context.board?.units.forEach(u => {
+      if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && u.status.has(StatusEffects.BLOODLUST)) (u as Tribe).removeBloodlust();
+    });
+
+    this.unitCard.updateCardData(this);
+  }
+
+  getCurrentHealthPercent(): number {
+    return this.stats.currentHealth / this.stats.maxHealth;
+  }
+
+  getExtraHealthPercent(): number {
+    return this.stats.maxHealth / this.stats.baseHealth - 1;
+  }
+
+  consumeMeat(handPosition: number): void {
+    this.visuals.playMeatAnimation();
+    this.getsHealed(700);
+    this.status.add(StatusEffects.MEAT);
+    this.unitCard.updateCardData(this);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+  }
+
+  checkForDamageToReflect(target: Hero | Crystal | undefined, damage: number): void {
+    if (target && target instanceof Hero && target.status.has(StatusEffects.SPIKE_ARMOR) && damage > 0 ) this.applySpikeArmorDamage(damage);
+  }
+
+  applySpikeArmorDamage(damage: number): void {
+    this.getsDamaged({
+      damage: damage * SPIKE_ARMOR_DEFLECT_PERCENT,
+      attackType: this.stats.attackType
+    });
   }
 }

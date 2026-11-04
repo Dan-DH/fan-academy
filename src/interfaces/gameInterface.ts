@@ -1,16 +1,12 @@
-import { EActionClass, EActionType, EAttackType, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, EWinConditions } from "../enums/gameEnums";
+import { Hero } from "../classes/factions/hero";
+import { Item } from "../classes/factions/item";
+import { EActionClass, EActionType, EAttackType, EBoardUnit, EClass, EFaction, EGameModes, EGameStatus, EHeroes, EItems, ETiles, ETurnTimer, EWinConditions } from "../enums/gameEnums";
 
-/**
- * Game Over Interface
- */
 export interface IGameOver {
   winCondition: EWinConditions,
   winner: string
 }
 
-/**
- * Coordinates Interface
- */
 export type Coordinates = {
   x: number,
   y: number,
@@ -19,9 +15,6 @@ export type Coordinates = {
   boardPosition?: number
 };
 
-/**
- * Item Interface
- */
 export interface IItem {
   class: EClass;
   faction: EFaction;
@@ -34,67 +27,81 @@ export interface IItem {
   dealsDamage: boolean;
 }
 
-/**
- * Unit Interface
- */
+export interface IItemBE {
+  class: EClass;
+  faction: EFaction;
+  unitId: string; // userId_itemName_itemNumber
+  itemType: EItems;
+  boardPosition: number // 45-51
+  belongsTo: number;
+}
+
 export interface IHero {
+
+  // BE properties
   class: EClass;
   faction: EFaction;
   unitType: EHeroes;
   unitId: string; // userId_unitName_unitNumber
   boardPosition: number;
+  currentHealth: number;
+  lastBreath: boolean;
+  status: number;
+  unitsConsumed: number;
+
+  // FE only
   row: number;
   col: number;
   baseHealth: number;
   maxHealth: number;
-  currentHealth: number;
   isKO: boolean;
-  lastBreath: boolean;
   movement: number;
   attackRange: number;
   healingRange: number;
   buffRange: number;
   attackType: EAttackType;
   basePower: number;
-  physicalDamageResistance: number;
+  physicalDamageResistance?: number;
   basePhysicalDamageResistance: number;
-  magicalDamageResistance: number;
+  magicalDamageResistance?: number;
   baseMagicalDamageResistance: number;
-  factionEquipment: boolean;
-  runeMetal: boolean;
-  shiningHelm: boolean;
-  superCharge: boolean;
   belongsTo: number;
   canHeal: boolean;
   canBuff: boolean;
-  unitsConsumed: number;
-  priestessDebuff: boolean;
-  attackTile: boolean;
-  magicalResistanceTile: boolean;
-  physicalResistanceTile: boolean;
-  manaVial: boolean;
-  speedTile: boolean;
-  dwarvenBrew: boolean;
-  engineerShield?: string;
   shieldingAlly?: string;
-  annihilatorDebuff: boolean;
-  paladinAura: number;
+  paladinAura?: number;
 }
 
-/**
- * Faction Interface
- */
-export interface IFaction {
-  userId?: string;
-  factionName: string;
-  unitsInHand: (IHero | IItem)[];
-  unitsInDeck: (IHero | IItem)[];
-  unitsLeft: number;
+export interface IHeroBE {
+  class: EClass;
+  faction: EFaction;
+  unitType: EHeroes;
+  unitId: string; // userId_unitName_unitNumber
+  boardPosition: number;
+  currentHealth?: number;
+  maxHealth?: number,
+  lastBreath?: boolean;
+  shieldingAlly?: string;
+  status: number;
+  unitsConsumed?: number;
+  boardType: EBoardUnit;
+  belongsTo: number
 }
 
-/**
- * User and player data Interface
- */
+export interface IHeroBaseStats {
+  baseHealth: number,
+  movement: number,
+  attackType: EAttackType,
+  attackRange: number,
+  healingRange: number,
+  buffRange: number,
+  basePower: number,
+  basePhysicalDamageResistance: number,
+  baseMagicalDamageResistance: number,
+  canHeal: boolean,
+  canBuff: boolean
+}
+
 export interface IUserData {
   _id: string;
   username: string; // from populate in the BE
@@ -106,50 +113,50 @@ export interface IPlayerData {
   faction: EFaction;
 }
 
-/**
- * TurnAction Interface
- */
 export interface ITurnAction {
   actorPosition?: number;
   targetPosition?: number; // an item can be a target for shuffle
-  action: EActionType;
+  action: EActionType; // TODO: rename to actionType
   actionClass: EActionClass,
 }
 
-/**
- * UserState Interface
- */
 export interface IPlayerState {
   playerId: string;
-  factionData: IFaction;
+  hand: (IHeroBE | IItemBE)[];
+  deck: (IHeroBE | IItemBE)[];
 }
 
-/**
- * Crystal Interface
- */
 export interface ICrystal {
-  unitId?: string;
+  // BE fields
+  unitId: string;
   belongsTo: number;
   maxHealth: number;
   currentHealth: number;
+  boardPosition: number;
+  status?: number;
+  boardType: EBoardUnit;
+
+  // FE only fields
   row: number;
   col: number;
-  isDestroyed: boolean;
-  isLastCrystal: boolean;
-  boardPosition: number;
   debuffLevel: number;
-  engineerShield?: string;
   paladinAura: number;
-  annihilatorDebuff: boolean;
   physicalDamageResistance: number;
   magicalDamageResistance: number;
   basePhysicalDamageResistance: number;
   baseMagicalDamageResistance: number;
 }
 
-/**
- * Tile Interface
- */
+export interface ICrystalBE {
+  unitId: string;
+  belongsTo: number;
+  maxHealth: number;
+  currentHealth: number;
+  boardPosition: number;
+  status: number;
+  boardType: EBoardUnit;
+}
+
 export interface ITile {
   row: number;
   col: number;
@@ -157,24 +164,15 @@ export interface ITile {
   tileType: ETiles;
   x: number;
   y: number;
-  obstacle: boolean;
-  hero?: IHero | undefined;
-  crystal?: ICrystal | undefined;
 }
 
-/**
- * GameState Interface
- */
 export interface IGameState {
   player1: IPlayerState;
   player2?: IPlayerState;
-  boardState: ITile[];
+  boardState: (IHeroBE | ICrystalBE)[];
   action?: ITurnAction;
 }
 
-/**
- * Chat message interface
- */
 export interface IChatMessage {
   username: string;
   message: string;
@@ -185,21 +183,53 @@ export interface IChat {
   messages: IChatMessage[]
 }
 
-/**
- * Game Interface
- */
+export interface ITurnHistoryAction {
+  actionType: EActionType,
+  actorPosition?: number;
+  targetPosition?: number;
+}
+
+export interface ITurnHistoryElement {
+  activePlayer: string;
+  actions: ITurnHistoryAction[];
+}
+
 export interface IGame {
   _id: string;
   players: IPlayerData[];
   turnNumber: number;
+  map: number;
   currentState: IGameState[];
   previousTurn: IGameState[];
+  startState?: IGameState;
+  turnHistory?: ITurnHistoryElement[];
   gameOver?: IGameOver,
   status: EGameStatus;
   createdAt: Date;
   finishedAt: Date;
   lastPlayedAt: Date;
+  firstPlayer?: string;
   activePlayer: string;
   chatLogs: IChat;
-  gameMode: EGameModes
+  gameMode: EGameModes;
+  turnTimer: ETurnTimer;
+  timeLeft: number;
+}
+
+export interface ISpecialTile {
+  row: number,
+  col: number,
+  boardPosition: number,
+  tileType: ETiles
+}
+
+export interface IDamageParams {
+  damage: number,
+  attackType: EAttackType,
+  attacker?: Hero | Item,
+  directPulverizerHit?: boolean,
+  avoidKOs?: boolean,
+  oneShot?: boolean,
+  reflectedDamage?: boolean,
+  splashDamage?: number
 }

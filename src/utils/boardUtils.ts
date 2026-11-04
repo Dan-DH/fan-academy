@@ -5,87 +5,80 @@ import { Item } from "../classes/factions/item";
 import { ETiles } from "../enums/gameEnums";
 import { Coordinates, ITile } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
-import { checkUnitGameOver, getGridDistance } from "./gameUtils";
+import { getGridDistance } from "./gameUtils";
+import { StatusEffects } from "./statuses";
 
-export function getAOETiles(aoeAttack: Hero | Item,  targetTile: Tile): {
-  enemyHeroTiles: Tile[],
-  enemyCrystalTiles: Tile[]
-} {
-  const board = aoeAttack.context.gameController?.board;
+export const SPIKE_ARMOR_HP_THRESHOLD = 100;
+export const SPIKE_ARMOR_DEFLECT_PERCENT = 0.33;
+
+export function getAOETiles(aoeAttack: Hero | Item,  boardPosition: number): (Hero | Crystal)[] {
+  const board = aoeAttack.context.board!;
   if (!board) throw new Error('Inferno use() board not found');
 
-  const areaOfEffect = board.get3x3AreaOfEffectTiles(targetTile);
+  const areaOfEffect = board.get3x3AreaOfEffectTiles(boardPosition);
 
-  const enemyHeroTiles = areaOfEffect?.filter(tile => tile.hero && tile.hero?.belongsTo !== aoeAttack.stats.belongsTo);
+  const result: (Hero | Crystal)[] = [];
+  areaOfEffect?.forEach(tile => {
+    board.units.forEach(u => {
+      if (u.stats.boardPosition === tile.boardPosition && u.stats.belongsTo !== aoeAttack.stats.belongsTo) result.push(u);
+    });
+  });
 
-  const enemyCrystalTiles = areaOfEffect?.filter(tile => tile.crystal && tile.crystal?.belongsTo !== aoeAttack.stats.belongsTo);
-
-  return {
-    enemyHeroTiles,
-    enemyCrystalTiles
-  };
+  return result;
 }
 
 export function isEnemySpawn(context: GameScene, tile: Tile | ITile): boolean {
   return tile.tileType === ETiles.SPAWN && (context.isPlayerOne ? tile.col > 5 : tile.col < 5);
 }
 
-export function exitSpecialTileCheck(hero: Hero, tile: Tile): void {
-  removeSpecialTile(hero, tile);
-}
-
 export function enterSpecialTileCheck(hero: Hero, tile: Tile): void {
   specialTileCheck(hero, tile);
 }
 
-export function moveSpecialTileCheck(hero: Hero, endTile: Tile, startTile: Tile): void {
-  exitSpecialTileCheck(hero, startTile);
+export function moveSpecialTileCheck(hero: Hero, endTile: Tile): void {
+  removeSpecialTile(hero);
   enterSpecialTileCheck(hero, endTile);
 }
 
 export function specialTileCheck(hero: Hero, tile: Tile): void {
   if (tile.tileType === ETiles.CRYSTAL_DAMAGE) {
-    hero.context.gameController?.updateCrystals(hero.stats.belongsTo, true);
+    hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, true);
+    hero.status.add(StatusEffects.CRYSTAL_DAMAGE_TILE);
     // this.scene.sound.play(EGameSounds.CRYSTAL_TILE);
   };
   if (tile.tileType === ETiles.POWER) {
-    hero.stats.attackTile = true;
+    hero.status.add(StatusEffects.POWER_TILE);
     // this.scene.sound.play(EGameSounds.SWORD_TILE);
   };
   if (tile.tileType === ETiles.MAGICAL_RESISTANCE) {
-    hero.stats.magicalResistanceTile = true;
+    hero.status.add(StatusEffects.MAGICAL_RESISTANCE_TILE);
     // this.scene.sound.play(EGameSounds.HELM_TILE);
   };
   if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) {
-    hero.stats.physicalResistanceTile = true;
+    hero.status.add(StatusEffects.PHYSICAL_RESISTANCE_TILE);
     // this.scene.sound.play(EGameSounds.SHIELD_TILE);
   };
   if (tile.tileType === ETiles.SPEED) {
-    hero.stats.speedTile = true;
+    hero.status.add(StatusEffects.SPEED_TILE);
     // TODO: missing sound bite
   };
 
-  if (![ETiles.BASIC, !ETiles.SPAWN].includes(tile.tileType)) hero.visuals.playSpecialTileAnimation(tile.tileType);
+  if (![ETiles.BASIC, ETiles.SPAWN, ETiles.TELEPORTER].includes(tile.tileType)) hero.visuals.playSpecialTileAnimation(tile.tileType);
 
   hero.unitCard.updateCardData(hero);
 }
 
-export function removeSpecialTile(hero: Hero, tile: Tile): void {
-  if (tile.tileType === ETiles.CRYSTAL_DAMAGE) hero.context.gameController?.updateCrystals(hero.stats.belongsTo, false);
-  if (tile.tileType === ETiles.POWER) hero.stats.attackTile = false;
-  if (tile.tileType === ETiles.MAGICAL_RESISTANCE) hero.stats.magicalResistanceTile = false;
-  if (tile.tileType === ETiles.PHYSICAL_RESISTANCE) hero.stats.physicalResistanceTile = false;
-  if (tile.tileType === ETiles.SPEED) hero.stats.speedTile = false;
+export function removeSpecialTile(hero: Hero): void {
+  hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE, StatusEffects.POWER_TILE, StatusEffects.MAGICAL_RESISTANCE_TILE, StatusEffects.PHYSICAL_RESISTANCE_TILE, StatusEffects.SPEED_TILE);
+  hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
 
   hero.visuals.stopSpecialTileAnimation();
   hero.unitCard.updateCardData(hero);
 }
 
 export function getDistanceToTarget(hero: Hero, target: Hero | Crystal): number {
-  const gameController = hero.context.gameController!;
-
-  const attackerTile = gameController.board.getTileFromBoardPosition(hero.stats.boardPosition);
-  const targetTile = gameController.board.getTileFromBoardPosition(target.stats.boardPosition);
+  const attackerTile = hero.context.board!.getTileFromBoardPosition(hero.stats.boardPosition);
+  const targetTile = hero.context.board!.getTileFromBoardPosition(target.stats.boardPosition);
 
   if (!attackerTile || !targetTile) {
     console.error('Archer attack() No attacker or target tile found');
@@ -95,33 +88,6 @@ export function getDistanceToTarget(hero: Hero, target: Hero | Crystal): number 
   return getGridDistance(attackerTile.row, attackerTile.col, targetTile.row, targetTile.col );
 }
 
-export function removeFromBoard(hero: Hero): void {
-  // Remove hero data from tile
-  const tile = hero.getTile();
-  tile.removeHero();
-
-  // Remove hero from board array
-  const index = hero.context.gameController!.board.units.findIndex(unit => unit.stats.unitId === hero.stats.unitId);
-  if (index !== -1) { hero.context.gameController!.board.units.splice(index, 1); }
-
-  checkUnitGameOver(hero);
-}
-
-export function getKeyMapTiles(tiles: Tile[]): Tile[] {
-  const result: Tile[] = [];
-
-  for (const tile of tiles) {
-    if (tile.tileType !== ETiles.BASIC) {
-      result.push(tile);
-      continue;
-    }
-
-    if (tile.hero) result.push(tile);
-  }
-
-  return result;
-}
-
 export function createBasicTileData(coordinates: Coordinates): ITile {
   return {
     x: coordinates.x!,
@@ -129,10 +95,7 @@ export function createBasicTileData(coordinates: Coordinates): ITile {
     row: coordinates.row!,
     col: coordinates.col!,
     boardPosition: coordinates.boardPosition!,
-    tileType: ETiles.BASIC,
-    obstacle: false,
-    hero: undefined,
-    crystal: undefined
+    tileType: ETiles.BASIC
   };
 }
 

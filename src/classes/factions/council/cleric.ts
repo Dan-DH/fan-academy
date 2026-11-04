@@ -1,42 +1,39 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Cleric extends Council {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
     attackAnimation(this);
-
     turnIfBehind(this.context, this, target);
-
     const distance = getDistanceToTarget(this, target);
 
-    if (
-      distance === 1 &&
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (distance === 1 && isKoUnitOnEnemySpawn(target)) {
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
-      target.removeFromGame();
+      target.getsStompedOrDestroyed(this);
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.CLERIC_ATTACK);
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(target: Hero): void {
@@ -56,7 +53,7 @@ export class Cleric extends Council {
 
     this.removeAttackModifiers();
 
-    this.context.gameController?.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.HEAL, this.stats.boardPosition, target.stats.boardPosition);
   };
 
   teleport(_target: Hero): void {};

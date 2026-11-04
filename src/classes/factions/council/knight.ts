@@ -1,45 +1,50 @@
 import { EHeroes, EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Knight extends Council {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
-  async attack(target: Hero | Crystal): Promise<void> {
+  attack(target: Hero | Crystal): void {
     attackAnimation(this);
 
-    const gameController = this.context.gameController!;
     turnIfBehind(this.context, this, target);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
+    if (isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.KNIGHT_ATTACK);
-      target.removeFromGame();
+      target.getsStompedOrDestroyed(this);
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.KNIGHT_ATTACK_BIG);
       // if (!this.stats.superCharge)this.scene.sound.play(EGameSounds.ARCHER_ATTACK_MELEE);
 
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
 
-      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) gameController.pushEnemy(this, target);
+      if (target instanceof Hero && target.stats.unitType !== EHeroes.PHANTOM) this.context.board!.displaceUnit({
+        attackerCoords: {
+          row: this.stats.row,
+          col: this.stats.col
+        },
+        target
+      });
 
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

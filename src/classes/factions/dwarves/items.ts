@@ -1,27 +1,16 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
-import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { pulverizerAnimation, useAnimation } from "../../../utils/unitAnimations";
 import { roundToFive } from "../../../utils/gameUtils";
-
-export class DragonScale extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
-  }
-
-  use(target: Hero): void {
-    target.equipFactionEquipment(this.stats.boardPosition);
-    this.removeFromGame();
-  }
-}
+import { Crystal } from "../../board/crystal";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class DwarvenBrew extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -32,60 +21,64 @@ export class DwarvenBrew extends Item {
     const dwarvenBrewImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'dwarvenBrew').setDepth(100);
     useAnimation(dwarvenBrewImage);
 
-    target.stats.dwarvenBrew = true;
+    target.status.add(StatusEffects.DWARVEN_BREW);
     target.visuals.dwarvenBrewImage.setVisible(true);
     target.getsHealed(1000);
 
     this.removeFromGame();
 
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 }
 
 export class Pulverizer extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
-  };
+  constructor(data: IItem) {
+    super(data);
+  }
 
-  use(targetTile: Tile): void {
-    const pulverizerImage = this.scene.add.image(targetTile.x, targetTile.y, 'gameAtlas', 'pulverizer').setDepth(100);
-    pulverizerAnimation(pulverizerImage, targetTile.y);
+  use(target: Hero | Crystal): void {
+    const pulverizerImage = this.scene.add.image(target.x, target.y, 'gameAtlas', 'pulverizer').setDepth(100);
+    pulverizerAnimation(pulverizerImage, target.y);
     // this.scene.sound.play(EGameSounds.PULVERIZER_USE);
 
-    if (targetTile.hero) this.directHitOnHero(targetTile);
-    if (targetTile.crystal) this.directHitOnCrystal(targetTile);
+    if (target instanceof Hero) this.directHitOnHero(target);
+    if (target instanceof Crystal) this.directHitOnCrystal(target);
 
     this.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 
-  directHitOnHero(targetTile: Tile): void {
-    const hero = this.context.gameController?.board.units.find(unit => unit.stats.boardPosition === targetTile.boardPosition);
-    if (!hero) throw new Error(`directHitOnHero() - no target found in units`);
+  directHitOnHero(hero: Hero): void {
     const directHitDamage = 600;
 
-    // FIXME: number used as boolean
-    hero.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this, 1);
+    hero.getsDamaged({
+      damage: directHitDamage,
+      attackType: EAttackType.PHYSICAL,
+      attacker: this,
+      directPulverizerHit: true
+    });
   }
 
-  directHitOnCrystal(targetTile: Tile): void {
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
-
+  directHitOnCrystal(crystal: Crystal): void {
     const directHitDamage = 600;
     const splashDamage = roundToFive(600 * 0.33);
 
-    enemyHeroTiles?.forEach(tile => {
-      const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      hero!.getsDamaged(splashDamage, EAttackType.PHYSICAL, this);
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
+    crystal.getsDamaged({
+      damage: directHitDamage,
+      attackType: EAttackType.PHYSICAL,
+      attacker: this
     });
 
-    enemyCrystalTiles.forEach(tile => {
-      const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (crystal?.stats.boardPosition === targetTile.boardPosition) {
-        crystal?.getsDamaged(directHitDamage, EAttackType.PHYSICAL, this);
-      } else {
-        crystal?.getsDamaged(splashDamage, EAttackType.PHYSICAL, this, 0.33);
+    const enemyUnits = getAOETiles(this, crystal.stats.boardPosition);
+    enemyUnits.forEach(u => {
+      if (u.stats.boardPosition !== crystal.stats.boardPosition) {
+        u!.getsDamaged({
+          damage: splashDamage,
+          attackType: EAttackType.PHYSICAL,
+          attacker: this,
+          splashDamage: 0.33
+        });
+        if (u instanceof Hero && u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
       }
     });
   }

@@ -88,6 +88,27 @@ export function getCardText(unit: EHeroes | EItems): {
       cardText: "Lobs molotovs over enemies for AoE damage. Weak melee attack."
     },
 
+    [EHeroes. WARRIOR]: {
+      cardType: ECardType.FIGHTER,
+      cardText: "Can instantly K.O. any wounded (at or below 50% health) enemy unit (25% for crystals)."
+    },
+    [EHeroes.AXE_THROWER]: {
+      cardType: ECardType.SHOOTER,
+      cardText: "Deals 200 extra damage to enemies above 50% health (25% for crystals)."
+    },
+    [EHeroes.WITCH]: {
+      cardType: ECardType.SUPPORT,
+      cardText: "Explodes fallen heroes at range to damage nearby enemies. Each enemy takes full damage from the explosion."
+    },
+    [EHeroes.CHIEFTAIN]: {
+      cardType: ECardType.SUPER,
+      cardText: "AOE fighter who can pull surrounding enemies close, or charge out to distant enemies."
+    },
+    [EHeroes.SHAMAN]: {
+      cardType: ECardType.CASTER,
+      cardText: "Healer whose healing spells chain through multiple allies, even heroes already at full health."
+    },
+
     [EItems.SHINING_HELM]: {
       cardName: 'Shining Helm',
       cardType: ECardType.EQUIPMENT,
@@ -145,6 +166,22 @@ export function getCardText(unit: EHeroes | EItems): {
       cardName: 'Pulverizer',
       cardType: ECardType.SPELL,
       cardText: "Deals 600 physical damage to a target. Crystal hits damage all nearby units, while unit direct hits destroy equipped Armor."
+    },
+
+    [EItems.TYPHOON]: {
+      cardName: 'Typhoon',
+      cardType: ECardType.SPELL,
+      cardText: "Knocks enemies left or right two tiles. The direction of the knockback depends on where the spell is targeted."
+    },
+    [EItems.MEAT]: {
+      cardName: 'Haunch of meat',
+      cardType: ECardType.CONSUMABLE,
+      cardText: "Heals an ally for 700 HP and increases next attack by 175%."
+    },
+    [EItems.SPIKE_ARMOR]: {
+      cardName: 'Spike armor',
+      cardType: ECardType.EQUIPMENT,
+      cardText: "Reflects 33% of damage taken back to the attacker and increases max health by 10%."
     }
   };
 

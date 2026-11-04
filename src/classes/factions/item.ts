@@ -1,7 +1,9 @@
 import { EClass, EItems } from "../../enums/gameEnums";
-import { IItem } from "../../interfaces/gameInterface";
+import { Coordinates, IItem, IItemBE } from "../../interfaces/gameInterface";
+import { fanAcademy } from "../../main";
 import GameScene from "../../scenes/game.scene";
 import { handleUnitClick } from "../../utils/handleUnitClick";
+import { mapItemToBE } from "../../utils/mapItemToBE";
 import { ItemCard } from "../cards/itemCard";
 
 export abstract class Item extends Phaser.GameObjects.Container {
@@ -11,9 +13,11 @@ export abstract class Item extends Phaser.GameObjects.Container {
   context: GameScene;
   unitCard: ItemCard;
 
-  constructor(context: GameScene, data: IItem) {
-    const { x, y } = context.centerPoints[data.boardPosition];
+  constructor(data: IItem) {
+    const context = fanAcademy.scene.getScene('GameScene') as GameScene;
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
     super(context, x, y - 20);
+
     this.context = context;
     this.stats = data;
     this.stats.class = EClass.ITEM;
@@ -60,17 +64,6 @@ export abstract class Item extends Phaser.GameObjects.Container {
     }
   }
 
-  exportData(): IItem {
-    return { ... this.stats };
-  }
-
-  updatePosition(boardPosition: number): void {
-    const { x, y } = this.context.centerPoints[boardPosition];
-    this.x = x;
-    this.y = y;
-    this.stats.boardPosition = boardPosition;
-  }
-
   onActivate() {
     this.setScale(1.2);
   }
@@ -79,12 +72,23 @@ export abstract class Item extends Phaser.GameObjects.Container {
     this.setScale(1);
   }
 
+  exportData(): IItemBE {
+    return mapItemToBE(this);
+  }
+
+  updatePosition(boardPosition: number): void {
+    const { x, y } = (fanAcademy.registry.get('tileCoords') as Coordinates[])[boardPosition];
+    this.x = x;
+    this.y = y;
+    this.stats.boardPosition = boardPosition;
+  }
+
   shuffleInDeck(): void {
     this.stats.boardPosition = 51;
 
     const unitData = this.exportData();
 
-    this.context.gameController!.deck.addToDeck(unitData);
+    this.context.deck!.addToDeck(unitData);
 
     this.removeFromGame();
   }
@@ -93,9 +97,18 @@ export abstract class Item extends Phaser.GameObjects.Container {
     // Remove animations
     this.scene.tweens.killTweensOf(this);
 
-    this.context.gameController?.hand.removeFromHand(this.stats.unitId);
+    if (this.inPlayerHand()) {
+      this.context.hand!.removeFromHand(this.stats.unitId);
+    } else {
+      this.context.opponentHand!.removeFromHand(this.stats.unitId);
+    }
 
     this.destroy(true);
+  }
+
+  private inPlayerHand(): boolean {
+    const pDeck = this.context.hand!.getHandElement(this.stats.unitId);
+    return !!pDeck;
   }
 
   abstract use(target: any): void;

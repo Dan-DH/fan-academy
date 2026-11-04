@@ -1,16 +1,15 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Council } from "./council";
 import { Crystal } from "../../board/crystal";
-import { getDistanceToTarget, isEnemySpawn, moveSpecialTileCheck } from "../../../utils/boardUtils";
+import { getDistanceToTarget, moveSpecialTileCheck, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Ninja extends Council {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -25,28 +24,34 @@ export class Ninja extends Council {
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.NINJA_ATTACK);
     };
 
+    let damageDealt = 0;
     if (distance === 1) {
       // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-      if (
-        target instanceof Hero &&
-        target.stats.isKO &&
-        isEnemySpawn(this.context, target.getTile())
-      ) {
+      if (isKoUnitOnEnemySpawn(target)) {
         // this.scene.sound.play(EGameSounds.NINJA_ATTACK);
-        target.removeFromGame();
+        target.getsStompedOrDestroyed(this);
       } else {
         ninjaAttackSound();
-        target.getsDamaged(this.getTotalPower(2), this.stats.attackType, this);
+        damageDealt = target.getsDamaged({
+          damage: this.getTotalPower(2),
+          attackType: this.stats.attackType,
+          attacker: this
+        });
         this.removeAttackModifiers();
       }
     } else {
       ninjaAttackSound();
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   teleport(target: Hero): void {
@@ -58,15 +63,13 @@ export class Ninja extends Council {
     sizeReduceTween(this.visuals.smokeAnimationImage!, 500, this.visuals.smokeAnimationImage.scale);
     sizeReduceTween(target.visuals.smokeAnimationImage!, 500, this.visuals.smokeAnimationImage.scale);
 
-    moveSpecialTileCheck(target, targetDestination, unitDestination);
+    moveSpecialTileCheck(target, targetDestination);
     target.updatePosition(targetDestination);
-    targetDestination.hero = target.exportData();
 
-    moveSpecialTileCheck(this, unitDestination, targetDestination);
+    moveSpecialTileCheck(this, unitDestination);
     this.updatePosition(unitDestination);
-    unitDestination.hero = this.exportData();
 
-    this.context.gameController!.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);
+    this.context.afterAction(EActionType.TELEPORT, targetDestination.boardPosition, unitDestination.boardPosition);
   };
 
   heal(_target: Hero): void {};

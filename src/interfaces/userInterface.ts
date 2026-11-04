@@ -12,9 +12,10 @@ export interface IUserStats {
 }
 
 export interface IUserFactions {
-  council: IUserFactionStats
-  elves: IUserFactionStats
-  dwarves: IUserFactionStats
+  council: IUserFactionStats;
+  elves: IUserFactionStats;
+  dwarves: IUserFactionStats;
+  tribe: IUserFactionStats;
 }
 
 export interface IUserFactionStats {

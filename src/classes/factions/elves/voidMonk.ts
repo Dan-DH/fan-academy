@@ -1,17 +1,16 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
-import { isOnBoard, canBeAttacked } from "../../../utils/gameUtils";
+import { isOnBoard, canBeAttacked, isPhantomAndKO, isKoUnitOnEnemySpawn } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class VoidMonk extends DarkElf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -24,14 +23,10 @@ export class VoidMonk extends DarkElf {
     // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.VOIDMONK_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
-      target.removeFromGame();
+    if (isKoUnitOnEnemySpawn(target)) {
+      target.getsStompedOrDestroyed(this);
     } else {
-      const board = this.context.gameController!.board;
+      const board = this.context.board!;
 
       // Get the direction of the attack and offset tiles
       const attackDirection = board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
@@ -41,48 +36,46 @@ export class VoidMonk extends DarkElf {
       if (!offsetTiles.length) throw new Error(`voidMonk attack() No offsetTiles: ${this.stats.boardPosition}, ${target.stats.boardPosition}`);
 
       for (const offset of offsetTiles) {
-        const tileBP = target.stats.boardPosition + offset;
-        if (!isOnBoard(tileBP)) continue;
+        const tileBoardPosition = target.stats.boardPosition + offset;
+        if (!isOnBoard(tileBoardPosition)) continue;
 
-        const tile = board.getTileFromBoardPosition(tileBP);
-        if (!tile) throw new Error(`voidMonk attack() No tile found`);
-
-        if (!canBeAttacked(this, tile)) continue;
-
-        if (tile.hero) {
-          const hero = board.units.find(unit => unit.stats.unitId === tile.hero!.unitId);
-          if (hero) splashedEnemies.push(hero);
-        }
-
-        if (tile.crystal) {
-          const crystal = board.crystals.find(c => c.stats.boardPosition === tile.crystal!.boardPosition);
-          if (crystal) splashedEnemies.push(crystal);
-        }
+        const matchedEnemy = board.units.find(u => u.stats.boardPosition === tileBoardPosition && u.stats.belongsTo !== this.stats.belongsTo);
+        if (matchedEnemy && canBeAttacked(this, matchedEnemy)) splashedEnemies.push(matchedEnemy);
       };
 
       // Apply damage to targets
-      let damageDone = 0;
-      const unitDamage = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
-      if (unitDamage) damageDone += unitDamage;
+      let damageDealt = 0;
+      let  totalDamageToReflect = 0;
+      const unitDamage = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
+      if (unitDamage) damageDealt += unitDamage;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += unitDamage;
+
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
         splashedEnemies.forEach(enemy => {
-          const unitDamage = enemy.getsDamaged(splashDamage, this.stats.attackType, this, 0.666);
-          if (unitDamage) damageDone += unitDamage;
+          const unitDamage = enemy.getsDamaged({
+            damage: splashDamage,
+            attackType: this.stats.attackType,
+            attacker: this,
+            splashDamage: 0.666
+          });
+          if (unitDamage) damageDealt += unitDamage;
+          if (enemy.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += unitDamage;
+          if (isPhantomAndKO(enemy)) enemy.removeFromGame();
         });
       }
 
-      if (damageDone) this.lifeSteal(damageDone);
-
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
       this.removeAttackModifiers();
     }
 
-    splashedEnemies.forEach(enemy => {
-      if (enemy instanceof Hero && enemy.stats.unitType === EHeroes.PHANTOM && enemy.stats.isKO) enemy.removeFromGame();
-    });
-
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   getOffsetTiles(targetBoardPosition: number, attackDirection: number): number[] {

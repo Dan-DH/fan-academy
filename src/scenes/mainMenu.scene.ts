@@ -1,30 +1,33 @@
+import { FetchGameListPopup } from "../classes/popups/fetchGameListPopup";
+import { colyseusService } from "../colyseus/colyseusService";
 import { IUserPreferences } from "../interfaces/userInterface";
+import { getGameList } from "../queries/gameQueries";
 import { authCheck, loginQuery, passwordRecoveryEmailQuery, passwordResetQuery, signUpQuery } from "../queries/userQueries";
 import { isValidPassword } from "../utils/playerUtils";
 import createMainMenuButton from "./mainMenuUtils/buttons";
 
 export default class MainMenuScene extends Phaser.Scene {
   userId: string | undefined;
-  gameList: string | undefined;
-  userPreferences: IUserPreferences | undefined;
-
   currentSubScene: string | undefined;
+  fetchingGamesPopup: Phaser.GameObjects.Container | undefined;
 
   constructor() {
     super({ key: 'MainMenuScene' });
   }
 
-  init() {}
+  init() {
+    this.userId = undefined;
+    this.currentSubScene = undefined; //TODO: do the same for all scenes to keep them tidy
+  }
 
   async create() {
     // Auth check
-    const authCheckResult = await authCheck();
-
-    if (authCheckResult) this.updateUserPreferences(authCheckResult);
+    this.isPlayerLoggedIn();
 
     // Background image
     const bg = this.add.image(0, 0, 'uiBackground').setOrigin(0);
-    const menuImg = this.add.image(396, 15, 'mainMenuImage').setOrigin(0).setScale(1.065);
+    const menuImg = this.add.image(395, 12, 'mainMenuImage').setOrigin(0).setScale(1.25);
+    // const menuImg = this.add.image(396, 15, 'mainMenuImage').setOrigin(0).setScale(1.065);
     // Background game screen (to be used when a sub scene is running to avoid flickering)
     const backgroundGameScreen = this.add.image(397, 15, 'gameBackground').setOrigin(0, 0).setScale(1.06, 1.2).setVisible(false);
     // Adjustments for the original bg image
@@ -121,7 +124,7 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: () => {
         // this.sound.play(EUiSounds.BUTTON_PLAY);
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
-        this.scene.start('UIScene', { userId: this.userId });
+        this.scene.start('UIScene');
         this.currentSubScene = 'UIScene';
       }
     });
@@ -138,15 +141,15 @@ export default class MainMenuScene extends Phaser.Scene {
       callback: async () => {
         // this.sound.play(EUiSounds.BUTTON_GENERIC);
         localStorage.removeItem('jwt');
+        this.registry.remove('userId');
+        this.registry.remove('userPreferences');
+        this.registry.remove('gameList');
         this.userId = undefined;
         document.title = 'Fan Academy';
         if (this.currentSubScene) this.scene.stop(this.currentSubScene);
         this.scene.restart();
       }
     });
-
-    // Login and sign up forms. Only show if user is not authenticated
-    this.createSignUpAndLoginForms(this.userId);
   }
 
   onShutdown() {
@@ -192,6 +195,7 @@ export default class MainMenuScene extends Phaser.Scene {
     messageBoxContainer.add([bg, title, body, signature]);
     return messageBoxContainer;
   }
+
   createSignUpAndLoginForms(userId: string | undefined):  {
     loginForm: Phaser.GameObjects.DOMElement,
     signUpForm: Phaser.GameObjects.DOMElement
@@ -252,13 +256,14 @@ export default class MainMenuScene extends Phaser.Scene {
     loginButton.addEventListener('click', async () => {
       if (loginUsernameInput.value && loginPasswordInput.value) {
         const result = await loginQuery(loginUsernameInput.value, loginPasswordInput.value);
-        if (result.success) {
-          if (result.userData) this.updateUserPreferences(result.userData);
+        if (result.success && result.userData) {
+          this.updateUserPreferences(result.userData);
+          await this.connectToLobby();
           cleanLoginFormFields();
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
           // this.sound.play(EUiSounds.BUTTON_GENERIC);
-        }else {
+        } else {
           // this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(loginError, result.error); // Show server error to user
         }
@@ -291,13 +296,13 @@ export default class MainMenuScene extends Phaser.Scene {
 
       if (signUpEmailInput.value && signUpUsernameInput.value && signUpPasswordInput.value) {
         const result = await signUpQuery(signUpEmailInput.value, signUpUsernameInput.value, signUpPasswordInput.value);
-        if (result.success) {
-          if (result.userData) this.updateUserPreferences(result.userData);
+        if (result.success && result.userData) {
+          this.updateUserPreferences(result.userData);
+          await this.connectToLobby();
           cleanSignUpFormFields();
           blockingLayer.setVisible(false);
           // patchNotice.setVisible(true);
           // this.sound.play(EUiSounds.BUTTON_GENERIC);
-          console.log('UserId after sign up:', this.userId);
         } else {
           // this.sound.play(EUiSounds.BUTTON_FAILED);
           showFormError(signUpError, result.error); // Show server error to user
@@ -415,17 +420,58 @@ export default class MainMenuScene extends Phaser.Scene {
     };
   }
 
+  async isPlayerLoggedIn(): Promise<void> {
+    this.userId = this.registry.get('userId');
+    if (this.userId) {
+      console.log('User already authenticated, skipping gameList fetch');
+      return;
+    }
+
+    const authCheckResult = await authCheck();
+    if (authCheckResult) this.updateUserPreferences(authCheckResult);
+
+    // Login and sign up forms. Only show if user is not authenticated
+    this.createSignUpAndLoginForms(this.userId);
+
+    if (this.userId) await this.connectToLobby();
+  }
+
   updateUserPreferences(userData: {
     userId: string,
     preferences: IUserPreferences
   }): void {
+    this.registry.set('userId', userData.userId);
     this.userId = userData.userId;
 
     this.registry.set('userPreferences', {
       chat: userData.preferences.chat,
       sound: userData.preferences.sound
     });
+  }
 
-    // this.sound.mute = !userData.preferences.sound;
+  async connectToLobby(): Promise<void> {
+    this.fetchingGamesWarning();
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      console.error('connectToLobby() - No token found');
+      return;
+    }
+
+    const lobby = await colyseusService.connect(this.userId!, token);
+    if (!lobby) throw new Error('mainMenu - unable to connect to lobby');
+    // TODO: get games via lobby message;
+    const gameList =  await getGameList(this.userId!);
+
+    this.registry.set('gameList', gameList ?? []);
+    this.removeFetchingGamesWarning();
+  }
+
+  fetchingGamesWarning(): void {
+    this.fetchingGamesPopup = new FetchGameListPopup();
+  }
+
+  removeFetchingGamesWarning(): void {
+    this.fetchingGamesPopup?.destroy();
   }
 }

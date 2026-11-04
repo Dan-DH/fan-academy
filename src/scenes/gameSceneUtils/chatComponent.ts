@@ -1,9 +1,9 @@
 import { GameObjects } from "phaser";
 import { IChatMessage } from "../../interfaces/gameInterface";
 import GameScene from "../game.scene";
-import { sendChatMessage } from "../../colyseus/colyseusLobbyRoom";
 import { fanAcademy } from "../../main";
 import UIScene from "../ui.scene";
+import { colyseusService } from "../../colyseus/colyseusService";
 
 export const chatPlayers = {
   player1: '',
@@ -31,8 +31,8 @@ export function renderChatMessage(chatMessage: IChatMessage): void {
 
 export function createChatComponent(context: GameScene): GameObjects.DOMElement {
   // Set up player usernames to apply color to each message
-  chatPlayers.player1 = context.currentGame.players[0].userData.username;
-  chatPlayers.player2 = context.currentGame.players[1].userData.username;
+  chatPlayers.player1 = context.clonedGame!.players[0].userData.username;
+  chatPlayers.player2 = context.clonedGame!.players[1].userData.username;
 
   const chat = context.add.dom(495, 800).createFromCache('chatComponent').setOrigin(0.5);
   const chatRoot = chat.node as HTMLElement;
@@ -86,17 +86,17 @@ export function createChatComponent(context: GameScene): GameObjects.DOMElement 
       const uiScene = fanAcademy.scene.getScene('UIScene') as UIScene;
       if (!uiScene) console.error('Chat component - No UI Scene found when sending a message');
       const messageObject = {
-        gameId: context.currentGame._id,
+        gameId: context.clonedGame!._id,
         userIds: [context.player1!.playerId, context.player2!.playerId],
         message: chatInput.value.trim()
       };
-      sendChatMessage(uiScene.lobbyRoom!, messageObject);
+      colyseusService.sendChatMessage(messageObject);
       chatInput.value = '';
     }
   });
 
   // Render the messages
-  const messagesToRender = context.currentGame.chatLogs.messages;
+  const messagesToRender = context.clonedGame!.chatLogs.messages;
 
   messagesToRender.forEach((message) => renderChatMessage(message));
   chatMessages.scrollTop = chatMessages.scrollHeight;

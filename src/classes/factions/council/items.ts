@@ -1,6 +1,5 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
@@ -8,8 +7,8 @@ import { getAOETiles } from "../../../utils/boardUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
 
 export class DragonScale extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -19,8 +18,8 @@ export class DragonScale extends Item {
 }
 
 export class HealingPotion extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -34,14 +33,14 @@ export class HealingPotion extends Item {
 
     this.removeFromGame();
 
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
   }
 }
 
 export class Inferno extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
-  };
+  constructor(data: IItem) {
+    super(data);
+  }
 
   use(targetTile: Tile): void {
     const infernoImage = this.scene.add.image(targetTile.x, targetTile.y, 'gameAtlas', 'infernoShockWave').setDepth(100);
@@ -51,31 +50,28 @@ export class Inferno extends Item {
     // Damages enemy units and crystals, and removes enemy KO'd units
     const damage = 350;
 
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
+    const enemyUnits = getAOETiles(this, targetTile.boardPosition);
 
-    enemyHeroTiles?.forEach(tile => {
-      const hero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      if (!hero) throw new Error('Inferno use() hero not found');
-
+    enemyUnits?.forEach(u => {
       // Inferno removes KO'd enemy units
-      if (hero.stats.isKO){
-        hero.removeFromGame(true);
-        return;
-      }
+      if (u instanceof Hero && u.stats.isKO) u.getsStompedOrDestroyed(this);
 
-      hero.getsDamaged(damage, EAttackType.MAGICAL, this);
-
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
+      u.getsDamaged({
+        damage: damage,
+        attackType: EAttackType.MAGICAL,
+        attacker: this,
+        avoidKOs: true
+      });
     });
 
-    enemyCrystalTiles.forEach(tile => {
-      const crystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!crystal) throw new Error('Inferno use() crystal not found');
-
-      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
+    enemyUnits?.forEach(u => {
+      if (u instanceof Hero){
+        u.checkIfShouldBeKO();
+        if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
+      }
     });
 
     this.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
   }
 }

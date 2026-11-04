@@ -1,16 +1,16 @@
-import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
-import { getAOETiles, getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getAOETiles, getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
-import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 
 export class Grenadier extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -25,49 +25,51 @@ export class Grenadier extends Dwarf {
       this.rangedAttack(target);
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   meleeAttack(target: Hero | Crystal): void {
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK_MELEE);
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())
-    ) {
-      target.removeFromGame();
+    if (isKoUnitOnEnemySpawn(target)) {
+      target.getsStompedOrDestroyed(this);
     } else {
-      target.getsDamaged(this.getTotalPower(0.5), this.stats.attackType, this);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(0.5),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
   }
 
   rangedAttack(target: Hero | Crystal): void {
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, target.getTile());
+    const enemyUnits = getAOETiles(this, target.stats.boardPosition);
     // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK);
 
-    enemyHeroTiles?.forEach(tile => {
-      const enemyHero = this.context.gameController!.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
-      if (!enemyHero) throw new Error('Grenadier attack() hero not found');
+    let totalDamageToReflect = 0;
+    const damageDealt = target.getsDamaged({
+      damage: this.getTotalPower(),
+      attackType: EAttackType.MAGICAL,
+      attacker: this
+    });
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
-      if (enemyHero.stats.boardPosition === target.stats.boardPosition) {
-        enemyHero.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
-      } else {
-        enemyHero.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this);
-        if (enemyHero.stats.isKO && enemyHero.stats.unitType === EHeroes.PHANTOM) enemyHero.removeFromGame();
+    enemyUnits.forEach(u => {
+      if (u.stats.boardPosition !== target.stats.boardPosition) {
+        const damageDealt = u.getsDamaged({
+          damage: this.getTotalPower(0.5),
+          attackType: EAttackType.MAGICAL,
+          attacker: this
+        });
+        if (isPhantomAndKO(u)) u.removeFromGame();
+        if (u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
       }
     });
 
-    enemyCrystalTiles.forEach(tile => {
-      const enemyCrystal = this.context.gameController!.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!enemyCrystal) throw new Error('Grenadier attack() crystal not found');
-
-      if (enemyCrystal.stats.boardPosition === target.stats.boardPosition) {
-        enemyCrystal.getsDamaged(this.getTotalPower(), EAttackType.MAGICAL, this);
-      } else {
-        enemyCrystal.getsDamaged(this.getTotalPower(0.5), EAttackType.MAGICAL, this, 0.5);
-      }
-    });
-
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
     this.removeAttackModifiers();
   }
 

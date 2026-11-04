@@ -2,5 +2,6 @@ export enum ELeaderboardEnum {
   MAIN = 'main',
   COUNCIL = 'council',
   ELVES = 'elves',
-  DWARVES = 'dwarves'
+  DWARVES = 'dwarves',
+  TRIBE = 'tribe'
 }

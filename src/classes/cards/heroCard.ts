@@ -1,6 +1,7 @@
 import { EAttackType, EHeroes } from "../../enums/gameEnums";
 import { IHero } from "../../interfaces/gameInterface";
 import GameScene from "../../scenes/game.scene";
+import { StatusEffects } from "../../utils/statuses";
 import { capitalize } from "../../utils/textAnimations";
 import { getCardText } from "../../utils/unitCards";
 import { Hero } from "../factions/hero";
@@ -42,7 +43,7 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
     // Background, unit image, name and type, and separator
     this.cardBackgroundImage = context.add.image(10, 10, 'gameAtlas', 'cardBackground').setScale(1.7);
-    this.unitPictureImage = context.add.image(-130, -150, 'gameAtlas', `${data.unitType}_v1-hd`).setOrigin(0.5).setScale(1.5);
+    this.unitPictureImage = context.add.image(-130, -150, 'gameAtlas', `${data.unitType}_v1-hd`).setOrigin(0.5).setScale(data.unitType === EHeroes.AXE_THROWER ? 2 : 1.5);
     this.cardSeparatorImage = context.add.image(50, -100, 'gameAtlas', 'cardSeparator').setOrigin(0.5).setScale(1.3);
 
     const { cardText, cardType } = getCardText(data.unitType);
@@ -84,14 +85,14 @@ export class HeroCard extends Phaser.GameObjects.Container {
     this.magicalResistanceText = this.context.add.text(100, 30, `${data.magicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: this.getTextColor(data.magicalDamageResistance, data.baseMagicalDamageResistance)
+      color: this.getTextColor(data.magicalDamageResistance!, data.baseMagicalDamageResistance)
     }).setOrigin(0.5);
 
     this.physicalResistanceImage = context.add.image(-150, 30, 'gameAtlas', 'physicalResistance').setOrigin(0.5).setScale(1.3);
     this.physicalResistanceText = this.context.add.text(-85, 30, `${data.physicalDamageResistance} %`, {
       fontFamily: "proLight",
       fontSize: 35,
-      color: this.getTextColor(data.physicalDamageResistance, data.basePhysicalDamageResistance)
+      color: this.getTextColor(data.physicalDamageResistance!, data.basePhysicalDamageResistance)
     }).setOrigin(0.5);
 
     // Range
@@ -177,7 +178,7 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
     const basePower = hero.stats.unitType === EHeroes.WRAITH ? 250 : hero.stats.basePower;
 
-    if (hero.stats.priestessDebuff) {
+    if (hero.status.has(StatusEffects.PRIESTESS_DEBUFF)) {
       this.powerText.setColor('#ff0000');
     } else {
       this.powerText.setColor(this.getTextColor(totalPow, basePower));
@@ -186,12 +187,12 @@ export class HeroCard extends Phaser.GameObjects.Container {
 
   updateCardPhysicalResistance(hero: Hero): void {
     this.physicalResistanceText.setText(`${hero.stats.physicalDamageResistance} %`);
-    this.physicalResistanceText.setColor(this.getTextColor(hero.stats.physicalDamageResistance, hero.stats.basePhysicalDamageResistance));
+    this.physicalResistanceText.setColor(this.getTextColor(hero.stats.physicalDamageResistance!, hero.stats.basePhysicalDamageResistance));
   }
 
   updateCardMagicalResistance(hero: Hero): void {
     this.magicalResistanceText.setText(`${hero.stats.magicalDamageResistance} %`);
-    this.magicalResistanceText.setColor(this.getTextColor(hero.stats.magicalDamageResistance, hero.stats.baseMagicalDamageResistance));
+    this.magicalResistanceText.setColor(this.getTextColor(hero.stats.magicalDamageResistance!, hero.stats.baseMagicalDamageResistance));
   }
 
   updateCardHealth(hero: Hero ): void {

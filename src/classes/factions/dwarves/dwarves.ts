@@ -1,13 +1,12 @@
 import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { useAnimation } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
 
 export abstract class Dwarf extends Hero {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   equipFactionEquipment(handPosition: number): void {
@@ -16,17 +15,16 @@ export abstract class Dwarf extends Hero {
     const dragonScaleImg = this.scene.add.image(this.x + 10, this.y - 10, 'gameAtlas', 'dragonScale').setOrigin(0.5).setDepth(100);
     useAnimation(dragonScaleImg);
 
-    this.stats.factionEquipment = true;
+    this.status.add(StatusEffects.FACTION_EQUIPMENT);
     this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
 
-    this.stats.physicalDamageResistance += 20;
+    this.stats.physicalDamageResistance! += 20;
 
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 }

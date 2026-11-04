@@ -1,6 +1,8 @@
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { IPlayerState } from "../interfaces/gameInterface";
+import { EGameModes, EGameStatus, ETurnTimer } from "../enums/gameEnums";
+import { IGame } from "../interfaces/gameInterface";
+import { fanAcademy } from "../main";
 import GameScene from "../scenes/game.scene";
 
 export function getPlayersKey(context: GameScene): {
@@ -16,10 +18,6 @@ export function getPlayersKey(context: GameScene): {
   };
 }
 
-export function getCurrentPlayer(context: GameScene): IPlayerState {
-  return context.isPlayerOne! ? context.player1! : context.player2!;
-}
-
 export function isValidPassword(password: string): boolean {
   const minLength = 8;
   const hasLetter = /[a-zA-Z]/.test(password);
@@ -32,8 +30,8 @@ export function selectUnit(context: GameScene, unit: Hero | Item): void {
   context.activeUnit = unit;
 
   // Highlight tiles
-  if (unit instanceof Hero) context.gameController?.onHeroClicked(unit);
-  if (unit instanceof Item) context.gameController?.onItemClicked(unit);
+  if (unit instanceof Hero) context.onHeroClicked(unit);
+  if (unit instanceof Item) context.onItemClicked(unit);
 }
 
 export function deselectUnit(context: GameScene): void {
@@ -41,6 +39,16 @@ export function deselectUnit(context: GameScene): void {
 
   context.activeUnit.isActive = false;
   context.activeUnit = undefined;
-  context.gameController?.board.clearHighlights();
-  context.gameController?.board.removeReticles();
+  context.board!.clearHighlights();
+  context.board!.removeReticles();
+}
+
+export function getAllOpponentIds(mode: EGameModes, timer: ETurnTimer): string[] {
+  const gameList = fanAcademy.registry.get('gameList') as IGame[];
+  const playerIds: string[] = gameList.filter(g => g.turnTimer === timer && g.gameMode === mode && g.status !== EGameStatus.FINISHED).flatMap(g => [
+    g.players[0].userData._id,
+    g.players[1]?.userData._id
+  ]);
+
+  return [...new Set(playerIds)];
 }

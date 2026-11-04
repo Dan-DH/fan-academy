@@ -1,16 +1,15 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
-import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
-import { isEnemySpawn } from "../../../utils/boardUtils";
 import { attackAnimation, flashActingUnit, turnIfBehind } from "../../../utils/unitAnimations";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Engineer extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -19,20 +18,21 @@ export class Engineer extends Dwarf {
     // this.scene.sound.play(EGameSounds.ENGINEER_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
-      target.removeFromGame();
+    if (isKoUnitOnEnemySpawn(target)) {
+      target.getsStompedOrDestroyed(this);
     } else {
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
 
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   shieldAlly(target: Hero | Crystal): void {
@@ -42,13 +42,12 @@ export class Engineer extends Dwarf {
 
     if (this.stats.shieldingAlly) {
       if (this.stats.shieldingAlly === target.stats.unitId) return;
-      this.context.gameController?.board.removeEngineerShield(this.stats.shieldingAlly);
+      this.context.board!.removeEngineerShield(this.stats.shieldingAlly);
     }
 
-    target.receiveEngineerShield(this.stats.unitId);
+    target.receiveEngineerShield();
     this.stats.shieldingAlly = target.stats.unitId;
-    this.updateTileData();
-    this.context.gameController!.afterAction(EActionType.BUFF, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.BUFF, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

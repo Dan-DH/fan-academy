@@ -19,11 +19,6 @@ export class HomeButton extends Phaser.GameObjects.Container {
     this.add([this.button, this.buttonText]).setScale(0.8);
 
     this.button.on('pointerdown', async() => {
-      // FIXME: not awaiting the response fixes the issue with the Home button being unresponsive in production. But it is clearly not the right way of handling it.
-      context.lobbyRoom?.removeAllListeners();
-      context.lobbyRoom?.leave();
-
-      context.activeGame = undefined;
       context.scene.stop('GameScene');
       context.scene.start('MainMenuScene');
     });

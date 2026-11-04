@@ -1,4 +1,3 @@
-import { Tile } from "../classes/board/tile";
 import { Archer } from "../classes/factions/council/archer";
 import { Cleric } from "../classes/factions/council/cleric";
 import { DragonScale, HealingPotion, Inferno } from "../classes/factions/council/items";
@@ -22,25 +21,36 @@ import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
 import { ShiningHelm, SuperCharge, RuneMetal } from "../classes/factions/sharedItems";
 import { EItems, EHeroes } from "../enums/gameEnums";
-import { IItem, IHero } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
+import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
+import { mapItemFromBE } from "./mapItemFromBE";
+import { mapHeroFromBE } from "./mapHeroFromBE";
+import { Meat, SpikeArmor, Typhoon } from "../classes/factions/tribe/items";
+import { Warrior } from "../classes/factions/tribe/warrior";
+import { AxeThrower } from "../classes/factions/tribe/axeThrower";
+import { Witch } from "../classes/factions/tribe/witch";
+import { Shaman } from "../classes/factions/tribe/shaman";
+import { Chieftain } from "../classes/factions/tribe/chieftain";
 
-export function createNewItem(context: GameScene, itemData: IItem): Item {
+export function createNewItem(itemData: IItemBE): Item {
   const itemTypes: Record<EItems, () => Item> = {
-    [EItems.SHINING_HELM]: () => new ShiningHelm(context, itemData),
-    [EItems.SUPERCHARGE]: () => new SuperCharge(context, itemData),
-    [EItems.RUNE_METAL]: () => new RuneMetal(context, itemData),
+    [EItems.SHINING_HELM]: () => new ShiningHelm(mapItemFromBE(itemData)),
+    [EItems.SUPERCHARGE]: () => new SuperCharge(mapItemFromBE(itemData)),
+    [EItems.RUNE_METAL]: () => new RuneMetal(mapItemFromBE(itemData)),
 
-    [EItems.DRAGON_SCALE]: () => new DragonScale(context, itemData),
-    [EItems.HEALING_POTION]: () => new HealingPotion(context, itemData),
-    [EItems.INFERNO]: () => new Inferno(context, itemData),
+    [EItems.DRAGON_SCALE]: () => new DragonScale(mapItemFromBE(itemData)),
+    [EItems.HEALING_POTION]: () => new HealingPotion(mapItemFromBE(itemData)),
+    [EItems.INFERNO]: () => new Inferno(mapItemFromBE(itemData)),
 
-    [EItems.MANA_VIAL]: () => new ManaVial(context, itemData),
-    [EItems.SOUL_HARVEST]: () => new SoulHarvest(context, itemData),
-    [EItems.SOUL_STONE]: () => new SoulStone(context, itemData),
+    [EItems.MANA_VIAL]: () => new ManaVial(mapItemFromBE(itemData)),
+    [EItems.SOUL_HARVEST]: () => new SoulHarvest(mapItemFromBE(itemData)),
+    [EItems.SOUL_STONE]: () => new SoulStone(mapItemFromBE(itemData)),
 
-    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(context, itemData),
-    [EItems.PULVERIZER]: () => new Pulverizer(context, itemData)
+    [EItems.DWARVEN_BREW]: () => new DwarvenBrew(mapItemFromBE(itemData)),
+    [EItems.PULVERIZER]: () => new Pulverizer(mapItemFromBE(itemData)),
+
+    [EItems.TYPHOON]: () => new Typhoon(mapItemFromBE(itemData)),
+    [EItems.MEAT]: () => new Meat(mapItemFromBE(itemData)),
+    [EItems.SPIKE_ARMOR]: () => new SpikeArmor(mapItemFromBE(itemData))
   };
 
   const createItem = itemTypes[itemData.itemType];
@@ -48,26 +58,32 @@ export function createNewItem(context: GameScene, itemData: IItem): Item {
   return createItem();
 }
 
-export function createNewHero(context: GameScene, heroData: IHero, tile?: Tile): Hero {
+export function createNewHero(heroData: IHeroBE): Hero {
   const heroTypes: Record<EHeroes, () => Hero> = {
-    [EHeroes.ARCHER]: () => new Archer(context, heroData, tile),
-    [EHeroes.CLERIC]: () => new Cleric(context, heroData, tile),
-    [EHeroes.KNIGHT]: () => new Knight(context, heroData, tile),
-    [EHeroes.NINJA]: () => new Ninja(context, heroData, tile),
-    [EHeroes.WIZARD]: () => new Wizard(context, heroData, tile),
+    [EHeroes.ARCHER]: () => new Archer(mapHeroFromBE(heroData)),
+    [EHeroes.CLERIC]: () => new Cleric(mapHeroFromBE(heroData)),
+    [EHeroes.KNIGHT]: () => new Knight(mapHeroFromBE(heroData)),
+    [EHeroes.NINJA]: () => new Ninja(mapHeroFromBE(heroData)),
+    [EHeroes.WIZARD]: () => new Wizard(mapHeroFromBE(heroData)),
 
-    [EHeroes.PRIESTESS]: () => new Priestess(context, heroData, tile),
-    [EHeroes.IMPALER]: () => new Impaler(context, heroData, tile),
-    [EHeroes.NECROMANCER]: () => new Necromancer(context, heroData, tile),
-    [EHeroes.PHANTOM]: () => new Phantom(context, heroData, tile),
-    [EHeroes.VOIDMONK]: () => new VoidMonk(context, heroData, tile),
-    [EHeroes.WRAITH]: () => new Wraith(context, heroData, tile),
+    [EHeroes.PRIESTESS]: () => new Priestess(mapHeroFromBE(heroData)),
+    [EHeroes.IMPALER]: () => new Impaler(mapHeroFromBE(heroData)),
+    [EHeroes.NECROMANCER]: () => new Necromancer(mapHeroFromBE(heroData)),
+    [EHeroes.PHANTOM]: () => new Phantom(mapHeroFromBE(heroData)),
+    [EHeroes.VOIDMONK]: () => new VoidMonk(mapHeroFromBE(heroData)),
+    [EHeroes.WRAITH]: () => new Wraith(mapHeroFromBE(heroData)),
 
-    [EHeroes.PALADIN]: () => new Paladin(context, heroData, tile),
-    [EHeroes.ENGINEER]: () => new Engineer(context, heroData, tile),
-    [EHeroes.GUNNER]: () => new Gunner(context, heroData, tile),
-    [EHeroes.GRENADIER]: () => new Grenadier(context, heroData, tile),
-    [EHeroes.ANNIHILATOR]: () => new Annihilator(context, heroData, tile)
+    [EHeroes.PALADIN]: () => new Paladin(mapHeroFromBE(heroData)),
+    [EHeroes.ENGINEER]: () => new Engineer(mapHeroFromBE(heroData)),
+    [EHeroes.GUNNER]: () => new Gunner(mapHeroFromBE(heroData)),
+    [EHeroes.GRENADIER]: () => new Grenadier(mapHeroFromBE(heroData)),
+    [EHeroes.ANNIHILATOR]: () => new Annihilator(mapHeroFromBE(heroData)),
+
+    [EHeroes.WARRIOR]: () => new Warrior(mapHeroFromBE(heroData)),
+    [EHeroes.AXE_THROWER]: () => new AxeThrower(mapHeroFromBE(heroData)),
+    [EHeroes.WITCH]: () => new Witch(mapHeroFromBE(heroData)),
+    [EHeroes.SHAMAN]: () => new Shaman(mapHeroFromBE(heroData)),
+    [EHeroes.CHIEFTAIN]: () => new Chieftain(mapHeroFromBE(heroData))
   };
 
   const createHero = heroTypes[heroData.unitType];

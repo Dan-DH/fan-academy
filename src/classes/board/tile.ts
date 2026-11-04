@@ -1,39 +1,33 @@
 import { ETiles } from "../../enums/gameEnums";
-import { ICrystal, IHero, ITile } from "../../interfaces/gameInterface";
+import { Coordinates, ISpecialTile, ITile } from "../../interfaces/gameInterface";
+import { fanAcademy } from "../../main";
 import GameScene from "../../scenes/game.scene";
 import { handleTileClick } from "../../utils/handleTileClick";
 import { SpecialTileCard } from "../cards/specialTileCard";
 
 export class Tile extends Phaser.GameObjects.Container {
-  baseRectangle: Phaser.GameObjects.Rectangle;
   row: number;
   col: number;
+  boardPosition: number;
   x: number;
   y: number;
-  boardPosition: number;
 
-  obstacle: boolean;
-  hero: IHero | undefined;
-  crystal: ICrystal | undefined;
+  baseRectangle: Phaser.GameObjects.Rectangle;
   tileSize: number = 90;
   tileType: ETiles;
-
   isHighlighted: boolean;
   unitCard: SpecialTileCard | undefined;
   icon: Phaser.GameObjects.Image | undefined;
 
-  constructor(context: GameScene,
-    data: ITile) {
-    super(context, data.x, data.y);
+  constructor(context: GameScene, data: ISpecialTile) {
+    const coordinates = (fanAcademy.registry.get('tileCoords') as Coordinates[])[data.boardPosition];
+    super(context, coordinates.x, coordinates.y);
 
+    this.x = coordinates.x;
+    this.y = coordinates.y;
     this.row = data.row;
     this.col = data.col;
-    this.x = data.x;
-    this.y = data.y;
     this.tileType = data.tileType;
-    this.obstacle = data.obstacle;
-    this.hero = data.hero;
-    this.crystal = data.crystal;
     this.boardPosition = data.boardPosition;
 
     // Add base tile shape
@@ -41,19 +35,18 @@ export class Tile extends Phaser.GameObjects.Container {
     this.add(this.baseRectangle);
     this.isHighlighted = this.baseRectangle.isFilled;
 
-    if (this.tileType !== ETiles.BASIC) this.unitCard = new SpecialTileCard(context, this.tileType).setVisible(false);
-
     // If tileType is not basic or a crystal, add the visual representation
     const typesToIgnore = [ETiles.BASIC, ETiles.CRYSTAL, ETiles.CRYSTAL_SMALL, ETiles.CRYSTAL_BIG];
     if (!typesToIgnore.includes(this.tileType)) {
-      this.icon = context.add.image(0, 0, 'gameAtlas', this.tileType);
+      this.icon = context.add.image(0, 0, 'gameAtlas', this.tileType).setScale(1.2).setDepth(0);
       if (this.col > 4) this.icon.setFlipX(true);
-      this.add(this.icon);
+      this.unitCard = new SpecialTileCard(context, this.tileType).setVisible(false).setDepth(100);
+      this.add([this.icon, this.unitCard]);
     }
 
-    if (this.unitCard) this.add(this.unitCard);
-    this.setSize(90, 90).setInteractive({ useHandCursor: true }).setDepth(2);
+    this.setSize(90, 90).setInteractive({ useHandCursor: true });
     handleTileClick(this, context);
+    // parentLayer.add(this);
     context.add.existing(this);
   }
 
@@ -64,19 +57,8 @@ export class Tile extends Phaser.GameObjects.Container {
       x: this.x,
       y: this.y,
       tileType: this.tileType,
-      boardPosition: this.boardPosition,
-      obstacle: this.obstacle,
-      hero: this.hero,
-      crystal: this.crystal
+      boardPosition: this.boardPosition
     };
-  }
-
-  removeHero(): void {
-    this.hero = undefined;
-  }
-
-  isEnemy(userId: string) {
-    return this.hero && !this.hero.unitId.includes(userId);
   }
 
   setHighlight() {

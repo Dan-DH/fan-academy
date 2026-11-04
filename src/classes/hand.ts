@@ -1,25 +1,16 @@
 import { EClass } from "../enums/gameEnums";
-import { IGameState, IHero, IItem } from "../interfaces/gameInterface";
-import GameScene from "../scenes/game.scene";
+import { IHeroBE, IItemBE } from "../interfaces/gameInterface";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
 
 export class Hand {
-  context: GameScene;
-  handData: (IHero | IItem)[];
   hand: (Hero | Item)[];
+  isVisible = true;
 
-  constructor(context: GameScene, lastTurnState: IGameState) {
-    this.context = context;
-
-    if (context.isPlayerOne){
-      this.handData = structuredClone(lastTurnState.player1.factionData.unitsInHand) ?? [];
-    } else {
-      this.handData = structuredClone(lastTurnState.player2!.factionData.unitsInHand) ?? [];
-    }
-
-    this.hand = this.handData?.map(unit => this.renderUnit(unit)) ?? [];
+  constructor(handData: (IHeroBE | IItemBE)[], isVisible?: boolean) {
+    this.hand = handData?.map(unit => this.renderUnit(unit)) ?? [];
+    if (isVisible) this.isVisible = isVisible;
   }
 
   getHandSize(): number {
@@ -30,17 +21,26 @@ export class Hand {
     return this.hand;
   }
 
-  renderUnit(unit: IHero | IItem): Hero | Item {
-    if (unit.class === EClass.HERO) return createNewHero(this.context, unit as IHero);
-    if (unit.class === EClass.ITEM) return createNewItem(this.context, unit as IItem);
+  getHandElement(unitId: string): Hero | Item | undefined {
+    return this.hand.find(u => u.stats.unitId === unitId);
+  }
+
+  getHandElementByBoardPosition(boardPosition: number): Hero | Item | undefined {
+    return this.hand.find(u => u.stats.boardPosition === boardPosition);
+  }
+
+  renderUnit(unit: IHeroBE | IItemBE): Hero | Item {
+    if (unit.class === EClass.HERO) return createNewHero(unit as IHeroBE);
+    if (unit.class === EClass.ITEM) return createNewItem(unit as IItemBE);
     throw new Error('Unit passed to renderUnit is not a recognized type');
   }
 
-  addToHand(units: (IHero | IItem)[]): void {
+  addToHand(units: (IHeroBE | IItemBE)[]): void {
     const defaultPositions = [45, 46, 47, 48, 49, 50];
 
     let previousIndex = -1;
     defaultPositions.forEach(element => {
+      if (!units.length) return;
       const matchIndex = this.hand.findIndex((unit) => unit.stats.boardPosition === element);
 
       if (matchIndex !== -1) {
@@ -49,11 +49,13 @@ export class Hand {
         const unitData = units.shift();
         if (unitData) {
           unitData.boardPosition = element;
-          const newUnit = this.renderUnit(unitData);
-          this.hand.splice(++previousIndex, 0, newUnit);
+          const newUnit = this.renderUnit(unitData).setVisible(this.isVisible);
+          this.hand.push(newUnit);
         }
       }
     });
+
+    this.hand.sort((a, b) => a.stats.boardPosition - b.stats.boardPosition);
   }
 
   removeFromHand(unitId: string): void {
@@ -61,8 +63,13 @@ export class Hand {
     if (index !== -1) this.hand.splice(index, 1);
   }
 
-  exportHandData(): (IHero | IItem)[] {
+  exportHandData(): (IHeroBE | IItemBE)[] {
     if (this.hand.length === 0) return [];
-    return this.hand.map(unit =>  unit.exportData());
+    return this.hand.map(unit => unit.exportData());
+  }
+
+  disableOpponentHand(): void {
+    this.hand.forEach(u => u.setVisible(false).setInteractive(false));
+    this.isVisible = false;
   }
 }

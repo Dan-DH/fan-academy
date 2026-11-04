@@ -1,35 +1,32 @@
 import { EActionType, EAttackType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { useAnimation } from "../../../utils/unitAnimations";
 import { roundToFive } from "../../../utils/gameUtils";
+import { StatusEffects } from "../../../utils/statuses";
 
 export abstract class DarkElf extends Hero {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
-
   equipFactionEquipment(handPosition: number): void {
     const soulStone = this.scene.add.image(this.x, this.y - 10, 'gameAtlas', 'soulStone').setOrigin(0.5).setDepth(100);
     useAnimation(soulStone);
 
-    this.stats.factionEquipment = true;
+    this.status.add(StatusEffects.FACTION_EQUIPMENT);
     this.visuals.factionEquipmentImage.setVisible(true);
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     this.increaseMaxHealth(this.stats.baseHealth * 0.1);
 
     this.unitCard.updateCardData(this);
-    this.updateTileData();
 
     // this.scene.sound.play(EGameSounds.ITEM_USE);
 
-    this.context.gameController!.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
   lifeSteal(damage: number): void {
-    if (this.stats.factionEquipment) {
+    if (this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
       const roundedHealing = roundToFive(damage * 0.666);
       this.getsHealed(roundedHealing);
     } else {
@@ -56,59 +53,19 @@ export function createElvesPhantomData(data: Partial<IHero>): IHero {
     magicalDamageResistance: 0,
     baseMagicalDamageResistance: 0,
     canHeal: false,
-    manaVial: false,
-    magicalResistanceTile: data.magicalResistanceTile ?? false,
-    physicalResistanceTile: data.physicalResistanceTile ?? false,
-    ...createGenericElvesData(data)
-  };
-}
-
-export function createGenericElvesData(data: Partial<IHero>): {
-  class: EClass,
-  faction: EFaction,
-  unitId: string,
-  boardPosition: number,
-  isKO: boolean,
-  factionEquipment: boolean,
-  runeMetal: boolean,
-  shiningHelm: boolean,
-  superCharge: boolean,
-  belongsTo: number,
-  lastBreath: boolean,
-  row: number,
-  col: number,
-  priestessDebuff: boolean,
-  annihilatorDebuff: boolean,
-  attackTile: boolean,
-  speedTile: boolean,
-  buffRange: number,
-  canBuff: boolean,
-  paladinAura: number,
-  unitsConsumed: number,
-  dwarvenBrew: boolean
-} {
-  return {
     class: EClass.HERO,
     faction: EFaction.DARK_ELVES,
     unitId: data.unitId!,
     boardPosition: data.boardPosition ?? 51,
     isKO: data.isKO ?? false,
     lastBreath: data.lastBreath ?? false,
-    factionEquipment: data.factionEquipment ?? false,
-    runeMetal: data.runeMetal ?? false,
-    shiningHelm: data.shiningHelm ?? false,
-    superCharge: data.superCharge ?? false,
     belongsTo: data.belongsTo ?? 1,
     row: data.row ?? 0,
     col: data.col ?? 0,
-    priestessDebuff: data.priestessDebuff ?? false,
-    annihilatorDebuff: data.annihilatorDebuff ?? false,
-    attackTile: data.attackTile ?? false,
-    speedTile: data.speedTile ?? false,
     buffRange: 0,
     canBuff: false,
     paladinAura: data.paladinAura ?? 0,
     unitsConsumed: data.unitsConsumed ?? 0,
-    dwarvenBrew: data.dwarvenBrew ?? false
+    status: 0
   };
 }

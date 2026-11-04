@@ -1,26 +1,24 @@
-import { EClass, EActionType } from "../enums/gameEnums";
-import { IHero, IItem, ITurnAction } from "../interfaces/gameInterface";
+import { EClass, EActionType, EGameSceneMode } from "../enums/gameEnums";
+import { IHeroBE, IItemBE, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { textAnimationSizeIncrease } from "../utils/textAnimations";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
-import { GameController } from "./gameController";
 
 export class TurnReplay {
-  gameController: GameController;
   context: GameScene;
 
-  constructor(gameController: GameController) {
-    this.gameController = gameController;
-    this.context = gameController.context;
+  constructor(context: GameScene) {
+    this.context = context;
+    this.replayTurn();
   }
 
   async replayTurn() {
     const opponentHand = this.fakeOpponentHand();
 
-    for (let i = 1; i < this.gameController.game.previousTurn.length; i++) {
-      const turn = this.gameController.game.previousTurn[i];
+    for (let i = 1; i < this.context.clonedGame!.previousTurn.length; i++) {
+      const turn = this.context.clonedGame!.previousTurn[i];
 
       const actionsToIgnore = [EActionType.DRAW, EActionType.PASS];
       const actionTaken = turn.action?.action;
@@ -44,7 +42,7 @@ export class TurnReplay {
 
           if (actionTaken === EActionType.USE) await this.replayUse(turn.action!, opponentHand);
 
-          if (actionTaken === EActionType.REMOVE_UNITS) await this.gameController.removeKOUnits();
+          if (actionTaken === EActionType.REMOVE_UNITS) await this.context.removeKOUnits();
 
           resolve();
         });
@@ -53,20 +51,19 @@ export class TurnReplay {
 
     this.context.scene.restart({
       userId: this.context.userId,
-      colyseusClient: this.context.colyseusClient,
-      currentGame: this.context.currentGame,
-      triggerReplay: false
+      currentGame: this.context.clonedGame,
+      gameSceneMode: EGameSceneMode.GAME
     } );
   }
 
   fakeOpponentHand(): (Hero | Item)[] {
     const opponentHand: (Hero | Item)[] = [];
-    if (this.gameController.context.activePlayer === this.context.userId) {
-      const opponentData = this.context.isPlayerOne ? this.gameController.lastTurnState.player2 : this.gameController.lastTurnState.player1;
+    if (this.context.activePlayer === this.context.userId) {
+      const opponentData = this.context.isPlayerOne ? this.context.startTurnState!.player2 : this.context.startTurnState!.player1;
 
-      opponentData?.factionData.unitsInHand.forEach(unit => {
-        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(this.context, unit as IHero).setVisible(false).setInteractive(false));
-        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(this.context, unit as IItem).setVisible(false).setInteractive(false));
+      opponentData?.hand.forEach(unit => {
+        if (unit.class === EClass.HERO) opponentHand.push(createNewHero(unit as IHeroBE).setVisible(false).setInteractive(false));
+        if (unit.class === EClass.ITEM ) opponentHand.push(createNewItem(unit as IItemBE).setVisible(false).setInteractive(false));
       });
     }
 
@@ -75,11 +72,11 @@ export class TurnReplay {
 
   replaySpawn(action: ITurnAction, opponentHand: (Hero | Item)[]): void {
     const actionTaken = action.action;
-    const hand = opponentHand.length ? opponentHand : this.gameController.hand.hand;
+    const hand = opponentHand.length ? opponentHand : this.context.hand!.hand;
 
     const hero = hand.find(unit => unit.stats.boardPosition === action.actorPosition) as Hero;
 
-    const tile = this.gameController.board.getTileFromBoardPosition(action.targetPosition!);
+    const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
 
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
@@ -89,19 +86,19 @@ export class TurnReplay {
   replayMove(action: ITurnAction): void {
     const actionTaken = action.action;
 
-    const hero = this.gameController.board.units.find(unit => unit.stats.boardPosition === action.actorPosition);
+    const hero = this.context.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
 
-    const tile = this.gameController.board.getTileFromBoardPosition(action.targetPosition!);
+    const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
 
     if (!hero || !tile) throw new Error('Missing hero or tile in spawn or move action');
 
-    if (actionTaken === EActionType.MOVE) hero.move(hero.getTile(), tile);
+    if (actionTaken === EActionType.MOVE) hero.move(tile);
     if (actionTaken === EActionType.SPAWN) hero.setVisible(true).spawn(tile);
   };
 
   async replayUnitAction(action: ITurnAction): Promise<void> {
-    const hero = this.gameController.board.units.find(unit => unit.stats.boardPosition === action.actorPosition);
-    const target = this.gameController.board.crystals.find(crystal => crystal.stats.boardPosition === action.targetPosition) ?? this.gameController.board.units.find(unit => unit.stats.boardPosition === action.targetPosition);
+    const hero = this.context.board!.units.find(unit => unit instanceof Hero && unit.stats.boardPosition === action.actorPosition) as Hero;
+    const target = this.context.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
     if (!hero || !target) throw new Error('Missing hero or target in attack or heal action');
 
     // VSCode says await has no effect on them, but it does work
@@ -112,19 +109,19 @@ export class TurnReplay {
   };
 
   async replayUse(action: ITurnAction, opponentHand: (Hero | Item)[]): Promise<void> {
-    const hand = opponentHand.length ? opponentHand : this.gameController.hand.hand;
+    const hand = opponentHand.length ? opponentHand : this.context.hand!.hand;
 
     const item = hand.find(item => item.stats.boardPosition === action.actorPosition) as Item;
     if (!item) throw new Error('Missing item in use action');
 
     if (item.stats.dealsDamage) {
-      const tile = this.gameController.board.getTileFromBoardPosition(action.targetPosition!);
+      const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
       if (!item) throw new Error('Missing tile in use action');
       await item.use(tile);
     }
 
     if (!item.stats.dealsDamage) {
-      const hero = this.gameController.board.units.find(unit => unit.stats.boardPosition === action.targetPosition);
+      const hero = this.context.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
       if (!hero) throw new Error('Missing target in use action');
       await item.use(hero);
     }

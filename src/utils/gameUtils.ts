@@ -1,10 +1,10 @@
 import { Crystal } from "../classes/board/crystal";
-import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
 import { Item } from "../classes/factions/item";
-import { EActionType, EActionClass, EClass, EWinConditions } from "../enums/gameEnums";
+import { EActionType, EActionClass, EClass, EWinConditions, EFaction, EHeroes } from "../enums/gameEnums";
 import { IHero, IItem, ICrystal } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
+import { isEnemySpawn } from "./boardUtils";
 
 export function isHero(unit: IHero | IItem): boolean {
   return unit.class === "hero";
@@ -48,27 +48,23 @@ export function getActionClass(action: EActionType): EActionClass {
   return [EActionType.PASS, EActionType.DRAW, EActionType.REMOVE_UNITS].includes(action) ? EActionClass.AUTO : EActionClass.USER;
 }
 
-export function canBeAttacked(attacker: Hero, tile: Tile): boolean {
-  let result = false;
-
-  if (tile.hero && tile.hero.belongsTo !== attacker.stats.belongsTo && !tile.hero.isKO) result = true;
-  if (tile.crystal && tile.crystal.belongsTo !== attacker.stats.belongsTo) result = true;
-
-  return result;
+export function canBeAttacked(attacker: Hero, target: Hero | Crystal): boolean {
+  if (target.stats.belongsTo === attacker.stats.belongsTo) return false;
+  if (target instanceof Hero && target.stats.isKO) return false;
+  return true;
 }
 
 export function isLastUnit(hero: Hero): boolean {
-  const opponentData = hero.context.isPlayerOne ? hero.context.gameController!.lastTurnState.player2 : hero.context.gameController!.lastTurnState.player1;
+  const opponentData = hero.context.isPlayerOne ? hero.context.startTurnState!.player2 : hero.context.startTurnState!.player1;
 
-  const handUnits = opponentData?.factionData.unitsInHand.find(unit => unit.class === EClass.HERO);
+  const handUnits = opponentData?.hand.find(unit => unit.class === EClass.HERO);
   if (handUnits) return false;
 
-  const boardUnits = hero.context.gameController?.board.units;
-  const aliveBoardUnits = boardUnits!.filter(unit => unit.stats.belongsTo === hero.stats.belongsTo).find(unit => !unit.stats.isKO);
-  if (aliveBoardUnits) return false;
-
-  const deckUnits = opponentData?.factionData.unitsInDeck.find(unit => unit.class === EClass.HERO && unit.belongsTo === hero.stats.belongsTo);
+  const deckUnits = opponentData?.deck.find(unit => unit.class === EClass.HERO);
   if (deckUnits) return false;
+
+  const boardUnits = hero.context.board!.units.find(unit => unit instanceof Hero && unit !== hero && unit.stats.belongsTo === hero.stats.belongsTo && !unit.stats.isKO);
+  if (boardUnits) return false;
 
   return true;
 }
@@ -78,7 +74,7 @@ export function checkUnitGameOver(hero: Hero): void {
 
   const attackingPlayer = hero.stats.unitId.includes(hero.context.player1!.playerId) ? hero.context.player2 : hero.context.player1;
 
-  hero.context.gameController!.gameOver = {
+  hero.context.gameOver = {
     winCondition: EWinConditions.HERO,
     winner: attackingPlayer!.playerId
   };
@@ -92,8 +88,32 @@ export function factionEnumToEmblem(faction: string): string {
   const factionMap: Record<string, string> = {
     council: 'councilEmblem',
     elves: 'elvesEmblem',
-    dwarves: 'dwarvesEmblem'
+    dwarves: 'dwarvesEmblem',
+    tribe: 'OR-Emblem-hd'
   };
 
   return factionMap[faction] ?? 'unknownFaction';
 }
+
+export function waitUntilSceneCreated(currentScene: Phaser.Scene, targetSceneKey: string): Promise<Phaser.Scene> {
+  return new Promise((resolve) => {
+    const targetScene = currentScene.scene.get(targetSceneKey);
+    if (targetScene.scene.settings.status === Phaser.Scenes.RUNNING) {
+      resolve(targetScene);
+      return;
+    }
+    targetScene.events.once(Phaser.Scenes.Events.CREATE, () => {
+      resolve(targetScene);
+    });
+  });
+}
+
+export function isPhantomAndKO(target?: Hero | Crystal): boolean {
+  return target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM;
+}
+
+export function isKoUnitOnEnemySpawn(target: Hero | Crystal): boolean {
+  return target instanceof Hero && target.stats.isKO && isEnemySpawn(target.context, target.getTile());
+}
+
+export const factionArray = [EFaction.COUNCIL, EFaction.DARK_ELVES, EFaction.DWARVES, EFaction.TRIBE];

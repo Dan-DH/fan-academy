@@ -1,22 +1,21 @@
-import { EHeroes, EActionType } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
 import { Crystal } from "../../board/crystal";
-import { enterSpecialTileCheck, isEnemySpawn } from "../../../utils/boardUtils";
+import { enterSpecialTileCheck, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 import { attackAnimation, sizeReduceTween, turnIfBehind } from "../../../utils/unitAnimations";
+import { Tile } from "../../board/tile";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
 
 export class Phantom extends Hero {
   spawnAnim?: Phaser.GameObjects.Image;
 
-  constructor(context: GameScene, data: IHero, tile?: Tile, spawned = false) {
-    super(context, data, tile);
+  constructor(data: IHero, spawned = false, tile?: Tile) {
+    super(data);
 
-    if (spawned && tile) {
-      this.spawnAnim = context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(1.3);
-
-      enterSpecialTileCheck(this, tile);
+    if (spawned) {
+      this.spawnAnim = this.context.add.image(0, -15, 'gameAtlas', 'phantomSpawnAnim_1').setOrigin(0.5).setScale(1.3);
+      if (tile) enterSpecialTileCheck(this, tile);
       this.add([this.spawnAnim]);
       sizeReduceTween(this.spawnAnim, 500, this.spawnAnim.scale);
     }
@@ -30,20 +29,20 @@ export class Phantom extends Hero {
     // this.scene.sound.play(EGameSounds.WRAITH_ATTACK);
 
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (
-      target instanceof Hero &&
-      target.stats.isKO &&
-      isEnemySpawn(this.context, target.getTile())
-    ) {
-      target.removeFromGame();
+    if (isKoUnitOnEnemySpawn(target)) {
+      target.getsStompedOrDestroyed(this);
     } else {
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
-
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

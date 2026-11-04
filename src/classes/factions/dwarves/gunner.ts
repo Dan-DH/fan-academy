@@ -1,16 +1,16 @@
-import { EHeroes, EActionType, EAttackType } from "../../../enums/gameEnums";
+import { EActionType, EAttackType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
-import { getDistanceToTarget, isEnemySpawn } from "../../../utils/boardUtils";
+import { getDistanceToTarget, SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { isKoUnitOnEnemySpawn, isPhantomAndKO } from "../../../utils/gameUtils";
+import { StatusEffects } from "../../../utils/statuses";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { Crystal } from "../../board/crystal";
-import { Tile } from "../../board/tile";
 import { Hero } from "../hero";
 import { Dwarf } from "./dwarves";
 
 export class Gunner extends Dwarf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -25,19 +25,24 @@ export class Gunner extends Dwarf {
       this.multiTargetAttack(target);
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   singleTargetAttack(target: Hero | Crystal): void {
     // Check required for the very specific case of being orthogonally adjacent to a KO'd enemy unit on an enemy spawn
-    if (target instanceof Hero && target.stats.isKO && isEnemySpawn(this.context, target.getTile())) {
+    if (isKoUnitOnEnemySpawn(target)) {
       // this.scene.sound.play(EGameSounds.GRENADIER_ATTACK_MELEE);
-      target.removeFromGame();
+      target.getsStompedOrDestroyed(this);
     } else {
       // this.scene.sound.play(EGameSounds.GUNNER_ATTACK);
-      target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
       this.removeAttackModifiers();
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
     }
   }
 
@@ -45,15 +50,27 @@ export class Gunner extends Dwarf {
     // this.scene.sound.play(EGameSounds.GUNNER_ATTACK);
     // this.context.time.delayedCall(100, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
     // this.context.time.delayedCall(200, () => this.scene.sound.play(EGameSounds.GUNNER_ATTACK));
+    let totalDamageToReflect = 0;
+    const damageDealt = target.getsDamaged({
+      damage: this.getTotalPower(0.6667),
+      attackType: EAttackType.PHYSICAL,
+      attacker: this
+    });
+    if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
 
-    const splashedUnits = this.context.gameController?.board.getGunnerSplashTargets(this, target);
-
+    const splashedUnits = this.context.board!.getGunnerSplashTargets(this, target);
     splashedUnits?.forEach(unit =>  {
-      unit.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this, 0.6667);
-      if (unit instanceof Hero && unit.stats.isKO && unit.stats.unitType === EHeroes.PHANTOM) unit.removeFromGame();
+      const damageDealt = unit.getsDamaged({
+        damage: this.getTotalPower(0.6667),
+        attackType: EAttackType.PHYSICAL,
+        attacker: this,
+        splashDamage: 0.6667
+      });
+      if (isPhantomAndKO(unit)) unit.removeFromGame();
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
     });
 
-    target.getsDamaged(this.getTotalPower(0.6667), EAttackType.PHYSICAL, this);
+    if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
     this.removeAttackModifiers();
   }
 

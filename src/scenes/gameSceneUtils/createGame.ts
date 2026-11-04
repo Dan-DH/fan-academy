@@ -1,11 +1,12 @@
-import { EFaction, EGameModes } from "../../enums/gameEnums";
+import { EFaction, EGameModes, ETurnTimer } from "../../enums/gameEnums";
 import UIScene from "../ui.scene";
 import { gameListFadeOutText, textAnimationFadeOut } from "../../utils/textAnimations";
-import { sendCreateGameMessage } from "../../colyseus/colyseusLobbyRoom";
+import { colyseusService } from "../../colyseus/colyseusService";
+import { getAllOpponentIds } from "../../utils/playerUtils";
 
-export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes) => {
+export const createNewGame = async (context: UIScene, faction: EFaction, gameMode: EGameModes, turnTimer: ETurnTimer) => {
   if (context.activeGamesAmount >= context.activeGamesAmountLimit) {
-    if (context.activeGame) {
+    if (context.activeGameId) {
       context.game.events.emit('messageToGameScene', {
         x: 300,
         y: 350,
@@ -19,13 +20,15 @@ export const createNewGame = async (context: UIScene, faction: EFaction, gameMod
   }
   // Create the faction's deck and starting hand
   if (context.userId) {
-    sendCreateGameMessage({
+    colyseusService.sendCreateGameMessage({
       userId: context.userId,
       faction,
-      gameMode
+      gameMode,
+      turnTimer,
+      opponents: getAllOpponentIds(gameMode, turnTimer)
     });
 
-    if (context.activeGame) {
+    if (context.activeGameId) {
       context.game.events.emit('messageToGameScene', {
         x: 700,
         y: 350,

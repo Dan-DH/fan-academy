@@ -1,6 +1,7 @@
 import { ETiles } from "../enums/gameEnums";
+import { calculateAllCenterPoints } from "../utils/boardCalculations";
 
-export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@cc4a03e';
+export const CDN_PATH = 'https://cdn.jsdelivr.net/gh/Dan-DH/fa-assets@aa4529a';
 
 // PreloaderScene.ts
 export default class PreloaderScene extends Phaser.Scene {
@@ -20,14 +21,15 @@ export default class PreloaderScene extends Phaser.Scene {
 
   create(): void {
     this.createSpriteAnimations();
+    this.registry.set('tileCoords', calculateAllCenterPoints());
 
     // Move to main scene after loading
     this.scene.start('MainMenuScene');
   }
 
   loadAtlases() {
-    this.load.atlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.webp`, `${CDN_PATH}/atlas/gameTexture.json`);
-    // this.load.atlas('gameAtlas', `/gameTexture.webp`, `/gameTexture.json`);
+    // this.load.multiatlas('gameAtlas', `/atlas/gameTexture.json`, '/atlas');
+    this.load.multiatlas('gameAtlas', `${CDN_PATH}/atlas/gameTexture.json`, `${CDN_PATH}/atlas`);
     // Floating text fonts
     this.load.atlas(
       'greenFont',
@@ -56,7 +58,8 @@ export default class PreloaderScene extends Phaser.Scene {
 
     // menu images
     this.load.image('uiBackground', `${CDN_PATH}/ui/game_screen.webp`);
-    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`); // 'main_menu_image.webp' for the original one
+    this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_tribe.webp`);
+    // this.load.image('mainMenuImage', `${CDN_PATH}/ui/main_menu_image_dwarves.webp`); // 'main_menu_image.webp' for the original one
 
     // ui scene
     this.load.html('disconnectWarning', 'html/disconnectWarning.html');
@@ -75,11 +78,14 @@ export default class PreloaderScene extends Phaser.Scene {
   // animations
   createSpriteAnimations(): void {
     this.createReviveAnimation();
+    this.creatCorpseExplosionAnimation();
     this.createSpecialTileAnimations();
     this.createAnnihilatorDebuffAnimation();
     this.createSingleCrystalDebuffAnimation();
     this.createDoubleCrystalDebuffAnimation();
     this.createSuperChargeAnimation();
+    this.createMeatAnimation();
+    this.createSingleCrystalDebuffAnimation();
   }
 
   createReviveAnimation(): void {
@@ -87,6 +93,19 @@ export default class PreloaderScene extends Phaser.Scene {
       key: 'reviveAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
         prefix: 'reviveAnim_',
+        start: 1,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+  }
+
+  creatCorpseExplosionAnimation(): void {
+    this.anims.create({
+      key: 'corpseExpAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'CorpseExplosion_',
         start: 1,
         end: 3
       }),
@@ -113,6 +132,19 @@ export default class PreloaderScene extends Phaser.Scene {
       key: 'superChargeAnim',
       frames: this.anims.generateFrameNames('gameAtlas', {
         prefix: 'superChargeAnim_',
+        start: 1,
+        end: 3
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
+  };
+
+  createMeatAnimation(): void {
+    this.anims.create({
+      key: 'meatAnim',
+      frames: this.anims.generateFrameNames('gameAtlas', {
+        prefix: 'Meat_',
         start: 1,
         end: 3
       }),

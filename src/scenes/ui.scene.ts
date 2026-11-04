@@ -1,25 +1,20 @@
-import { connectToGameLobby } from "../colyseus/colyseusLobbyRoom";
-import { IGame } from "../interfaces/gameInterface";
-import { getGameList } from "../queries/gameQueries";
 import { createGameList } from "./gameSceneUtils/gameList";
 import { createWarningComponent } from "./uiSceneUtils/disconnectWarning";
 import { HomeButton } from "../classes/buttons/homeButton";
-import { Client, Room } from "@colyseus/sdk";
+import { IGame } from "../interfaces/gameInterface";
 
 export const backgroundMusicInstance: Phaser.Sound.BaseSound | null = null;
 
 export default class UIScene extends Phaser.Scene {
-  colyseusClient: Client;
-  lobbyRoom: Room | undefined;
   userId!: string;
   gameListContainer: Phaser.GameObjects.Container | undefined;
-  gameList: IGame[] | undefined;
 
   gameScene: Phaser.Scene | undefined;
 
   // Used to highlight the active game in the game list
   activeGameImage: Phaser.GameObjects.Image | undefined;
-  activeGame: string | undefined;
+  activeGameId: string | undefined;
+  activeGame: IGame | undefined;
 
   // There is limit of 50 active games per player. Games currently playing, searching for players and open challenges all count towards the limit
   activeGamesAmountLimit = 50;
@@ -27,11 +22,15 @@ export default class UIScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'UIScene' });
-    this.colyseusClient = new Client(`${import.meta.env.VITE_SOCKET}`);
   }
 
-  init(data: { userId: string, }) {
-    this.userId = data.userId;
+  init() {
+    this.userId = this.registry.get('userId');
+    this.gameListContainer = undefined;
+    this.gameScene = undefined;
+    this.activeGameImage = undefined;
+    this.activeGameId = undefined;
+    this.activeGame = undefined;
   }
 
   async create() {
@@ -39,15 +38,11 @@ export default class UIScene extends Phaser.Scene {
 
     this.add.image(0, 0, 'loadingScreen').setOrigin(0).setScale(2.8);
 
-    // Connect to lobby and get the list of games
-    this.lobbyRoom = await connectToGameLobby(this.colyseusClient, this.userId, this);
-    this.gameList = await getGameList(this.userId);
-
     // UI background
     this.add.image(0, 0, 'uiBackground').setOrigin(0);
 
     // Create the game list UI
-    await createGameList(this);
+    createGameList();
 
     new HomeButton(this);
 

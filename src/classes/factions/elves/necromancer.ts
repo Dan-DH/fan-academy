@@ -1,17 +1,17 @@
-import { EActionType, EHeroes } from "../../../enums/gameEnums";
+import { EActionType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
-import { Tile } from "../../board/tile";
-import { createElvesPhantomData, DarkElf } from "./elves";
-import { Phantom } from "./phantom";
+import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { generateFourDigitId } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
+import { Phantom } from "./phantom";
+import { mapUnitBaseStats } from "../../../utils/mapHeroFromBE";
+import { generateFourDigitId, isPhantomAndKO } from "../../../utils/gameUtils";
+import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class Necromancer extends DarkElf {
-  constructor(context: GameScene, data: IHero, tile?: Tile) {
-    super(context, data, tile);
+  constructor(data: IHero) {
+    super(data);
   }
 
   attack(target: Hero | Crystal): void {
@@ -19,37 +19,51 @@ export class Necromancer extends DarkElf {
     turnIfBehind(this.context, this, target);
 
     if (target instanceof Hero && target.stats.isKO) {
-      const tile = target.getTile();
-
-      // this.scene.sound.play(EGameSounds.PHANTOM_SPAWN);
-
-      const phantom = new Phantom(this.context, createElvesPhantomData({
-        unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
-        boardPosition: target.stats.boardPosition,
-        belongsTo: this.stats.belongsTo,
-        row: target.stats.row,
-        col: target.stats.col
-      }), tile, true);
-
-      target.removeFromGame(true);
-
-      this.context.gameController?.board.units.push(phantom);
-      tile.hero = phantom.exportData();
-
-      this.context.gameController!.afterAction(EActionType.SPAWN_PHANTOM, this.stats.boardPosition, target.stats.boardPosition);
-
+      this.spawnPhantom(target);
       return;
     } else {
       // if (this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK_BIG);
       // if (!this.stats.superCharge) this.scene.sound.play(EGameSounds.NECROMANCER_ATTACK);
-
-      const damageDone = target.getsDamaged(this.getTotalPower(), this.stats.attackType, this);
-      if (damageDone) this.lifeSteal(damageDone);
+      const damageDealt = target.getsDamaged({
+        damage: this.getTotalPower(),
+        attackType: this.stats.attackType,
+        attacker: this
+      });
+      if (damageDealt) this.lifeSteal(damageDealt);
+      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }
 
-    if (target && target instanceof Hero && target.stats.isKO && target.stats.unitType === EHeroes.PHANTOM) target.removeFromGame();
-    this.context.gameController!.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+    if (isPhantomAndKO(target)) target.removeFromGame();
+    this.context.afterAction(EActionType.ATTACK, this.stats.boardPosition, target.stats.boardPosition);
+  }
+
+  private spawnPhantom(target: Hero): void {
+    const tile = target.getTile();
+    // this.scene.sound.play(EGameSounds.PHANTOM_SPAWN);
+    const phantom = new Phantom({
+      unitId: `${this.context.userId}_phantom_${generateFourDigitId()}`,
+      class: EClass.HERO,
+      faction: EFaction.DARK_ELVES,
+      unitType: EHeroes.PHANTOM,
+      boardPosition: target.stats.boardPosition,
+      belongsTo: this.stats.belongsTo,
+      row: target.stats.row,
+      col: target.stats.col,
+      maxHealth: 100,
+      currentHealth: 100,
+      status: 0,
+      unitsConsumed: 0,
+      isKO: false,
+      lastBreath: false,
+      ...mapUnitBaseStats(EHeroes.PHANTOM)
+    }, true, tile);
+
+    target.getsStompedOrDestroyed(this);
+
+    this.context.board!.units.push(phantom);
+
+    this.context.afterAction(EActionType.SPAWN_PHANTOM, this.stats.boardPosition, target.stats.boardPosition);
   }
 
   heal(_target: Hero): void {};

@@ -2,8 +2,7 @@ import { GameObjects } from "phaser";
 import { Crystal } from "../classes/board/crystal";
 import { Tile } from "../classes/board/tile";
 import { Hero } from "../classes/factions/hero";
-import { EHeroes, ETiles } from "../enums/gameEnums";
-import { ITile } from "../interfaces/gameInterface";
+import { EHeroes, EUnitMoveType } from "../enums/gameEnums";
 import GameScene from "../scenes/game.scene";
 
 export function flashActingUnit(hero: Hero): void {
@@ -40,8 +39,32 @@ export function getDamagedAnimation(hero: Hero): void {
   });
 }
 
-export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
-  const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType);
+export async function unitMoveAnimation(params: {
+  move: EUnitMoveType;
+  hero: Hero;
+  targetTile: Tile;
+  tilesMoved?: number,
+  angle?: number,
+  duration?: number,
+  isCharge?: boolean
+}): Promise<void> {
+  if ((params.hero.scene as GameScene).skipAnimations) return;
+  if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
+  if (params.move === EUnitMoveType.FORCED_MOVE) {
+    await forcedMoveAnimation(params);
+    params.hero.updatePosition(params.targetTile);
+  }
+};
+
+async function moveAnimation(params: {
+  hero: Hero,
+  targetTile: Tile,
+  tilesMoved?: number,
+  isCharge?: boolean
+}): Promise<void> {
+  const { hero, targetTile, tilesMoved } = params;
+
+  const isFlying = [EHeroes.NECROMANCER, EHeroes.WRAITH, EHeroes.PHANTOM].includes(hero.stats.unitType) || params?.isCharge;
 
   hero.context.input.enabled = false;
   const unitImage = hero.visuals.characterImage;
@@ -54,9 +77,9 @@ export async function moveAnimation(hero: Hero, targetTile: Tile, tilesMoved: nu
   }
 
   if (isFlying) {
-    await flyingAnimation(hero, targetTile, tilesMoved);
+    await flyingAnimation(hero, targetTile, tilesMoved!);
   } else {
-    await hoppingAnimation(hero, targetTile, tilesMoved);
+    await hoppingAnimation(hero, targetTile, tilesMoved!);
   }
 
   hero.context.input.enabled = true;
@@ -100,9 +123,8 @@ async function flyingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number)
 
 async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number): Promise<void> {
   // this.scene.sound.play(EGameSounds.MOVE_WALK);
-
   const hopSpeed = 100;
-  const moveDuration = hopSpeed * 2 * tilesMoved;
+  const moveDuration = Math.min(900, hopSpeed * 2 * tilesMoved);
   const unitImage = hero.visuals.characterImage;
   const unitBaseY = unitImage.y;
 
@@ -121,7 +143,6 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
 
     const hop = unitImage.scene.tweens.add({
       targets: unitImage,
-      scale: 1.2,
       y: '-=20',
       duration: hopSpeed,
       yoyo: true,
@@ -129,62 +150,40 @@ async function hoppingAnimation(hero: Hero, targetTile: Tile, tilesMoved: number
       ease: 'Sine.easeOut',
       onStop: () => {
         unitImage.y = unitBaseY;
-        unitImage.setScale(1);
       }
     });
   });
 }
 
-export async function forcedMoveAnimation(context: GameScene, hero: Hero, targetTile: Tile, angle = 0): Promise<void> {
-  context.input.enabled = false;
+async function forcedMoveAnimation(params: {
+  hero: Hero,
+  targetTile: Tile,
+  angle?: number,
+  duration?: number,
+}): Promise<void> {
+  params.hero.scene.input.enabled = false;
 
-  const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
-    return new Promise((resolve) => {
-      context.tweens.add({
-        targets: hero,
-        x: targetTile.x,
-        y: targetTile.y,
-        angle,
-        duration: 200,
-        ease: 'Linear',
-        onComplete: () => {
-          context.input.enabled = true;
-          resolve();
-        }
-      });
+  // const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
+  return new Promise((resolve) => {
+    params.hero.scene.tweens.add({
+      targets: params.hero,
+      x: params.targetTile.x,
+      y: params.targetTile.y,
+      angle: params.angle ?? 0,
+      duration: params.duration ?? 200,
+      ease: 'Linear',
+      onComplete: () => {
+        params.hero.scene.input.enabled = true;
+        resolve();
+      }
     });
-  };
+  });
+  // };
 
-  await animation.call(context, hero, targetTile);
+  // await animation.call(params.hero.scene, params.hero, params.targetTile);
 };
 
-export function getNewPositionAfterForce(attackerRow: number, attackerCol: number, targetRow: number, targetCol: number, isPush: boolean) {
-  // Direction from attacker to target
-  let directionRow = targetRow - attackerRow;
-  let directionColumn = targetCol - attackerCol;
-
-  // Normalize to single step
-  directionRow = Math.sign(directionRow);
-  directionColumn = Math.sign(directionColumn);
-
-  // For pull, reverse the direction
-  if (!isPush) {
-    directionRow *= -1;
-    directionColumn *= -1;
-  }
-
-  return {
-    row: targetRow + directionRow,
-    col: targetCol + directionColumn
-  };
-}
-
-export function canBeMovedIntoSpawn(tile: Tile | ITile, hero: Hero): boolean {
-  const spawnBelongsTo = tile.col < 5 ? 1 : 2;
-  return tile.tileType === ETiles.SPAWN && hero.stats.belongsTo === spawnBelongsTo;
-}
-
-export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal): void {
+export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal, duration = 500): void {
   const isLookingRight = attacker.stats.belongsTo === 1;
   const attackerImage = attacker.visuals.characterImage;
 
@@ -194,7 +193,7 @@ export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | 
   if (!isLookingRight) attackerImage.setFlipX(false);
   if (isLookingRight)  attackerImage.setFlipX(true);
 
-  context.time.delayedCall(500, () => {
+  context.time.delayedCall(duration, () => {
     attackerImage.setFlipX(!attacker.visuals.characterImage.flipX);
   });
 }
@@ -241,6 +240,39 @@ export function removeReticleTween(reticle: Phaser.GameObjects.Image): void {
     reticle.setData('reticleTween', null);
     reticle.setVisible(false);
   }
+}
+
+export function addBloodlustTween(image: Phaser.GameObjects.Image): void {
+  const bloodlustTween = image.scene.tweens.add({
+    targets: image,
+    scaleX: 1.15,
+    scaleY: 1.15,
+    duration: 300,
+    yoyo: true,
+    repeat: -1,
+    ease: 'Sine.easeInOut'
+  });
+  image.setData('bloodlustTween', bloodlustTween);
+}
+
+export function removeBloodlustTween(image: Phaser.GameObjects.Image): void {
+  const bloodlustTween = image.getData('bloodlustTween');
+  if (bloodlustTween) {
+    bloodlustTween.stop();
+    bloodlustTween.remove();
+    image.setData('bloodlustTween', null);
+  }
+}
+
+export function addWhirlwindTween(image: Phaser.GameObjects.Image): void {
+  image.scene.tweens.add({
+    targets: image,
+    scaleX: -1,
+    duration: 25,
+    yoyo: true,
+    repeat: 2,
+    ease: 'Linear'
+  });
 }
 
 export function addCirclingTween(reticle: Phaser.GameObjects.Image): Phaser.Tweens.Tween {
@@ -327,3 +359,24 @@ export function pulverizerAnimation(image: Phaser.GameObjects.Image, targetY: nu
     }
   });
 }
+
+export function typhoonAnimation(image: Phaser.GameObjects.Image, col: number): void {
+  const scene = image.scene;
+  const leftWave = scene.add.image(image.x - 30, image.y, 'gameAtlas', 'Typhoon_Wave2-hd').setScale(2.5).setDepth(100).setFlipX(true);
+  const rightTravelDistance = (9 - col + 1) * 50;
+  const leftTravelDistance = (0 + col + 1) * 50;
+
+  scene.tweens.add({
+    targets: image,
+    x: image.x + rightTravelDistance,
+    duration: Math.max(rightTravelDistance, leftTravelDistance, 500),
+    onComplete: () => { image.destroy(true); }
+  });
+
+  scene.tweens.add({
+    targets: leftWave,
+    x: leftWave.x - leftTravelDistance,
+    duration: Math.max(rightTravelDistance, leftTravelDistance, 500),
+    onComplete: () => { leftWave.destroy(true); }
+  });
+};

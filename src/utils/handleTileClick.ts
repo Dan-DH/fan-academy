@@ -9,16 +9,27 @@ import { adjustUnitCardPositionAndMakeVisible } from "./boardUtils";
 
 export function handleTileClick(tile: Tile, context: GameScene): void {
   tile.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
-    if (context.currentGame.status === EGameStatus.FINISHED || tile.hero || tile.crystal) return;
-
     visibleUnitCardCheck(context);
+
+    if (context.board!.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
+
+    if (context.clonedGame!.status === EGameStatus.FINISHED) {
+      const isSpecial = tile.tileType !== ETiles.BASIC && tile.tileType !== ETiles.CRYSTAL;
+      if (isSpecial) {
+        tile.setDepth(1001);
+        if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);
+        context.visibleUnitCard = tile;
+        event.stopPropagation();
+      }
+      return;
+    }
+
     context.longPressStart = context.time.now;
 
     // Handle right click: show card if empty special tile
     if (pointer.button === 2) {
       const isSpecial = tile.tileType !== ETiles.BASIC && tile.tileType !== ETiles.CRYSTAL;
-      const isEmpty = !tile.hero && !tile.crystal;
-      if (isSpecial && isEmpty) {
+      if (isSpecial) {
         tile.setDepth(1001);
         if (tile.unitCard) adjustUnitCardPositionAndMakeVisible(tile);
         context.visibleUnitCard = tile;
@@ -28,15 +39,14 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
     }
 
     // Only the active player can click on tiles, and only if they still have actions available
-    if (context.activePlayer !== context.userId || context.currentTurnAction! > 5) return;
+    if (context.activePlayer !== context.userId || !context.hasActionsLeft()) return;
 
     const activeUnit = context.activeUnit;
-    const gameController = context.gameController;
-    if (!activeUnit || !gameController) return;
+    if (!activeUnit) return;
 
     // If unit is on the board and the tile clicked on is in range, move the unit
     if (activeUnit.stats.boardPosition < 45 && tile.isHighlighted && activeUnit instanceof Hero) {
-      activeUnit.move(activeUnit.getTile(), tile);
+      activeUnit.move(tile);
       // this.scene.sound.play(EGameSounds.HERO_MOVE);
     }
 
@@ -56,7 +66,7 @@ export function handleTileClick(tile: Tile, context: GameScene): void {
 
   // Handle long press on the tile
   tile.on('pointerup', () => {
-    if (context.currentGame.status === EGameStatus.FINISHED || tile.hero || tile.crystal) return;
+    if (context.clonedGame!.status === EGameStatus.FINISHED || context.board!.isTileOccupiedIncludingKOs(tile.boardPosition)) return;
 
     if (context.longPressStart && context.time.now - context.longPressStart > 500) {
       tile.setDepth(1001);

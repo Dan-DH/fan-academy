@@ -1,4 +1,4 @@
-import { EFaction, EGameModes } from "../enums/gameEnums";
+import { EFaction, EGameModes, ETurnTimer } from "../enums/gameEnums";
 import { IGame } from "../interfaces/gameInterface";
 
 export async function getGameList(userId: string): Promise<IGame[] | []> {
@@ -24,10 +24,10 @@ export async function getGameList(userId: string): Promise<IGame[] | []> {
 }
 
 // Challenge a player to a game
-export async function newGameChallenge(userId: string, faction: EFaction, opponentId: string, gameMode: EGameModes): Promise<any> {
+export async function newGameChallenge(userId: string, faction: EFaction, opponentId: string, gameMode: EGameModes, turnTimer: ETurnTimer): Promise<any> {
   const jwt = localStorage.getItem('jwt');
 
-  const url = `${import.meta.env.VITE_BE_URL}games/newGameChallenge?userId=${encodeURIComponent(userId)}&faction=${encodeURIComponent(faction)}&opponentId=${encodeURIComponent(opponentId)}&gameMode=${encodeURIComponent(gameMode)}`;
+  const url = `${import.meta.env.VITE_BE_URL}games/newGameChallenge?userId=${encodeURIComponent(userId)}&faction=${encodeURIComponent(faction)}&opponentId=${encodeURIComponent(opponentId)}&gameMode=${encodeURIComponent(gameMode)}&turnTimer=${encodeURIComponent(turnTimer)}`;
   const result = await fetch(url, {
     method: 'POST',
     headers: {

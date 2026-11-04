@@ -1,7 +1,25 @@
-export function timeAgo(dateString: Date) {
+import { ETurnTimer } from "../enums/gameEnums";
+
+// NOTE: not used atm
+export function timeAgo(dateString: Date): string {
   const now = new Date();
   const lastPlayed = new Date(dateString);
-  let seconds = Math.floor((now.getTime() - lastPlayed.getTime()) / 1000);
+  return getGameListTimerText(now.getTime() - lastPlayed.getTime());
+}
+
+export function getTimeLeft(lastPlayedAt: Date, turnTimer: ETurnTimer): number {
+  const timerMap = {
+    [ETurnTimer.DAILY]: 24 * 60 * 60 * 1000,
+    [ETurnTimer.THREE_DAYS]: 3 * 24 * 60 * 60 * 1000,
+    [ETurnTimer.WEEKLY]: 7 * 24 * 60 * 60 * 1000
+  };
+  const now = new Date();
+  const turnDeadline = new Date(lastPlayedAt).getTime() + timerMap[turnTimer];
+  return turnDeadline - now.getTime();
+}
+
+export function getGameListTimerText(timeLeft: number): string {
+  let seconds = timeLeft / 1000;
 
   const intervals = {
     year: 31536000,
@@ -23,5 +41,5 @@ export function timeAgo(dateString: Date) {
     }
   }
 
-  return result.length ? result.join(" and ") + " ago" : "just now";
+  return result.join(" and ") + " left";
 }

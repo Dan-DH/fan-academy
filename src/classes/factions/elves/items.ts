@@ -1,16 +1,16 @@
 import { EActionType, EAttackType, EHeroes } from "../../../enums/gameEnums";
 import { IItem } from "../../../interfaces/gameInterface";
-import GameScene from "../../../scenes/game.scene";
 import { Hero } from "../hero";
 import { Item } from "../item";
 import { Tile } from "../../board/tile";
 import { getAOETiles } from "../../../utils/boardUtils";
 import { roundToFive } from "../../../utils/gameUtils";
 import { useAnimation } from "../../../utils/unitAnimations";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class SoulStone extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -20,8 +20,8 @@ export class SoulStone extends Item {
 }
 
 export class ManaVial extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(target: Hero): void {
@@ -31,23 +31,22 @@ export class ManaVial extends Item {
     const potionImage = this.scene.add.image(target.x, target.y - 10, 'gameAtlas', 'manaVial').setDepth(100);
     useAnimation(potionImage);
 
-    if (target.stats.manaVial) {
+    if (target.status.has(StatusEffects.MANA_VIAL)) {
       target.getsHealed(1000);
     } else {
       target.healAndIncreaseHealth(1000, 50);
-      target.stats.manaVial = true;
-      target.updateTileData();
+      target.status.add(StatusEffects.MANA_VIAL);
     }
 
-    this.context.gameController!.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
 
     this.removeFromGame();
   }
 }
 
 export class SoulHarvest extends Item {
-  constructor(context: GameScene, data: IItem) {
-    super(context, data);
+  constructor(data: IItem) {
+    super(data);
   }
 
   use(targetTile: Tile): void {
@@ -56,48 +55,45 @@ export class SoulHarvest extends Item {
 
     // this.scene.sound.play(EGameSounds.USE_HARVEST);
 
-    const gameController = this.context.gameController;
-
-    if (!gameController) {
-      console.error('SoulHarvest use() No gamecontroller');
-      return;
-    }
     // Damages enemy units and crystals but doesn't remove KO'd enemy units
     const damage = 100;
-
-    const { enemyHeroTiles, enemyCrystalTiles } = getAOETiles(this, targetTile);
 
     // Keep track of the cumulative damage done (not attack power used) to enemy heroes (not crystals)
     let totalDamageInflicted = 0;
 
-    enemyHeroTiles?.forEach(tile => {
-      const hero = gameController.board.units.find(unit => unit.stats.boardPosition === tile.boardPosition);
+    const enemyUnits = getAOETiles(this, targetTile.boardPosition);
+    enemyUnits.forEach(u => {
+      const damageInflicted = u.getsDamaged({
+        damage,
+        attackType: EAttackType.MAGICAL,
+        attacker: this,
+        avoidKOs: true
+      });
 
-      if (!hero) throw new Error('SoulHarvest use() hero not found');
-      if (hero.stats.isKO) return;
-
-      totalDamageInflicted += hero.getsDamaged(damage, EAttackType.MAGICAL, this);
-
-      if (hero && hero instanceof Hero && hero.stats.unitType === EHeroes.PHANTOM && hero.stats.isKO) hero.removeFromGame();
+      if (u instanceof Hero) totalDamageInflicted += damageInflicted;
     });
 
-    enemyCrystalTiles.forEach(tile => {
-      const crystal = gameController.board.crystals.find(crystal => crystal.stats.boardPosition === tile.boardPosition);
-      if (!crystal) throw new Error('SoulHarvest use() crystal not found');
+    if (totalDamageInflicted > 0) {
+      enemyUnits.forEach(u => {
+        if (u instanceof Hero) {
+          u.checkIfShouldBeKO();
+          if (u.stats.unitType === EHeroes.PHANTOM && u.stats.isKO) u.removeFromGame();
+        }});
 
-      if (crystal.stats.belongsTo !== this.stats.belongsTo) crystal.getsDamaged(damage, EAttackType.MAGICAL, this);
-    });
+      // Get total amount of friendly units in the map, including KO'd ones
+      const friendlyUnits = this.context.board!.units.filter(u => u instanceof Hero && u.stats.belongsTo === this.stats.belongsTo) as Hero[];
 
-    // Get total amount of friendly units in the map, including KO'd ones
-    const friendlyUnits = gameController.board.units.filter(unit => unit.stats.belongsTo === this.stats.belongsTo);
+      // Divide damage dealt by that number + 3, then round to nearest 5. Formula: 1 / (units + 3) * damage
+      const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);
 
-    // Divide damage dealt by that number + 3, then round to nearest 5. Formula: 1 / (units + 3) * damage
-    const lifeIncreaseAmount = roundToFive(1 / (friendlyUnits.length + 3) * totalDamageInflicted);
+      // Increase max health of all units, including KO'd ones, and revive them
+      friendlyUnits.forEach(unit => {
+        if (unit.stats.isKO) unit.getsRevived();
+        unit.increaseMaxHealth(lifeIncreaseAmount);
+      });
+    }
 
-    // Increase max health of all units, including KO'd ones, and revive them
-    friendlyUnits.forEach(unit => unit.increaseMaxHealth(lifeIncreaseAmount));
-
-    gameController.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
+    this.context.afterAction(EActionType.USE, this.stats.boardPosition, targetTile.boardPosition);
     this.removeFromGame();
   }
 }

@@ -25,7 +25,8 @@ export enum EWinConditions {
 export enum EFaction {
   COUNCIL = 'council',
   DARK_ELVES = 'elves',
-  DWARVES = 'dwarves'
+  DWARVES = 'dwarves',
+  TRIBE = 'tribe'
 }
 
 export enum EActionType {
@@ -69,7 +70,12 @@ export enum EItems {
 
   // Dwarves
   DWARVEN_BREW = 'dwarvenBrew',
-  PULVERIZER = 'pulverizer'
+  PULVERIZER = 'pulverizer',
+
+  // Tribe
+  TYPHOON = 'typhoon',
+  SPIKE_ARMOR = 'spikeArmor',
+  MEAT = 'meat'
 }
 
 export enum EClass {
@@ -98,7 +104,14 @@ export enum EHeroes {
   GUNNER = 'gunner',
   ENGINEER = 'engineer',
   GRENADIER = 'grenadier',
-  ANNIHILATOR = 'annihilator'
+  ANNIHILATOR = 'annihilator',
+
+  // Tribe
+  WARRIOR = 'warrior',
+  WITCH = 'witch',
+  AXE_THROWER = 'axeThrower',
+  SHAMAN = 'shaman',
+  CHIEFTAIN = 'chieftain'
 
 }
 
@@ -117,7 +130,6 @@ export enum ETiles {
 }
 
 export enum ERange {
-  MOVE = 'move',
   ATTACK = 'attack',
   HEAL = 'healing',
   BUFF = 'buff'
@@ -257,5 +269,28 @@ export enum EGameSounds {
 
 export enum EGameModes {
   RANKED = 'ranked',
-  CASUAL = 'casual'
+  CASUAL = 'casual',
+  BRAWL = 'brawl'
+}
+
+export enum EBoardUnit {
+  HERO = 'hero',
+  CRYSTAL = 'crystal'
+}
+
+export enum EGameSceneMode {
+  GAME = 'game',
+  TURN_REPLAY = 'turnReplay',
+  GAME_REPLAY = 'gameReplay'
+}
+
+export enum ETurnTimer {
+  DAILY = 'daily',
+  THREE_DAYS = 'threeDays',
+  WEEKLY = 'weekly'
+}
+
+export enum EUnitMoveType {
+  MOVE = 'move',
+  FORCED_MOVE = 'forcedMove'
 }

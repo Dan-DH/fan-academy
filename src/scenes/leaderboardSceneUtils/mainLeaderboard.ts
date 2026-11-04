@@ -2,9 +2,9 @@ import { EChallengePopup } from "../../enums/gameEnums";
 import { IUserStats } from "../../interfaces/userInterface";
 import LeaderboardScene from "../leaderboard.scene";
 import { truncateText } from "../../utils/textAnimations";
-import { ChallengePopup } from "../../classes/popups/challengePopup";
 import { ELeaderboardEnum } from "../../enums/leaderboardEnum";
 import { getLeaderBoardQuery } from "../../queries/userQueries";
+import { NewGamePopup } from "../../classes/popups/newGamePopup";
 
 export class MainLeaderboard extends Phaser.GameObjects.Container {
   header: Phaser.GameObjects.Container;
@@ -54,11 +54,12 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
     const usernameText = context.add.text(100, 0, 'Username', bigStyle);
     const totalWins = context.add.text(400, 0, `Wins`, bigStyle);
     const totalGames = context.add.text(520, 0, `Games`, bigStyle);
-    const councilWins = context.add.image(700, 25, 'gameAtlas', 'councilEmblem').setScale(0.5);
-    const elvesWins = context.add.image(800, 25, 'gameAtlas', 'elvesEmblem').setScale(0.5);
-    const dwarvesWins = context.add.image(900, 25, 'gameAtlas', 'dwarvesEmblem').setScale(0.5);
+    const councilWins = context.add.image(680, 25, 'gameAtlas', 'councilEmblem').setScale(0.5);
+    const elvesWins = context.add.image(780, 25, 'gameAtlas', 'elvesEmblem').setScale(0.5);
+    const dwarvesWins = context.add.image(880, 25, 'gameAtlas', 'dwarvesEmblem').setScale(0.5);
+    const tribeWins = context.add.image(980, 25, 'gameAtlas', 'OR-Emblem-hd').setScale(0.4);
 
-    this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins]);
+    this.header.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins, tribeWins]);
 
     startingCoords.y += 20;
 
@@ -69,16 +70,17 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
       const usernameText = context.add.text(100, 0, truncateText(player.username, 20), smallStyle);
       const totalWins = context.add.text(410, 0, `${player.stats.totalWins}`, smallStyle);
       const totalGames = context.add.text(530, 0, `${player.stats.totalGames}`, smallStyle);
-      const councilWins = context.add.text(690, 0, `${player.stats.factions.council.wins}`, smallStyle);
-      const elvesWins = context.add.text(790, 0, `${player.stats.factions.elves.wins}`, smallStyle);
-      const dwarvesWins = context.add.text(890, 0, `${player.stats.factions.dwarves.wins}`, smallStyle);
+      const councilWins = context.add.text(670, 0, `${player.stats.factions.council.wins}`, smallStyle);
+      const elvesWins = context.add.text(770, 0, `${player.stats.factions.elves.wins}`, smallStyle);
+      const dwarvesWins = context.add.text(870, 0, `${player.stats.factions.dwarves.wins}`, smallStyle);
+      const tribeWins = context.add.text(970, 0, `${player.stats.factions.tribe.wins}`, smallStyle);
 
       const challengeIcon = context.add.image(1030, 15, 'gameAtlas', 'challengeIcon').setScale(1.2).setInteractive({ useHandCursor: true });
 
       challengeIcon.on('pointerdown', () => {
         // this.scene.sound.play(EUiSounds.BUTTON_GENERIC);
 
-        new ChallengePopup({
+        new NewGamePopup({
           context,
           username: player.username,
           challengeType: EChallengePopup.SEND,
@@ -88,7 +90,7 @@ export class MainLeaderboard extends Phaser.GameObjects.Container {
 
       if (player._id === context.userId) challengeIcon.setVisible(false).disableInteractive();
 
-      row.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins, challengeIcon]);
+      row.add([usernameText, totalGames, totalWins, councilWins, elvesWins, dwarvesWins, tribeWins, challengeIcon]);
 
       return row;
     });

@@ -1,13 +1,13 @@
 import { EActionType } from "../../enums/gameEnums";
 import GameScene from "../../scenes/game.scene";
 import { isInHand } from "../../utils/gameUtils";
-import { getCurrentPlayer } from "../../utils/playerUtils";
 
 export class Door extends Phaser.GameObjects.Container {
   doorClosed: Phaser.GameObjects.Image;
   doorOpen: Phaser.GameObjects.Image;
   doorBanner: Phaser.GameObjects.Image;
   bannerText: Phaser.GameObjects.Text;
+  opponentBannerText: Phaser.GameObjects.Text;
   context: GameScene;
 
   constructor(context: GameScene) {
@@ -19,26 +19,32 @@ export class Door extends Phaser.GameObjects.Container {
     this.doorOpen = context.add.image(55, -15, 'gameAtlas', 'doorOpen').setScale(1.1).setVisible(false);
 
     this.doorBanner = context.add.image(0, 45, 'gameAtlas', 'doorBanner').setScale(1.2);
-    const deckSize: number = getCurrentPlayer(context).factionData.unitsInDeck.length ?? 99;
-    this.bannerText = this.context.add.text(0, 45 + 2, deckSize!.toString(), {
+
+    this.bannerText = context.add.text(0, 45 + 2, context.deck!.getDeckSize().toString(), {
       fontFamily: "proLight",
       fontSize: 30,
       color: '#000000'
     }).setOrigin(0.5);
 
-    this.add([this.doorClosed, this.doorOpen, this.doorBanner, this.bannerText]);
+    this.opponentBannerText = context.add.text(0, 45 + 2, context.opponentDeck!.getDeckSize().toString(), {
+      fontFamily: "proLight",
+      fontSize: 30,
+      color: '#000000'
+    }).setOrigin(0.5).setVisible(false); // TODO: check to see which one is visible
+
+    this.add([this.doorClosed, this.doorOpen, this.doorBanner, this.bannerText, this.opponentBannerText]);
 
     this.setSize(70, 100).setInteractive({ useHandCursor: true });
 
     this.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (pointer.button === 0 && context.activeUnit && isInHand(context.activeUnit.stats.boardPosition)) {
-        // this.sscene.sound.play(EGameSounds.SHUFFLE);
+        // this.scene.sound.play(EGameSounds.SHUFFLE);
 
         const activePosition = context.activeUnit.stats.boardPosition;
         context.activeUnit.shuffleInDeck();
 
         // Add action to state
-        context.gameController?.afterAction(EActionType.SHUFFLE, activePosition, 51);
+        context.afterAction(EActionType.SHUFFLE, activePosition, 51);
 
         this.updateBannerText();
       }
@@ -48,12 +54,13 @@ export class Door extends Phaser.GameObjects.Container {
   }
 
   updateBannerText(): void {
-    const deckSize: number = this.context.gameController?.deck.getDeckSize() ?? 0;
-
-    this.bannerText.setText(deckSize.toString());
+    this.bannerText.setText(this.context.deck!.getDeckSize().toString());
+    this.opponentBannerText.setText(this.context.opponentDeck!.getDeckSize().toString());
   }
 
   openDoor(): void {
+    if (this.context.skipAnimations) return;
+
     this.doorOpen.setVisible(true);
     this.doorClosed.setVisible(false);
 
