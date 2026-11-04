@@ -28,9 +28,8 @@ export class Typhoon extends Item {
     typhoonAnimation(typhoonImage, targetTile.col);
 
     const isPlayerOne = scene.isPlayerOne;
-    const belongsTo = isPlayerOne ? 1 : 2;
 
-    const enemyUnits = scene.board?.units.filter((u): u is Hero => u.stats.belongsTo !== belongsTo && u instanceof Hero);
+    const enemyUnits = scene.board?.units.filter((u): u is Hero => u.stats.belongsTo !== this.stats.belongsTo && u instanceof Hero);
     if (!enemyUnits) return;
 
     if (targetTile.col !== 0) {
@@ -63,21 +62,19 @@ export class Typhoon extends Item {
         col: u.stats.col + offset
       };
 
-      let targetTile = await scene.board?.calculateDisplaceUnit({
+      const params = {
         attackerCoords: pushTarget,
         target: u as Hero,
         isPush: true
-      });
+      };
+
+      let targetTile = await scene.board?.calculateDisplaceUnit(params);
 
       if (targetTile) {
         u.stats.col = targetTile.col;
         u.stats.row = targetTile.row;
 
-        const movedAgain = await scene.board?.calculateDisplaceUnit({
-          attackerCoords: pushTarget,
-          target: u as Hero,
-          isPush: true
-        });
+        const movedAgain = await scene.board?.calculateDisplaceUnit(params);
 
         if (movedAgain) targetTile = movedAgain;
 

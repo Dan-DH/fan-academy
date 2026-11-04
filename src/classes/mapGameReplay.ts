@@ -86,7 +86,7 @@ export class MapGameReplay {
       [EActionType.CONCEDE]: () => console.log('User conceded')
     };
 
-    replayActionMap[actionTaken]();
+    await replayActionMap[actionTaken]();
   }
 
   replaySpawn(action: ITurnHistoryAction, hand: Hand): void {
@@ -119,20 +119,20 @@ export class MapGameReplay {
     if (action.actionType === EActionType.TELEPORT) hero.teleport(target as Hero);
   };
 
-  replayUse(action: ITurnHistoryAction, hand: Hand): void {
+  async replayUse(action: ITurnHistoryAction, hand: Hand): Promise<void> {
     const item = hand.getHand().find(item => item.stats.boardPosition === action.actorPosition) as Item;
     if (!item) throw new Error('Missing item in use action');
 
     if (item.stats.dealsDamage) {
       const target = item instanceof Pulverizer ? this.gameScene.board!.units.find(u => u.stats.boardPosition === action.targetPosition) : this.gameScene.board!.getTileFromBoardPosition(action.targetPosition!);
       if (!item) throw new Error('Missing tile in use action');
-      item.use(target);
+      await item.use(target);
     }
 
     if (!item.stats.dealsDamage) {
       const hero = this.gameScene.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition);
       if (!hero) throw new Error('Missing target in use action');
-      item.use(hero);
+      await item.use(hero);
     }
   }
 
