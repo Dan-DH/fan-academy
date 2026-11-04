@@ -38,14 +38,11 @@ export class Hand {
   addToHand(units: (IHeroBE | IItemBE)[]): void {
     const defaultPositions = [45, 46, 47, 48, 49, 50];
 
-    let previousIndex = -1;
     defaultPositions.forEach(element => {
       if (!units.length) return;
       const matchIndex = this.hand.findIndex((unit) => unit.stats.boardPosition === element);
 
-      if (matchIndex !== -1) {
-        previousIndex = matchIndex;
-      } else {
+      if (matchIndex === -1) {
         const unitData = units.shift();
         if (unitData) {
           unitData.boardPosition = element;
