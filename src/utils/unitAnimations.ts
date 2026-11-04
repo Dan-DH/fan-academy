@@ -48,12 +48,18 @@ export async function unitMoveAnimation(params: {
   duration?: number,
   isCharge?: boolean
 }): Promise<void> {
-  if ((params.hero.scene as GameScene).skipAnimations) return;
-  if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
-  if (params.move === EUnitMoveType.FORCED_MOVE) {
-    await forcedMoveAnimation(params);
-    params.hero.updatePosition(params.targetTile);
-  }
+  if ((params.hero.scene as GameScene).skipAnimations) {
+    if (params.move === EUnitMoveType.MOVE) return;
+    if (params.move === EUnitMoveType.FORCED_MOVE) {
+      params.hero.updatePosition(params.targetTile);
+      return;
+    }
+  } else {
+    if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
+    if (params.move === EUnitMoveType.FORCED_MOVE) {
+      await forcedMoveAnimation(params);
+      params.hero.updatePosition(params.targetTile);
+    }}
 };
 
 async function moveAnimation(params: {
@@ -163,7 +169,6 @@ async function forcedMoveAnimation(params: {
 }): Promise<void> {
   params.hero.scene.input.enabled = false;
 
-  // const animation = (hero: Hero, targetTile: Tile): Promise<void> => {
   return new Promise((resolve) => {
     params.hero.scene.tweens.add({
       targets: params.hero,
@@ -178,9 +183,6 @@ async function forcedMoveAnimation(params: {
       }
     });
   });
-  // };
-
-  // await animation.call(params.hero.scene, params.hero, params.targetTile);
 };
 
 export function turnIfBehind(context: GameScene, attacker: Hero, target: Hero | Crystal, duration = 500): void {
