@@ -527,7 +527,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
 
   updateUnitAfterSpawn(tile: Tile): void {
     // Modify image
-    this.setVisible(true); // FIXME: add check if hiding untis during fast forward replay
+    this.setVisible(true);
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, false);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;

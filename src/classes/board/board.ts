@@ -409,7 +409,7 @@ export class Board {
         break;
     }
 
-    if (direction === 0) console.error(`getAttackDirection() No direction found between: ${attackerBP} and ${targetBP}`);
+    if (direction === 0) console.log(`getAttackDirection() No direction found between: ${attackerBP} and ${targetBP}`);
 
     return direction;
   }
