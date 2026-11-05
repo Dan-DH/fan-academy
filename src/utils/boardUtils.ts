@@ -69,9 +69,9 @@ export function specialTileCheck(hero: Hero, tile: Tile): void {
 }
 
 export function removeSpecialTile(hero: Hero): void {
-  hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE, StatusEffects.POWER_TILE, StatusEffects.MAGICAL_RESISTANCE_TILE, StatusEffects.PHYSICAL_RESISTANCE_TILE, StatusEffects.SPEED_TILE);
-  hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
+  if (hero.status.has(StatusEffects.CRYSTAL_DAMAGE_TILE)) hero.context.board!.updateCrystalsAfterUnitMove(hero.stats.belongsTo, false);
 
+  hero.status.remove(StatusEffects.CRYSTAL_DAMAGE_TILE, StatusEffects.POWER_TILE, StatusEffects.MAGICAL_RESISTANCE_TILE, StatusEffects.PHYSICAL_RESISTANCE_TILE, StatusEffects.SPEED_TILE);
   hero.visuals.stopSpecialTileAnimation();
   hero.unitCard.updateCardData(hero);
 }
