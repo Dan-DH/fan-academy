@@ -136,7 +136,7 @@ export function createGameList() {
           }
 
           uiScene.activeGameId = game._id;
-
+          console.log('Accessing game: ', uiScene.activeGameId);
           if (game.status === EGameStatus.FINISHED) await colyseusService.sendGetTurnHistoryMessage(game._id);
 
           uiScene.activeGame = game;
