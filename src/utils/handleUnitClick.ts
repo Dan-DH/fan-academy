@@ -9,6 +9,7 @@ import { visibleUnitCardCheck } from "./unitCards";
 import { belongsToPlayer } from "./gameUtils";
 import { HealingPotion } from "../classes/factions/council/items";
 import { Pulverizer } from "../classes/factions/dwarves/items";
+import { Typhoon } from "../classes/factions/tribe/items";
 
 export function handleUnitClick(unit: Hero | Item, context: GameScene): void {
   unit.on('pointerdown', (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Types.Input.EventData) => {
@@ -216,7 +217,7 @@ function handleOnUnitLeftClick(unit: Hero | Item, context: GameScene): void {
       if (activeUnit instanceof Item) {
         if (unit.isAlreadyEquipped(activeUnit) || unit.stats.unitType === EHeroes.PHANTOM && !activeUnit.stats.dealsDamage) return;
 
-        if (activeUnit.stats.dealsDamage && unit.getTile().isHighlighted) activeUnit.use(unit);
+        if (activeUnit.stats.dealsDamage && unit.getTile().isHighlighted) activeUnit.use(activeUnit instanceof Typhoon ? unit.getTile() : unit);
 
         if (activeUnit instanceof HealingPotion && unit.isFullHP()) return;
 
