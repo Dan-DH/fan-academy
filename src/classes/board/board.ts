@@ -315,11 +315,15 @@ export class Board {
     const result: (Hero | Crystal)[] = [];
 
     const targetFound = (i: number, towardsRightSide: boolean): boolean => {
-      const matchingUnit = this.units.find(u => u.stats.belongsTo !== hero.stats.belongsTo && u.stats.row === hero.stats.row && u.stats.col === i);
+      const matchingUnit = this.units.find(u => u.stats.belongsTo !== hero.stats.belongsTo && u.stats.row === hero.stats.row && u.stats.col === i && (u instanceof Crystal || u instanceof Hero && !u.stats.isKO));
       if (matchingUnit) {
         const offset = towardsRightSide ? 1 : -1;
         if (this.isAdjacent(hero, matchingUnit)) return true;
-        const adjacentTileOccupied = this.units.find(u => u.stats.boardPosition === matchingUnit.stats.boardPosition + offset);
+        const adjacentTileOccupied = this.units.find(u =>
+          u.stats.boardPosition === matchingUnit.stats.boardPosition + offset &&
+          (u instanceof Crystal || u instanceof Hero && !u.stats.isKO)
+        );
+
         if (!adjacentTileOccupied) result.push(matchingUnit);
         return true;
       }
