@@ -49,7 +49,7 @@ export class Shaman extends Tribe {
     if (secondTarget) await this.applyHealing(secondTarget, 1, 0.25);
 
     let thirdTarget: Hero | undefined = undefined;
-    if (secondTarget) thirdTarget = this.getNextTarget(secondTarget);
+    if (secondTarget) thirdTarget = this.getNextTarget(secondTarget, target);
     if (thirdTarget) await this.applyHealing(thirdTarget, 0.5, 0.125);
 
     this.removeAttackModifiers();
@@ -63,11 +63,11 @@ export class Shaman extends Tribe {
     unit.getsHealed(healingAmount);
   }
 
-  getNextTarget(target: Hero): Hero | undefined {
+  getNextTarget(target: Hero, unitToIgnore: Hero | undefined = undefined): Hero | undefined {
     const board = this.context.board!;
     const healDirection = board.getAttackDirection(this.stats.boardPosition, target.stats.boardPosition);
     const unitsToRate = board.units.filter((u): u is Hero => {
-      if (u instanceof Crystal || u.stats.belongsTo !== this.stats.belongsTo || u === this) return false; // BEWARE: this won't work if u references a different instance of the Hero, but it shouldn't be the case.
+      if (u instanceof Crystal || u.stats.belongsTo !== this.stats.belongsTo || u === this || u === unitToIgnore) return false;
 
       const distance = getGridDistance(target.stats.row, target.stats.col, u.stats.row, u.stats.col);
 
