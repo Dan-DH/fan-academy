@@ -36,7 +36,7 @@ export class Impaler extends DarkElf {
         attacker: this
       });
 
-      if (damageDealt) this.lifeSteal(damageDealt);
+      if (damageDealt && target instanceof Hero) this.lifeSteal(damageDealt);
       if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }

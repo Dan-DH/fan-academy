@@ -29,7 +29,7 @@ export class Necromancer extends DarkElf {
         attackType: this.stats.attackType,
         attacker: this
       });
-      if (damageDealt) this.lifeSteal(damageDealt);
+      if (damageDealt && target instanceof Hero) this.lifeSteal(damageDealt);
       if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
       this.removeAttackModifiers();
     }
