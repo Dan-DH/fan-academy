@@ -361,8 +361,6 @@ export class Board {
         if (isRowValid && isColValid) {
           const aoeTile = this.getTileFromCoordinates(currentRow, currentCol);
           areaTiles.push(aoeTile);
-        } else {
-          console.warn('Invalid tile coordinates skipped:', currentRow, currentCol);
         }
       }
     }
