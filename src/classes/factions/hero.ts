@@ -616,9 +616,11 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.status.remove(StatusEffects.MEAT);
     this.visuals.stopMeatAnimation();
 
-    this.context.board?.units.forEach(u => {
-      if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && u.status.has(StatusEffects.BLOODLUST)) (u as Tribe).removeBloodlust();
-    });
+    if (this.status.has(StatusEffects.BLOODLUST)) {
+      this.context.board?.units.forEach(u => {
+        if (u instanceof Hero && u.stats.faction === EFaction.TRIBE && u.stats.belongsTo === this.stats.belongsTo && u.status.has(StatusEffects.BLOODLUST)) (u as Tribe).removeBloodlust();
+      });
+    }
 
     this.unitCard.updateCardData(this);
   }
