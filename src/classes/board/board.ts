@@ -114,9 +114,9 @@ export class Board {
     this.highlightTiles([...spawns]);
   }
 
-  highlightAllLivingEnemyTargets(unit: Hero | Item): void {
+  highlightPulverizerTargets(unit: Hero | Item): void {
     this.units.map(u => {
-      if (unit.stats.belongsTo !== unit.stats.belongsTo) u.getTile().setHighlight();
+      if (unit.stats.belongsTo !== u.stats.belongsTo && (u instanceof Crystal || u instanceof Hero && !u.stats.isKO)) u.getTile().setHighlight();
     });
   }
 

@@ -44,8 +44,8 @@ export class Pulverizer extends Item {
     if (target instanceof Hero) this.directHitOnHero(target);
     if (target instanceof Crystal) this.directHitOnCrystal(target);
 
-    this.removeFromGame();
     this.context.afterAction(EActionType.USE, this.stats.boardPosition, target.stats.boardPosition);
+    this.removeFromGame();
   }
 
   directHitOnHero(hero: Hero): void {

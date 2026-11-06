@@ -365,8 +365,8 @@ export default class GameScene extends Phaser.Scene {
 
   onItemClicked(item: Item) {
     // console.log(`An item ${item.stats.unitId} has been clicked`);
-    if (item.stats.dealsDamage && item.stats.itemType === EItems.PULVERIZER) {
-      this.board!.highlightAllLivingEnemyTargets(item);
+    if (item.stats.itemType === EItems.PULVERIZER) {
+      this.board!.highlightPulverizerTargets(item);
     } else if (item.stats.dealsDamage) {
       this.board!.highlightAllBoard();
     } else {
