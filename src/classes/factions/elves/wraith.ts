@@ -5,7 +5,7 @@ import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { isPhantomAndKO } from "../../../utils/gameUtils";
-import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
+import { StatusEffects } from "../../../utils/statuses";
 
 export class Wraith extends DarkElf {
   constructor(data: IHero) {
@@ -36,8 +36,7 @@ export class Wraith extends DarkElf {
         attacker: this
       });
 
-      if (damageDealt && target instanceof Hero) this.lifeSteal(damageDealt);
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD) this.checkForDamageToReflect(target, damageDealt);
+      if (damageDealt && target instanceof Hero) this.lifeSteal(damageDealt, target.status.has(StatusEffects.SPIKE_ARMOR));
       this.removeAttackModifiers();
     }
 

@@ -25,11 +25,11 @@ export abstract class DarkElf extends Hero {
     this.context.afterAction(EActionType.USE, handPosition, this.stats.boardPosition);
   }
 
-  lifeSteal(damage: number): void {
+  lifeSteal(damage: number, spikeArmor: boolean): void {
     if (this.status.has(StatusEffects.FACTION_EQUIPMENT)) {
-      const roundedHealing = roundToFive(damage * 0.666);
+      const roundedHealing = roundToFive(damage * (spikeArmor ? 0.333 : 0.666));
       this.getsHealed(roundedHealing);
-    } else {
+    } else if (!spikeArmor) {
       const roundedHealing = roundToFive(damage * 0.333);
       this.getsHealed(roundedHealing);
     }

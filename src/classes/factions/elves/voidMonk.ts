@@ -3,10 +3,9 @@ import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { DarkElf } from "./elves";
 import { Crystal } from "../../board/crystal";
-import { isOnBoard, canBeAttacked, isPhantomAndKO, isKoUnitOnEnemySpawn } from "../../../utils/gameUtils";
+import { isOnBoard, canBeAttacked, isPhantomAndKO, isKoUnitOnEnemySpawn, roundToFive } from "../../../utils/gameUtils";
 import { attackAnimation, turnIfBehind } from "../../../utils/unitAnimations";
 import { StatusEffects } from "../../../utils/statuses";
-import { SPIKE_ARMOR_HP_THRESHOLD } from "../../../utils/boardUtils";
 
 export class VoidMonk extends DarkElf {
   constructor(data: IHero) {
@@ -45,14 +44,14 @@ export class VoidMonk extends DarkElf {
 
       // Apply damage to targets
       let lifeStealDamage = 0;
-      let  totalDamageToReflect = 0;
+      let spikeDamage = 0;
       const unitDamage = target.getsDamaged({
         damage: this.getTotalPower(),
         attackType: this.stats.attackType,
         attacker: this
       });
       if (target instanceof Hero) lifeStealDamage += unitDamage;
-      if (target.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += unitDamage;
+      if (target.status.has(StatusEffects.SPIKE_ARMOR)) spikeDamage += unitDamage;
 
       if (splashedEnemies.length) {
         const splashDamage = this.getTotalPower() * 0.666;
@@ -64,13 +63,18 @@ export class VoidMonk extends DarkElf {
             splashDamage: 0.666
           });
           if (enemy instanceof Hero) lifeStealDamage += unitDamage;
-          if (enemy.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += unitDamage;
+          if (enemy.status.has(StatusEffects.SPIKE_ARMOR)) spikeDamage += unitDamage;
           if (isPhantomAndKO(enemy)) enemy.removeFromGame();
         });
       }
 
-      if (lifeStealDamage) this.lifeSteal(lifeStealDamage);
-      if (this.stats.currentHealth > SPIKE_ARMOR_HP_THRESHOLD && totalDamageToReflect > 0) this.applySpikeArmorDamage(totalDamageToReflect);
+      // Voidmonk doesn't use the lifeSteal function due to the interaction with SpikeArmor
+      if (lifeStealDamage) {
+        const soulStone = this.status.has(StatusEffects.FACTION_EQUIPMENT);
+        const totalLifeSteal = roundToFive(lifeStealDamage * (soulStone ? 0.666 : 0.333));
+        const totalSpikeDamage = roundToFive(spikeDamage * 0.333);
+        this.getsHealed(roundToFive(totalLifeSteal - totalSpikeDamage));
+      }
       this.removeAttackModifiers();
     }
 
