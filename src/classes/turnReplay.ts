@@ -3,6 +3,7 @@ import { IHeroBE, IItemBE, ITurnAction } from "../interfaces/gameInterface";
 import GameScene from "../scenes/game.scene";
 import { createNewHero, createNewItem } from "../utils/createUnit";
 import { textAnimationSizeIncrease } from "../utils/textAnimations";
+import { Pulverizer } from "./factions/dwarves/items";
 import { Hero } from "./factions/hero";
 import { Item } from "./factions/item";
 
@@ -115,9 +116,9 @@ export class TurnReplay {
     if (!item) throw new Error('Missing item in use action');
 
     if (item.stats.dealsDamage) {
-      const tile = this.context.board!.getTileFromBoardPosition(action.targetPosition!);
+      const target = item instanceof Pulverizer ? this.context.board!.units.find(unit => unit.stats.boardPosition === action.targetPosition) : this.context.board!.getTileFromBoardPosition(action.targetPosition!);
       if (!item) throw new Error('Missing tile in use action');
-      await item.use(tile);
+      await item.use(target);
     }
 
     if (!item.stats.dealsDamage) {
