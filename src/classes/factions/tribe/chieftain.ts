@@ -59,6 +59,7 @@ export class Chieftain extends Tribe {
         attacker: this
       });
       if (u instanceof Hero && u.status.has(StatusEffects.SPIKE_ARMOR)) totalDamageToReflect += damageDealt;
+      if (isPhantomAndKO(u)) u.removeFromGame();
     });
 
     this.pullUnitsCloser();

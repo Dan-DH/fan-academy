@@ -311,8 +311,9 @@ export abstract class Hero extends Phaser.GameObjects.Container {
   }
 
   getsRevived(): void {
-    this.visuals.playReviveAnimation();
+    if (this.stats.unitType === EHeroes.PHANTOM) return;
 
+    this.visuals.playReviveAnimation();
     this.stats.isKO = false;
     this.stats.lastBreath = false;
     this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
@@ -386,8 +387,7 @@ export abstract class Hero extends Phaser.GameObjects.Container {
     this.stats.isKO = true;
 
     if (this.stats.unitType === EHeroes.PALADIN) this.context.board!.updatePaladinAurasAcrossBoard();
-
-    this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
+    if (this.stats.unitType !== EHeroes.PHANTOM) this.visuals.characterImage.setTexture('gameAtlas', this.visuals.updateCharacterImage(this.stats));
     const { charImageX, charImageY } = positionHeroImage(this.stats.unitType, this.stats.belongsTo === 1, false, true);
     this.visuals.characterImage.x = charImageX;
     this.visuals.characterImage.y = charImageY;

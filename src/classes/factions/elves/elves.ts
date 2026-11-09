@@ -1,4 +1,4 @@
-import { EActionType, EAttackType, EClass, EFaction, EHeroes } from "../../../enums/gameEnums";
+import { EActionType } from "../../../enums/gameEnums";
 import { IHero } from "../../../interfaces/gameInterface";
 import { Hero } from "../hero";
 import { useAnimation } from "../../../utils/unitAnimations";
@@ -34,38 +34,4 @@ export abstract class DarkElf extends Hero {
       this.getsHealed(roundedHealing);
     }
   }
-}
-
-export function createElvesPhantomData(data: Partial<IHero>): IHero {
-  // Cannot be equipped, buffed or healed, disappears if KO'd
-  return {
-    unitType: EHeroes.PHANTOM,
-    baseHealth: 100,
-    maxHealth: 100,
-    currentHealth: data.currentHealth ?? 100,
-    movement: 3,
-    attackRange: 1,
-    healingRange: 0,
-    attackType: EAttackType.MAGICAL,
-    basePower: 100,
-    physicalDamageResistance: 0,
-    basePhysicalDamageResistance: 0,
-    magicalDamageResistance: 0,
-    baseMagicalDamageResistance: 0,
-    canHeal: false,
-    class: EClass.HERO,
-    faction: EFaction.DARK_ELVES,
-    unitId: data.unitId!,
-    boardPosition: data.boardPosition ?? 51,
-    isKO: data.isKO ?? false,
-    lastBreath: data.lastBreath ?? false,
-    belongsTo: data.belongsTo ?? 1,
-    row: data.row ?? 0,
-    col: data.col ?? 0,
-    buffRange: 0,
-    canBuff: false,
-    paladinAura: data.paladinAura ?? 0,
-    unitsConsumed: data.unitsConsumed ?? 0,
-    status: 0
-  };
 }
