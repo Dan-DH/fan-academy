@@ -57,6 +57,7 @@ export async function unitMoveAnimation(params: {
   } else {
     if (params.move === EUnitMoveType.MOVE) await moveAnimation(params);
     if (params.move === EUnitMoveType.FORCED_MOVE) {
+      params.hero.stats.boardPosition = params.targetTile.boardPosition; // gotta update it here because updatePosition waits for the animation to finish, but the Typhoon column loop does not
       await forcedMoveAnimation(params);
       params.hero.updatePosition(params.targetTile);
     }}
